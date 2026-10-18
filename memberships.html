@@ -251,12 +251,13 @@
             if (data.history) {
               currentHistory = data.history;
             }
-            // ดึงข้อมูลบัญชีธนาคารจาก Script Properties (ผ่าน CONFIG ฝั่งหลังบ้าน) มาแสดงผลที่ Modal เติมเงิน
+            
+            // 💎 เพิ่มส่วนนี้เข้าไปเพื่อให้ดึงข้อมูลธนาคารจาก Script Properties มาแสดงทันทีที่โหลดหน้าเว็บ
             if (data.bankInfo) {
               document.getElementById('bank-name').innerText = data.bankInfo.bankName || "ธนาคารกสิกรไทย";
               document.getElementById('bank-accname').innerText = data.bankInfo.accName || "วินทร์ทรัพย์นาคราช";
               document.getElementById('bank-accno').innerText = data.bankInfo.accNo || "123-4-56789-0";
-              if(data.bankInfo.qrUrl) {
+              if (data.bankInfo.qrUrl) {
                 document.getElementById('bank-qr').src = data.bankInfo.qrUrl;
               }
             }

@@ -3,7 +3,7 @@
     let currentHistory = [];
     let currentUserId = "";
     // กำหนด URL ตั้งต้นชั่วคราวเพื่อให้ระบบยิงไปขอ URL จริงจาก Script Properties ในครั้งแรก
-    let WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_placeholder/exec"; 
+    let WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec"; 
 
     window.onload = async function() {
       try {
@@ -25,7 +25,7 @@
     function fetchAppData(userId) {
       // ยิงไปที่ URL ตั้งต้นก่อน เพื่อดึง Web App URL จริงจาก Properties ผ่าน api_init
       const targetUrl = WEB_APP_URL.includes("placeholder") 
-        ? "https://script.google.com/macros/s/YOUR_INITIAL_DEPLOY_URL/exec?action=api_init&userId=" + userId // <--- ใส่ URL เดบิวต์แรกสุดครั้งเดียวตรงนี้
+        ? "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec?action=api_init&userId=" + userId // <--- ใส่ URL เดบิวต์แรกสุดครั้งเดียวตรงนี้
         : WEB_APP_URL + "?action=api_init&userId=" + userId;
 
       fetch(targetUrl)

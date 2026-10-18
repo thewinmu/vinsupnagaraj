@@ -8,7 +8,7 @@
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; } /* Midnight Blue */
+    body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
     @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.2); } 50% { box-shadow: 0 0 30px rgba(217, 119, 6, 0.7); } }
@@ -79,7 +79,7 @@
       <p id="loading-text" class="text-xs text-amber-500 font-bold hidden animate-pulse">กำลังร่ายเวทมนตร์...</p>
     </div>
 
-    <!-- 💰 ส่วนแจ้งเตือนเงินไม่พอ & เติมเงิน (กั้นประตู) -->
+    <!-- 💰 ส่วนแจ้งเตือนเงินไม่พอ & เติมเงิน -->
     <div id="topup-section" class="hidden w-full space-y-5 animate-fade-in">
       <div class="bg-slate-900 border border-red-500/50 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <div class="absolute -right-10 -top-10 w-32 h-32 bg-red-500/10 rounded-full blur-2xl"></div>
@@ -88,7 +88,6 @@
         
         <p class="text-xs text-amber-400 mb-3">กรุณาเลือกยอดที่ต้องการเติมเงิน:</p>
         
-        <!-- Grid ปุ่มเลือกยอดเติมเงิน -->
         <div class="grid grid-cols-3 gap-2.5">
           <button onclick="requestTopup(10)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">10 ฿</button>
           <button onclick="requestTopup(20)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">20 ฿</button>
@@ -103,7 +102,6 @@
 
     <!-- 🌟 ส่วนแสดงผลสาส์นเวทมนตร์ (เปิดไพ่) -->
     <div id="result-section" class="hidden w-full space-y-6">
-      <!-- ไพ่ 3 มิติ -->
       <div class="perspective-1000 mx-auto w-56 h-80">
         <div id="card-inner" class="relative w-full h-full transform-style-3d">
           <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500 rounded-2xl shadow-[0_0_20px_rgba(217,119,6,0.4)] flex items-center justify-center">
@@ -129,12 +127,13 @@
 
   <script>
     let currentUserId = "";
-    // วาง Web App URL ตัวจริงของคุณลงไปตรงนี้
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec";
 
     window.onload = async function() {
       try {
-        await liff.init({ liffId: "YOUR_PICKACARD_LIFF_ID" }); // ⚠️ ใส่ LIFF ID ใหม่ของหน้า Pick a Card 
+        // 🚀 อัปเดต LIFF ID ของคุณที่นี่
+        await liff.init({ liffId: "2007499712-EtMhu4c2" }); 
+        
         if (liff.isLoggedIn()) {
           const profile = await liff.getProfile();
           currentUserId = profile.userId;
@@ -143,12 +142,11 @@
         }
       } catch (err) {
         console.warn("ทดสอบในเบราว์เซอร์");
-        currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a"; // ID จำลองสำหรับเทส
+        currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a"; 
       }
     };
 
     function drawCard() {
-      // แอนิเมชันตอนกด: ซ่อนไพ่อื่นๆ และขึ้นสถานะโหลด
       document.querySelector('.flex.justify-center').style.opacity = '0.3';
       document.querySelector('.flex.justify-center').style.pointerEvents = 'none';
       document.getElementById('loading-text').classList.remove('hidden');
@@ -171,19 +169,17 @@
         });
     }
 
-    // ฟังก์ชันพาเข้าสู่หน้าเติมเงิน
     function showTopupGate(balance) {
       document.getElementById('intro-section').classList.add('hidden');
       document.getElementById('current-balance').innerText = balance.toLocaleString();
       document.getElementById('topup-section').classList.remove('hidden');
     }
 
-    // ฟังก์ชันส่งคำสั่งเติมเงินเข้าแชทและปิดหน้าต่าง
     function requestTopup(amount) {
       if (liff.isInClient()) {
         liff.sendMessages([{ type: 'text', text: 'เติมเงิน_' + amount }])
           .then(() => {
-            liff.closeWindow(); // ปิดหน้าจอให้ลูกค้าไปส่งสลิปในแชท
+            liff.closeWindow(); 
           }).catch((err) => {
             alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
           });
@@ -192,7 +188,6 @@
       }
     }
 
-    // ฟังก์ชันโชว์ไพ่ (3D Flip Animation)
     function showResult(cardData) {
       document.getElementById('intro-section').classList.add('hidden');
       document.getElementById('result-section').classList.remove('hidden');
@@ -201,7 +196,6 @@
       document.getElementById('res-meaning').innerText = cardData.meaning;
       document.getElementById('res-image').src = cardData.imgUrl;
 
-      // พลิกไพ่ 180 องศา โชว์ความขลัง
       setTimeout(() => {
         document.getElementById('card-inner').classList.add('rotate-y-180');
       }, 300);

@@ -32,7 +32,6 @@
         <p class="text-xs mt-1 text-amber-100">ลดราคาพิเศษสำหรับสินค้าและพิธีกรรมมงคล ด่วน! มีจำนวนจำกัด</p>
       </div>
       <div id="product-list" class="grid grid-cols-1 gap-3">
-        <!-- รายการสินค้าจะถูกโหลดผ่าน JavaScript อัตโนมัติ -->
         <div class="text-center py-10 text-slate-400 text-xs">กำลังโหลดรายการสินค้า...</div>
       </div>
     </div>
@@ -43,9 +42,6 @@
         <h2 class="font-bold text-sm text-purple-200">✨ วอลเปเปอร์เสริมดวงพญานาคราช</h2>
         <p class="text-xs text-purple-300 mt-1">รับฟรี! สำหรับสมาชิก หรือเลือกบูชาแบบพรีเมียม</p>
         <button onclick="claimFreeWallpaper()" class="mt-3 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-4 py-2 rounded-lg shadow">🎁 กดรับวอลเปเปอร์ฟรีเข้า LINE</button>
-      </div>
-      <div id="wallpaper-list" class="grid grid-cols-2 gap-3">
-        <!-- รายการวอลเปเปอร์ -->
       </div>
     </div>
 
@@ -68,9 +64,8 @@
     let cachedData = null;
 
     window.onload = async function() {
-      // เริ่มต้นเชื่อมต่อ LIFF (ใส่ LIFF ID ของคุณ หรือจำลอง UserID สำหรับทดสอบ)
       try {
-        await liff.init({ liffId: "YOUR_LIFF_ID" }); // เปลี่ยนเป็น LIFF ID ของคุณ
+        await liff.init({ liffId: "YOUR_LIFF_ID" }); // ใส่ LIFF ID ของคุณ
         if (!liff.isLoggedIn()) {
           liff.login();
           return;
@@ -78,16 +73,15 @@
         const profile = await liff.getProfile();
         loadAppData(profile.userId);
       } catch (err) {
-        console.warn("รันในโหมดทดสอบเบราว์เซอร์ภายนอก");
-        loadAppData("U8065e05dc54f0ddc3fb46e97492eb53a"); // ใช้ UserID จำลองจากชีตเดิมของคุณ
+        console.warn("โหมดทดสอบเบราว์เซอร์");
+        loadAppData("U8065e05dc54f0ddc3fb46e97492eb53a"); // ใช้ UserID จำลอง
       }
     };
 
     function loadAppData(userId) {
-      // เรียกข้อมูลจาก Google Apps Script Web App
-      const webAppUrl = "YOUR_GAS_WEB_APP_URL"; // แทนที่ด้วย URL ของ Web App หลังจาก Deploy
+      const webAppUrl = "YOUR_GAS_WEB_APP_URL"; // ใส่ URL Web App ของ Google Apps Script
       if (!webAppUrl.startsWith("https")) {
-        document.getElementById('user-welcome').innerText = "⚠️ กรุณาใส่ Web App URL ในโค้ด index.html";
+        document.getElementById('user-welcome').innerText = "⚠️ กรุณาใส่ Web App URL ในโค้ด";
         return;
       }
 
@@ -110,11 +104,9 @@
           <p><b>เบอร์โทร:</b> ${currentUser.phone}</p>
           <p><b>ยอดเงินคงเหลือ:</b> ${currentUser.balance} บาท</p>
           <p><b>สิทธิ์เปิดไพ่ฟรี:</b> ${currentUser.remainingFree} ครั้ง/เดือน</p>
-          <p><b>ที่อยู่:</b> ${currentUser.address}</p>
         `;
       }
 
-      // Render Products
       const prodContainer = document.getElementById('product-list');
       if (cachedData && cachedData.products) {
         prodContainer.innerHTML = cachedData.products.map(p => `
@@ -122,7 +114,7 @@
             <img src="${p.img}" class="w-16 h-16 object-cover rounded-lg bg-slate-700" alt="img">
             <div class="flex-1">
               <h3 class="font-bold text-xs text-white">${p.name}</h3>
-              <p class="text-xs text-amber-400 font-bold mt-1">${p.price} บาท ${p.hasCampaign ? '<span class="text-[10px] bg-red-600 text-white px-1 rounded">โปรเปิดตัว</span>' : ''}</p>
+              <p class="text-xs text-amber-400 font-bold mt-1">${p.price} บาท</p>
             </div>
             <button onclick="buyProduct('${p.id}')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-2 rounded-lg">สั่งซื้อ</button>
           </div>
@@ -140,25 +132,22 @@
     }
 
     function buyProduct(productId) {
-      if (!currentUser) return alert("กรุณารอสักครู่ ระบบกำลังโหลดข้อมูลสมาชิก");
-      if (confirm("ยืนยันการสั่งซื้อสินค้ารหัส " + productId + " ?")) {
-        // ส่งคำสั่งซื้อกลับไปที่ LINE Bot เพื่อออกบิล
-        liff.sendMessages([{ type: 'text', text: 'ยืนยันสั่งซื้อ_' + productId }])
-          .then(() => { alert("ส่งคำสั่งซื้อไปที่แชท LINE เรียบร้อยแล้ว!"); liff.closeWindow(); })
-          .catch(() => { alert("กรุณาส่งข้อความ 'ยืนยันสั่งซื้อ_" + productId + "' ในแชท LINE OA ของร้านครับ"); });
-      }
+      if (!currentUser) return alert("กำลังโหลดข้อมูล");
+      liff.sendMessages([{ type: 'text', text: 'ยืนยันสั่งซื้อ_' + productId }])
+        .then(() => { alert("ส่งคำสั่งซื้อไปที่แชท LINE แล้ว!"); liff.closeWindow(); })
+        .catch(() => { alert("กรุณาส่งข้อความ 'ยืนยันสั่งซื้อ_" + productId + "' ในแชท LINE"); });
     }
 
     function claimFreeWallpaper() {
       liff.sendMessages([{ type: 'text', text: 'รับวอลเปเปอร์ฟรี' }])
-        .then(() => { alert("ระบบส่งวอลเปเปอร์เข้าแชท LINE ให้แล้วครับ!"); liff.closeWindow(); })
-        .catch(() => { alert("กรุณาพิมพ์คำว่า 'รับวอลเปเปอร์ฟรี' ในแชท LINE OA ครับ"); });
+        .then(() => { alert("ส่งคำขอรับวอลเปเปอร์เข้า LINE แล้ว!"); liff.closeWindow(); })
+        .catch(() => { alert("กรุณาพิมพ์ 'รับวอลเปเปอร์ฟรี' ในแชท LINE"); });
     }
 
     function openUpdateChat() {
       liff.sendMessages([{ type: 'text', text: 'อัปเดตข้อมูล' }])
         .then(() => liff.closeWindow())
-        .catch(() => alert("กรุณาพิมพ์ 'อัปเดตข้อมูล' หรือ 'เติมเงิน' ในแชท LINE ครับ"));
+        .catch(() => alert("กรุณาพิมพ์ 'อัปเดตข้อมูล' ในแชท LINE"));
     }
   </script>
 </body>

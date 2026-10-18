@@ -26,6 +26,9 @@
     }
 
     .modal-box { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #d97706; border-radius: 4px; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
@@ -69,17 +72,20 @@
       </div>
     </div>
 
-    <!-- Quick Stats Grid -->
-    <div class="grid grid-cols-2 gap-3">
-      <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 p-4 rounded-2xl text-center shadow-lg">
-        <p class="text-[11px] text-slate-400 font-medium">สิทธิ์เปิดไพ่ฟรีเดือนนี้</p>
-        <p id="stat-free" class="text-2xl font-bold text-amber-400 mt-1">0 <span class="text-xs font-normal text-slate-400">ครั้ง</span></p>
+    <!-- Quick Stats Grid (เพิ่มแต้มสะสม) -->
+    <div class="grid grid-cols-3 gap-2.5">
+      <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 p-3 rounded-2xl text-center shadow-lg">
+        <p class="text-[10px] text-slate-400 font-medium">แต้มสะสม</p>
+        <p id="stat-points" class="text-lg font-bold text-amber-400 mt-1">0 <span class="text-[10px] font-normal text-slate-400">แต้ม</span></p>
       </div>
-      <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 p-4 rounded-2xl text-center shadow-lg">
-        <p class="text-[11px] text-slate-400 font-medium">สถานะบัญชี</p>
-        <p class="text-xs font-bold text-emerald-400 mt-2 flex items-center justify-center gap-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping absolute"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 relative"></span> ใช้งานปกติ
+      <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 p-3 rounded-2xl text-center shadow-lg">
+        <p class="text-[10px] text-slate-400 font-medium">สิทธิ์เปิดไพ่ฟรี</p>
+        <p id="stat-free" class="text-lg font-bold text-amber-400 mt-1">0 <span class="text-[10px] font-normal text-slate-400">ครั้ง</span></p>
+      </div>
+      <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 p-3 rounded-2xl text-center shadow-lg">
+        <p class="text-[10px] text-slate-400 font-medium">สถานะ</p>
+        <p class="text-xs font-bold text-emerald-400 mt-2 flex items-center justify-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ปกติ
         </p>
       </div>
     </div>
@@ -109,15 +115,46 @@
 
     <!-- Action Buttons -->
     <div class="space-y-2.5 pt-1">
-      <button onclick="openEditModal()" class="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 text-xs font-bold py-3.5 px-4 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2">
+      <button onclick="openHistoryModal()" class="w-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-amber-400 text-xs font-bold py-3 px-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
+        <span>📜</span> ประวัติการใช้บริการ & แต้มสะสม
+      </button>
+      <button onclick="openEditModal()" class="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 text-xs font-bold py-3.5 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2">
         <span>✏️</span> แก้ไขข้อมูลส่วนตัว
       </button>
-      <button onclick="openTopupModal()" class="w-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-amber-300 text-xs font-semibold py-3 px-4 rounded-2xl shadow-md transition-all transform active:scale-95 flex items-center justify-center gap-2">
+      <button onclick="openTopupModal()" class="w-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-amber-300 text-xs font-semibold py-3 px-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
         <span>💎</span> เติมเงิน Wallet (สแกน QR / คัดลอกเลขบัญชี)
       </button>
     </div>
 
   </main>
+
+  <!-- History & Points Modal (ประวัติการใช้บริการ) -->
+  <div id="history-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 opacity-0 pointer-events-none">
+    <div id="history-content" class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl modal-box scale-95 opacity-0">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-amber-400">📜 ประวัติการใช้บริการ</h3>
+        <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-white text-sm font-bold w-7 h-7 rounded-full bg-slate-800/80 flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl text-center">
+        <p class="text-[11px] text-slate-300">แต้มสะสมปัจจุบันของคุณ (20 บาท = 1 แต้ม)</p>
+        <p id="modal-points" class="text-2xl font-extrabold text-amber-400 mt-1">0 แต้ม</p>
+      </div>
+
+      <div class="space-y-2 max-h-60 overflow-y-auto pr-1" id="history-list">
+        <!-- รายการประวัติจะถูกเรนเดอร์ตรงนี้ -->
+        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-xs flex justify-between items-center">
+          <div>
+            <p class="font-bold text-white">กำลังโหลดประวัติ...</p>
+            <p class="text-[10px] text-slate-400">-</p>
+          </div>
+          <span class="text-amber-400 font-bold">0 ฿</span>
+        </div>
+      </div>
+
+      <button onclick="closeHistoryModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-3 rounded-xl transition">ปิดหน้าต่าง</button>
+    </div>
+  </div>
 
   <!-- Edit Profile Modal -->
   <div id="edit-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 opacity-0 pointer-events-none">
@@ -153,7 +190,7 @@
     </div>
   </div>
 
-  <!-- Topup Wallet Modal (พร้อม QR Code และปุ่ม Copy เลขบัญชี) -->
+  <!-- Topup Wallet Modal -->
   <div id="topup-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 opacity-0 pointer-events-none">
     <div id="topup-content" class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl modal-box scale-95 opacity-0 text-center">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -161,14 +198,13 @@
         <button onclick="closeTopupModal()" class="text-slate-400 hover:text-white text-sm font-bold w-7 h-7 rounded-full bg-slate-800/80 flex items-center justify-center">✕</button>
       </div>
 
-      <!-- QR Code สำหรับสแกนโอน -->
       <div class="bg-white p-3 rounded-2xl inline-block shadow-inner">
         <img id="qr-img" src="https://placehold.co/200x200.png?text=QR+Code" alt="QR PromptPay" class="w-40 h-40 object-cover mx-auto rounded-lg">
       </div>
 
       <div class="space-y-1 text-xs bg-slate-950/60 p-3 rounded-xl border border-slate-800/80 text-left">
         <p class="text-slate-400">ธนาคาร: <span id="bank-name" class="text-white font-medium">กสิกรไทย</span></p>
-        <p class="text-slate-400">ชื่อบัญชี: <span id="bank-accname" class="text-white font-medium">วินทร์ทรัพย์나คราช</span></p>
+        <p class="text-slate-400">ชื่อบัญชี: <span id="bank-accname" class="text-white font-medium">วินทร์ทรัพย์นาคราช</span></p>
         <div class="flex justify-between items-center pt-1">
           <span class="text-slate-400">เลขบัญชี: <strong id="bank-accno" class="text-amber-400 font-mono">123-4-56789-0</strong></span>
           <button onclick="copyAccNo()" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-[11px] font-bold px-2.5 py-1 rounded-lg transition">📋 คัดลอก</button>
@@ -176,7 +212,7 @@
       </div>
 
       <p class="text-[11px] text-slate-400 leading-relaxed">
-        💡 โอนเงินผ่านแอปธนาคารแล้ว ส่งสลิปโอนเงินเข้ามาในแชท <strong>LINE OA ของร้าน</strong> เพื่อให้ระบบตรวจสอบและเติมเครดิตเข้ากระเป๋าอัตโนมัติทันทีครับ
+        💡 โอนเงินผ่านแอปธนาคารแล้ว ส่งสลิปโอนเงินเข้ามาในแชท <strong>LINE OA ของร้าน</strong> เพื่อให้ระบบตรวจสอบและเติมเครดิตอัตโนมัติทันทีครับ
       </p>
 
       <button onclick="closeTopupModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-3 rounded-xl transition">ปิดหน้าต่าง</button>
@@ -191,12 +227,13 @@
   <!-- Script Logic -->
   <script>
     let currentUser = null;
+    let currentHistory = [];
     let currentUserId = "";
     let WEB_APP_URL = ""; 
 
     window.onload = async function() {
       try {
-        await liff.init({ liffId: "2007499712-J15McRGz" }); // LIFF ID ของคุณ
+        await liff.init({ liffId: "2007499712-J15McRGz" });
         if (!liff.isLoggedIn()) {
           liff.login();
           return;
@@ -223,6 +260,9 @@
               currentUser = data.member;
               renderMemberCard();
             }
+            if (data.history) {
+              currentHistory = data.history;
+            }
           }
         })
         .catch(err => console.error("API Error: ", err));
@@ -233,12 +273,50 @@
       document.getElementById('card-name').innerText = currentUser.name;
       document.getElementById('card-code').innerText = currentUser.memberCode;
       document.getElementById('card-balance').innerHTML = currentUser.balance.toLocaleString() + ' <span class="text-xs font-normal text-slate-300">฿</span>';
-      document.getElementById('stat-free').innerHTML = currentUser.remainingFree + ' <span class="text-xs font-normal text-slate-400">ครั้ง</span>';
+      document.getElementById('stat-free').innerHTML = currentUser.remainingFree + ' <span class="text-[10px] font-normal text-slate-400">ครั้ง</span>';
+      document.getElementById('stat-points').innerHTML = currentUser.points.toLocaleString() + ' <span class="text-[10px] font-normal text-slate-400">แต้ม</span>';
       
       document.getElementById('info-phone').innerText = currentUser.phone || "-";
       document.getElementById('info-dob').innerText = currentUser.dob || "-";
       document.getElementById('info-address').innerText = currentUser.address || "-";
       document.getElementById('info-address').title = currentUser.address || "-";
+    }
+
+    // Modal Control: History & Points
+    function openHistoryModal() {
+      if (!currentUser) return;
+      document.getElementById('modal-points').innerText = currentUser.points.toLocaleString() + " แต้ม";
+      
+      const listContainer = document.getElementById('history-list');
+      if (currentHistory && currentHistory.length > 0) {
+        listContainer.innerHTML = currentHistory.map(h => `
+          <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-xs flex justify-between items-center">
+            <div>
+              <p class="font-bold text-white">${h.detail}</p>
+              <p class="text-[10px] text-slate-400">${h.date}</p>
+            </div>
+            <span class="text-amber-400 font-bold">${h.amount > 0 ? h.amount.toLocaleString() + ' ฿' : 'ฟรี'}</span>
+          </div>
+        `).join('');
+      } else {
+        listContainer.innerHTML = `<p class="text-center text-xs text-slate-500 py-4">ยังไม่มีประวัติการใช้บริการ</p>`;
+      }
+
+      const modal = document.getElementById('history-modal');
+      const content = document.getElementById('history-content');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+    }
+
+    function closeHistoryModal() {
+      const modal = document.getElementById('history-modal');
+      const content = document.getElementById('history-content');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
     // Modal Control: Edit Profile
@@ -251,6 +329,7 @@
       
       const modal = document.getElementById('edit-modal');
       const content = document.getElementById('edit-content');
+      modal.classList.0 && modal.classList.remove('hidden'); // safe check
       modal.classList.remove('hidden');
       setTimeout(() => {
         modal.classList.remove('opacity-0', 'pointer-events-none');

@@ -25,8 +25,7 @@
       transform: rotate(25deg); animation: shine 6s infinite linear;
     }
 
-    #edit-modal { transition: opacity 0.3s ease, backdrop-filter 0.3s ease; }
-    #modal-content { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
+    .modal-box { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
@@ -113,8 +112,8 @@
       <button onclick="openEditModal()" class="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 text-xs font-bold py-3.5 px-4 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2">
         <span>✏️</span> แก้ไขข้อมูลส่วนตัว
       </button>
-      <button onclick="openTopupChat()" class="w-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-amber-300 text-xs font-semibold py-3 px-4 rounded-2xl shadow-md transition-all transform active:scale-95 flex items-center justify-center gap-2">
-        <span>💎</span> เติมเงิน Wallet (ผ่านแชท LINE)
+      <button onclick="openTopupModal()" class="w-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-amber-300 text-xs font-semibold py-3 px-4 rounded-2xl shadow-md transition-all transform active:scale-95 flex items-center justify-center gap-2">
+        <span>💎</span> เติมเงิน Wallet (สแกน QR / คัดลอกเลขบัญชี)
       </button>
     </div>
 
@@ -122,7 +121,7 @@
 
   <!-- Edit Profile Modal -->
   <div id="edit-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 opacity-0 pointer-events-none">
-    <div id="modal-content" class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl transform scale-95 opacity-0">
+    <div id="edit-content" class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl modal-box scale-95 opacity-0">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <h3 class="text-sm font-bold text-amber-400">แก้ไขข้อมูลส่วนตัวสมาชิก</h3>
         <button onclick="closeEditModal()" class="text-slate-400 hover:text-white text-sm font-bold w-7 h-7 rounded-full bg-slate-800/80 flex items-center justify-center">✕</button>
@@ -151,6 +150,36 @@
           <button type="submit" id="btn-save" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 py-3 rounded-xl font-bold shadow-lg">บันทึกข้อมูล</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Topup Wallet Modal (พร้อม QR Code และปุ่ม Copy เลขบัญชี) -->
+  <div id="topup-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 opacity-0 pointer-events-none">
+    <div id="topup-content" class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl modal-box scale-95 opacity-0 text-center">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-amber-400">ช่องทางเติมเงิน Wallet</h3>
+        <button onclick="closeTopupModal()" class="text-slate-400 hover:text-white text-sm font-bold w-7 h-7 rounded-full bg-slate-800/80 flex items-center justify-center">✕</button>
+      </div>
+
+      <!-- QR Code สำหรับสแกนโอน -->
+      <div class="bg-white p-3 rounded-2xl inline-block shadow-inner">
+        <img id="qr-img" src="https://placehold.co/200x200.png?text=QR+Code" alt="QR PromptPay" class="w-40 h-40 object-cover mx-auto rounded-lg">
+      </div>
+
+      <div class="space-y-1 text-xs bg-slate-950/60 p-3 rounded-xl border border-slate-800/80 text-left">
+        <p class="text-slate-400">ธนาคาร: <span id="bank-name" class="text-white font-medium">กสิกรไทย</span></p>
+        <p class="text-slate-400">ชื่อบัญชี: <span id="bank-accname" class="text-white font-medium">วินทร์ทรัพย์나คราช</span></p>
+        <div class="flex justify-between items-center pt-1">
+          <span class="text-slate-400">เลขบัญชี: <strong id="bank-accno" class="text-amber-400 font-mono">123-4-56789-0</strong></span>
+          <button onclick="copyAccNo()" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-[11px] font-bold px-2.5 py-1 rounded-lg transition">📋 คัดลอก</button>
+        </div>
+      </div>
+
+      <p class="text-[11px] text-slate-400 leading-relaxed">
+        💡 โอนเงินผ่านแอปธนาคารแล้ว ส่งสลิปโอนเงินเข้ามาในแชท <strong>LINE OA ของร้าน</strong> เพื่อให้ระบบตรวจสอบและเติมเครดิตเข้ากระเป๋าอัตโนมัติทันทีครับ
+      </p>
+
+      <button onclick="closeTopupModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-3 rounded-xl transition">ปิดหน้าต่าง</button>
     </div>
   </div>
 
@@ -183,7 +212,7 @@
     };
 
     function fetchAppData(userId) {
-      WEB_APP_URL = "https://script.google.com/macros/s/AKfycbydYb9anSgyUFUMYBGQr2d6o7b9mWHixBnm93HQ1-ScPErQ-_8LuWcSVC-EI-YrHbd2Pw/exec"; // <--- แทนที่ด้วย Web App URL ของคุณ
+      WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz..."; // <--- แทนที่ด้วย Web App URL ของคุณ
 
       fetch(WEB_APP_URL + "?action=api_init&userId=" + userId)
         .then(res => res.json())
@@ -212,6 +241,7 @@
       document.getElementById('info-address').title = currentUser.address || "-";
     }
 
+    // Modal Control: Edit Profile
     function openEditModal() {
       if (!currentUser) return;
       document.getElementById('input-name').value = currentUser.name === "อนุบาล" ? "" : currentUser.name;
@@ -220,7 +250,7 @@
       document.getElementById('input-address').value = currentUser.address === "-" ? "" : currentUser.address;
       
       const modal = document.getElementById('edit-modal');
-      const content = document.getElementById('modal-content');
+      const content = document.getElementById('edit-content');
       modal.classList.remove('hidden');
       setTimeout(() => {
         modal.classList.remove('opacity-0', 'pointer-events-none');
@@ -230,10 +260,38 @@
 
     function closeEditModal() {
       const modal = document.getElementById('edit-modal');
-      const content = document.getElementById('modal-content');
+      const content = document.getElementById('edit-content');
       modal.classList.add('opacity-0', 'pointer-events-none');
       content.classList.add('scale-95', 'opacity-0');
       setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    }
+
+    // Modal Control: Topup Wallet & Copy Account Number
+    function openTopupModal() {
+      const modal = document.getElementById('topup-modal');
+      const content = document.getElementById('topup-content');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+    }
+
+    function closeTopupModal() {
+      const modal = document.getElementById('topup-modal');
+      const content = document.getElementById('topup-content');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    }
+
+    function copyAccNo() {
+      const accNo = document.getElementById('bank-accno').innerText;
+      navigator.clipboard.writeText(accNo).then(() => {
+        alert("📋 คัดลอกเลขบัญชี " + accNo + " เรียบร้อยแล้ว!");
+      }).catch(err => {
+        alert("ไม่สามารถคัดลอกอัตโนมัติได้ กรุณาจดเลขบัญชีแทนครับ");
+      });
     }
 
     function submitEditForm(event) {
@@ -257,23 +315,21 @@
       })
       .then(res => res.json())
       .then(result => {
-        alert("✅ บันทึกข้อมูลส่วนตัวเรียบร้อยแล้วครับ!");
-        closeEditModal();
-        fetchAppData(currentUserId);
+        if(result.status === "success") {
+          alert("✅ บันทึกข้อมูลส่วนตัวเรียบร้อยแล้วครับ!");
+          closeEditModal();
+          fetchAppData(currentUserId);
+        } else {
+          alert("⚠️ " + (result.message || "เกิดข้อผิดพลาด"));
+        }
         btnSave.innerText = "บันทึกข้อมูล";
         btnSave.disabled = false;
       })
       .catch(err => {
-        alert("❌ เกิดข้อผิดพลาดในการบันทึก กรุณาลองใหม่อีกครั้ง");
+        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
         btnSave.innerText = "บันทึกข้อมูล";
         btnSave.disabled = false;
       });
-    }
-
-    function openTopupChat() {
-      liff.sendMessages([{ type: 'text', text: 'เติมเงิน' }])
-        .then(() => liff.closeWindow())
-        .catch(() => alert("กรุณาพิมพ์คำว่า 'เติมเงิน' ในแชท LINE OA ของร้านครับ"));
     }
   </script>
 </body>

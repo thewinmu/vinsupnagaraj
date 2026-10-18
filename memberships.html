@@ -7,6 +7,199 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    let currentUser = null;
+    let currentHistory = [];
+    let currentUserId = "";
+    
+    // URL Web App ของคุณ
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec"; 
+
+    window.onload = async function() {
+      try {
+        await liff.init({ liffId: "2007499712-J15McRGz" });
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
+        const profile = await liff.getProfile();
+        currentUserId = profile.userId;
+        fetchAppData(currentUserId);
+      } catch (err) {
+        console.warn("รันในโหมดทดสอบเบราว์เซอร์");
+        currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a";
+        fetchAppData(currentUserId);
+      }
+    };
+
+    function fetchAppData(userId) {
+      fetch(WEB_APP_URL + "?action=api_init&userId=" + userId)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.status === "success") {
+            if (data.member) {
+              currentUser = data.member;
+              renderMemberCard();
+            }
+            if (data.history) {
+              currentHistory = data.history;
+            }
+            
+            // 🛠️ อัปเดต: ระบบป้องกันจอดำ/ค้าง ถ้าหลังบ้านไม่ส่ง bankInfo มา ให้ใช้ค่านี้แทนทันที
+            const bankName = (data.bankInfo && data.bankInfo.bankName) ? data.bankInfo.bankName : "ธนาคารกสิกรไทย";
+            const accName = (data.bankInfo && data.bankInfo.accName) ? data.bankInfo.accName : "วินทร์ทรัพย์นาคราช";
+            const accNo = (data.bankInfo && data.bankInfo.accNo) ? data.bankInfo.accNo : "123-4-56789-0";
+            const qrUrl = (data.bankInfo && data.bankInfo.qrUrl) ? data.bankInfo.qrUrl : "https://placehold.co/200x200.png?text=QR+Code";
+
+            document.getElementById('bank-name').innerText = bankName;
+            document.getElementById('bank-accname').innerText = accName;
+            document.getElementById('bank-accno').innerText = accNo;
+            document.getElementById('bank-qr').src = qrUrl;
+          }
+        })
+        .catch(err => console.error("API Error: ", err));
+    }
+
+    function renderMemberCard() {
+      if (!currentUser) return;
+      document.getElementById('card-name').innerText = currentUser.name;
+      document.getElementById('card-code').innerText = currentUser.memberCode;
+      document.getElementById('card-balance').innerHTML = currentUser.balance.toLocaleString() + ' <span class="text-xs font-normal text-slate-300">฿</span>';
+      document.getElementById('stat-free').innerText = currentUser.remainingFree;
+      document.getElementById('stat-points').innerText = currentUser.points.toLocaleString();
+      
+      document.getElementById('info-phone').innerText = currentUser.phone || "-";
+      document.getElementById('info-dob').innerText = currentUser.dob || "-";
+      document.getElementById('info-address').innerText = currentUser.address || "-";
+      document.getElementById('info-address').title = currentUser.address || "-";
+    }
+
+    function openHistoryModal() {
+      if (!currentUser) return;
+      document.getElementById('modal-points').innerText = currentUser.points.toLocaleString() + " แต้ม";
+      
+      const listContainer = document.getElementById('history-list');
+      if (currentHistory && currentHistory.length > 0) {
+        listContainer.innerHTML = currentHistory.map(h => `
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs flex justify-between items-center">
+            <div>
+              <p class="font-bold text-slate-800">${h.detail}</p>
+              <p class="text-[10px] text-slate-400">${h.date}</p>
+            </div>
+            <span class="text-amber-600 font-bold">${h.amount > 0 ? h.amount.toLocaleString() + ' ฿' : 'ฟรี'}</span>
+          </div>
+        `).join('');
+      } else {
+        listContainer.innerHTML = `<p class="text-center text-xs text-slate-400 py-4">ยังไม่มีประวัติการใช้บริการ</p>`;
+      }
+
+      const modal = document.getElementById('history-modal');
+      const content = document.getElementById('history-content');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+    }
+
+    function closeHistoryModal() {
+      const modal = document.getElementById('history-modal');
+      const content = document.getElementById('history-content');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    }
+
+    function openEditModal() {
+      if (!currentUser) return;
+      document.getElementById('input-name').value = currentUser.name === "อนุบาล" ? "" : currentUser.name;
+      document.getElementById('input-phone').value = currentUser.phone === "-" ? "" : currentUser.phone;
+      document.getElementById('input-dob').value = currentUser.dob === "-" ? "" : currentUser.dob;
+      document.getElementById('input-address').value = currentUser.address === "-" ? "" : currentUser.address;
+      
+      const modal = document.getElementById('edit-modal');
+      const content = document.getElementById('edit-content');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+    }
+
+    function closeEditModal() {
+      const modal = document.getElementById('edit-modal');
+      const content = document.getElementById('edit-content');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    }
+
+    function openTopupModal() {
+      const modal = document.getElementById('topup-modal');
+      const content = document.getElementById('topup-content');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+    }
+
+    function closeTopupModal() {
+      const modal = document.getElementById('topup-modal');
+      const content = document.getElementById('topup-content');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    }
+
+    // ฟังก์ชันคัดลอกจะเอาเฉพาะตัวเลข
+    function copyAccNo() {
+      const accNo = document.getElementById('bank-accno').innerText.trim();
+      navigator.clipboard.writeText(accNo).then(() => {
+        alert("📋 คัดลอกเลขบัญชี " + accNo + " เรียบร้อยแล้ว!");
+      }).catch(err => {
+        alert("ไม่สามารถคัดลอกอัตโนมัติได้ กรุณาจดเลขบัญชีแทนครับ");
+      });
+    }
+
+    function submitEditForm(event) {
+      event.preventDefault();
+      const btnSave = document.getElementById('btn-save');
+      btnSave.innerText = "กำลังบันทึก...";
+      btnSave.disabled = true;
+
+      const payload = {
+        liffAction: "UPDATE_MEMBER",
+        userId: currentUserId,
+        name: document.getElementById('input-name').value,
+        phone: document.getElementById('input-phone').value,
+        dob: document.getElementById('input-dob').value,
+        address: document.getElementById('input-address').value
+      };
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(result => {
+        if(result.status === "success") {
+          alert("✅ บันทึกข้อมูลส่วนตัวเรียบร้อยแล้วครับ!");
+          closeEditModal();
+          fetchAppData(currentUserId);
+        } else {
+          alert("⚠️ " + (result.message || "เกิดข้อผิดพลาด"));
+        }
+        btnSave.innerText = "บันทึกข้อมูล";
+        btnSave.disabled = false;
+      })
+      .catch(err => {
+        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
+        btnSave.innerText = "บันทึกข้อมูล";
+        btnSave.disabled = false;
+      });
+    }
+  </script>
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }

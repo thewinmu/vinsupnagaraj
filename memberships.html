@@ -13,7 +13,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between antialiased">
 
-  <!-- Header พรีเมี่ยม -->
+  <!-- Header -->
   <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 p-4 text-center sticky top-0 z-50 shadow-sm">
     <p class="text-[10px] tracking-widest text-amber-600 uppercase font-bold">The Win Mu Exclusive</p>
     <h1 class="text-base font-bold text-slate-800">บัตรสมาชิกดิจิทัล</h1>
@@ -22,7 +22,7 @@
   <!-- Main Container -->
   <main class="max-w-md mx-auto p-4 w-full space-y-4 my-auto">
     
-    <!-- Digital Membership Card (บัตรสมาชิกพรีเมี่ยม ธีมสว่าง ขอบทอง) -->
+    <!-- Digital Membership Card -->
     <div class="relative bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 border border-amber-400/40 rounded-2xl p-6 shadow-xl overflow-hidden text-white">
       <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-amber-400/10 rounded-full blur-3xl"></div>
       
@@ -85,7 +85,7 @@
 
     <!-- Action Buttons -->
     <div class="space-y-2.5 pt-1">
-      <button onclick="openEditModal()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold py-3 px-4 rounded-xl shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
+      <button onclick="openEditModal()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
         <span>✏️</span> แก้ไขข้อมูลส่วนตัว
       </button>
       <button onclick="openTopupChat()" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
@@ -138,12 +138,11 @@
   <script>
     let currentUser = null;
     let currentUserId = "";
-    // ดึงค่า Web App URL จาก Script Properties ผ่าน API หรือใส่สำรองไว้
     let WEB_APP_URL = ""; 
 
     window.onload = async function() {
       try {
-        await liff.init({ liffId: "2007499712-J15McRGz" }); // LIFF ID ของหน้าสมาชิกคุณ
+        await liff.init({ liffId: "2007499712-J15McRGz" }); // LIFF ID ของคุณ
         if (!liff.isLoggedIn()) {
           liff.login();
           return;
@@ -159,14 +158,13 @@
     };
 
     function fetchAppData(userId) {
-      // ใช้สคริปต์กลางหรือใส่ URL ของ Apps Script ตรงนี้
-      WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz..."; // <--- วาง URL Web App ของคุณที่นี่ (ใส่ครั้งเดียวจบ ไม่ต้องแก้อีกหากดึงผ่าน Script Properties)
+      WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz..."; // <--- แทนที่ด้วย Web App URL ของคุณ
 
       fetch(WEB_APP_URL + "?action=api_init&userId=" + userId)
         .then(res => res.json())
         .then(data => {
           if (data) {
-            if (data.webAppUrl) WEB_APP_URL = data.webAppUrl; // ดึงจาก Properties อัตโนมัติ
+            if (data.webAppUrl) WEB_APP_URL = data.webAppUrl;
             if (data.member) {
               currentUser = data.member;
               renderMemberCard();

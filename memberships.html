@@ -113,7 +113,7 @@
       <button onclick="openEditModal()" class="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white text-xs font-bold py-3.5 px-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
         <span>✏️</span> แก้ไขข้อมูลส่วนตัว
       </button>
-      <!-- ปุ่มเติมเงิน (ส่งข้อความและปิดหน้าจอ) -->
+      <!-- ปุ่มเติมเงิน (ลบ Modal ออก และเรียกใช้งานฟังก์ชันปิดหน้าจอแทน) -->
       <button onclick="sendTopupMessage()" class="w-full bg-slate-900 hover:bg-slate-800 border border-slate-900 text-amber-400 text-xs font-semibold py-3 px-4 rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2">
         <span>💎</span> เติมเงิน Wallet
       </button>
@@ -297,21 +297,20 @@
       setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
-    // 🚀 ฟังก์ชันสำหรับส่งคำว่า "เติมเงิน" เข้าแชท และปิดหน้าต่าง LIFF
+    // 🚀 ฟังก์ชันสำหรับส่งคำว่า "เติมเงิน" เข้าแชท และปิดหน้าต่าง LIFF ทันที
     function sendTopupMessage() {
       if (liff.isInClient()) {
         liff.sendMessages([{
           type: 'text',
           text: 'เติมเงิน'
         }]).then(() => {
-          liff.closeWindow();
+          liff.closeWindow(); // ปิดหน้าจออัตโนมัติ
         }).catch((err) => {
           console.error("Error sending message: ", err);
           alert("เกิดข้อผิดพลาดในการส่งข้อความ กรุณาลองใหม่ครับ");
         });
       } else {
-        // กรณีที่ไม่ได้เปิดผ่านแอป LINE (เช่น เปิดบนเบราว์เซอร์คอมพิวเตอร์)
-        alert("กรุณาพิมพ์คำว่า 'เติมเงิน' ในแชท LINE ของร้านครับ (ฟังก์ชันนี้ใช้ได้เฉพาะในแอป LINE)");
+        alert("กรุณาพิมพ์คำว่า 'เติมเงิน' ในแชท LINE ของร้านครับ (ฟังก์ชันนี้ใช้ได้เฉพาะเมื่อเปิดในแอป LINE)");
       }
     }
 
@@ -351,27 +350,6 @@
         btnSave.innerText = "บันทึกข้อมูล";
         btnSave.disabled = false;
       });
-    }
-
-    // 🚀 ฟังก์ชันสำหรับส่งคำว่า "เติมเงิน" เข้าแชท และปิดหน้าต่าง LIFF
-    function sendTopupMessage() {
-      // ตรวจสอบว่าเปิดผ่านแอป LINE อยู่หรือไม่
-      if (liff.isInClient()) {
-        // ส่งข้อความเข้าแชทในนามผู้ใช้
-        liff.sendMessages([{
-          type: 'text',
-          text: 'เติมเงิน'
-        }]).then(() => {
-          // เมื่อส่งข้อความสำเร็จ ให้ปิดหน้าต่าง LIFF ทันที
-          liff.closeWindow();
-        }).catch((err) => {
-          console.error("Error sending message: ", err);
-          alert("เกิดข้อผิดพลาดในการส่งข้อความ กรุณาลองใหม่ครับ");
-        });
-      } else {
-        // กรณีที่ลูกค้าเปิดผ่านเบราว์เซอร์คอมพิวเตอร์ (ไม่ได้เปิดในแอป LINE)
-        alert("กรุณาพิมพ์คำว่า 'เติมเงิน' ในแชท LINE ของร้านครับ (ปุ่มนี้ทำงานได้สมบูรณ์เมื่อเปิดผ่านแอป LINE บนมือถือเท่านั้น)");
-      }
     }
   </script>
 </body>

@@ -1,6 +1,6 @@
 const SYSTEM_CONFIG = {
     // 🔗 URL ของ Google Apps Script (เอาไว้ให้เว็บคุยกับฐานข้อมูล)
-    WEB_APP_URL: "hhttps://script.google.com/macros/s/AKfycbwnrWpJNYY_JXQSpWDwP2GhG9jgLWZifwz8NKKRu68E4KHO5YU8oZMLvr-Xr9dVwgme3w/exec",
+    WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwiFVI4CCl1eGEqD9KkNnmdoNE9y8ZO0llllb-Nzk18Bzx9sPhlU64b4sNY0BEXrnFidg/exec",
     
     // 🆔 LIFF ID สำหรับแต่ละหน้าเว็บ
     LIFF: {

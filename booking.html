@@ -193,7 +193,6 @@
     function submitBooking() {
       bookingData.bookingDate = document.getElementById('booking-date').value;
       if(!bookingData.bookingDate) {
-        alert("กรุณาเลือกวันที่ต้องการจองคิวก่อนครับ");
         return;
       }
       
@@ -203,20 +202,15 @@
         .then(res => res.json())
         .then(data => {
           if (data.status === "success") {
-            alert("✅ บันทึกการจองสำเร็จ! ระบบกำลังส่งสรุปยอดโอนเงินไปที่แชท LINE ของท่าน...");
-            // ปิดหน้า LIFF อัตโนมัติทันทีหลังยืนยันการจองเหมือนระบบสั่งซื้อสินค้า
+            // ปิดหน้า LIFF ทันทีอย่างไร้รอยต่อ ไม่มี Popup แจ้งเตือน เพื่อให้ลูกค้ากลับสู่แชทมารับ Flex สรุปยอดโอน
             if (liff.isInClient()) {
               liff.closeWindow();
             } else {
-              window.location.reload();
+              window.close();
             }
-          } else { 
-            alert("❌ เกิดข้อผิดพลาด: " + data.message); 
           }
         })
-        .catch(err => {
-          alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
-        });
+        .catch(err => {});
     }
   </script>
 </body>

@@ -166,7 +166,7 @@
 
       <div class="grid grid-cols-2 gap-3">
         <!-- 1. การงาน -->
-        <button onclick="pickCategory('การงาน')" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
+        <button onclick="pickCategory('การงาน', false)" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
           <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-2xl mb-2 shadow-inner">
             💼
           </div>
@@ -175,7 +175,7 @@
         </button>
 
         <!-- 2. การเงิน -->
-        <button onclick="pickCategory('การเงิน')" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
+        <button onclick="pickCategory('การเงิน', false)" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
           <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-2xl mb-2 shadow-inner">
             💰
           </div>
@@ -184,16 +184,16 @@
         </button>
 
         <!-- 3. ความรัก -->
-        <button onclick="pickCategory('ความรัก')" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
+        <button onclick="pickCategory('ความรัก', false)" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
           <div class="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-2xl mb-2 shadow-inner">
-            💚
+            ❤️
           </div>
           <div class="text-sm font-black text-emerald-950">ความรัก</div>
           <div class="text-[10px] text-amber-700 font-semibold mt-0.5">คนโสด คนมีคู่ ความสัมพันธ์</div>
         </button>
 
         <!-- 4. สุขภาพ -->
-        <button onclick="pickCategory('สุขภาพ')" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
+        <button onclick="pickCategory('สุขภาพ', false)" class="luxury-card p-4 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
           <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-2xl mb-2 shadow-inner">
             🌿
           </div>
@@ -202,15 +202,15 @@
         </button>
       </div>
 
-      <!-- 5. Cards Of the Day -->
-      <button onclick="pickCategory('Cards Of the Day')" class="luxury-card w-full p-4 rounded-3xl flex items-center justify-between text-left transition active:scale-98 border-2 border-amber-400/80 bg-gradient-to-r from-white via-amber-50/30 to-emerald-50/30">
+      <!-- 5. Card Of the Days (แก้ไขชื่อเรียบร้อย) -->
+      <button onclick="pickCategory('Card Of the Days', false)" class="luxury-card w-full p-4 rounded-3xl flex items-center justify-between text-left transition active:scale-98 border-2 border-amber-400/80 bg-gradient-to-r from-white via-amber-50/30 to-emerald-50/30">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-2xl bg-amber-100/60 border border-amber-300 flex items-center justify-center text-2xl shadow-inner">
             🔮
           </div>
           <div>
             <div class="text-sm font-black text-emerald-950 flex items-center gap-1.5">
-              <span>Cards Of the Day</span>
+              <span>Card Of the Days</span>
               <span class="bg-amber-400 text-emerald-950 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full">ประจำวัน</span>
             </div>
             <div class="text-[10px] text-amber-800 font-medium mt-0.5">สาส์นนำทางและพลังงานมงคลวันนี้</div>
@@ -219,11 +219,11 @@
         <div class="text-amber-600 font-black text-lg pr-1">➔</div>
       </button>
 
-      <!-- ส่วนพิเศษ: สาส์นครู (แสดงเฉพาะภาพไพ่สาร์นปู่) -->
+      <!-- ส่วนแยกพิเศษ: สาส์นครู (เฉพาะรูปภาพใน Drive เท่านั้น ไม่ยุ่งกับ Sheet) -->
       <div class="pt-3">
-        <button onclick="pickCategory('สาส์นครู')" class="w-full bg-emerald-950 text-amber-200 border border-amber-400 p-3.5 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold shadow-md active:scale-95 transition">
+        <button onclick="pickCategory('สาส์นครู', true)" class="w-full bg-emerald-950 text-amber-200 border border-amber-400 p-3.5 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold shadow-md active:scale-95 transition">
           <span>🐍</span>
-          <span>สาส์นครู (ชมพลังภาพไพ่สาร์นปู่เต็มสำรับ)</span>
+          <span>สาส์นครู (เปิดชมภาพสาร์นปู่จาก Drive ล้วนๆ)</span>
         </button>
       </div>
     </div>
@@ -249,7 +249,7 @@
           <div class="text-center">
             <div class="text-4xl mb-1 filter drop-shadow">🐍</div>
             <div class="text-[10px] font-black tracking-widest text-amber-300">วินทร์ทรัพย์นาคราช</div>
-            <div class="text-[8px] text-emerald-200 mt-1">✦ PICK A CARD ✦</div>
+            <div class="text-[8px] text-emerald-200 mt-1" id="deck-sub-badge">✦ PICK A CARD ✦</div>
           </div>
         </div>
       </div>
@@ -270,7 +270,7 @@
       <div class="text-center text-[10px] text-emerald-600 font-bold mt-1">⇄ เลื่อนแถวไพ่ไปมาเพื่อสัมผัสพลังงาน</div>
     </div>
 
-    <!-- STEP 4: ผลคำทำนาย (รองรับทั้งโหมดข้อความ + รูปภาพ และโหมดสาส์นครูภาพเดี่ยวเต็มจอ) -->
+    <!-- STEP 4: ผลคำทำนาย -->
     <div id="view-result" style="display: none;" class="py-2">
       <div class="card-3d-box relative w-72 h-[480px] mx-auto mb-6" id="result-flipper">
         <div class="card-3d-inner">
@@ -282,7 +282,7 @@
 
           <!-- หน้าไพ่ -->
           <div class="card-back-face p-3.5 flex flex-col justify-between text-left" id="card-result-container">
-            <!-- ส่วน A: โหมดสาส์นครู (แสดงเฉพาะภาพเต็มใบ) -->
+            <!-- ส่วน A: โหมดสาส์นครู (ภาพขนาดใหญ่เต็มใบ 100% ไม่มีกล่องข้อความทับ) -->
             <div id="mode-image-only" style="display: none;" class="w-full h-full flex flex-col justify-between">
               <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1">
                 <span>สาส์นครู • องค์นาคราช</span>
@@ -296,32 +296,23 @@
                 </div>
               </div>
               <div class="text-[9px] text-emerald-800 text-center font-bold pt-1">
-                ภาพสาส์นครูแท้จากมณฑลพิธีวินทร์ทรัพย์นาคราช
+                ภาพสาส์นครูแท้จากโฟลเดอร์บารมีองค์นาคราช
               </div>
             </div>
 
-            <!-- ส่วน B: โหมดข้อความคำทำนาย (การงาน, การเงิน, ความรัก, สุขภาพ, Cards Of the Day) -->
+            <!-- ส่วน B: โหมดคำทำนายจาก Sheet (การงาน, การเงิน, ความรัก, สุขภาพ, Card Of the Days) -->
             <div id="mode-text-card" style="display: none;" class="w-full h-full flex flex-col justify-between">
               <div>
-                <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1.5 pb-1 border-b border-amber-200">
+                <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-2 pb-1 border-b border-amber-200">
                   <span id="res-code">CARD --</span>
                   <span id="res-cat" class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">หมวด</span>
                 </div>
 
-                <!-- กรอบภาพสาร์นปู่ (ถ้ามี) -->
-                <div id="box-sub-img" class="w-full h-40 rounded-xl overflow-hidden border border-amber-300 mb-2.5 bg-emerald-950 flex items-center justify-center shadow-inner relative">
-                  <img id="res-img" src="" alt="ภาพไพ่" class="w-full h-full object-cover" style="display: none;" onload="this.style.display='block'; document.getElementById('res-loader').style.display='none';">
-                  <div id="res-loader" class="text-center text-amber-300 text-xs font-bold p-2">
-                    <div class="text-3xl mb-1 animate-pulse">🐍</div>
-                    กำลังอัญเชิญภาพ...
-                  </div>
-                </div>
-
                 <!-- Col C: CardName -->
-                <h2 id="res-title" class="text-sm font-black text-emerald-950 mb-1 leading-snug">-</h2>
+                <h2 id="res-title" class="text-base font-black text-emerald-950 mb-2 leading-snug border-b border-emerald-100 pb-1.5">-</h2>
 
-                <!-- Col E: Meaning -->
-                <div class="text-[11px] text-slate-700 font-normal leading-relaxed overflow-y-auto max-h-28 pr-1" id="res-meaning">
+                <!-- Col E: Meaning (กล่องอ่านข้อความคำทำนายเต็มตา) -->
+                <div class="text-xs text-slate-800 font-normal leading-relaxed overflow-y-auto max-h-72 pr-1 space-y-2" id="res-meaning">
                   กำลังอ่านคำทำนาย...
                 </div>
               </div>
@@ -355,6 +346,7 @@
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
     let selectedCat = "";
+    let isGuruMode = false;
     let cardsData = [];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -363,15 +355,23 @@
       }
     });
 
-    function pickCategory(catName) {
+    function pickCategory(catName, isGuru) {
       selectedCat = catName;
+      isGuruMode = isGuru;
       document.getElementById('category-badge').innerText = catName;
       document.getElementById('view-categories').style.display = 'none';
       document.getElementById('view-shuffle').style.display = 'block';
       document.getElementById('sub-title').innerText = "หมวด: " + catName;
+      document.getElementById('deck-sub-badge').innerText = isGuru ? "✦ สาส์นครู ✦" : "✦ PICK A CARD ✦";
 
-      // ส่งชื่อหมวดหมู่ไปกรองใน Column B แบบแม่นยำ
-      fetch(`${WEB_URL}?action=get_cards&category=${encodeURIComponent(catName)}`, {
+      let requestUrl = "";
+      if (isGuru) {
+        requestUrl = `${WEB_URL}?action=get_guru_cards`;
+      } else {
+        requestUrl = `${WEB_URL}?action=get_cards&category=${encodeURIComponent(catName)}`;
+      }
+
+      fetch(requestUrl, {
         method: "GET",
         mode: "cors",
         redirect: "follow"
@@ -382,7 +382,7 @@
           cardsData = res.cards;
         }
       })
-      .catch(e => console.warn("Fetch cards error:", e));
+      .catch(e => console.warn("Fetch error:", e));
     }
 
     function backToHub() {
@@ -423,8 +423,7 @@
       box.innerHTML = "";
       document.getElementById('view-select-card').style.display = 'block';
 
-      // แสดงจำนวนไพ่ตามที่กรองได้จาก Column B จริง
-      const total = cardsData.length > 0 ? cardsData.length : 15;
+      const total = cardsData.length > 0 ? cardsData.length : 12;
 
       for (let i = 0; i < total; i++) {
         let el = document.createElement('div');
@@ -444,16 +443,15 @@
       const flipper = document.getElementById('result-flipper');
       viewResult.style.display = 'block';
 
-      // ดึงไพ่ที่ตรงกับ Index ในชุดข้อมูลที่กรองมาแล้ว
       let card = (cardsData.length > 0 && cardsData[idx]) 
                  ? cardsData[idx] 
-                 : { id: String(idx + 1).padStart(2, '0'), category: selectedCat, name: "จิตแห่งแสงสว่าง", meaning: "สถานการณ์กำลังเปิดทาง ขอให้รักษาความตั้งใจจริง", imageUrl: "", isImageOnly: false };
+                 : { id: String(idx + 1).padStart(2, '0'), category: selectedCat, name: "จิตแห่งแสงสว่าง", meaning: "สถานการณ์กำลังเปิดทาง ขอให้รักษาความตั้งใจจริง", imageUrl: "", isGuruImage: isGuruMode };
 
       const modeImgOnly = document.getElementById('mode-image-only');
       const modeTextCard = document.getElementById('mode-text-card');
 
-      // 1. ถ้าเป็น "สาส์นครู" -> แสดงภาพอย่างเดียว
-      if (card.isImageOnly || selectedCat === "สาส์นครู") {
+      // 1. ถ้าเป็น "สาส์นครู" -> แสดงภาพจาก Drive 100% เต็มใบ
+      if (isGuruMode || card.isGuruImage) {
         modeTextCard.style.display = 'none';
         modeImgOnly.style.display = 'flex';
 
@@ -463,9 +461,9 @@
         
         guruImg.style.display = 'none';
         guruLdr.style.display = 'block';
-        guruImg.src = card.imageUrl || "https://drive.google.com/uc?export=view&id=16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2";
+        guruImg.src = card.imageUrl;
       } 
-      // 2. ถ้าเป็นหมวดปกติ (ความรัก, การเงิน, การงาน, สุขภาพ, Cards Of the Day) -> แสดงภาพ + ข้อความคำทำนาย
+      // 2. ถ้าเป็นหมวดหมู่จาก Sheet (ความรัก, การเงิน, การงาน, สุขภาพ, Card Of the Days) -> แสดงข้อความคำทำนายเต็มตา
       else {
         modeImgOnly.style.display = 'none';
         modeTextCard.style.display = 'flex';
@@ -474,19 +472,6 @@
         document.getElementById('res-cat').innerText = card.category;
         document.getElementById('res-title').innerText = card.name;
         document.getElementById('res-meaning').innerText = card.meaning;
-
-        const img = document.getElementById('res-img');
-        const ldr = document.getElementById('res-loader');
-        const boxImg = document.getElementById('box-sub-img');
-
-        if (card.imageUrl) {
-          boxImg.style.display = 'flex';
-          img.style.display = 'none';
-          ldr.style.display = 'block';
-          img.src = card.imageUrl;
-        } else {
-          boxImg.style.display = 'none'; // ถ้าไม่มีรูปให้ซ่อนเพื่อขยายพื้นที่ข้อความ
-        }
       }
 
       setTimeout(() => {

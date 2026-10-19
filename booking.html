@@ -1,16 +1,112 @@
-<script>
-    const WEB_URL = APP_CONFIG.WEB_URL;
-    const LIFF_ID = APP_CONFIG.LIFF.BOOKING;
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ระบบจองคิวพยากรณ์ | วินทร์ทรัพย์นาคราช</title>
+  
+  <!-- โหลดคอนฟิกส่วนกลาง (ถ้ามี) -->
+  <script src="./config.js"></script>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #0F172A; -webkit-tap-highlight-color: transparent; }
+    .emerald-gradient { background: linear-gradient(135deg, #065F46 0%, #047857 100%); }
+    .gold-gradient { background: linear-gradient(135deg, #B45309 0%, #D97706 100%); }
+    .card-luxury { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 1.25rem; box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04); }
+    .slot-avail { background-color: #ECFDF5; border: 1.5px solid #10B981; color: #065F46; }
+    .slot-avail:hover { background-color: #D1FAE5; }
+    .slot-busy { background-color: #FEF2F2; border: 1.5px solid #F87171; color: #991B1B; opacity: 0.65; cursor: not-allowed; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 max-w-md mx-auto">
+  <div>
+    <!-- Header สไตล์ SCB / iOS Executive -->
+    <header class="text-center py-5 border border-slate-100 mb-4 bg-white rounded-3xl shadow-sm px-4">
+      <div class="inline-flex items-center gap-2 mb-1">
+        <span class="w-3.5 h-3.5 rounded-full bg-emerald-600 shadow-sm shadow-emerald-500/50"></span>
+        <h1 class="text-base font-extrabold text-slate-900 tracking-tight" id="brand-title">วินทร์ทรัพย์นาคราช</h1>
+      </div>
+      <p id="user-display" class="text-xs text-slate-500 font-semibold">ระบบพร้อมใช้งาน</p>
+    </header>
 
-    let userId = "U_TEST_USER";
+    <!-- กล่องแจ้งเตือนสถานะการเชื่อมต่อ (ถ้ามี Error จะแสดงที่นี่) -->
+    <div id="error-box" style="display: none;" class="mb-4 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs">
+      <div class="font-bold flex items-center gap-1">⚠️ แจ้งเตือนข้อผิดพลาด:</div>
+      <div id="error-msg" class="mt-1 font-medium"></div>
+    </div>
+
+    <!-- STEP 1: รายการบริการ (กรองเฉพาะประเภท "บริการ") -->
+    <div id="step-packages" class="space-y-3">
+      <div id="loading-spinner" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-emerald-600 border-t-transparent"></div>
+        <p class="text-xs text-slate-400 font-bold mt-3">กำลังเชื่อมต่อฐานข้อมูลบริการ...</p>
+      </div>
+    </div>
+
+    <!-- STEP 2: ปฏิทินรอบเวลา (09:00 - 20:00 น. ทุก 30 นาที) -->
+    <div id="step-datetime" style="display: none;" class="space-y-4">
+      <button onclick="backToPkgs()" class="text-xs font-bold text-slate-600 mb-1 flex items-center gap-1 hover:text-slate-900">
+        ❮ ย้อนกลับไปเลือกบริการอื่น
+      </button>
+
+      <!-- สรุปบริการที่เลือก -->
+      <div class="card-luxury p-4 border border-emerald-100 bg-emerald-50/20">
+        <div class="text-[11px] text-slate-400 font-bold">บริการที่เลือก:</div>
+        <div class="text-sm font-black text-emerald-950 mt-0.5" id="selected-pkg-txt">-</div>
+        <div class="text-xs font-black text-amber-700 mt-1" id="selected-price-txt">-</div>
+      </div>
+
+      <!-- เลือกวันที่ -->
+      <div>
+        <label class="text-xs font-bold text-slate-700 block mb-1.5">📅 เลือกวันที่ต้องการจอง</label>
+        <select id="booking-date" onchange="loadSlots()" class="w-full bg-white border border-slate-200 rounded-2xl p-3.5 text-xs font-bold text-slate-800 shadow-sm focus:ring-2 focus:ring-emerald-600 outline-none"></select>
+      </div>
+
+      <!-- ตารางแสดงรอบเวลา เขียว/แดง -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label class="text-xs font-bold text-slate-700">⏰ เลือกรอบเวลา (09:00 - 20:00 น.)</label>
+          <div class="text-[10px] font-bold flex gap-2">
+            <span class="text-emerald-700">🟢 ว่าง</span>
+            <span class="text-rose-700">🔴 เต็ม</span>
+          </div>
+        </div>
+        <div id="slots-container" class="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto p-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ปุ่มกดยืนยันการจอง -->
+  <div id="action-box" style="display: none;" class="mt-6">
+    <button id="sub-btn" onclick="submitBooking()" class="w-full emerald-gradient text-white font-extrabold py-4 rounded-2xl text-xs shadow-lg shadow-emerald-800/20 active:scale-95 transition">
+      ยืนยันการจองและออกบิลชำระเงิน
+    </button>
+  </div>
+
+  <script>
+    // Fallback Config ในกรณีที่ config.js ไม่ได้โหลดหรือโหลดไม่ทัน
+    const DEFAULT_CONFIG = {
+      WEB_URL: "https://script.google.com/macros/s/AKfycbyztwCdkFfoD1eUxN3cRzAbyHRuX3f8QqQ3aTp5Se5WZ6IiJbl3xWZ_vNn_6RZXlqFK9A/exec",
+      LIFF_ID: "2007499712-B0uid9G3",
+      BRAND_NAME: "วินทร์ทรัพย์นาคราช"
+    };
+
+    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_CONFIG.WEB_URL;
+    const LIFF_ID = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.LIFF && APP_CONFIG.LIFF.BOOKING) ? APP_CONFIG.LIFF.BOOKING : DEFAULT_CONFIG.LIFF_ID;
+
+    let userId = "U_WEB_GUEST";
     let userName = "คุณลูกค้า";
     let bookingData = { packageId: "", packageName: "", price: 0, bookingDate: "", bookingTime: "" };
 
-    // รันทำงานทันทีเมื่อเปิดหน้าเว็บ
-    window.addEventListener('DOMContentLoaded', async () => {
-      // 1. โหลดข้อมูลแพ็กเกจทันทีก่อน ไม่ต้องรอ LIFF
+    window.addEventListener('DOMContentLoaded', () => {
       initDateSelector();
       
+      // ดึงค่า Parameter ที่ส่งต่อมาจาก Flex Message ในแชท LINE
       const params = new URLSearchParams(window.location.search);
       const pkgId = params.get('id');
       const pkgName = params.get('pkg');
@@ -22,11 +118,11 @@
         loadPackages();
       }
 
-      // 2. เชื่อมต่อ LINE LIFF แบบไม่บล็อกหน้าเว็บ
-      initLiffAsync();
+      // เชื่อมต่อ LINE LIFF แบบ Non-blocking
+      initLiff();
     });
 
-    async function initLiffAsync() {
+    async function initLiff() {
       try {
         if (typeof liff !== 'undefined' && LIFF_ID) {
           await liff.init({ liffId: LIFF_ID });
@@ -35,15 +131,10 @@
             userId = profile.userId;
             userName = profile.displayName;
             document.getElementById('user-display').innerText = "ลูกค้า: " + userName;
-          } else {
-            document.getElementById('user-display').innerText = "ผู้ใช้งานทั่วไป";
           }
-        } else {
-          document.getElementById('user-display').innerText = "โหมดทดสอบภายนอก LINE";
         }
       } catch (err) {
-        console.warn("LIFF Init Notice:", err);
-        document.getElementById('user-display').innerText = "โหมดทดสอบภายนอก LINE";
+        console.warn("LINE LIFF Warning:", err);
       }
     }
 
@@ -69,17 +160,19 @@
       const container = document.getElementById('step-packages');
       
       fetch(WEB_URL + "?action=get_packages")
-        .then(r => {
-          if (!r.ok) throw new Error("HTTP Status: " + r.status);
-          return r.json();
+        .then(response => {
+          if (!response.ok) throw new Error("Network Response ไม่ถูกต้อง (" + response.status + ")");
+          return response.json();
         })
         .then(res => {
-          if (res.status === "success" && res.packages) {
+          if (res.status === "success" && Array.isArray(res.packages)) {
             container.innerHTML = "";
+            
+            // กรองเฉพาะประเภท "บริการ"
             const servicePackages = res.packages.filter(p => !p.type || p.type === "บริการ");
 
             if (servicePackages.length === 0) {
-              container.innerHTML = '<div class="text-center text-xs text-slate-400 py-10 font-bold">ไม่พบรายการบริการดูดวงในชีต products</div>';
+              container.innerHTML = '<div class="text-center text-xs text-slate-400 py-10 font-bold">ไม่พบรายการบริการในระบบ</div>';
               return;
             }
 
@@ -99,16 +192,13 @@
               container.appendChild(div);
             });
           } else {
-            container.innerHTML = `<div class="text-center text-xs text-rose-500 py-10 font-bold">ไม่สามารถดึงข้อมูลได้: ${res.message || 'โครงสร้างข้อมูลไม่ถูกต้อง'}</div>`;
+            throw new Error(res.message || "โครงสร้างข้อมูลตอบกลับไม่ถูกต้อง");
           }
         })
         .catch(err => {
-          container.innerHTML = `
-            <div class="text-center p-6 bg-rose-50 border border-rose-200 rounded-2xl">
-              <div class="text-rose-600 font-bold text-xs">⚠️ เชื่อมต่อ Apps Script ไม่สำเร็จ</div>
-              <div class="text-[11px] text-slate-500 mt-1">กรุณาตรวจสอบว่าได้ตั้งค่าสิทธิ์ Deploy ใน Apps Script เป็น "Anyone (ทุกคน)" หรือยังครับ</div>
-            </div>
-          `;
+          document.getElementById('error-box').style.display = 'block';
+          document.getElementById('error-msg').innerText = "ไม่สามารถเชื่อมต่อฐานข้อมูลได้: " + err.message;
+          container.innerHTML = '<div class="text-center text-xs text-rose-500 py-6 font-bold">กรุณาตรวจสอบการตั้งค่าสิทธิ์ Deploy ใน Apps Script เป็น Anyone</div>';
         });
     }
 
@@ -147,7 +237,7 @@
               };
             } else {
               btn.className = "slot-busy p-3 rounded-xl text-xs font-bold text-center";
-              btn.innerHTML = `<div>${s.time}</div><div class="text-[9px] text-rose-700 font-bold">🔴 ${s.statusText || 'จองแล้ว'}</div>`;
+              btn.innerHTML = `<div>${s.time}</div><div class="text-[9px] text-rose-700 font-bold">🔴 ${s.statusText || 'เต็ม'}</div>`;
               btn.disabled = true;
             }
             c.appendChild(btn);
@@ -189,7 +279,7 @@
           if (typeof liff !== 'undefined' && liff.isInClient()) {
             liff.closeWindow();
           } else {
-            window.close();
+            window.location.reload();
           }
         } else {
           alert("❌ ไม่สามารถจองได้: " + (res.message || "รอบเวลานี้ไม่ว่าง"));
@@ -205,3 +295,5 @@
       });
     }
   </script>
+</body>
+</html>

@@ -74,8 +74,7 @@
         <div id="card-inner" class="relative w-full h-full transform-style-3d">
           <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500 rounded-2xl shadow-[0_0_20px_rgba(217,119,6,0.4)] flex items-center justify-center"><span class="text-amber-500/50 text-5xl font-serif">✧</span></div>
           <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-slate-900 border border-amber-400 rounded-2xl shadow-2xl overflow-hidden flex items-center justify-center">
-            <!-- ⚡️ แก้ไขไม่ให้ซ่อนรูปภาพเมื่อโหลด -->
-            <img id="res-image" src="" alt="Card" class="w-full h-full object-cover bg-slate-800">
+            <img id="res-image" src="" alt="Card" referrerpolicy="no-referrer" class="w-full h-full object-cover bg-slate-800">
           </div>
         </div>
       </div>
@@ -85,9 +84,10 @@
   </main>
 
   <script>
-    // ⚡️ นำ URL ใหม่ใส่ไว้ให้แล้วครับ
+    // 🚨 จุดสำคัญที่สุด: นำ Web App URL ที่กด "คัดลอก" มาจากขั้นตอนที่ 1 มาวางแทนที่ในเครื่องหมายคำพูดด้านล่างนี้ครับ
+    const WEB_APP_URL = "วาง_URL_ที่คัดลอกมาจาก_Manage_Deployments_ตรงนี้";
+
     const SYSTEM_CONFIG = {
-        WEB_APP_URL: "https://script.google.com/macros/s/AKfycbzAJeHPfi9p4K-ouN-9z-8rG79REIP0qNiQwWzM1F9M5BfWJ2H1WZQ_4V4P0d8v0uM/exec",
         LIFF: { HUB: "2007499712-O7LXXVaY" },
         FOLDER: {
             KRU: "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN",   
@@ -96,7 +96,6 @@
     };
 
     let currentUserId = "", activeFolderId = "";
-    const WEB_APP_URL = SYSTEM_CONFIG.WEB_APP_URL;
 
     window.onload = async function() {
       try {
@@ -121,12 +120,29 @@
       const requestUrl = WEB_APP_URL + "?action=draw_folder_card&folderId=" + activeFolderId + "&userId=" + currentUserId + "&t=" + timestamp;
 
       fetch(requestUrl, { redirect: "follow" })
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.status === "success") { showResult(data.imgUrl); } 
-          else if (data && data.status === "insufficient_funds") { showTopupGate(data.balance); } 
-          else { alert("⚠️ แจ้งเตือน: " + (data.message || "เกิดข้อผิดพลาด")); window.location.reload(); }
-        }).catch(err => { alert("❌ พลังงานขัดข้อง กรุณาลองใหม่"); window.location.reload(); });
+        .then(res => res.text())
+        .then(text => {
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            alert("❌ ลิงก์ WEB_APP_URL ผิดพลาด หรือยังไม่ได้ตั้งค่าสิทธิ์เป็น Anyone:\n" + text.substring(0, 100));
+            window.location.reload();
+            return;
+          }
+
+          if (data && data.status === "success") { 
+            showResult(data.imgUrl, data.fileId); 
+          } else if (data && data.status === "insufficient_funds") { 
+            showTopupGate(data.balance); 
+          } else { 
+            alert("⚠️ ระบบแจ้งว่า: " + (data.message || "เกิดข้อผิดพลาด")); 
+            window.location.reload(); 
+          }
+        }).catch(err => { 
+          alert("❌ เชื่อมต่อหลังบ้านไม่ได้ (กรุณาเช็คบรรทัด WEB_APP_URL ในไฟล์ HTML): " + err.message); 
+          window.location.reload(); 
+        });
     }
 
     function showTopupGate(balance) {
@@ -141,10 +157,21 @@
       } else { alert("กรุณาพิมพ์ 'เติมเงิน_" + amount + "' ในแชท LINE"); }
     }
 
-    function showResult(imgUrl) {
+    function showResult(imgUrl, fileId) {
       document.getElementById('intro-section').classList.add('hidden');
       document.getElementById('result-section').classList.remove('hidden');
-      document.getElementById('res-image').src = imgUrl;
+      
+      const imgEl = document.getElementById('res-image');
+      
+      // ระบบสำรอง: ถ้าลิงก์ lh3 โหลดไม่ขึ้น ให้สลับไปใช้ลิงก์ thumbnail แทนอัตโนมัติ
+      imgEl.onerror = function() {
+        if (fileId && !this.dataset.retried) {
+          this.dataset.retried = "true";
+          this.src = "https://drive.google.com/thumbnail?id=" + fileId + "&sz=w1000";
+        }
+      };
+      
+      imgEl.src = imgUrl;
       setTimeout(() => { document.getElementById('card-inner').classList.add('rotate-y-180'); }, 300);
     }
   </script>

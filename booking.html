@@ -38,7 +38,7 @@
       <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังโหลดรายการบริการ...</div>
     </div>
 
-    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน (กรณีเลือกแบบเจาะจงหรือเลือกจากรายการ) -->
+    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
       <button id="back-btn" onclick="backToPackages()" class="text-slate-600 text-xs font-bold flex items-center gap-1 mb-2 hover:text-slate-900">❮ กลับไปเลือกบริการอื่น</button>
       <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
@@ -59,7 +59,7 @@
   </div>
 
   <div id="action-box" style="display: none;" class="mt-8">
-    <button onclick="submitBooking()" class="w-full executive-btn font-bold py-4 rounded-xl text-sm shadow-lg tracking-wide active:scale-95">ยืนยันการจองคิว & รับใบเสร็จระบบ</button>
+    <button onclick="submitBooking()" class="w-full executive-btn font-bold py-4 rounded-xl text-sm shadow-lg tracking-wide active:scale-95">ยืนยันการจองคิว & รับใบสรุปยอดโอน</button>
   </div>
 
   <footer class="text-center text-[11px] text-slate-400 py-6 border-t border-slate-200 mt-8 font-normal">
@@ -84,7 +84,6 @@
       fetchMemberData();
       setMinMaxDate();
 
-      // ตรวจสอบว่ามีพารามิเตอร์ส่งแพ็กเกจมาแบบเจาะจงหรือไม่ (เช่น ?pkg=ดูดวง%2015%20นาที&price=108)
       const urlParams = new URLSearchParams(window.location.search);
       const directPkg = urlParams.get('pkg');
       const directPrice = urlParams.get('price');
@@ -92,7 +91,7 @@
       if (directPkg && directPrice) {
         isDirectSelection = true;
         selectPackage(directPkg, Number(directPrice));
-        document.getElementById('back-btn').style.display = 'none'; // ซ่อนปุ่มกลับเพราะเป็นการจองแบบเจาะจง
+        document.getElementById('back-btn').style.display = 'none';
       } else {
         fetchPackages();
       }
@@ -204,9 +203,19 @@
         .then(res => res.json())
         .then(data => {
           if (data.status === "success") {
-            alert("✅ จองคิวสำเร็จ! ระบบได้ส่งใบเสร็จยืนยันไปยังแชท LINE ของท่านแล้ว");
-            window.location.reload();
-          } else { alert("❌ เกิดข้อผิดพลาด: " + data.message); }
+            alert("✅ บันทึกการจองสำเร็จ! ระบบกำลังส่งสรุปยอดโอนเงินไปที่แชท LINE ของท่าน...");
+            // ปิดหน้า LIFF อัตโนมัติทันทีหลังยืนยันการจองเหมือนระบบสั่งซื้อสินค้า
+            if (liff.isInClient()) {
+              liff.closeWindow();
+            } else {
+              window.location.reload();
+            }
+          } else { 
+            alert("❌ เกิดข้อผิดพลาด: " + data.message); 
+          }
+        })
+        .catch(err => {
+          alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
         });
     }
   </script>

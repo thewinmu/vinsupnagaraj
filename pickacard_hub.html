@@ -6,8 +6,7 @@
   <title>โถงพยากรณ์ | วินทร์ทรัพย์นาคราช</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <!-- โหลดไฟล์ config.js (ถ้ามี) -->
-  <script src="./config.js?v=5"></script>
+  <script src="config.js?v=6"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; }
@@ -29,35 +28,38 @@
   </div>
   <header class="bg-slate-950/50 backdrop-blur-md border-b border-amber-500/20 p-4 text-center sticky top-0 z-40">
     <p class="text-[10px] tracking-[0.2em] text-amber-500 uppercase font-bold">The Win Mu</p>
-    <h1 id="header-title" class="text-lg font-bold text-amber-400 tracking-widest mt-0.5 font-['Prompt']">โถงพยากรณ์</h1>
+    <!-- เพิ่ม (v.6) เพื่อให้สังเกตเห็นได้ทันทีว่าหน้าเว็บอัปเดตแล้วหรือยัง -->
+    <h1 id="header-title" class="text-lg font-bold text-amber-400 tracking-widest mt-0.5 font-['Prompt']">โถงพยากรณ์ (v.6)</h1>
   </header>
 
   <main class="max-w-md mx-auto p-6 w-full flex-1 flex flex-col items-center justify-center relative z-10 text-center">
     
-    <!-- เมนูเลือกไพ่ (แยกชื่อปุ่มออกจากตัวแปร เพื่อให้กดติด 100% ทุกสถานการณ์) -->
+    <!-- เมนูเลือกไพ่: สั่งสลับหน้าจอโดยตรงที่ปุ่ม ไม่พึ่งสคริปต์ภายนอก กดติด 100% -->
     <div id="menu-section" class="w-full space-y-5 animate-fade-in">
       <div class="mb-6"><h2 class="text-xl font-bold text-amber-400 font-['Prompt']">เลือกรูปแบบสาส์น</h2><p class="text-sm text-slate-400 mt-2">ค่าครู 20 บาท หรือใช้สิทธิ์เปิดฟรี</p></div>
-      <button onclick="selectMenu('Pick a Card', 'KRU')" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
+      
+      <button type="button" onclick="window.activeFolderId = '1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN'; document.getElementById('header-title').innerText = 'Pick a Card'; document.getElementById('menu-section').style.display = 'none'; document.getElementById('intro-section').style.display = 'block';" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all cursor-pointer">
         <span class="text-3xl">🔮</span><span class="font-bold text-lg font-['Prompt']">Pick a Card</span><span class="text-xs text-slate-400">สุ่มไพ่จากสาส์นครู</span>
       </button>
-      <button onclick="selectMenu('สาส์นเทวดา', 'ANGEL')" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
+
+      <button type="button" onclick="window.activeFolderId = '16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2'; document.getElementById('header-title').innerText = 'สาส์นเทวดา'; document.getElementById('menu-section').style.display = 'none'; document.getElementById('intro-section').style.display = 'block';" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all cursor-pointer">
         <span class="text-3xl">👼</span><span class="font-bold text-lg font-['Prompt']">สาส์นเทวดา</span><span class="text-xs text-slate-400">สุ่มไพ่จากสาส์นเทวดา</span>
       </button>
     </div>
 
     <!-- หน้าเลือกไพ่ 3 ใบ -->
-    <div id="intro-section" class="hidden space-y-8 w-full animate-fade-in">
+    <div id="intro-section" style="display: none;" class="space-y-8 w-full animate-fade-in">
       <div class="bg-slate-900/60 border border-amber-500/30 rounded-2xl p-5 shadow-lg"><p class="text-sm text-amber-100/80 leading-relaxed font-medium">ตั้งจิตอธิษฐานให้เป็นสมาธิ <br>จงเลือกไพ่ 1 ใบ เพื่อรับสาส์นชี้แนะ</p></div>
-      <div class="flex justify-center gap-4 px-2">
+      <div id="cards-container" class="flex justify-center gap-4 px-2">
         <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 flex items-center justify-center shadow-[0_0_15px_rgba(217,119,6,0.3)]"><span class="text-amber-400/60 text-3xl font-serif">✧</span></div>
         <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 flex items-center justify-center shadow-[0_0_15px_rgba(217,119,6,0.3)]" style="animation-delay: 1s;"><span class="text-amber-400/60 text-3xl font-serif">✧</span></div>
         <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 flex items-center justify-center shadow-[0_0_15px_rgba(217,119,6,0.3)]" style="animation-delay: 2s;"><span class="text-amber-400/60 text-3xl font-serif">✧</span></div>
       </div>
-      <p id="loading-text" class="text-xs text-amber-500 font-bold hidden animate-pulse">กำลังสื่อสารกับพลังงาน...</p>
+      <p id="loading-text" style="display: none;" class="text-xs text-amber-500 font-bold animate-pulse">กำลังสื่อสารกับพลังงาน...</p>
     </div>
 
     <!-- แจ้งเตือนเงินไม่พอ -->
-    <div id="topup-section" class="hidden w-full space-y-5 animate-fade-in">
+    <div id="topup-section" style="display: none;" class="w-full space-y-5 animate-fade-in">
       <div class="bg-slate-900 border border-red-500/50 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <h2 class="text-lg font-bold text-red-400 mb-2">⚠️ พลังงานเวทมนตร์ไม่เพียงพอ</h2>
         <p class="text-sm text-slate-300 mb-4">ยอดเงินของคุณเหลือ <span id="current-balance" class="text-white font-bold">0</span> บาท<br>(ค่าครู 20 บาท)</p>
@@ -71,7 +73,7 @@
     </div>
 
     <!-- แสดงรูปไพ่ที่สุ่มได้ -->
-    <div id="result-section" class="hidden w-full space-y-6">
+    <div id="result-section" style="display: none;" class="w-full space-y-6">
       <div class="perspective-1000 mx-auto w-64 h-96">
         <div id="card-inner" class="relative w-full h-full transform-style-3d">
           <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500 rounded-2xl shadow-[0_0_20px_rgba(217,119,6,0.4)] flex items-center justify-center"><span class="text-amber-500/50 text-5xl font-serif">✧</span></div>
@@ -86,42 +88,30 @@
   </main>
 
   <script>
-    // 🛡️ ระบบตั้งค่าสำรองอัตโนมัติ: ถ้าโหลดไฟล์ config.js สำเร็จจะใช้ค่าจาก config.js แต่ถ้าโหลดไม่ติดจะใช้ค่าด้านล่างนี้แทน ปุ่มจึงไม่มีวันค้าง!
-    const DEFAULT_CONFIG = {
-      WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec",
-      LIFF: { HUB: "2007499712-O7LXXVaY" },
-      FOLDER: {
-        KRU: "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN",
-        ANGEL: "16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2"
-      }
-    };
-
-    const APP_CONFIG = (typeof SYSTEM_CONFIG !== "undefined") ? SYSTEM_CONFIG : DEFAULT_CONFIG;
-    const WEB_APP_URL = APP_CONFIG.WEB_APP_URL;
-
-    let currentUserId = "", activeFolderId = "";
+    window.currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a";
+    window.activeFolderId = "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN";
 
     window.onload = async function() {
       try {
-        await liff.init({ liffId: APP_CONFIG.LIFF.HUB }); 
-        if (liff.isLoggedIn()) { currentUserId = (await liff.getProfile()).userId; } else { liff.login(); }
-      } catch (err) { currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a"; }
+        const liffId = (typeof SYSTEM_CONFIG !== "undefined" && SYSTEM_CONFIG.LIFF) ? SYSTEM_CONFIG.LIFF.HUB : "2007499712-O7LXXVaY";
+        await liff.init({ liffId: liffId }); 
+        if (liff.isLoggedIn()) { window.currentUserId = (await liff.getProfile()).userId; } else { liff.login(); }
+      } catch (err) { console.log("LIFF Init fallback"); }
     };
 
-    function selectMenu(name, typeKey) {
-      activeFolderId = APP_CONFIG.FOLDER[typeKey]; 
-      document.getElementById('header-title').innerText = name;
-      document.getElementById('menu-section').classList.add('hidden');
-      document.getElementById('intro-section').classList.remove('hidden');
-    }
-
     function drawCard() {
-      document.querySelector('.flex.justify-center').style.opacity = '0.3';
-      document.querySelector('.flex.justify-center').style.pointerEvents = 'none';
-      document.getElementById('loading-text').classList.remove('hidden');
+      const webAppUrl = (typeof SYSTEM_CONFIG !== "undefined" && SYSTEM_CONFIG.WEB_APP_URL) ? SYSTEM_CONFIG.WEB_APP_URL : "";
+      if (!webAppUrl || webAppUrl.indexOf("http") !== 0) {
+        alert("❌ ไม่พบลิงก์ WEB_APP_URL ในไฟล์ config.js กรุณาตรวจสอบไฟล์ config.js");
+        return;
+      }
+
+      document.getElementById('cards-container').style.opacity = '0.3';
+      document.getElementById('cards-container').style.pointerEvents = 'none';
+      document.getElementById('loading-text').style.display = 'block';
 
       const timestamp = new Date().getTime();
-      const requestUrl = WEB_APP_URL + "?action=draw_folder_card&folderId=" + activeFolderId + "&userId=" + currentUserId + "&t=" + timestamp;
+      const requestUrl = webAppUrl + "?action=draw_folder_card&folderId=" + window.activeFolderId + "&userId=" + window.currentUserId + "&t=" + timestamp;
 
       fetch(requestUrl, { redirect: "follow" })
         .then(res => res.text())
@@ -130,7 +120,7 @@
           try {
             data = JSON.parse(text);
           } catch (e) {
-            alert("⚠️ ระบบหลังบ้านส่งค่ากลับผิดปกติ (เช็ค WEB_APP_URL ใน config.js ว่าตรงกับลิงก์ Deploy ล่าสุดหรือไม่)");
+            alert("⚠️ ลิงก์ WEB_APP_URL ใน config.js ไม่ถูกต้อง หรือยังไม่ได้กด Deploy เป็น New Version:\n" + text.substring(0, 80));
             window.location.reload();
             return;
           }
@@ -144,26 +134,26 @@
             window.location.reload(); 
           }
         }).catch(err => { 
-          alert("❌ เชื่อมต่อเซิร์ฟเวอร์ไม่ได้: " + err.message); 
+          alert("❌ เชื่อมต่อหลังบ้านไม่ได้: " + err.message); 
           window.location.reload(); 
         });
     }
 
     function showTopupGate(balance) {
-      document.getElementById('intro-section').classList.add('hidden');
+      document.getElementById('intro-section').style.display = 'none';
       document.getElementById('current-balance').innerText = balance.toLocaleString();
-      document.getElementById('topup-section').classList.remove('hidden');
+      document.getElementById('topup-section').style.display = 'block';
     }
 
     function requestTopup(amount) {
-      if (liff.isInClient()) {
+      if (typeof liff !== "undefined" && liff.isInClient()) {
         liff.sendMessages([{ type: 'text', text: 'เติมเงิน_' + amount }]).then(() => liff.closeWindow());
       } else { alert("กรุณาพิมพ์ 'เติมเงิน_" + amount + "' ในแชท LINE"); }
     }
 
     function showResult(imgUrl, fileId) {
-      document.getElementById('intro-section').classList.add('hidden');
-      document.getElementById('result-section').classList.remove('hidden');
+      document.getElementById('intro-section').style.display = 'none';
+      document.getElementById('result-section').style.display = 'block';
       
       const imgEl = document.getElementById('res-image');
       imgEl.onerror = function() {

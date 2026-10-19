@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โถงพยากรณ์ | วินทร์ทรัพย์นาคราช</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.2); } 50% { box-shadow: 0 0 30px rgba(217, 119, 6, 0.7); } }
+    
+    .animate-fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1); }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    .tarot-card { cursor: pointer; transition: all 0.3s ease; }
+    .tarot-card:hover { transform: translateY(-10px) scale(1.05); }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col relative overflow-x-hidden">
+
+  <!-- Background Effect -->
+  <div class="fixed inset-0 flex items-center justify-center pointer-events-none z-0">
+    <div class="absolute w-96 h-96 bg-amber-600/10 rounded-full blur-[100px]"></div>
+  </div>
+
+  <header class="bg-slate-950/50 backdrop-blur-md border-b border-amber-500/20 p-4 text-center sticky top-0 z-40">
+    <p class="text-[10px] tracking-[0.2em] text-amber-500 uppercase font-bold">The Win Mu</p>
+    <h1 id="header-title" class="text-lg font-bold text-amber-400 tracking-widest mt-0.5 font-['Prompt']">โถงพยากรณ์</h1>
+  </header>
+
+  <main class="max-w-md mx-auto p-6 w-full flex-1 flex flex-col items-center justify-center relative z-10 text-center">
+    
+    <!-- 🗂️ ส่วนที่ 1: หน้าเลือกเมนู (แสดงเป็นค่าเริ่มต้น) -->
+    <div id="menu-section" class="w-full space-y-5 animate-fade-in">
+      <div class="mb-6">
+        <h2 class="text-xl font-bold text-amber-400 font-['Prompt']">เลือกรูปแบบสาส์น</h2>
+        <p class="text-sm text-slate-400 mt-2">ค่าครู 20 บาท หรือใช้สิทธิ์เปิดฟรี</p>
+      </div>
+
+      <!-- ปุ่ม 1: Pick a Card ทั่วไป -->
+      <button onclick="selectMenu('Pick a Card', '1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN')" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
+        <span class="text-3xl">🔮</span>
+        <span class="font-bold text-lg font-['Prompt']">Pick a Card</span>
+        <span class="text-xs text-slate-400">สุ่มไพ่จากสำรับพยากรณ์</span>
+      </button>
+
+      <!-- ปุ่ม 2: สาส์นเทวดา -->
+      <button onclick="selectMenu('สาส์นเทวดา', '16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2')" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
+        <span class="text-3xl">👼</span>
+        <span class="font-bold text-lg font-['Prompt']">สาส์นเทวดา</span>
+        <span class="text-xs text-slate-400">รับคำชี้แนะจากสิ่งศักดิ์สิทธิ์</span>
+      </button>
+    </div>
+
+    <!-- 🔮 ส่วนที่ 2: หน้าอธิษฐานจิตและเลือกไพ่ 3 ใบ (ซ่อนไว้ก่อน) -->
+    <div id="intro-section" class="hidden space-y-8 w-full animate-fade-in">
+      <div class="bg-slate-900/60 border border-amber-500/30 rounded-2xl p-5 shadow-lg">
+        <p class="text-sm text-amber-100/80 leading-relaxed font-medium">
+          ตั้งจิตอธิษฐานให้เป็นสมาธิ <br>จงเลือกไพ่ 1 ใบ เพื่อรับสาส์นชี้แนะ
+        </p>
+      </div>
+
+      <div class="flex justify-center gap-4 px-2">
+        <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 flex items-center justify-center shadow-[0_0_15px_rgba(217,119,6,0.3)]">
+          <span class="text-amber-400/60 text-3xl font-serif">✧</span>
+        </div>
+        <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 flex items-center justify-center shadow-[0_0_15px_rgba(217,119,6,0.3)]" style="animation-delay: 1s;">
+          <span class="text-amber-400/60 text-3xl font-serif">✧</span>
+        </div>
+        <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 flex items-center justify-center shadow-[0_0_15px_rgba(217,119,6,0.3)]" style="animation-delay: 2s;">
+          <span class="text-amber-400/60 text-3xl font-serif">✧</span>
+        </div>
+      </div>
+      <p id="loading-text" class="text-xs text-amber-500 font-bold hidden animate-pulse">กำลังสื่อสารกับพลังงานในโฟลเดอร์...</p>
+    </div>
+
+    <!-- 💰 ส่วนที่ 3: ระบบ Paywall เงินไม่พอ -->
+    <div id="topup-section" class="hidden w-full space-y-5 animate-fade-in">
+      <div class="bg-slate-900 border border-red-500/50 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+        <h2 class="text-lg font-bold text-red-400 mb-2">⚠️ พลังงานเวทมนตร์ไม่เพียงพอ</h2>
+        <p class="text-sm text-slate-300 mb-4">ยอดเงินของคุณเหลือ <span id="current-balance" class="text-white font-bold">0</span> บาท<br>(ค่าครู 20 บาท)</p>
+        <p class="text-xs text-amber-400 mb-3">กรุณาเลือกยอดที่ต้องการเติมเงิน:</p>
+        <div class="grid grid-cols-3 gap-2.5">
+          <button onclick="requestTopup(20)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">20 ฿</button>
+          <button onclick="requestTopup(50)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">50 ฿</button>
+          <button onclick="requestTopup(100)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">100 ฿</button>
+        </div>
+      </div>
+      <button onclick="window.location.reload()" class="text-slate-500 text-xs underline">กลับไปเลือกเมนูใหม่</button>
+    </div>
+
+    <!-- 🌟 ส่วนที่ 4: แสดงผลไพ่ 3 มิติ -->
+    <div id="result-section" class="hidden w-full space-y-6">
+      <div class="perspective-1000 mx-auto w-64 h-96">
+        <div id="card-inner" class="relative w-full h-full transform-style-3d">
+          <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500 rounded-2xl shadow-[0_0_20px_rgba(217,119,6,0.4)] flex items-center justify-center">
+            <span class="text-amber-500/50 text-5xl font-serif">✧</span>
+          </div>
+          <!-- รูปไพ่ที่สุ่มมาจาก Google Drive จะมาโชว์ตรงนี้ -->
+          <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-slate-900 border border-amber-400 rounded-2xl shadow-2xl overflow-hidden flex items-center justify-center">
+            <img id="res-image" src="" alt="Card" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-900/80 backdrop-blur-md border border-amber-500/30 rounded-2xl p-4 shadow-lg animate-fade-in" style="animation-delay: 0.8s; opacity: 0;">
+        <p class="text-sm text-amber-50/90 font-['Prompt']">ขอให้ท่านเปิดรับสาส์นและพลังงานจากภาพไพ่ใบนี้...</p>
+      </div>
+      <button onclick="window.location.reload()" class="w-full bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-400 hover:to-amber-600 text-slate-950 text-sm font-bold py-3.5 px-4 rounded-xl shadow-[0_0_15px_rgba(217,119,6,0.4)] transition-all">
+        🔄 เริ่มต้นทำนายใหม่
+      </button>
+    </div>
+  </main>
+
+  <script>
+    let currentUserId = "";
+    let activeFolderId = ""; // ตัวแปรเก็บ Folder ID ที่ลูกค้าเลือก
+
+    // ⚠️ อย่าลืมใส่ URL Web App ตัวจริงของคุณ
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec";
+
+    window.onload = async function() {
+      try {
+        await liff.init({ liffId: "2007499712-EtMhu4c2" }); // LIFF ID เดิมของคุณ
+        if (liff.isLoggedIn()) { currentUserId = (await liff.getProfile()).userId; } else { liff.login(); }
+      } catch (err) { currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a"; }
+    };
+
+    // เมื่อลูกค้ากดเลือกเมนู
+    function selectMenu(name, folderId) {
+      activeFolderId = folderId; // บันทึก Folder ID ไว้ใช้ตอนสุ่มไพ่
+      document.getElementById('header-title').innerText = name;
+      document.getElementById('menu-section').classList.add('hidden');
+      document.getElementById('intro-section').classList.remove('hidden');
+    }
+
+    // ฟังก์ชันตอนกดเลือกไพ่ (ยิง API ไปหาหลังบ้านเพื่อสุ่มรูปจาก Folder)
+    function drawCard() {
+      document.querySelector('.flex.justify-center').style.opacity = '0.3';
+      document.querySelector('.flex.justify-center').style.pointerEvents = 'none';
+      document.getElementById('loading-text').classList.remove('hidden');
+
+      // ใชั action=draw_folder_card และส่ง folderId ไปด้วย
+      fetch(WEB_APP_URL + "?action=draw_folder_card&folderId=" + activeFolderId + "&userId=" + currentUserId)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.status === "success") { showResult(data.imgUrl); } 
+          else if (data && data.status === "insufficient_funds") { showTopupGate(data.balance); } 
+          else { alert("⚠️ " + (data.message || "เกิดข้อผิดพลาด")); window.location.reload(); }
+        }).catch(err => { alert("❌ พลังงานขัดข้อง กรุณาลองใหม่"); window.location.reload(); });
+    }
+
+    function showTopupGate(balance) {
+      document.getElementById('intro-section').classList.add('hidden');
+      document.getElementById('current-balance').innerText = balance.toLocaleString();
+      document.getElementById('topup-section').classList.remove('hidden');
+    }
+
+    function requestTopup(amount) {
+      if (liff.isInClient()) {
+        liff.sendMessages([{ type: 'text', text: 'เติมเงิน_' + amount }]).then(() => liff.closeWindow()).catch(() => alert("ตรวจสอบ Scope ใน LINE Dev"));
+      } else { alert("กรุณาพิมพ์ 'เติมเงิน_" + amount + "' ในแชท LINE"); }
+    }
+
+    function showResult(imgUrl) {
+      document.getElementById('intro-section').classList.add('hidden');
+      document.getElementById('result-section').classList.remove('hidden');
+      
+      // นำลิงก์รูปจาก Google Drive มาใส่ในไพ่
+      document.getElementById('res-image').src = imgUrl;
+
+      setTimeout(() => { document.getElementById('card-inner').classList.add('rotate-y-180'); }, 300);
+    }
+  </script>
+</body>
+</html>

@@ -73,32 +73,48 @@
       const container = document.getElementById('admin-slots-container');
       container.innerHTML = '<div class="col-span-2 text-center text-xs text-slate-400 py-8 font-bold">กำลังเช็ครอบเวลา...</div>';
 
-      fetch(`${WEB_URL}?action=admin_get_slots&date=${date}`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success") {
-            container.innerHTML = "";
-            res.slots.forEach(s => {
-              let btn = document.createElement('button');
-              const isBlocked = s.isBlocked;
-              btn.className = `${isBlocked ? 'slot-blocked' : 'slot-open'} p-3 rounded-2xl text-xs font-bold transition active:scale-95 text-center flex flex-col justify-center items-center shadow-sm`;
-              btn.innerHTML = `
-                <div class="text-[10px] ${isBlocked ? 'text-rose-800' : 'text-emerald-800'} font-extrabold mb-0.5">คิวที่ ${s.queue}</div>
-                <div class="font-bold">${s.time}</div>
-                <div class="text-[9px] ${isBlocked ? 'text-rose-600' : 'text-emerald-600'} font-extrabold mt-1">
-                  ${isBlocked ? '🔴 ปิดรับ (เต็ม)' : '🟢 ว่าง (เปิดรับ)'}
-                </div>
-                ${s.reason ? `<div class="text-[8px] text-slate-400 mt-0.5 truncate max-w-full">${s.reason}</div>` : ''}
-              `;
-              
-              btn.onclick = () => toggleSlot(date, s.time, !isBlocked);
-              container.appendChild(btn);
-            });
-          }
-        })
-        .catch(err => {
-          container.innerHTML = '<div class="col-span-2 text-center text-xs text-rose-500 py-8 font-bold">เกิดข้อผิดพลาดในการโหลดรอบเวลา</div>';
-        });
+      fetch(`${WEB_URL}?action=admin_get_slots&date=${date}`, {
+        method: "GET",
+        mode: "cors",
+        redirect: "follow"
+      })
+      .then(r => {
+        if (!r.ok) throw new Error("HTTP Status " + r.status);
+        return r.json();
+      })
+      .then(res => {
+        if (res.status === "success" && Array.isArray(res.slots)) {
+          container.innerHTML = "";
+          res.slots.forEach(s => {
+            let btn = document.createElement('button');
+            const isBlocked = s.isBlocked;
+            btn.className = `${isBlocked ? 'slot-blocked' : 'slot-open'} p-3 rounded-2xl text-xs font-bold transition active:scale-95 text-center flex flex-col justify-center items-center shadow-sm`;
+            btn.innerHTML = `
+              <div class="text-[10px] ${isBlocked ? 'text-rose-800' : 'text-emerald-800'} font-extrabold mb-0.5">คิวที่ ${s.queue}</div>
+              <div class="font-bold">${s.time}</div>
+              <div class="text-[9px] ${isBlocked ? 'text-rose-600' : 'text-emerald-600'} font-extrabold mt-1">
+                ${isBlocked ? '🔴 เต็ม (ปิด)' : '🟢 ว่าง (เปิด)'}
+              </div>
+              ${s.reason ? `<div class="text-[8px] text-slate-400 mt-0.5 truncate max-w-full">${s.reason}</div>` : ''}
+            `;
+            
+            btn.onclick = () => toggleSlot(date, s.time, !isBlocked);
+            container.appendChild(btn);
+          });
+        } else {
+          throw new Error(res.message || "ข้อมูลไม่ถูกต้อง");
+        }
+      })
+      .catch(err => {
+        container.innerHTML = `
+          <div class="col-span-2 text-center py-6">
+            <div class="text-rose-500 text-xs font-bold mb-2">⚠️ ${err.message}</div>
+            <button onclick="loadAdminSlots()" class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-xl active:scale-95 transition">
+              🔄 กดเพื่อโหลดใหม่อีกครั้ง
+            </button>
+          </div>
+        `;
+      });
     }
 
     function toggleSlot(date, timeSlot, setBlocked) {

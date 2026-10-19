@@ -1,152 +1,195 @@
-const BOOKING_CONFIG = {
-  get SS_ID() { return PropertiesService.getScriptProperties().getProperty("SS_ID"); },
-  get TOKEN() { return PropertiesService.getScriptProperties().getProperty("LINE_TOKEN"); },
-  SHEET_NAME: "bookings",
-  MEMBER_SHEET: "member",
-  PRODUCT_SHEET: "products"
-};
-
-function doGet(e) {
-  const action = e.parameter.action;
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจองคิวพยากรณ์ | วินทร์ทรัพย์นาคราช</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #FAFAFA; color: #111827; font-weight: 500; }
+    /* ธีมสีหรูหรา: ทองคำ, ดำเข้ม, และม่วงอมชมพูพรีเมียม */
+    .luxury-gradient { background: linear-gradient(135deg, #7E22CE 0%, #B45309 100%); }
+    .gold-border { border-color: rgba(217, 119, 6, 0.35); }
+    .luxury-card { background: #FFFFFF; border: 1.5px solid rgba(126, 34, 206, 0.15); box-shadow: 0 10px 30px -5px rgba(126, 34, 206, 0.08); }
+    .text-purple-gold { background: linear-gradient(135deg, #7E22CE 0%, #D97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col p-4 max-w-md mx-auto justify-between">
   
-  if (action === "get_member") {
-    const userId = e.parameter.userId;
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", member: getMemberInfoByUserId_(userId) })).setMimeType(ContentService.MimeType.JSON);
-  }
-  
-  if (action === "get_packages") {
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", packages: getAllCatalogProducts_() })).setMimeType(ContentService.MimeType.JSON);
-  }
-  
-  if (action === "check_slots") {
-    const date = e.parameter.date;
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", slots: getAvailableSlots_(date) })).setMimeType(ContentService.MimeType.JSON);
-  }
-  
-  return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Invalid action" })).setMimeType(ContentService.MimeType.JSON);
-}
-
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    if (data.action === "create_booking") {
-      return ContentService.createTextOutput(JSON.stringify(createBooking_(data))).setMimeType(ContentService.MimeType.JSON);
-    }
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Unknown action" })).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.message })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-// ดึงรายการแพ็กเกจจากชีต products (คอลัมน์ A ถึง E)
-function getAllCatalogProducts_() {
-  try {
-    const ss = SpreadsheetApp.openById(BOOKING_CONFIG.SS_ID);
-    const sheet = ss.getSheetByName(BOOKING_CONFIG.PRODUCT_SHEET);
-    if (!sheet) return [];
-    const data = sheet.getDataRange().getValues();
-    const list = [];
-    
-    for (let i = 1; i < data.length; i++) {
-      const productId = String(data[i][0] || "").trim(); // Col A
-      const name = String(data[i][1] || "").trim();      // Col B
-      const price = Number(data[i][2]) || 0;             // Col C
-      const imageUrl = String(data[i][3] || "").trim();    // Col D
-      const description = String(data[i][4] || "").trim(); // Col E
+  <div>
+    <!-- ส่วนหัว: ธีมสว่าง ขาว-ทอง-ดำ-ม่วงอมชมพู พร้อมสัญลักษณ์พญานาค -->
+    <header class="text-center py-6 border-b gold-border mb-6 bg-white/80 backdrop-blur rounded-2xl shadow-sm">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-purple-50 border-2 gold-border mb-2 shadow-inner">
+        <span class="text-2xl">🐉</span>
+      </div>
+      <p class="text-[11px] tracking-[0.3em] text-purple-700 uppercase font-bold">THE WIN MU</p>
+      <h1 class="text-xl font-bold text-slate-900 mt-1 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
+      <p class="text-xs text-slate-500 mt-0.5 font-normal">ระบบจองคิวพยากรณ์และศรัทธามหามงคล</p>
       
-      if (productId && name) {
-        list.push({
-          id: productId,
-          name: name,
-          price: price,
-          description: description || "บริการพยากรณ์พิเศษโดยวินทร์ทรัพย์นาคราช",
-          imageUrl: imageUrl || "https://placehold.co/600x400/F8FAFC/D97706?text=The+Win+Mu"
+      <div id="member-badge" class="mt-3 inline-block bg-purple-50/80 border gold-border px-4 py-1.5 rounded-full text-xs text-purple-900 font-bold shadow-sm">
+        กำลังตรวจสอบข้อมูลสมาชิก...
+      </div>
+    </header>
+
+    <!-- รายการแพ็กเกจ (ดึงจากชีต products อัตโนมัติ) -->
+    <div id="step-packages" class="space-y-4">
+      <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังเชื่อมต่อฐานข้อมูลแพ็กเกจศักดิ์สิทธิ์...</div>
+    </div>
+
+    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
+    <div id="step-datetime" style="display: none;" class="space-y-4">
+      <button onclick="backToPackages()" class="text-purple-700 text-xs font-bold flex items-center gap-1 mb-2 hover:opacity-80">❮ กลับไปเลือกแพ็กเกจอื่น</button>
+      <div class="bg-purple-50/50 border gold-border rounded-2xl p-4 shadow-sm">
+        <p class="text-[11px] text-purple-800 font-semibold uppercase tracking-wider">แพ็กเกจที่ท่านเลือก</p>
+        <p id="selected-pkg-name" class="text-sm font-bold text-slate-900 mt-1"></p>
+      </div>
+      <div>
+        <label class="text-xs text-slate-700 block mb-2 font-bold">เลือกวันที่ต้องการ (ภายใน 15 วันนี้)</label>
+        <input type="date" id="booking-date" onchange="checkSlots()" class="w-full bg-white border gold-border rounded-xl p-3 text-sm text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500/20 shadow-sm">
+      </div>
+      <div>
+        <label class="text-xs text-slate-700 block mb-2 font-bold">สถานะรอบเวลา (🟩 ว่าง | 🟥 เต็ม)</label>
+        <div id="slots-container" class="grid grid-cols-2 gap-2.5">
+          <p class="text-xs text-slate-400 col-span-2 py-6 text-center font-normal">กรุณาเลือกวันที่ด้านบนเพื่อตรวจสอบรอบเวลา</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="action-box" style="display: none;" class="mt-8">
+    <button onclick="submitBooking()" class="w-full luxury-gradient text-white font-bold py-4 rounded-xl text-sm shadow-xl shadow-purple-900/20 transition-all active:scale-95 tracking-wide">ยืนยันการจองคิว & รับใบกำกับภาษี</button>
+  </div>
+
+  <footer class="text-center text-[11px] text-slate-400 py-6 border-t border-slate-200 mt-8 font-normal">
+    The Win Mu Official © 2026 — All Rights Reserved.
+  </footer>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAJeHPfi9p4K-ouN-9z-8rG79REIP0qNiQwWzM1F9M5BfWJ2H1WZQ_4V4P0d8v0uM/exec";
+    let currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a";
+    let memberInfo = { memberCode: "M0000", name: "สมาชิก" };
+    let bookingData = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
+
+    window.onload = async function() {
+      try {
+        await liff.init({ liffId: "2007499712-B0uid9G3" });
+        if (liff.isLoggedIn()) currentUserId = (await liff.getProfile()).userId;
+      } catch (e) {}
+      fetchMemberData();
+      fetchPackages();
+      setMinMaxDate();
+    };
+
+    function setMinMaxDate() {
+      const today = new Date().toISOString().split('T')[0];
+      const maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + 15);
+      const maxStr = maxDate.toISOString().split('T')[0];
+      const dateInput = document.getElementById('booking-date');
+      dateInput.min = today;
+      dateInput.max = maxStr;
+    }
+
+    function fetchMemberData() {
+      fetch(WEB_APP_URL + "?action=get_member&userId=" + currentUserId)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            memberInfo = data.member;
+            document.getElementById('member-badge').innerText = "👤 " + memberInfo.name + " (" + memberInfo.memberCode + ")";
+          }
         });
+    }
+
+    function fetchPackages() {
+      fetch(WEB_APP_URL + "?action=get_packages")
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success" && data.packages) {
+            const container = document.getElementById('step-packages');
+            container.innerHTML = "";
+            data.packages.forEach(pkg => {
+              const card = document.createElement('div');
+              card.className = "luxury-card rounded-2xl p-4 cursor-pointer hover:border-purple-500 transition-all transform hover:-translate-y-0.5";
+              card.onclick = () => selectPackage(pkg.name, pkg.price);
+              card.innerHTML = `
+                <div class="flex justify-between items-start gap-2">
+                  <h3 class="font-bold text-base text-slate-900">${pkg.name}</h3>
+                  <span class="text-purple-800 font-bold text-sm bg-purple-50 px-3 py-1 rounded-xl border gold-border whitespace-nowrap">${pkg.price} ฿</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed font-normal">${pkg.description}</p>
+              `;
+              container.appendChild(card);
+            });
+          }
+        });
+    }
+
+    function selectPackage(name, price) {
+      bookingData.packageName = name;
+      bookingData.price = price;
+      document.getElementById('step-packages').style.display = 'none';
+      document.getElementById('step-datetime').style.display = 'block';
+      document.getElementById('selected-pkg-name').innerText = name + " — " + price + " บาท";
+    }
+
+    function checkSlots() {
+      const date = document.getElementById('booking-date').value;
+      if (!date) return;
+      fetch(WEB_APP_URL + "?action=check_slots&date=" + date)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('slots-container');
+          container.innerHTML = "";
+          data.slots.forEach(slot => {
+            const btn = document.createElement('button');
+            if (slot.available) {
+              btn.className = "bg-emerald-50 border border-emerald-300 p-3 rounded-xl text-xs text-emerald-900 font-bold shadow-sm transition hover:bg-emerald-100";
+              btn.innerText = "🟩 " + slot.time + " (ว่าง)";
+              btn.onclick = () => selectTime(slot.time, btn);
+            } else {
+              btn.className = "bg-red-50 border border-red-200 p-3 rounded-xl text-xs text-red-400 opacity-60 cursor-not-allowed font-bold";
+              btn.innerText = "🟥 " + slot.time + " (เต็ม)";
+              btn.disabled = true;
+            }
+            container.appendChild(btn);
+          });
+        });
+    }
+
+    function selectTime(timeStr, btnEl) {
+      bookingData.bookingTime = timeStr;
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('ring-2', 'ring-purple-600', 'bg-purple-50'));
+      btnEl.classList.add('time-btn', 'ring-2', 'ring-purple-600', 'bg-purple-50');
+      document.getElementById('action-box').style.display = 'block';
+    }
+
+    function backToPackages() {
+      document.getElementById('step-datetime').style.display = 'none';
+      document.getElementById('step-packages').style.display = 'block';
+      document.getElementById('action-box').style.display = 'none';
+    }
+
+    function submitBooking() {
+      bookingData.bookingDate = document.getElementById('booking-date').value;
+      if(!bookingData.bookingDate) {
+        alert("กรุณาเลือกวันที่ต้องการจองคิวก่อนครับ");
+        return;
       }
+      
+      const payload = { action: "create_booking", userId: currentUserId, memberCode: memberInfo.memberCode, customerName: memberInfo.name, ...bookingData };
+
+      fetch(WEB_APP_URL, { method: "post", contentType: "application/json", body: JSON.stringify(payload) })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            alert("✅ จองคิวสำเร็จ! ระบบได้ส่งใบกำกับภาษีแบบย่อไปยังแชท LINE ของท่านแล้ว");
+            window.location.reload();
+          } else { alert("❌ เกิดข้อผิดพลาด: " + data.message); }
+        });
     }
-    return list;
-  } catch (e) { return []; }
-}
-
-function getAvailableSlots_(date) {
-  const defaultSlots = [
-    { time: "13:00 - 13:20", available: true },
-    { time: "14:00 - 14:20", available: true },
-    { time: "15:00 - 15:20", available: false },
-    { time: "16:00 - 16:20", available: true }
-  ];
-  try {
-    const ss = SpreadsheetApp.openById(BOOKING_CONFIG.SS_ID);
-    const sheet = ss.getSheetByName(BOOKING_CONFIG.SHEET_NAME);
-    if (!sheet) return defaultSlots;
-    const rows = sheet.getDataRange().getValues();
-    for (let i = 1; i < rows.length; i++) {
-      if (String(rows[i][6]) === String(date) && String(rows[i][8]) === "Confirmed") {
-        const bookedTime = String(rows[i][7]);
-        defaultSlots.forEach(slot => { if (slot.time === bookedTime) slot.available = false; });
-      }
-    }
-    return defaultSlots;
-  } catch (e) { return defaultSlots; }
-}
-
-function getMemberInfoByUserId_(userId) {
-  try {
-    const ss = SpreadsheetApp.openById(BOOKING_CONFIG.SS_ID);
-    const sheet = ss.getSheetByName(BOOKING_CONFIG.MEMBER_SHEET);
-    if (!sheet) return { memberCode: "M0001", name: "สมาชิกทั่วไป" };
-    const rows = sheet.getDataRange().getValues();
-    for (let i = 1; i < rows.length; i++) {
-      if (String(rows[i][0]).trim() === String(userId).trim()) {
-        return { memberCode: String(rows[i][1] || "M0000"), name: String(rows[i][2] || "สมาชิก") };
-      }
-    }
-    return { memberCode: "M0000", name: "สมาชิกทั่วไป" };
-  } catch (e) { return { memberCode: "M0000", name: "สมาชิก" }; }
-}
-
-function createBooking_(data) {
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
-  try {
-    const ss = SpreadsheetApp.openById(BOOKING_CONFIG.SS_ID);
-    let sheet = ss.getSheetByName(BOOKING_CONFIG.SHEET_NAME);
-    if (!sheet) {
-      sheet = ss.insertSheet(BOOKING_CONFIG.SHEET_NAME);
-      sheet.appendRow(["BookingID", "UserId", "MemberCode", "CustomerName", "PackageName", "Price", "BookingDate", "BookingTime", "Status", "Timestamp"]);
-    }
-    
-    const bookingId = "BK-" + Math.floor(100000 + Math.random() * 900000);
-    sheet.appendRow([bookingId, data.userId, data.memberCode, data.customerName, data.packageName, data.price, data.bookingDate, data.bookingTime, "Confirmed", new Date()]);
-    
-    sendTaxInvoiceFlex_(data.userId, bookingId, data.packageName, data.price, data.bookingDate, data.bookingTime, data.memberCode, data.customerName);
-    
-    return { status: "success", bookingId: bookingId };
-  } catch (err) {
-    return { status: "error", message: err.message };
-  } finally { lock.releaseLock(); }
-}
-
-function sendTaxInvoiceFlex_(userId, bookingId, pkgName, price, date, time, memberCode, name) {
-  const flex = {
-    type: "bubble",
-    header: { type: "box", layout: "vertical", backgroundColor: "#FAF5FF", contents: [{ type: "text", text: "📄 ใบกำกับภาษี/ใบเสร็จรับเงิน (แบบย่อ)", color: "#7E22CE", weight: "bold", size: "xs" }, { type: "text", text: "วินทร์ทรัพย์นาคราช", color: "#1E293B", weight: "bold", size: "md", margin: "sm" }] },
-    body: { type: "box", layout: "vertical", spacing: "sm", contents: [
-      { type: "text", text: "รหัสการจอง: " + bookingId, size: "xs", color: "#64748B" },
-      { type: "text", text: "ลูกค้า: " + name + " (" + memberCode + ")", size: "sm", color: "#1E293B", weight: "bold" },
-      { type: "separator", margin: "md" },
-      { type: "box", layout: "horizontal", contents: [{ type: "text", text: pkgName, size: "sm", color: "#1E293B", wrap: true }, { type: "text", text: price + " ฿", size: "sm", color: "#7E22CE", align: "end", weight: "bold" }] },
-      { type: "separator", margin: "md" },
-      { type: "box", layout: "horizontal", contents: [{ type: "text", text: "วันที่: " + date + " | " + (time || "ผ่านแชท"), size: "xs", color: "#64748B" }] },
-      { type: "box", layout: "horizontal", contents: [{ type: "text", text: "สถานะ: ชำระเงินแล้ว (Confirmed)", size: "xs", color: "#059669", weight: "bold" }] }
-    ]}
-  };
-
-  UrlFetchApp.fetch("https://api.line.me/v2/bot/message/push", {
-    method: "post",
-    contentType: "application/json",
-    headers: { Authorization: "Bearer " + BOOKING_CONFIG.TOKEN },
-    payload: JSON.stringify({ to: userId, messages: [{ type: "flex", altText: "ใบกำกับภาษีแบบย่อ - วินทร์ทรัพย์นาคราช", contents: flex }] }),
-    muteHttpExceptions: true
-  });
-}
+  </script>
+</body>
+</html>

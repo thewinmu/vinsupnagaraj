@@ -2,458 +2,144 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วินทร์ทรัพย์นาคราช • Executive ERP Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ระบบจัดการรอบเวลาคิวดูดวง | วินทร์ทรัพย์นาคราช</title>
+  
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: 'Prompt', sans-serif; background-color: #070A0F; color: #FFFFFF; letter-spacing: -0.01em; }
-    .scb-gold-grad { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); }
-    .scb-emerald-grad { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
-    .card-ios { background: #0E1420; border: 1px solid rgba(255,255,255,0.08); border-radius: 1.5rem; }
-    .nav-pill-active { background: #F59E0B; color: #000000; font-weight: 800; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4); }
-    .gold-badge { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .emerald-badge { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #0F172A; -webkit-tap-highlight-color: transparent; }
+    .slot-open { background-color: #ECFDF5; border: 1.5px solid #10B981; color: #065F46; }
+    .slot-blocked { background-color: #FEF2F2; border: 1.5px solid #EF4444; color: #991B1B; }
   </style>
 </head>
-<body class="min-h-screen p-3 sm:p-6 max-w-6xl mx-auto flex flex-col justify-between">
+<body class="p-4 max-w-md mx-auto min-h-screen flex flex-col justify-between">
   <div>
-    <!-- SCB Style Executive Header -->
-    <header class="flex flex-wrap justify-between items-center py-5 border-b border-slate-800/80 gap-3">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="w-3.5 h-3.5 rounded-full scb-emerald-grad shadow-lg shadow-emerald-500/50"></span>
-          <h1 class="text-xl sm:text-2xl font-black text-amber-400 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
-        </div>
-        <p class="text-xs text-slate-400 font-bold mt-1">iOS Banking Standard • ERP & Backoffice Console</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="loadDashboard()" class="bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/40 text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center gap-2 transition active:scale-95">
-          <span>🔄</span> รีเฟรชฐานข้อมูล
-        </button>
-      </div>
+    <!-- Executive Admin Header -->
+    <header class="bg-slate-900 text-white p-5 rounded-3xl mb-4 shadow-sm border border-slate-800">
+      <div class="text-[11px] text-amber-400 font-bold uppercase tracking-wider">ระบบจัดการหลังบ้าน</div>
+      <h1 class="text-base font-extrabold mt-0.5">เปิด-ปิดรอบคิวพยากรณ์</h1>
+      <p class="text-xs text-slate-400 mt-1">แตะที่กล่องรอบเวลาเพื่อสลับ ว่าง 🟢 / เต็ม 🔴</p>
     </header>
 
-    <!-- iOS Style Scrollable Nav Pills -->
-    <nav class="flex overflow-x-auto space-x-2 py-4 border-b border-slate-900 text-xs font-bold text-slate-400 no-scrollbar">
-      <button id="p-slots" onclick="goTab('slots')" class="px-4 py-2.5 rounded-2xl nav-pill-active transition whitespace-nowrap">📅 รอบคิว & เวลา</button>
-      <button id="p-slips" onclick="goTab('slips')" class="px-4 py-2.5 rounded-2xl transition whitespace-nowrap">🧾 ตรวจสอบสลิป</button>
-      <button id="p-members" onclick="goTab('members')" class="px-4 py-2.5 rounded-2xl transition whitespace-nowrap">👑 ลูกค้า & สมาชิก</button>
-      <button id="p-products" onclick="goTab('products')" class="px-4 py-2.5 rounded-2xl transition whitespace-nowrap">🛍️ สินค้า 5 หมวด</button>
-      <button id="p-orders" onclick="goTab('orders')" class="px-4 py-2.5 rounded-2xl transition whitespace-nowrap">📦 พัสดุ & ขนส่ง</button>
-      <button id="p-config" onclick="goTab('config')" class="px-4 py-2.5 rounded-2xl transition whitespace-nowrap">⚙️ ตั้งค่า & เติมเงิน</button>
-    </nav>
-
-    <!-- ================= 1. TAB: SLOTS & BOOKING MANAGER ================= -->
-    <section id="tab-slots" class="mt-6 space-y-4">
-      <div class="card-ios p-5 flex flex-wrap justify-between items-center gap-4">
-        <div>
-          <label class="text-xs font-bold text-amber-400 block mb-1">เลือกวันที่ต้องการตรวจสอบ/จัดการคิว</label>
-          <input type="date" id="slot-date" onchange="renderSlots()" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs font-bold text-white focus:ring-2 focus:ring-amber-500">
-        </div>
-        <div class="text-xs font-bold flex gap-3">
-          <span class="emerald-badge px-3 py-1.5 rounded-xl">🟢 ว่าง (แตะเพื่อล็อกเต็ม)</span>
-          <span class="gold-badge px-3 py-1.5 rounded-xl">🔴 เต็ม/ปิดรอบ (แตะเพื่อเปิด)</span>
-        </div>
-      </div>
-      <div id="slots-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
-    </section>
-
-    <!-- ================= 2. TAB: SLIP VERIFICATION ================= -->
-    <section id="tab-slips" style="display: none;" class="mt-6 space-y-4">
-      <div class="card-ios p-5">
-        <h2 class="text-sm font-extrabold text-amber-400 mb-3">🧾 รายการรออนุมัติสลิป (คิวดูดวง / ขอพร / เติมเงินกระเป๋า)</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-bold">
-            <thead class="text-slate-400 border-b border-slate-800 pb-2">
-              <tr>
-                <th class="p-3">รหัส/ประเภท</th>
-                <th class="p-3">ลูกค้า / สมาชิก</th>
-                <th class="p-3">ยอดโอน</th>
-                <th class="p-3">หลักฐานสลิป</th>
-                <th class="p-3 text-center">การดำเนินการ</th>
-              </tr>
-            </thead>
-            <tbody id="slip-table-body" class="divide-y divide-slate-800/40"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= 3. TAB: MEMBERS CRM ================= -->
-    <section id="tab-members" style="display: none;" class="mt-6 space-y-4">
-      <input type="text" id="member-search" oninput="filterMembers()" placeholder="🔍 ค้นหาสมาชิกด้วยชื่อ, เบอร์โทร, หรือ Line User ID..." 
-        class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-3.5 text-xs font-bold text-white focus:outline-none focus:border-amber-500">
-      <div class="card-ios overflow-hidden">
-        <table class="w-full text-left text-xs font-bold">
-          <thead class="text-slate-400 border-b border-slate-800 bg-slate-900/60">
-            <tr>
-              <th class="p-4">สมาชิก</th>
-              <th class="p-4">วันเกิด/เวลาเกิด (ผูกดวง)</th>
-              <th class="p-4">ระดับ Tier</th>
-              <th class="p-4">กระเป๋าเงิน (Wallet)</th>
-              <th class="p-4">คะแนน</th>
-              <th class="p-4 text-center">จัดการ</th>
-            </tr>
-          </thead>
-          <tbody id="member-table-body" class="divide-y divide-slate-800/50"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ================= 4. TAB: 5-CATEGORY PRODUCTS & MYSHOP ================= -->
-    <section id="tab-products" style="display: none;" class="mt-6 space-y-4">
-      <div class="flex justify-between items-center gap-2">
-        <div class="flex gap-2 overflow-x-auto pb-1 text-[11px] font-bold">
-          <button onclick="filterCategory('all')" class="bg-amber-500 text-black px-3 py-1.5 rounded-xl">ทั้งหมด</button>
-          <button onclick="filterCategory('บริการดูดวง')" class="bg-slate-800 px-3 py-1.5 rounded-xl">🔮 บริการดูดวง</button>
-          <button onclick="filterCategory('ไอเทมสายมู')" class="bg-slate-800 px-3 py-1.5 rounded-xl">📿 ไอเทมสายมู</button>
-          <button onclick="filterCategory('หนังสือมือสอง')" class="bg-slate-800 px-3 py-1.5 rounded-xl">📚 หนังสือมือสอง</button>
-          <button onclick="filterCategory('wallpaper')" class="bg-slate-800 px-3 py-1.5 rounded-xl">📱 วอลเปเปอร์</button>
-          <button onclick="filterCategory('ขอพรออนไลน์')" class="bg-slate-800 px-3 py-1.5 rounded-xl">🕯️ ขอพรออนไลน์</button>
-        </div>
-      </div>
-      <div class="card-ios overflow-hidden">
-        <table class="w-full text-left text-xs font-bold">
-          <thead class="text-slate-400 border-b border-slate-800 bg-slate-900/60">
-            <tr>
-              <th class="p-4">รหัส / รายการ</th>
-              <th class="p-4">หมวดหมู่</th>
-              <th class="p-4">ราคาบูชา</th>
-              <th class="p-4">คงเหลือ</th>
-              <th class="p-4">MyShop Link</th>
-              <th class="p-4 text-center">สถานะหน้าเว็บ</th>
-            </tr>
-          </thead>
-          <tbody id="product-table-body" class="divide-y divide-slate-800/50"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ================= 5. TAB: ORDERS & SHIPPING ================= -->
-    <section id="tab-orders" style="display: none;" class="mt-6 space-y-4">
-      <div class="card-ios p-5">
-        <h2 class="text-sm font-extrabold text-amber-400 mb-3">📦 การจัดส่งพัสดุ & ขนส่ง</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-bold">
-            <thead class="text-slate-400 border-b border-slate-800 pb-2">
-              <tr>
-                <th class="p-3">เลขออเดอร์</th>
-                <th class="p-3">สินค้าที่สั่ง</th>
-                <th class="p-3">ที่อยู่ปลายทาง</th>
-                <th class="p-3">สถานะ</th>
-                <th class="p-3">เลขติดตามพัสดุ (Tracking)</th>
-              </tr>
-            </thead>
-            <tbody id="order-table-body" class="divide-y divide-slate-800/50"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= 6. TAB: CONFIG & TOP-UP PACKAGES ================= -->
-    <section id="tab-config" style="display: none;" class="mt-6 space-y-4">
-      <div class="card-ios p-6 space-y-5">
-        <h2 class="text-sm font-black text-amber-400 border-b border-slate-800 pb-2">⚙️ การตั้งค่าระบบหลัก (Core Parameters)</h2>
-        <div>
-          <label class="text-xs font-bold text-slate-300 block mb-1">Web App Script URL (ระบบชีต)</label>
-          <input type="text" id="cfg-url" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-bold text-white">
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="text-xs font-bold text-slate-300 block mb-1">เวลาเริ่มเปิดคิว (นาฬิกา)</label>
-            <input type="number" id="cfg-slot-start" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-bold text-white">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-300 block mb-1">เวลาปิดคิวรอบสุดท้าย (นาฬิกา)</label>
-            <input type="number" id="cfg-slot-end" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-bold text-white">
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-300 block mb-1">ตัวเลือกเมนูยอดเติมเงิน (Wallet Top-up Choices)</label>
-          <input type="text" id="cfg-topup" placeholder="100, 300, 500, 1000, 2000" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-bold text-white">
-        </div>
-        <button onclick="saveAllConfig()" class="scb-gold-grad text-black font-extrabold text-xs py-3.5 px-8 rounded-2xl shadow-xl shadow-amber-500/20 active:scale-95 transition">
-          💾 บันทึกคอนฟิกทั้งหมด
+    <!-- กล่องเลือกวันที่ -->
+    <div class="bg-white p-4 rounded-3xl border border-slate-200 mb-4 shadow-sm">
+      <label class="text-xs font-bold text-slate-700 block mb-1.5">📅 เลือกวันที่ต้องการจัดการ</label>
+      <input type="date" id="manage-date" onchange="loadAdminSlots()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-slate-900">
+      
+      <!-- ปุ่มทางลัด ปิด/เปิดทั้งวัน -->
+      <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100">
+        <button onclick="setAllDay(true)" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-bold transition active:scale-95">
+          🔴 ปิดรับทั้งวัน
+        </button>
+        <button onclick="setAllDay(false)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-2.5 rounded-xl text-xs font-bold transition active:scale-95">
+          🟢 เปิดรับทั้งวัน
         </button>
       </div>
-    </section>
-  </div>
+    </div>
 
-  <!-- Member CRM Modal -->
-  <div id="crm-modal" style="display: none;" class="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-    <div class="card-ios p-6 max-w-sm w-full space-y-4 border border-amber-500/30">
-      <h3 class="text-sm font-black text-amber-400">แก้ไขข้อมูลสมาชิกระดับสูง</h3>
-      <input type="hidden" id="modal-uid">
-      <div>
-        <label class="text-[11px] font-bold text-slate-400">ชื่อลูกค้า</label>
-        <input type="text" id="modal-name" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs font-bold text-white">
+    <!-- รายการ 15 คิว -->
+    <div class="flex justify-between items-center mb-2 px-1">
+      <span class="text-xs font-bold text-slate-700">รอบเวลาทั้งหมด (15 คิว)</span>
+      <div class="text-[10px] font-bold flex gap-2">
+        <span class="text-emerald-700 font-extrabold">🟢 ว่าง (เปิด)</span>
+        <span class="text-rose-700 font-extrabold">🔴 เต็ม (ปิด)</span>
       </div>
-      <div>
-        <label class="text-[11px] font-bold text-slate-400">ระดับสมาชิก (Membership Tier)</label>
-        <select id="modal-tier" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs font-bold text-white">
-          <option value="Standard">Standard (สมาชิกทั่วไป)</option>
-          <option value="VIP">VIP (สายมูพิเศษ)</option>
-          <option value="VVIP">VVIP (ศิษย์เอกครอบครู)</option>
-        </select>
-      </div>
-      <div>
-        <label class="text-[11px] font-bold text-slate-400">ยอดเงินคงเหลือในกระเป๋า (Wallet - ฿)</label>
-        <input type="number" id="modal-wallet" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs font-bold text-emerald-400">
-      </div>
-      <div>
-        <label class="text-[11px] font-bold text-slate-400">คะแนนสะสม (Points - 🪙)</label>
-        <input type="number" id="modal-points" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs font-bold text-amber-400">
-      </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button onclick="document.getElementById('crm-modal').style.display='none'" class="bg-slate-800 text-xs font-bold px-4 py-2 rounded-xl">ยกเลิก</button>
-        <button onclick="submitMemberCRM()" class="scb-gold-grad text-black font-extrabold text-xs px-5 py-2 rounded-xl">บันทึก</button>
-      </div>
+    </div>
+
+    <div id="admin-slots-container" class="grid grid-cols-2 gap-2.5 max-h-[55vh] overflow-y-auto p-1">
+      <div class="col-span-2 text-center text-xs text-slate-400 py-8 font-bold">กำลังโหลดข้อมูลรอบคิว...</div>
     </div>
   </div>
 
-  <footer class="text-center py-6 text-xs font-bold text-slate-600 border-t border-slate-900 mt-10">
-    วินทร์ทรัพย์นาคราช ERP System &copy; 2026 • SCB Emerald Gold Architecture
+  <footer class="text-center py-4 text-[11px] text-slate-400">
+    วินทร์ทรัพย์นาคราช Backoffice • ซิงค์กับชีต <span class="font-bold text-slate-600">slot_blocks</span>
   </footer>
 
   <script>
-    const WEB_URL = APP_CONFIG.WEB_URL;
-    let db = { members: [], products: [], bookings: [], orders: [], topups: [], config: {} };
+    const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbx3LX000XBAZ63J7s3vgPKYkw2SM78WM8O6Z0YMbGaxOa7krdt_8tcmiQMrURnvniveJg/exec";
+    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
     window.onload = function() {
-      document.getElementById('slot-date').value = new Date().toISOString().split('T')[0];
-      loadDashboard();
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('manage-date').value = today;
+      loadAdminSlots();
     };
 
-    function goTab(t) {
-      ['slots', 'slips', 'members', 'products', 'orders', 'config'].forEach(n => {
-        document.getElementById('tab-' + n).style.display = (n === t ? 'block' : 'none');
-        document.getElementById('p-' + n).className = (n === t ? 'px-4 py-2.5 rounded-2xl nav-pill-active transition whitespace-nowrap' : 'px-4 py-2.5 rounded-2xl transition whitespace-nowrap');
-      });
-      if (t === 'slots') renderSlots();
-    }
+    function loadAdminSlots() {
+      const date = document.getElementById('manage-date').value;
+      const container = document.getElementById('admin-slots-container');
+      container.innerHTML = '<div class="col-span-2 text-center text-xs text-slate-400 py-8 font-bold">กำลังเช็ครอบเวลา...</div>';
 
-    function loadDashboard() {
-      const date = document.getElementById('slot-date').value;
-      fetch(WEB_URL + "?action=admin_get_dashboard&date=" + date)
+      fetch(`${WEB_URL}?action=admin_get_slots&date=${date}`)
         .then(r => r.json())
         .then(res => {
           if (res.status === "success") {
-            db = res;
-            renderSlots(res.slots);
-            renderSlips();
-            renderMembers(res.members);
-            renderProducts(res.products);
-            renderOrders(res.orders);
-            renderConfig(res.config);
+            container.innerHTML = "";
+            res.slots.forEach(s => {
+              let btn = document.createElement('button');
+              const isBlocked = s.isBlocked;
+              btn.className = `${isBlocked ? 'slot-blocked' : 'slot-open'} p-3 rounded-2xl text-xs font-bold transition active:scale-95 text-center flex flex-col justify-center items-center shadow-sm`;
+              btn.innerHTML = `
+                <div class="text-[10px] ${isBlocked ? 'text-rose-800' : 'text-emerald-800'} font-extrabold mb-0.5">คิวที่ ${s.queue}</div>
+                <div class="font-bold">${s.time}</div>
+                <div class="text-[9px] ${isBlocked ? 'text-rose-600' : 'text-emerald-600'} font-extrabold mt-1">
+                  ${isBlocked ? '🔴 ปิดรับ (เต็ม)' : '🟢 ว่าง (เปิดรับ)'}
+                </div>
+                ${s.reason ? `<div class="text-[8px] text-slate-400 mt-0.5 truncate max-w-full">${s.reason}</div>` : ''}
+              `;
+              
+              btn.onclick = () => toggleSlot(date, s.time, !isBlocked);
+              container.appendChild(btn);
+            });
           }
+        })
+        .catch(err => {
+          container.innerHTML = '<div class="col-span-2 text-center text-xs text-rose-500 py-8 font-bold">เกิดข้อผิดพลาดในการโหลดรอบเวลา</div>';
         });
     }
 
-    // --- 1. SLOTS ---
-    function renderSlots(slots) {
-      const date = document.getElementById('slot-date').value;
-      const c = document.getElementById('slots-container');
-      c.innerHTML = "";
-      (slots || []).forEach(s => {
-        let div = document.createElement('div');
-        let isAvail = s.available;
-        div.className = `p-4 rounded-2xl border font-black text-xs cursor-pointer transition active:scale-95 ${isAvail ? 'bg-emerald-950/30 border-emerald-600/50 text-emerald-400' : 'bg-rose-950/30 border-rose-600/50 text-rose-400'}`;
-        div.innerHTML = `
-          <div class="flex justify-between items-center">
-            <span>${s.time}</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-lg ${isAvail ? 'bg-emerald-500 text-black font-extrabold' : 'bg-rose-600 text-white font-extrabold'}">${isAvail ? 'ว่าง' : 'เต็ม/ปิด'}</span>
-          </div>
-          <p class="text-[10px] text-slate-400 mt-2 font-semibold">${s.reason || (isAvail ? 'เปิดรับคิวปกติ' : 'ล็อกระบบ')}</p>
-        `;
-        div.onclick = () => toggleSlotState(date, s.time, isAvail);
-        c.appendChild(div);
-      });
-    }
-
-    function toggleSlotState(date, time, current) {
+    function toggleSlot(date, timeSlot, setBlocked) {
       fetch(WEB_URL, {
         method: "post",
         contentType: "application/json",
-        body: JSON.stringify({ action: "admin_toggle_slot", date, time, isBlocked: current })
-      }).then(r => r.json()).then(res => { if(res.status === "success") loadDashboard(); });
-    }
-
-    // --- 2. SLIPS ---
-    function renderSlips() {
-      const tbody = document.getElementById('slip-table-body');
-      tbody.innerHTML = "";
-      const pendingBookings = (db.bookings || []).filter(b => b.status === "Pending Payment");
-      const pendingTopups = (db.topups || []).filter(t => t.status === "Pending");
-      
-      const allPending = [
-        ...pendingBookings.map(x => ({ id: x.bookingId, type: "booking", desc: x.packageName, amount: x.price, slip: x.slipUrl, user: x.userId })),
-        ...pendingTopups.map(x => ({ id: x.txId, type: "topup", desc: "เติมเงินกระเป๋า", amount: x.amount, slip: x.slipUrl, user: x.userId }))
-      ];
-
-      if (allPending.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500 font-bold">ไม่มีสลิปที่รอตรวจสอบ</td></tr>';
-        return;
-      }
-
-      allPending.forEach(p => {
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="p-3"><span class="gold-badge px-2 py-0.5 rounded text-[10px]">${p.type.toUpperCase()}</span><br><span class="text-slate-400">${p.id}</span></td>
-          <td class="p-3">${p.user.substring(0,10)}...<br><span class="text-[10px] text-slate-400">${p.desc}</span></td>
-          <td class="p-3 text-emerald-400 font-extrabold">${p.amount.toLocaleString()} ฿</td>
-          <td class="p-3">${p.slip ? `<a href="${p.slip}" target="_blank" class="text-amber-400 underline">ดูรูปสลิป</a>` : '<span class="text-slate-500">ไม่มีรูป</span>'}</td>
-          <td class="p-3 text-center">
-            <button onclick="verifySlip('${p.id}', '${p.type}')" class="scb-emerald-grad text-white px-3 py-1.5 rounded-xl font-bold text-xs shadow-md shadow-emerald-700/40">อนุมัติเงิน</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
+        body: JSON.stringify({
+          action: "admin_toggle_slot",
+          date: date,
+          timeSlot: timeSlot,
+          isBlocked: setBlocked
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          loadAdminSlots();
+        }
       });
     }
 
-    function verifySlip(id, type) {
-      if(!confirm("ยืนยันตรวจสอบยอดเงินถูกต้องและอนุมัติรายการนี้?")) return;
+    function setAllDay(setBlocked) {
+      const date = document.getElementById('manage-date').value;
+      const confirmText = setBlocked ? "ต้องการปิดรับคิวทั้งวัน ใช่หรือไม่?" : "ต้องการเปิดรับคิวทั้งวัน ใช่หรือไม่?";
+      if (!confirm(confirmText)) return;
+
       fetch(WEB_URL, {
         method: "post",
         contentType: "application/json",
-        body: JSON.stringify({ action: "admin_verify_slip", id, type })
-      }).then(r => r.json()).then(res => { if(res.status === "success") loadDashboard(); });
-    }
-
-    // --- 3. MEMBERS ---
-    function renderMembers(list) {
-      const tbody = document.getElementById('member-table-body');
-      tbody.innerHTML = "";
-      (list || []).forEach(m => {
-        let tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-900/40";
-        tr.innerHTML = `
-          <td class="p-4">
-            <div class="font-extrabold text-white">${m.name || 'ไม่ระบุชื่อ'}</div>
-            <div class="text-[10px] text-slate-500 font-bold">${m.phone || '-'} | ${m.userId.substring(0,8)}...</div>
-          </td>
-          <td class="p-4 text-slate-300">📅 ${m.birthDate || '-'} <br>⏰ ${m.birthTime || '-'}</td>
-          <td class="p-4"><span class="px-2.5 py-1 rounded-xl text-[10px] font-black ${m.tier === 'VVIP' ? 'bg-purple-900 text-purple-200' : m.tier === 'VIP' ? 'bg-amber-900 text-amber-200' : 'bg-slate-800 text-slate-400'}">${m.tier}</span></td>
-          <td class="p-4 text-emerald-400 font-extrabold">${m.wallet.toLocaleString()} ฿</td>
-          <td class="p-4 text-amber-400 font-extrabold">${m.points} 🪙</td>
-          <td class="p-4 text-center"><button onclick="openMemberModal('${m.userId}')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-700">✏️ แก้ไข</button></td>
-        `;
-        tbody.appendChild(tr);
+        body: JSON.stringify({
+          action: "admin_toggle_all_day",
+          date: date,
+          isBlocked: setBlocked
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          loadAdminSlots();
+        }
       });
-    }
-
-    function openMemberModal(uid) {
-      const m = db.members.find(x => x.userId === uid);
-      if (!m) return;
-      document.getElementById('modal-uid').value = m.userId;
-      document.getElementById('modal-name').value = m.name;
-      document.getElementById('modal-tier').value = m.tier;
-      document.getElementById('modal-wallet').value = m.wallet;
-      document.getElementById('modal-points').value = m.points;
-      document.getElementById('crm-modal').style.display = 'flex';
-    }
-
-    function submitMemberCRM() {
-      const data = {
-        action: "admin_update_member",
-        userId: document.getElementById('modal-uid').value,
-        name: document.getElementById('modal-name').value,
-        tier: document.getElementById('modal-tier').value,
-        wallet: Number(document.getElementById('modal-wallet').value),
-        points: Number(document.getElementById('modal-points').value)
-      };
-      fetch(WEB_URL, { method: "post", contentType: "application/json", body: JSON.stringify(data) })
-        .then(r => r.json()).then(res => {
-          if (res.status === "success") {
-            document.getElementById('crm-modal').style.display = 'none';
-            loadDashboard();
-          }
-        });
-    }
-
-    // --- 4. PRODUCTS ---
-    function renderProducts(list) {
-      const tbody = document.getElementById('product-table-body');
-      tbody.innerHTML = "";
-      (list || []).forEach(p => {
-        let isAct = p.status === 'ACTIVE';
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="p-4 font-extrabold text-white">${p.name}<br><span class="text-[10px] text-slate-500 font-normal">ID: ${p.id}</span></td>
-          <td class="p-4"><span class="gold-badge px-2 py-0.5 rounded text-[10px]">${p.category}</span></td>
-          <td class="p-4 text-amber-400 font-black">${p.price.toLocaleString()} ฿</td>
-          <td class="p-4 text-slate-300 font-bold">${p.stock}</td>
-          <td class="p-4">${p.myShopLink ? `<a href="${p.myShopLink}" target="_blank" class="text-emerald-400 underline text-[11px]">🔗 MyShop Link</a>` : '<span class="text-slate-600">-</span>'}</td>
-          <td class="p-4 text-center">
-            <button onclick="toggleProduct('${p.id}', '${isAct ? 'HIDDEN' : 'ACTIVE'}')" class="px-3.5 py-1.5 rounded-xl text-xs font-black ${isAct ? 'scb-emerald-grad text-white' : 'bg-slate-800 text-slate-500'}">
-              ${isAct ? '🟢 แสดง' : '⚪ ซ่อน'}
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function toggleProduct(id, newStatus) {
-      const prod = db.products.find(x => x.id === id);
-      if(!prod) return;
-      prod.status = newStatus;
-      fetch(WEB_URL, {
-        method: "post",
-        contentType: "application/json",
-        body: JSON.stringify({ action: "admin_save_product", ...prod })
-      }).then(r => r.json()).then(res => { if(res.status === "success") loadDashboard(); });
-    }
-
-    // --- 5. ORDERS & SHIPPING ---
-    function renderOrders(list) {
-      const tbody = document.getElementById('order-table-body');
-      tbody.innerHTML = "";
-      (list || []).forEach(o => {
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="p-3 text-amber-400 font-extrabold">${o.orderId}</td>
-          <td class="p-3 text-slate-200">${o.items}</td>
-          <td class="p-3 text-slate-400 text-[11px]">${o.address || '-'}</td>
-          <td class="p-3"><span class="emerald-badge px-2 py-0.5 rounded text-[10px]">${o.status}</span></td>
-          <td class="p-3">
-            <input type="text" value="${o.tracking || ''}" placeholder="ใส่เลข Flash/Kerry..." 
-              onchange="updateTracking('${o.orderId}', this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white">
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function updateTracking(orderId, tracking) {
-      fetch(WEB_URL, {
-        method: "post",
-        contentType: "application/json",
-        body: JSON.stringify({ action: "admin_update_order_tracking", orderId, tracking })
-      }).then(r => r.json()).then(res => { if(res.status === "success") alert("บันทึกเลขพัสดุเรียบร้อย"); });
-    }
-
-    // --- 6. CONFIG ---
-    function renderConfig(cfg) {
-      document.getElementById('cfg-url').value = cfg.WEB_URL || APP_CONFIG.WEB_URL;
-      document.getElementById('cfg-slot-start').value = cfg.SLOT_START_HOUR || "9";
-      document.getElementById('cfg-slot-end').value = cfg.SLOT_END_HOUR || "22";
-      document.getElementById('cfg-topup').value = cfg.TOPUP_CHOICES || "100, 300, 500, 1000, 2000";
-    }
-
-    function saveAllConfig() {
-      const settings = {
-        WEB_URL: document.getElementById('cfg-url').value.trim(),
-        SLOT_START_HOUR: document.getElementById('cfg-slot-start').value,
-        SLOT_END_HOUR: document.getElementById('cfg-slot-end').value,
-        TOPUP_CHOICES: document.getElementById('cfg-topup').value.trim()
-      };
-      fetch(WEB_URL, {
-        method: "post",
-        contentType: "application/json",
-        body: JSON.stringify({ action: "admin_save_config", settings })
-      }).then(r => r.json()).then(res => { if(res.status === "success") alert("บันทึกการตั้งค่าระบบเรียบร้อย"); });
     }
   </script>
 </body>

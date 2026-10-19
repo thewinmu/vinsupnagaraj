@@ -10,73 +10,74 @@
   <style> body { font-family: 'Prompt', sans-serif; background-color: #020617; } </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col p-4 max-w-md mx-auto justify-between">
-  
   <div>
     <header class="text-center py-5 border-b border-amber-500/20 mb-4">
       <p class="text-[10px] tracking-[0.2em] text-amber-500 uppercase font-bold">THE WIN MU</p>
-      <h1 class="text-xl font-bold text-amber-400 mt-1">รายการแพ็กเกจพยากรณ์</h1>
-      
-      <div id="member-badge" class="mt-3 inline-block bg-slate-900 border border-amber-500/40 px-4 py-1.5 rounded-full text-xs text-amber-300 shadow">
-        กำลังโหลดข้อมูลสมาชิก...
-      </div>
+      <h1 class="text-xl font-bold text-amber-400 mt-1">จองคิวพยากรณ์</h1>
+      <div id="member-badge" class="mt-2 inline-block bg-slate-900 border border-amber-500/40 px-4 py-1 rounded-full text-xs text-amber-300">กำลังตรวจสอบสมาชิก...</div>
     </header>
 
-    <!-- ขั้นที่ 1: แสดงรายการสินค้า/แพ็กเกจที่ดึงมาจากชีต products -->
+    <!-- รายการแพ็กเกจ -->
     <div id="step-packages" class="space-y-3">
-      <div class="text-center text-xs text-slate-400 py-6">กำลังดึงรายการแพ็กเกจจากระบบ...</div>
+      <div class="text-center text-xs text-slate-400 py-6">กำลังโหลดแพ็กเกจ...</div>
     </div>
 
-    <!-- ขั้นที่ 2: เลือกวัน-เวลา (สำหรับแพ็กเกจที่ต้องนัดหมาย) -->
+    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
-      <button onclick="backToPackages()" class="text-amber-400 text-xs">❮ เปลี่ยนแพ็กเกจ</button>
+      <button onclick="backToPackages()" class="text-amber-400 text-xs">❮ กลับไปเลือกแพ็กเกจ</button>
       <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3">
         <p id="selected-pkg-name" class="text-sm font-bold text-amber-300"></p>
       </div>
       <div>
-        <label class="text-xs text-slate-400 block mb-2">เลือกวันที่ต้องการ</label>
-        <input type="date" id="booking-date" class="w-full bg-slate-900 border border-amber-500/40 rounded-xl p-3 text-sm text-slate-100 focus:outline-none">
+        <label class="text-xs text-slate-400 block mb-2">เลือกวันที่ (ภายใน 15 วันนี้)</label>
+        <input type="date" id="booking-date" onchange="checkSlots()" class="w-full bg-slate-900 border border-amber-500/40 rounded-xl p-3 text-sm text-slate-100 focus:outline-none">
       </div>
       <div>
-        <label class="text-xs text-slate-400 block mb-2">เลือกรอบเวลา</label>
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="selectTime('13:00 - 13:20')" class="time-btn bg-slate-900 border border-amber-500/30 p-2.5 rounded-xl text-xs text-amber-300">13:00 - 13:20</button>
-          <button onclick="selectTime('14:00 - 14:20')" class="time-btn bg-slate-900 border border-amber-500/30 p-2.5 rounded-xl text-xs text-amber-300">14:00 - 14:20</button>
-          <button onclick="selectTime('15:00 - 15:20')" class="time-btn bg-slate-900 border border-amber-500/30 p-2.5 rounded-xl text-xs text-amber-300">15:00 - 15:20</button>
-          <button onclick="selectTime('16:00 - 16:20')" class="time-btn bg-slate-900 border border-amber-500/30 p-2.5 rounded-xl text-xs text-amber-300">16:00 - 16:20</button>
+        <label class="text-xs text-slate-400 block mb-2">สถานะรอบเวลา (🟩 ว่าง | 🟥 เต็ม)</label>
+        <div id="slots-container" class="grid grid-cols-2 gap-2">
+          <p class="text-xs text-slate-500 col-span-2">กรุณาเลือกวันที่ก่อนครับ</p>
         </div>
       </div>
     </div>
   </div>
 
   <div id="action-box" style="display: none;" class="mt-6">
-    <button onclick="submitBooking()" class="w-full bg-gradient-to-r from-amber-500 to-amber-700 text-slate-950 font-bold py-3.5 rounded-xl text-sm shadow">ยืนยันการจองคิวทันที</button>
+    <button onclick="submitBooking()" class="w-full bg-gradient-to-r from-amber-500 to-amber-700 text-slate-950 font-bold py-3.5 rounded-xl text-sm shadow">ยืนยันการจอง & รับใบกำกับภาษี</button>
   </div>
 
   <script>
     const WEB_APP_URL = "วาง_WEB_APP_URL_ของคุณตรงนี้";
     let currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a";
-    let memberInfo = { memberCode: "M0000", name: "กำลังโหลด..." };
-    let bookingData = { packageName: "", price: 0, isTimeRequired: false, bookingDate: "", bookingTime: "" };
+    let memberInfo = { memberCode: "M0000", name: "สมาชิก" };
+    let bookingData = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
 
     window.onload = async function() {
       try {
         await liff.init({ liffId: "2007499712-O7LXXVaY" });
         if (liff.isLoggedIn()) currentUserId = (await liff.getProfile()).userId;
       } catch (e) {}
-      
       fetchMemberData();
       fetchPackages();
+      setMinMaxDate();
     };
+
+    function setMinMaxDate() {
+      const today = new Date().toISOString().split('T')[0];
+      const maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + 15);
+      const maxStr = maxDate.toISOString().split('T')[0];
+      const dateInput = document.getElementById('booking-date');
+      dateInput.min = today;
+      dateInput.max = maxStr;
+    }
 
     function fetchMemberData() {
       fetch(WEB_APP_URL + "?action=get_member&userId=" + currentUserId)
         .then(res => res.json())
         .then(data => {
-          if (data.status === "success" && data.member) {
+          if (data.status === "success") {
             memberInfo = data.member;
             document.getElementById('member-badge').innerText = "👤 " + memberInfo.name + " (" + memberInfo.memberCode + ")";
-          } else {
-            document.getElementById('member-badge').innerText = "👤 ลูกค้าทั่วไป (M0000)";
           }
         });
     }
@@ -86,53 +87,59 @@
         .then(res => res.json())
         .then(data => {
           if (data.status === "success" && data.packages) {
-            renderPackages(data.packages);
-          } else {
-            document.getElementById('step-packages').innerHTML = '<div class="text-center text-xs text-red-400">ไม่พบข้อมูลแพ็กเกจในชีต products</div>';
+            const container = document.getElementById('step-packages');
+            container.innerHTML = "";
+            data.packages.forEach(pkg => {
+              const card = document.createElement('div');
+              card.className = "bg-slate-900 border border-amber-500/30 rounded-2xl p-4 cursor-pointer hover:border-amber-400 transition shadow";
+              card.onclick = () => selectPackage(pkg.name, pkg.price);
+              card.innerHTML = `
+                <h3 class="font-bold text-base text-slate-100">${pkg.name}</h3>
+                <p class="text-xs text-slate-400 mt-1">${pkg.description}</p>
+                <p class="text-amber-400 font-bold text-sm mt-2">${pkg.price} บาท</p>
+              `;
+              container.appendChild(card);
+            });
           }
         });
     }
 
-    function renderPackages(packages) {
-      const container = document.getElementById('step-packages');
-      container.innerHTML = "";
-      
-      packages.forEach(pkg => {
-        // ตรวจสอบเงื่อนไขว่าแพ็กเกจไหนต้องจองเวลา (เช่น แพ็กเกจที่มีคำว่า "โทร" หรือ "ชม." หรือ "นาที")
-        const needTime = pkg.name.includes("โทร") || pkg.name.includes("ชม") || pkg.name.includes("นาที");
-        
-        const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-amber-500/30 rounded-2xl p-4 cursor-pointer hover:border-amber-400 transition shadow-lg";
-        card.onclick = () => selectPackage(pkg.name, pkg.price, needTime);
-        
-        card.innerHTML = `
-          <span class="text-xs bg-amber-500/10 text-amber-400 px-2.5 py-0.5 rounded-full">${needTime ? 'โทรคุย (จองเวลา)' : 'ผ่านแชท (ใช้งานทันที)'}</span>
-          <h3 class="font-bold text-base text-slate-100 mt-2">${pkg.name}</h3>
-          <p class="text-xs text-slate-400 mt-0.5">${pkg.description}</p>
-          <p class="text-amber-400 font-bold text-sm mt-2">${pkg.price} บาท</p>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function selectPackage(name, price, reqTime) {
+    function selectPackage(name, price) {
       bookingData.packageName = name;
       bookingData.price = price;
-      bookingData.isTimeRequired = reqTime;
-      
-      if (reqTime) {
-        document.getElementById('step-packages').style.display = 'none';
-        document.getElementById('step-datetime').style.display = 'block';
-        document.getElementById('selected-pkg-name').innerText = "📦 " + name + " (" + price + " ฿)";
-      } else {
-        submitBooking();
-      }
+      document.getElementById('step-packages').style.display = 'none';
+      document.getElementById('step-datetime').style.display = 'block';
+      document.getElementById('selected-pkg-name').innerText = "📦 " + name + " (" + price + " ฿)";
     }
 
-    function selectTime(timeStr) {
+    function checkSlots() {
+      const date = document.getElementById('booking-date').value;
+      if (!date) return;
+      fetch(WEB_APP_URL + "?action=check_slots&date=" + date)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('slots-container');
+          container.innerHTML = "";
+          data.slots.forEach(slot => {
+            const btn = document.createElement('button');
+            if (slot.available) {
+              btn.className = "bg-emerald-950 border border-emerald-500/50 p-2.5 rounded-xl text-xs text-emerald-300 font-medium";
+              btn.innerText = "🟩 " + slot.time + " (ว่าง)";
+              btn.onclick = () => selectTime(slot.time, btn);
+            } else {
+              btn.className = "bg-red-950 border border-red-500/50 p-2.5 rounded-xl text-xs text-red-400 opacity-60 cursor-not-allowed";
+              btn.innerText = "🟥 " + slot.time + " (เต็ม)";
+              btn.disabled = true;
+            }
+            container.appendChild(btn);
+          });
+        });
+    }
+
+    function selectTime(timeStr, btnEl) {
       bookingData.bookingTime = timeStr;
-      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('bg-amber-500', 'text-slate-950'));
-      event.target.classList.add('bg-amber-500', 'text-slate-950');
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('ring-2', 'ring-amber-400'));
+      btnEl.classList.add('ring-2', 'ring-amber-400');
       document.getElementById('action-box').style.display = 'block';
     }
 
@@ -143,40 +150,17 @@
     }
 
     function submitBooking() {
-      if (bookingData.isTimeRequired) {
-        bookingData.bookingDate = document.getElementById('booking-date').value;
-        if (!bookingData.bookingDate || !bookingData.bookingTime) {
-          alert("กรุณาเลือกวันที่และรอบเวลาก่อนครับ");
-          return;
-        }
-      } else {
-        bookingData.bookingDate = "ใช้งานทันทีผ่านแชท";
-        bookingData.bookingTime = "-";
-      }
+      bookingData.bookingDate = document.getElementById('booking-date').value;
+      const payload = { action: "create_booking", userId: currentUserId, memberCode: memberInfo.memberCode, customerName: memberInfo.name, ...bookingData };
 
-      const payload = { 
-        action: "create_booking", 
-        userId: currentUserId, 
-        memberCode: memberInfo.memberCode,
-        customerName: memberInfo.name,
-        ...bookingData 
-      };
-
-      fetch(WEB_APP_URL, {
-        method: "post",
-        contentType: "application/json",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "success") {
-          alert("✅ จองคิวสำเร็จ! รหัสการจอง: " + data.bookingId);
-          window.location.reload();
-        } else {
-          alert("❌ เกิดข้อผิดพลาด: " + data.message);
-        }
-      })
-      .catch(err => alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"));
+      fetch(WEB_APP_URL, { method: "post", contentType: "application/json", body: JSON.stringify(payload) })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            alert("✅ จองคิวสำเร็จ! ระบบส่งใบกำกับภาษีแบบย่อให้ทางแชท LINE แล้ว");
+            window.location.reload();
+          } else { alert("❌ เกิดข้อผิดพลาด: " + data.message); }
+        });
     }
   </script>
 </body>

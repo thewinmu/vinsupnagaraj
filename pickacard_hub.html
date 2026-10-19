@@ -6,6 +6,8 @@
   <title>โถงพยากรณ์ | วินทร์ทรัพย์นาคราช</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <!-- 🔗 ดึงการตั้งค่าทั้งหมดมาจากไฟล์ config.js ที่เดียว -->
+  <script src="config.js?v=3"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; }
@@ -84,18 +86,10 @@
   </main>
 
   <script>
-    // 🚨 จุดสำคัญที่สุด: นำ Web App URL ที่กด "คัดลอก" มาจากขั้นตอนที่ 1 มาวางแทนที่ในเครื่องหมายคำพูดด้านล่างนี้ครับ
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwiFVI4CCl1eGEqD9KkNnmdoNE9y8ZO0llllb-Nzk18Bzx9sPhlU64b4sNY0BEXrnFidg/exec";
-
-    const SYSTEM_CONFIG = {
-        LIFF: { HUB: "2007499712-O7LXXVaY" },
-        FOLDER: {
-            KRU: "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN",   
-            ANGEL: "16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2"  
-        }
-    };
-
     let currentUserId = "", activeFolderId = "";
+    
+    // ดึง WEB_APP_URL มาจากไฟล์ config.js โดยตรง ไม่ต้องแก้ในหน้านี้แล้วครับ
+    const WEB_APP_URL = SYSTEM_CONFIG.WEB_APP_URL;
 
     window.onload = async function() {
       try {
@@ -126,7 +120,7 @@
           try {
             data = JSON.parse(text);
           } catch (e) {
-            alert("❌ ลิงก์ WEB_APP_URL ผิดพลาด หรือยังไม่ได้ตั้งค่าสิทธิ์เป็น Anyone:\n" + text.substring(0, 100));
+            alert("❌ ลิงก์ใน config.js ไม่ถูกต้อง หรือยังไม่ได้ Deploy เป็น Anyone:\n" + text.substring(0, 100));
             window.location.reload();
             return;
           }
@@ -140,7 +134,7 @@
             window.location.reload(); 
           }
         }).catch(err => { 
-          alert("❌ เชื่อมต่อหลังบ้านไม่ได้ (กรุณาเช็คบรรทัด WEB_APP_URL ในไฟล์ HTML): " + err.message); 
+          alert("❌ เชื่อมต่อหลังบ้านไม่ได้ (กรุณาเช็คลิงก์ WEB_APP_URL ในไฟล์ config.js): " + err.message); 
           window.location.reload(); 
         });
     }
@@ -162,8 +156,6 @@
       document.getElementById('result-section').classList.remove('hidden');
       
       const imgEl = document.getElementById('res-image');
-      
-      // ระบบสำรอง: ถ้าลิงก์ lh3 โหลดไม่ขึ้น ให้สลับไปใช้ลิงก์ thumbnail แทนอัตโนมัติ
       imgEl.onerror = function() {
         if (fileId && !this.dataset.retried) {
           this.dataset.retried = "true";

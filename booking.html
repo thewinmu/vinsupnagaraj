@@ -38,7 +38,7 @@
       <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังโหลดรายการบริการ...</div>
     </div>
 
-    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
+    <!-- เลือกรอบวันเวลา (เปลี่ยนช่องเลือกวันที่เป็นแบบ Dropdown 15 วัน) -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
       <button id="back-btn" onclick="backToPackages()" class="text-slate-600 text-xs font-bold flex items-center gap-1 mb-2 hover:text-slate-900">❮ กลับไปเลือกบริการอื่น</button>
       <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
@@ -46,12 +46,14 @@
         <p id="selected-pkg-name" class="text-sm font-bold text-slate-900 mt-1"></p>
       </div>
       <div>
-        <label class="text-xs text-slate-700 block mb-2 font-bold">เลือกวันที่ต้องการ (ภายใน 15 วันนี้)</label>
-        <input type="date" id="booking-date" onchange="checkSlots()" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-sm">
+        <label class="text-xs text-slate-700 block mb-2 font-bold">เลือกวันที่ต้องการ (ล่วงหน้า 15 วัน)</label>
+        <select id="booking-date" onchange="checkSlots()" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-sm">
+          <option value="">-- กรุณาเลือกวันที่ต้องการจอง --</option>
+        </select>
       </div>
       <div>
-        <label class="text-xs text-slate-700 block mb-2 font-bold">สถานะรอบเวลา (🟩 ว่าง | 🟥 เต็ม)</label>
-        <div id="slots-container" class="grid grid-cols-2 gap-2.5">
+        <label class="text-xs text-slate-700 block mb-2 font-bold">สถานะรอบเวลา 09:00 - 22:00 น. (🟩 ว่าง | 🟥 เต็ม)</label>
+        <div id="slots-container" class="grid grid-cols-2 gap-2.5 max-h-60 overflow-y-auto p-1">
           <p class="text-xs text-slate-400 col-span-2 py-6 text-center font-normal">กรุณาเลือกวันที่ด้านบนเพื่อตรวจสอบรอบเวลา</p>
         </div>
       </div>
@@ -82,7 +84,7 @@
       } catch (e) {}
       
       fetchMemberData();
-      setMinMaxDate();
+      generateDateDropdown();
 
       const urlParams = new URLSearchParams(window.location.search);
       const directPkg = urlParams.get('pkg');
@@ -97,14 +99,30 @@
       }
     };
 
-    function setMinMaxDate() {
-      const today = new Date().toISOString().split('T')[0];
-      const maxDate = new Date();
-      maxDate.setDate(maxDate.getDate() + 15);
-      const maxStr = maxDate.toISOString().split('T')[0];
-      const dateInput = document.getElementById('booking-date');
-      dateInput.min = today;
-      dateInput.max = maxStr;
+    // สร้างตัวเลือกวันที่แบบ Dropdown ล่วงหน้า 15 วัน
+    function generateDateDropdown() {
+      const select = document.getElementById('booking-date');
+      const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+      const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+      for (let i = 0; i < 15; i++) {
+        let d = new Date();
+        d.setDate(d.getDate() + i);
+        
+        let year = d.getFullYear();
+        let month = String(d.getMonth() + 1).padStart(2, '0');
+        let day = String(d.getDate()).padStart(2, '0');
+        let dateValue = `${year}-${month}-${day}`; // รูปแบบส่งค่าหลังบ้าน YYYY-MM-DD
+
+        let dayName = thaiDays[d.getDay()];
+        let monthName = thaiMonths[d.getMonth()];
+        let displayStr = `วัน${dayName}ที่ ${d.getDate()} ${monthName} ${year + 543}`;
+
+        let opt = document.createElement('option');
+        opt.value = dateValue;
+        opt.innerText = displayStr;
+        select.appendChild(opt);
+      }
     }
 
     function fetchMemberData() {
@@ -192,7 +210,10 @@
 
     function submitBooking() {
       bookingData.bookingDate = document.getElementById('booking-date').value;
-      if(!bookingData.bookingDate) return;
+      if(!bookingData.bookingDate) {
+        alert("กรุณาเลือกวันที่ต้องการจองคิวก่อนครับ");
+        return;
+      }
       
       const payload = { action: "create_booking", userId: currentUserId, memberCode: memberInfo.memberCode, customerName: memberInfo.name, ...bookingData };
 
@@ -205,6 +226,8 @@
             } else {
               window.close();
             }
+          } else {
+            alert("❌ " + data.message);
           }
         })
         .catch(err => {});

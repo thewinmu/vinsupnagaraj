@@ -44,7 +44,7 @@
   </div>
 
   <script>
-    const WEB_URL = "https://script.google.com/macros/s/AKfycbzlDSycXni3-s9YtjOmDbZA2ZH2iE_TFon1nOnBThCl6gYVyqL9rC3jxYe9WcwhXa5E9w/exec";
+    const WEB_URL = "https://script.google.com/macros/s/AKfycby72vUTZJf-eGaWdZg5XwDn4oSo-AkV0RHOCgI54UrAmUQ_SX2zZP97HIvgdrWp8fhzSw/exec";
     let userId = "U8065e05dc54f0ddc3fb46e97492eb53a";
     let userName = "คุณลูกค้า";
     let booking = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
@@ -142,20 +142,40 @@
 
     function submit() {
       booking.bookingDate = document.getElementById('booking-date').value;
-      if (!booking.bookingDate || !booking.bookingTime) return alert("กรุณาเลือกวันและรอบเวลา");
+      if (!booking.bookingDate || !booking.bookingTime) {
+        alert("กรุณาเลือกวันและรอบเวลาให้เรียบร้อยครับ");
+        return;
+      }
 
       let btn = document.getElementById('sub-btn');
-      btn.innerText = "กำลังส่งข้อมูล..."; btn.disabled = true;
+      btn.innerText = "กำลังส่งข้อมูล..."; 
+      btn.disabled = true;
 
       fetch(WEB_URL, {
-        method: "post", contentType: "application/json",
+        method: "post", 
+        contentType: "application/json",
         body: JSON.stringify({ action: "create_booking", userId, customerName: userName, ...booking })
-      }).then(r => r.json()).then(res => {
+      })
+      .then(r => r.json())
+      .then(res => {
         if (res.status === "success") {
-          setTimeout(() => { if (liff.isInClient()) liff.closeWindow(); else window.close(); }, 300);
+          setTimeout(() => { 
+            if (liff.isInClient()) {
+              liff.closeWindow(); 
+            } else {
+              window.close(); 
+            }
+          }, 300);
         } else {
-          alert(res.message); btn.innerText = "ยืนยันการจองคิว"; btn.disabled = false;
+          alert("❌ แจ้งเตือน: " + (res.message || "เกิดข้อผิดพลาด")); 
+          btn.innerText = "ยืนยันการจองคิว"; 
+          btn.disabled = false;
         }
+      })
+      .catch(err => {
+        alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์หลังบ้านได้ (กรุณาตรวจสอบสิทธิ์ Deploy เป็น 'Anyone' ใน Apps Script)");
+        btn.innerText = "ยืนยันการจองคิว"; 
+        btn.disabled = false;
       });
     }
   </script>

@@ -2,158 +2,302 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pick a Card - สาส์นครู | วินทร์ทรัพย์นาคราช</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>สาส์นครู • วินทร์ทรัพย์นาคราช</title>
+  
+  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; } 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.2); } 50% { box-shadow: 0 0 30px rgba(217, 119, 6, 0.7); } }
-    @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    
-    .animate-fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    .animate-float { animation: float 4s ease-in-out infinite; }
-    
-    .perspective-1000 { perspective: 1000px; }
-    .transform-style-3d { transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1); }
-    .backface-hidden { backface-visibility: hidden; }
-    .rotate-y-180 { transform: rotateY(180deg); }
-    
-    .tarot-card { cursor: pointer; transition: all 0.3s ease; }
-    .tarot-card:hover { transform: translateY(-10px) scale(1.05); }
-    
-    .magic-circle {
-      position: absolute; width: 250px; height: 250px; opacity: 0.1;
-      background: radial-gradient(circle, transparent 40%, rgba(217,119,6,0.8) 41%, transparent 43%);
-      border-radius: 50%; animation: spinSlow 20s linear infinite; z-index: 0; pointer-events: none;
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #090D0C; /* ดำมรกต */
+      color: #FCD34D;            /* ทองประกายสว่าง */
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* Gradient หรูหรา เขียวมรกต-ดำ-ขอบทองคำแท้ */
+    .sacred-border {
+      border: 1px solid #D4AF37;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+    }
+
+    .emerald-glow {
+      background: radial-gradient(circle at 50% 20%, #064E3B 0%, #090D0C 85%);
+    }
+
+    /* กองสำรับไพ่ 3D */
+    .card-deck-stack {
+      width: 145px;
+      height: 230px;
+      position: relative;
+      perspective: 1000px;
+      margin: 0 auto;
+    }
+
+    .deck-card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 1.15rem;
+      background: linear-gradient(145deg, #064E3B 0%, #042F2E 65%, #021C1B 100%);
+      border: 1.5px solid #D4AF37;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.85), 0 0 12px rgba(212, 175, 55, 0.2);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* อนิเมชันสับไพ่เต็มสำรับ */
+    @keyframes shuffleLeft {
+      0% { transform: translateX(0) rotate(0deg); }
+      50% { transform: translateX(-75px) rotate(-16deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    @keyframes shuffleRight {
+      0% { transform: translateX(0) rotate(0deg); }
+      50% { transform: translateX(75px) rotate(16deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    .shuffling-left { animation: shuffleLeft 0.5s ease-in-out infinite; }
+    .shuffling-right { animation: shuffleRight 0.5s ease-in-out infinite; }
+
+    /* คลี่สำรับไพ่เต็มจอ แนวนอน */
+    .card-fan-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      padding: 24px 12px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .card-fan-container::-webkit-scrollbar { display: none; }
+
+    .fan-card {
+      flex: 0 0 115px;
+      height: 180px;
+      border-radius: 0.95rem;
+      background: linear-gradient(145deg, #065F46 0%, #042F2E 100%);
+      border: 1.5px solid #F59E0B;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+      transition: transform 0.3s ease, border-color 0.3s;
+      scroll-snap-align: center;
+    }
+    .fan-card:active { transform: translateY(-10px) scale(1.05); border-color: #FCD34D; }
+
+    /* อนิเมชันพลิกการ์ด 3D */
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flipped .flip-card-inner { transform: rotateY(180deg); }
+
+    .flip-front, .flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 1.25rem;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(160deg, #064E3B 0%, #042F2E 75%, #090D0C 100%);
+      border: 1.5px solid #F59E0B;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
     }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col relative overflow-x-hidden">
+<body class="min-h-screen emerald-glow p-4 flex flex-col justify-between max-w-md mx-auto">
+  <div>
+    <!-- Executive Golden Header -->
+    <header class="text-center py-4 border-b border-emerald-950 mb-4">
+      <div class="text-[10px] text-amber-400 font-extrabold tracking-widest uppercase">✦ องค์นาคราชพยากรณ์ ✦</div>
+      <h1 class="text-xl font-black text-amber-300 mt-0.5">สาส์นครู • เสี่ยงทายชะตา</h1>
+      <p class="text-[11px] text-emerald-400 font-medium mt-1">ตั้งจิตนิ่งเพื่อรับพลังงานและปัญญาบารมี</p>
+    </header>
 
-  <div class="fixed inset-0 flex items-center justify-center pointer-events-none z-0">
-    <div class="magic-circle"></div>
-    <div class="absolute w-96 h-96 bg-amber-600/10 rounded-full blur-[100px]"></div>
-  </div>
-
-  <header class="bg-slate-950/50 backdrop-blur-md border-b border-amber-500/20 p-4 text-center sticky top-0 z-40">
-    <p class="text-[10px] tracking-[0.2em] text-amber-500 uppercase font-bold">Pick a Card</p>
-    <h1 class="text-lg font-bold text-amber-400 tracking-widest mt-0.5 font-['Prompt']">สาส์นครู</h1>
-  </header>
-
-  <main class="max-w-md mx-auto p-6 w-full flex-1 flex flex-col items-center justify-center relative z-10 text-center">
-    
-    <div id="intro-section" class="space-y-8 w-full animate-fade-in">
-      <div class="bg-slate-900/60 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_15px_rgba(217,119,6,0.1)]">
-        <p class="text-sm text-amber-100/80 leading-relaxed font-medium">
-          ตั้งจิตอธิษฐานให้เป็นสมาธิ <br><span class="text-amber-400">ค่าครู: 20 บาท (หรือใช้สิทธิ์ฟรี)</span><br>จงเลือกไพ่ 1 ใบ เพื่อรับสาส์นชี้แนะ
-        </p>
-      </div>
-
-      <div class="flex justify-center gap-4 px-2">
-        <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 shadow-lg flex items-center justify-center relative overflow-hidden" style="animation: pulseGlow 3s infinite, float 4s ease-in-out infinite;">
-          <div class="absolute inset-1.5 border border-amber-400/40 rounded-lg flex items-center justify-center"><span class="text-amber-400/60 text-3xl font-serif">✧</span></div>
+    <!-- STEP 1: กองสำรับไพ่รอสับ -->
+    <div id="step-shuffle" class="text-center py-6">
+      <p class="text-xs text-amber-200 font-bold mb-6">ระลึกถึงบารมีครูอาจารย์ แล้วแตะปุ่มเพื่อสับไพ่</p>
+      
+      <div class="card-deck-stack mb-8" id="deck-stack">
+        <div class="deck-card" style="transform: rotate(-4deg);">
+          <div class="text-center opacity-40 text-amber-400 text-3xl">🎴</div>
         </div>
-        <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 shadow-lg flex items-center justify-center relative overflow-hidden" style="animation: pulseGlow 3s infinite; animation-delay: 1s;">
-          <div class="absolute inset-1.5 border border-amber-400/40 rounded-lg flex items-center justify-center"><span class="text-amber-400/60 text-3xl font-serif">✧</span></div>
+        <div class="deck-card" style="transform: rotate(2deg);">
+          <div class="text-center opacity-60 text-amber-400 text-3xl">🎴</div>
         </div>
-        <div onclick="drawCard()" class="tarot-card animate-float aspect-[2/3] w-28 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500/60 shadow-lg flex items-center justify-center relative overflow-hidden" style="animation: pulseGlow 3s infinite; animation-delay: 2s;">
-          <div class="absolute inset-1.5 border border-amber-400/40 rounded-lg flex items-center justify-center"><span class="text-amber-400/60 text-3xl font-serif">✧</span></div>
-        </div>
-      </div>
-      <p id="loading-text" class="text-xs text-amber-500 font-bold hidden animate-pulse">กำลังร่ายเวทมนตร์...</p>
-    </div>
-
-    <!-- Paywall เงินไม่พอ -->
-    <div id="topup-section" class="hidden w-full space-y-5 animate-fade-in">
-      <div class="bg-slate-900 border border-red-500/50 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-        <div class="absolute -right-10 -top-10 w-32 h-32 bg-red-500/10 rounded-full blur-2xl"></div>
-        <h2 class="text-lg font-bold text-red-400 mb-2">⚠️ พลังงานเวทมนตร์ไม่เพียงพอ</h2>
-        <p class="text-sm text-slate-300 mb-4">ยอดเงินของคุณเหลือ <span id="current-balance" class="text-white font-bold">0</span> บาท<br>(ค่าครู 20 บาท)</p>
-        <p class="text-xs text-amber-400 mb-3">กรุณาเลือกยอดที่ต้องการเติมเงิน:</p>
-        <div class="grid grid-cols-3 gap-2.5">
-          <button onclick="requestTopup(10)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">10 ฿</button>
-          <button onclick="requestTopup(20)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">20 ฿</button>
-          <button onclick="requestTopup(30)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">30 ฿</button>
-          <button onclick="requestTopup(50)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">50 ฿</button>
-          <button onclick="requestTopup(80)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">80 ฿</button>
-          <button onclick="requestTopup(100)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 hover:text-white text-sm font-bold py-2.5 rounded-xl transition">100 ฿</button>
-        </div>
-      </div>
-      <button onclick="window.location.reload()" class="text-slate-500 text-xs underline">กลับไปหน้าแรก</button>
-    </div>
-
-    <!-- ไพ่ที่สุ่มได้ -->
-    <div id="result-section" class="hidden w-full space-y-6">
-      <div class="perspective-1000 mx-auto w-56 h-80">
-        <div id="card-inner" class="relative w-full h-full transform-style-3d">
-          <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500 rounded-2xl shadow-[0_0_20px_rgba(217,119,6,0.4)] flex items-center justify-center">
-            <span class="text-amber-500/50 text-5xl font-serif">✧</span>
-          </div>
-          <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-slate-900 border border-amber-400 rounded-2xl shadow-2xl overflow-hidden flex items-center justify-center">
-            <img id="res-image" src="" alt="Card" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
+        <div class="deck-card" id="top-card">
+          <div class="text-center text-amber-300">
+            <div class="text-3xl mb-1">🐍</div>
+            <div class="text-[10px] font-black tracking-widest text-amber-400">วินทร์ทรัพย์นาคราช</div>
           </div>
         </div>
       </div>
-      <div class="bg-slate-900/80 backdrop-blur-md border border-amber-500/30 rounded-2xl p-5 shadow-lg text-left animate-fade-in" style="animation-delay: 0.8s; opacity: 0;">
-        <h3 id="res-name" class="text-xl font-bold text-amber-400 border-b border-amber-500/20 pb-2 mb-3 font-['Prompt']">กำลังประมวลผล...</h3>
-        <p id="res-meaning" class="text-sm text-amber-50/90 leading-relaxed font-['Prompt'] whitespace-pre-line">...</p>
-      </div>
-      <button onclick="window.location.reload()" class="w-full bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-400 hover:to-amber-600 text-slate-950 text-sm font-bold py-3.5 px-4 rounded-xl shadow-[0_0_15px_rgba(217,119,6,0.4)] transition-all mt-4">
-        🔮 เปิดไพ่รับสาส์นอีกครั้ง
+
+      <button id="shuffle-btn" onclick="startShuffle()" class="w-full bg-gradient-to-r from-emerald-900 via-emerald-700 to-emerald-900 text-amber-200 font-extrabold py-4 rounded-2xl text-xs tracking-wider border border-amber-500/50 shadow-lg shadow-emerald-950/60 active:scale-95 transition">
+        ✨ สับไพ่เต็มสำรับ
       </button>
     </div>
 
-  </main>
-  <footer class="text-center py-4 text-[10px] text-slate-500 relative z-10">© The Win Mu Omnichannel System</footer>
+    <!-- STEP 2: คลี่ไพ่เต็มสำรับให้เลือกแตะ -->
+    <div id="step-select" style="display: none;" class="py-4">
+      <div class="text-center mb-4">
+        <div class="text-xs font-bold text-amber-300">สำรับไพ่พร้อมแล้ว</div>
+        <div class="text-[11px] text-emerald-300 mt-0.5">เลื่อนซ้าย-ขวา แล้ว "แตะเลือกไพ่ 1 ใบ" ที่ดึงดูดจิตที่สุด</div>
+      </div>
+
+      <div id="cards-fan" class="card-fan-container py-6"></div>
+      <div class="text-center text-[10px] text-emerald-600 font-semibold mt-2">⇄ เลื่อนแถวไพ่เพื่อสัมผัสพลังงาน</div>
+    </div>
+
+    <!-- STEP 3: ผลคำทำนาย (สาส์นครู) -->
+    <div id="step-result" style="display: none;" class="py-2">
+      <div class="relative w-64 h-96 mx-auto mb-6" id="result-card-box">
+        <div class="flip-card-inner">
+          <div class="flip-front deck-card flex flex-col justify-center items-center">
+            <div class="text-4xl text-amber-300 mb-2">🐍</div>
+            <div class="text-xs font-bold text-amber-400">กำลังเปิดสาส์น...</div>
+          </div>
+          <div class="flip-back p-5 flex flex-col justify-between text-left">
+            <div>
+              <div class="flex justify-between items-center text-[10px] text-amber-400 font-bold mb-1">
+                <span id="res-card-id">CARD --</span>
+                <span>วินทร์ทรัพย์นาคราช</span>
+              </div>
+              <!-- Col C: CardName -->
+              <h2 id="res-card-name" class="text-base font-black text-amber-300 mb-3 border-b border-amber-500/30 pb-2">-</h2>
+              <!-- Col E: Meaning -->
+              <div class="text-xs text-emerald-100 font-normal leading-relaxed overflow-y-auto max-h-52 pr-1" id="res-card-meaning">
+                กำลังอ่านคำทำนาย...
+              </div>
+            </div>
+            <div class="text-[9px] text-amber-400/80 text-center border-t border-emerald-900 pt-2 font-medium">
+              สาส์นครูเพื่อเป็นแสงสว่างและแนวทางดำเนินชีวิต
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ปุ่มเชื่อมต่อไปยังหน้าจองคิว 15 คิว -->
+      <div class="space-y-2 mt-4">
+        <button onclick="window.location.href='./booking.html'" class="w-full bg-gradient-to-r from-emerald-950 via-emerald-800 to-emerald-950 text-amber-300 border border-amber-400/60 font-extrabold py-3.5 rounded-2xl text-xs active:scale-95 transition shadow-lg">
+          🗓️ จองคิวพยากรณ์ส่วนตัวกับอาจารย์
+        </button>
+        <button onclick="resetReading()" class="w-full bg-transparent text-emerald-400 font-bold py-2.5 text-[11px] hover:text-amber-300 transition">
+          ↺ เสี่ยงสาส์นใหม่อีกครั้ง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-4 text-[10px] text-emerald-800">
+    มณฑลพิธีวินทร์ทรัพย์นาคราช • สาส์นครูแท้จากชีต pickacard
+  </footer>
 
   <script>
-    let currentUserId = "";
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxtbe9FCOGtmwSZr6Z6HwPpYK42tDN6EPv53BB42__U-tAx2hCQnOP7rARI0vW5wr83Q/exec";
+    const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw9RJdnqieYUY6QombS0Zmkkim0C8zecq71k0p7kMvwRPzy_Y5NMr8D54WHjd2qUCodEA/exec";
+    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
-    window.onload = async function() {
-      try {
-        await liff.init({ liffId: "2007499712-EtMhu4c2" }); 
-        if (liff.isLoggedIn()) { currentUserId = (await liff.getProfile()).userId; } else { liff.login(); }
-      } catch (err) { currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a"; }
+    let deckData = [];
+
+    window.onload = function() {
+      // โหลดข้อมูลไพ่จริงจากชีต pickacard (Col A=CardID, Col C=CardName, Col E=Meaning)
+      fetch(`${WEB_URL}?action=get_cards`, {
+        method: "GET",
+        mode: "cors",
+        redirect: "follow"
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success" && Array.isArray(res.cards)) {
+          deckData = res.cards;
+        }
+      })
+      .catch(e => console.warn("Fallback deck loaded"));
     };
 
-    function drawCard() {
-      document.querySelector('.flex.justify-center').style.opacity = '0.3';
-      document.querySelector('.flex.justify-center').style.pointerEvents = 'none';
-      document.getElementById('loading-text').classList.remove('hidden');
+    function startShuffle() {
+      const btn = document.getElementById('shuffle-btn');
+      const topCard = document.getElementById('top-card');
+      btn.innerText = "กำลังสลับสำรับไพ่...";
+      btn.disabled = true;
 
-      fetch(WEB_APP_URL + "?action=draw_card&category=สาส์นครู&userId=" + currentUserId)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.status === "success") { showResult(data.card); } 
-          else if (data && data.status === "insufficient_funds") { showTopupGate(data.balance); } 
-          else { alert("⚠️ " + (data.message || "เกิดข้อผิดพลาด")); window.location.reload(); }
-        }).catch(err => { alert("❌ พลังงานขัดข้อง กรุณาลองใหม่"); window.location.reload(); });
+      topCard.classList.add('shuffling-left');
+
+      setTimeout(() => {
+        topCard.classList.remove('shuffling-left');
+        topCard.classList.add('shuffling-right');
+      }, 500);
+
+      setTimeout(() => {
+        topCard.classList.remove('shuffling-right');
+        document.getElementById('step-shuffle').style.display = 'none';
+        renderFannedCards();
+      }, 1400);
     }
 
-    function showTopupGate(balance) {
-      document.getElementById('intro-section').classList.add('hidden');
-      document.getElementById('current-balance').innerText = balance.toLocaleString();
-      document.getElementById('topup-section').classList.remove('hidden');
+    function renderFannedCards() {
+      const container = document.getElementById('cards-fan');
+      container.innerHTML = "";
+      document.getElementById('step-select').style.display = 'block';
+
+      // แสดงไพ่ตามจำนวนในชีต pickacard (ถ้ายังโหลดไม่เสร็จจะใช้ค่าเริ่มต้น 28 ใบ)
+      const count = deckData.length > 0 ? deckData.length : 28;
+
+      for (let i = 0; i < count; i++) {
+        let cardDiv = document.createElement('div');
+        cardDiv.className = "fan-card flex flex-col justify-center items-center cursor-pointer";
+        cardDiv.innerHTML = `
+          <div class="text-xl text-amber-300">🎴</div>
+          <div class="text-[9px] font-bold text-amber-400 mt-2">ใบที่ ${i + 1}</div>
+        `;
+        cardDiv.onclick = () => revealCard(i);
+        container.appendChild(cardDiv);
+      }
     }
 
-    function requestTopup(amount) {
-      if (liff.isInClient()) {
-        liff.sendMessages([{ type: 'text', text: 'เติมเงิน_' + amount }]).then(() => liff.closeWindow()).catch(() => alert("ตรวจสอบ Scope ใน LINE Dev"));
-      } else { alert("กรุณาพิมพ์ 'เติมเงิน_" + amount + "' ในแชท LINE"); }
+    function revealCard(index) {
+      document.getElementById('step-select').style.display = 'none';
+      const stepResult = document.getElementById('step-result');
+      const cardBox = document.getElementById('result-card-box');
+      stepResult.style.display = 'block';
+
+      // ดึงข้อมูลไพ่จริงจากชีต pickacard ตามตำแหน่งที่เลือก
+      let card = (deckData.length > 0 && deckData[index]) 
+                 ? deckData[index] 
+                 : { id: String(index + 1).padStart(2, '0'), name: "สาส์นแห่งการตื่นรู้", meaning: "จิตเดิมแท้กำลังพาคุณก้าวผ่านทุกอุปสรรค ขอให้รักษาความดีและมีสติมั่นคง" };
+
+      // แสดงผล Col A, C, E
+      document.getElementById('res-card-id').innerText = `CARD ${card.id}`;
+      document.getElementById('res-card-name').innerText = card.name;
+      document.getElementById('res-card-meaning').innerText = card.meaning;
+
+      // เอฟเฟกต์พลิกการ์ด 3D เผยสาส์นครู
+      setTimeout(() => {
+        cardBox.classList.add('flipped');
+      }, 300);
     }
 
-    function showResult(cardData) {
-      document.getElementById('intro-section').classList.add('hidden');
-      document.getElementById('result-section').classList.remove('hidden');
-      document.getElementById('res-name').innerText = "✨ " + cardData.name;
-      document.getElementById('res-meaning').innerText = cardData.meaning;
-      document.getElementById('res-image').src = cardData.imgUrl;
-      setTimeout(() => { document.getElementById('card-inner').classList.add('rotate-y-180'); }, 300);
+    function resetReading() {
+      const cardBox = document.getElementById('result-card-box');
+      cardBox.classList.remove('flipped');
+      document.getElementById('step-result').style.display = 'none';
+      document.getElementById('step-shuffle').style.display = 'block';
+      const btn = document.getElementById('shuffle-btn');
+      btn.innerText = "✨ สับไพ่เต็มสำรับ";
+      btn.disabled = false;
     }
   </script>
 </body>

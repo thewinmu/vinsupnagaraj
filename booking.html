@@ -20,7 +20,6 @@
 <body class="min-h-screen flex flex-col p-4 max-w-md mx-auto justify-between">
   
   <div>
-    <!-- ส่วนหัว: สไตล์องค์กรธุรกิจชั้นนำ -->
     <header class="text-center py-6 border-b gold-border mb-6 bg-white rounded-2xl shadow-sm px-4">
       <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl corporate-gradient border gold-border mb-2 shadow-sm">
         <span class="text-xl">🐉</span>
@@ -30,20 +29,20 @@
       <p class="text-xs text-slate-500 mt-0.5 font-normal">ระบบจองคิวบริการพยากรณ์และปรึกษาธุรกิจ</p>
       
       <div id="member-badge" class="mt-3 inline-block bg-slate-50 border border-slate-200 px-4 py-1.5 rounded-lg text-xs text-slate-700 font-semibold shadow-inner">
-        กำลังโหลดข้อมูล...
+        กำลังโหลดข้อมูลสมาชิก...
       </div>
     </header>
 
-    <!-- รายการแพ็กเกจ -->
+    <!-- รายการแพ็กเกจ (กรณีเลือกแบบอิสระ) -->
     <div id="step-packages" class="space-y-3.5">
-      <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังเชื่อมต่อฐานข้อมูลระบบ...</div>
+      <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังโหลดรายการบริการ...</div>
     </div>
 
-    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
+    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน (กรณีเลือกแบบเจาะจงหรือเลือกจากรายการ) -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
-      <button onclick="backToPackages()" class="text-slate-600 text-xs font-bold flex items-center gap-1 mb-2 hover:text-slate-900">❮ กลับไปเลือกแพ็กเกจ</button>
+      <button id="back-btn" onclick="backToPackages()" class="text-slate-600 text-xs font-bold flex items-center gap-1 mb-2 hover:text-slate-900">❮ กลับไปเลือกบริการอื่น</button>
       <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-        <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wider">แพ็กเกจที่เลือก</p>
+        <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wider">บริการที่เลือก</p>
         <p id="selected-pkg-name" class="text-sm font-bold text-slate-900 mt-1"></p>
       </div>
       <div>
@@ -72,6 +71,7 @@
     let currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a";
     let memberInfo = { memberCode: "M0000", name: "ท่านผู้มีเกียรติ" };
     let bookingData = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
+    let isDirectSelection = false;
 
     window.onload = async function() {
       try {
@@ -79,14 +79,23 @@
         if (liff.isLoggedIn()) {
           currentUserId = (await liff.getProfile()).userId;
         }
-      } catch (e) {
-        console.log("LIFF Init fallback used.");
-      }
+      } catch (e) {}
       
-      // ดึงข้อมูลพร้อมกันทันที
       fetchMemberData();
-      fetchPackages();
       setMinMaxDate();
+
+      // ตรวจสอบว่ามีพารามิเตอร์ส่งแพ็กเกจมาแบบเจาะจงหรือไม่ (เช่น ?pkg=ดูดวง%2015%20นาที&price=108)
+      const urlParams = new URLSearchParams(window.location.search);
+      const directPkg = urlParams.get('pkg');
+      const directPrice = urlParams.get('price');
+
+      if (directPkg && directPrice) {
+        isDirectSelection = true;
+        selectPackage(directPkg, Number(directPrice));
+        document.getElementById('back-btn').style.display = 'none'; // ซ่อนปุ่มกลับเพราะเป็นการจองแบบเจาะจง
+      } else {
+        fetchPackages();
+      }
     };
 
     function setMinMaxDate() {
@@ -106,12 +115,7 @@
           if (data.status === "success" && data.member) {
             memberInfo = data.member;
             document.getElementById('member-badge').innerText = "👤 " + memberInfo.name + " (" + memberInfo.memberCode + ")";
-          } else {
-            document.getElementById('member-badge').innerText = "👤 ท่านผู้มีเกียรติ (M0000)";
           }
-        })
-        .catch(err => {
-          document.getElementById('member-badge').innerText = "👤 สมาชิกองค์กร (M0000)";
         });
     }
 
@@ -136,11 +140,8 @@
               container.appendChild(card);
             });
           } else {
-            document.getElementById('step-packages').innerHTML = '<div class="text-center text-xs text-slate-400 py-6">ไม่พบรายการแพ็กเกจในระบบ กรุณาตรวจสอบชีต products</div>';
+            document.getElementById('step-packages').innerHTML = '<div class="text-center text-xs text-slate-400 py-6">ไม่พบรายการบริการในระบบ</div>';
           }
-        })
-        .catch(err => {
-          document.getElementById('step-packages').innerHTML = '<div class="text-center text-xs text-red-500 py-6">เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์</div>';
         });
     }
 
@@ -184,6 +185,7 @@
     }
 
     function backToPackages() {
+      if (isDirectSelection) return;
       document.getElementById('step-datetime').style.display = 'none';
       document.getElementById('step-packages').style.display = 'block';
       document.getElementById('action-box').style.display = 'none';

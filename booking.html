@@ -7,46 +7,66 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style> body { font-family: 'Prompt', sans-serif; background-color: #020617; } </style>
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+    .gold-gradient { background: linear-gradient(135deg, #D97706 0%, #B45309 100%); }
+    .gold-border { border-color: rgba(217, 119, 6, 0.3); }
+    .luxury-card { background: #FFFFFF; border: 1px solid rgba(217, 119, 6, 0.2); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+  </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col p-4 max-w-md mx-auto justify-between">
+<body class="min-h-screen flex flex-col p-4 max-w-md mx-auto justify-between">
+  
   <div>
-    <header class="text-center py-5 border-b border-amber-500/20 mb-4">
-      <p class="text-[10px] tracking-[0.2em] text-amber-500 uppercase font-bold">THE WIN MU</p>
-      <h1 class="text-xl font-bold text-amber-400 mt-1">จองคิวพยากรณ์</h1>
-      <div id="member-badge" class="mt-2 inline-block bg-slate-900 border border-amber-500/40 px-4 py-1 rounded-full text-xs text-amber-300">กำลังตรวจสอบสมาชิก...</div>
+    <!-- ส่วนหัว: ธีมสว่าง หรูหรา พร้อมโลโก้พญานาค -->
+    <header class="text-center py-6 border-b gold-border mb-6">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 border gold-border mb-2 shadow-inner">
+        <!-- สัญลักษณ์พญานาค (Logo Icon) -->
+        <span class="text-xl">🐉</span>
+      </div>
+      <p class="text-[10px] tracking-[0.25em] text-amber-700 uppercase font-bold">THE WIN MU</p>
+      <h1 class="text-xl font-bold text-slate-900 mt-1">วินทร์ทรัพย์นาคราช</h1>
+      <p class="text-xs text-slate-500 mt-0.5">ระบบจองคิวพยากรณ์และศรัทธามหามงคล</p>
+      
+      <div id="member-badge" class="mt-3 inline-block bg-amber-50 border gold-border px-4 py-1 rounded-full text-xs text-amber-800 font-medium shadow-sm">
+        กำลังตรวจสอบสมาชิก...
+      </div>
     </header>
 
-    <!-- รายการแพ็กเกจ -->
-    <div id="step-packages" class="space-y-3">
-      <div class="text-center text-xs text-slate-400 py-6">กำลังโหลดแพ็กเกจ...</div>
+    <!-- ขั้นที่ 1: รายการแพ็กเกจ (ดึงจาก product) -->
+    <div id="step-packages" class="space-y-3.5">
+      <div class="text-center text-xs text-slate-400 py-8">กำลังเชื่อมต่อฐานข้อมูลแพ็กเกจ...</div>
     </div>
 
-    <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
+    <!-- ขั้นที่ 2: เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
-      <button onclick="backToPackages()" class="text-amber-400 text-xs">❮ กลับไปเลือกแพ็กเกจ</button>
-      <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3">
-        <p id="selected-pkg-name" class="text-sm font-bold text-amber-300"></p>
+      <button onclick="backToPackages()" class="text-amber-700 text-xs font-semibold flex items-center gap-1">❮ กลับไปเลือกแพ็กเกจ</button>
+      <div class="bg-amber-50 border gold-border rounded-2xl p-4 shadow-sm">
+        <p class="text-[11px] text-amber-800 font-medium">แพ็กเกจที่เลือก</p>
+        <p id="selected-pkg-name" class="text-sm font-bold text-slate-900 mt-0.5"></p>
       </div>
       <div>
-        <label class="text-xs text-slate-400 block mb-2">เลือกวันที่ (ภายใน 15 วันนี้)</label>
-        <input type="date" id="booking-date" onchange="checkSlots()" class="w-full bg-slate-900 border border-amber-500/40 rounded-xl p-3 text-sm text-slate-100 focus:outline-none">
+        <label class="text-xs text-slate-600 block mb-2 font-medium">เลือกวันที่ต้องการ (ภายใน 15 วันนี้)</label>
+        <input type="date" id="booking-date" onchange="checkSlots()" class="w-full bg-white border gold-border rounded-xl p-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-sm">
       </div>
       <div>
-        <label class="text-xs text-slate-400 block mb-2">สถานะรอบเวลา (🟩 ว่าง | 🟥 เต็ม)</label>
-        <div id="slots-container" class="grid grid-cols-2 gap-2">
-          <p class="text-xs text-slate-500 col-span-2">กรุณาเลือกวันที่ก่อนครับ</p>
+        <label class="text-xs text-slate-600 block mb-2 font-medium">สถานะรอบเวลา (🟩 ว่าง | 🟥 เต็ม)</label>
+        <div id="slots-container" class="grid grid-cols-2 gap-2.5">
+          <p class="text-xs text-slate-400 col-span-2 py-4 text-center">กรุณาเลือกวันที่ด้านบนก่อนครับ</p>
         </div>
       </div>
     </div>
   </div>
 
   <div id="action-box" style="display: none;" class="mt-6">
-    <button onclick="submitBooking()" class="w-full bg-gradient-to-r from-amber-500 to-amber-700 text-slate-950 font-bold py-3.5 rounded-xl text-sm shadow">ยืนยันการจอง & รับใบกำกับภาษี</button>
+    <button onclick="submitBooking()" class="w-full gold-gradient text-white font-bold py-3.5 rounded-xl text-sm shadow-lg shadow-amber-600/20 transition-all active:scale-95">ยืนยันการจอง & รับใบกำกับภาษี</button>
   </div>
 
+  <footer class="text-center text-[11px] text-slate-400 py-6 border-t border-slate-100 mt-6">
+    The Win Mu Official © 2026
+  </footer>
+
   <script>
-    const WEB_APP_URL = "วาง_WEB_APP_URL_ของคุณตรงนี้";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAJeHPfi9p4K-ouN-9z-8rG79REIP0qNiQwWzM1F9M5BfWJ2H1WZQ_4V4P0d8v0uM/exec";
     let currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a";
     let memberInfo = { memberCode: "M0000", name: "สมาชิก" };
     let bookingData = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
@@ -91,12 +111,14 @@
             container.innerHTML = "";
             data.packages.forEach(pkg => {
               const card = document.createElement('div');
-              card.className = "bg-slate-900 border border-amber-500/30 rounded-2xl p-4 cursor-pointer hover:border-amber-400 transition shadow";
+              card.className = "luxury-card rounded-2xl p-4 cursor-pointer hover:border-amber-500 transition-all transform hover:-translate-y-0.5";
               card.onclick = () => selectPackage(pkg.name, pkg.price);
               card.innerHTML = `
-                <h3 class="font-bold text-base text-slate-100">${pkg.name}</h3>
-                <p class="text-xs text-slate-400 mt-1">${pkg.description}</p>
-                <p class="text-amber-400 font-bold text-sm mt-2">${pkg.price} บาท</p>
+                <div class="flex justify-between items-start">
+                  <h3 class="font-bold text-base text-slate-900">${pkg.name}</h3>
+                  <span class="text-amber-700 font-bold text-sm bg-amber-50 px-2.5 py-1 rounded-lg border gold-border">${pkg.price} ฿</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">${pkg.description}</p>
               `;
               container.appendChild(card);
             });
@@ -109,7 +131,7 @@
       bookingData.price = price;
       document.getElementById('step-packages').style.display = 'none';
       document.getElementById('step-datetime').style.display = 'block';
-      document.getElementById('selected-pkg-name').innerText = "📦 " + name + " (" + price + " ฿)";
+      document.getElementById('selected-pkg-name').innerText = name + " — " + price + " บาท";
     }
 
     function checkSlots() {
@@ -123,11 +145,11 @@
           data.slots.forEach(slot => {
             const btn = document.createElement('button');
             if (slot.available) {
-              btn.className = "bg-emerald-950 border border-emerald-500/50 p-2.5 rounded-xl text-xs text-emerald-300 font-medium";
+              btn.className = "bg-emerald-50 border border-emerald-300 p-3 rounded-xl text-xs text-emerald-800 font-semibold shadow-sm transition hover:bg-emerald-100";
               btn.innerText = "🟩 " + slot.time + " (ว่าง)";
               btn.onclick = () => selectTime(slot.time, btn);
             } else {
-              btn.className = "bg-red-950 border border-red-500/50 p-2.5 rounded-xl text-xs text-red-400 opacity-60 cursor-not-allowed";
+              btn.className = "bg-red-50 border border-red-200 p-3 rounded-xl text-xs text-red-400 opacity-60 cursor-not-allowed font-semibold";
               btn.innerText = "🟥 " + slot.time + " (เต็ม)";
               btn.disabled = true;
             }
@@ -138,8 +160,8 @@
 
     function selectTime(timeStr, btnEl) {
       bookingData.bookingTime = timeStr;
-      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('ring-2', 'ring-amber-400'));
-      btnEl.classList.add('ring-2', 'ring-amber-400');
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('ring-2', 'ring-amber-500', 'bg-amber-100'));
+      btnEl.classList.add('ring-2', 'ring-amber-500', 'bg-amber-50');
       document.getElementById('action-box').style.display = 'block';
     }
 

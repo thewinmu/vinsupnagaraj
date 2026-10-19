@@ -20,7 +20,6 @@
       min-height: 100vh;
     }
 
-    /* สไตล์สี ขาว-เขียว-ทอง สว่าง Luxury */
     .luxury-card {
       background: rgba(255, 255, 255, 0.95);
       border: 1.5px solid #D4AF37;
@@ -44,7 +43,7 @@
       transform: scale(0.97);
     }
 
-    /* สำรับไพ่ 3D กองกลาง */
+    /* สำรับไพ่ 3D กลางจอ */
     .deck-container {
       width: 140px;
       height: 220px;
@@ -67,7 +66,7 @@
       transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* แอนิเมชันสับไพ่อลังการเวทมนต์ (Mystic Flying Shuffle) */
+    /* แอนิเมชันสับไพ่อลังการ */
     @keyframes mysticFloat {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-12px) rotate(1deg); }
@@ -91,7 +90,7 @@
     .shuffling-right { animation: magicShuffleRight 0.7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite; }
     .floating-deck { animation: mysticFloat 3s ease-in-out infinite; }
 
-    /* คลี่ไพ่เต็มสำรับแบบวงกลม/พัด */
+    /* คลี่สำรับไพ่ */
     .card-fan-scroll {
       display: flex;
       overflow-x: auto;
@@ -119,10 +118,8 @@
       box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
     }
 
-    /* พลิกไพ่ 3D */
-    .card-3d-box {
-      perspective: 1200px;
-    }
+    /* พลิกการ์ด 3D */
+    .card-3d-box { perspective: 1200px; }
     .card-3d-inner {
       position: relative;
       width: 100%;
@@ -130,9 +127,7 @@
       transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
     }
-    .flipped .card-3d-inner {
-      transform: rotateY(180deg);
-    }
+    .flipped .card-3d-inner { transform: rotateY(180deg); }
 
     .card-front-face, .card-back-face {
       position: absolute;
@@ -152,7 +147,7 @@
 </head>
 <body class="p-4 max-w-md mx-auto flex flex-col justify-between">
   <div>
-    <!-- Executive Luxury Header (ขาว เขียว ทอง สว่าง) -->
+    <!-- Executive Luxury Header -->
     <header class="text-center py-4 bg-white/90 rounded-3xl border border-amber-300 shadow-sm mb-4 px-4 backdrop-blur-md">
       <div class="inline-flex items-center gap-1.5 mb-0.5">
         <span class="text-amber-500 text-xs">✦</span>
@@ -160,13 +155,13 @@
         <span class="text-amber-500 text-xs">✦</span>
       </div>
       <h1 class="text-xl font-extrabold gold-gradient-text tracking-tight">PICK A CARD</h1>
-      <p id="sub-title" class="text-xs text-emerald-700 font-medium mt-0.5">เลือกเรื่องที่จิตต้องการคำตอบ แล้วเริ่มเสี่ยงทาย</p>
+      <p id="sub-title" class="text-xs text-emerald-700 font-medium mt-0.5">เลือกหมวดหมู่ที่ต้องการเปิดคำทำนาย</p>
     </header>
 
-    <!-- STEP 1: หน้าเลือก 5 หมวดหมู่ -->
+    <!-- STEP 1: หน้าเลือก 5 หมวดหมู่ + สาส์นครู -->
     <div id="view-categories" class="space-y-3">
       <div class="text-center text-xs font-bold text-emerald-900 mb-2">
-        กรุณาตั้งจิตถึงเรื่องที่ต้องการ แล้วเลือก 1 หมวดหมู่:
+        ตั้งจิตถึงเรื่องที่ต้องการ แล้วเลือก 1 หมวดหมู่:
       </div>
 
       <div class="grid grid-cols-2 gap-3">
@@ -224,16 +219,16 @@
         <div class="text-amber-600 font-black text-lg pr-1">➔</div>
       </button>
 
-      <!-- ส่วนเชื่อมโยง: สาส์นครู (ชมภาพไพ่สาร์นปู่ทั้งหมด) -->
+      <!-- ส่วนพิเศษ: สาส์นครู (แสดงเฉพาะภาพไพ่สาร์นปู่) -->
       <div class="pt-3">
         <button onclick="pickCategory('สาส์นครู')" class="w-full bg-emerald-950 text-amber-200 border border-amber-400 p-3.5 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold shadow-md active:scale-95 transition">
           <span>🐍</span>
-          <span>สาส์นครู (เปิดชมพลังภาพไพ่สาร์นปู่เต็มสำรับ)</span>
+          <span>สาส์นครู (ชมพลังภาพไพ่สาร์นปู่เต็มสำรับ)</span>
         </button>
       </div>
     </div>
 
-    <!-- STEP 2: แท่นสับไพ่แบบเวทมนต์ (Mystic Shuffle Animation) -->
+    <!-- STEP 2: แท่นสับไพ่แบบเวทมนต์ -->
     <div id="view-shuffle" style="display: none;" class="py-6 text-center">
       <button onclick="backToHub()" class="text-xs font-bold text-emerald-700 mb-3 flex items-center gap-1 mx-auto hover:text-emerald-950">
         ❮ เปลี่ยนหมวดหมู่
@@ -264,7 +259,7 @@
       </button>
     </div>
 
-    <!-- STEP 3: คลี่ไพ่เต็มสำรับให้เลือกสัมผัส -->
+    <!-- STEP 3: คลี่ไพ่เต็มสำรับให้เลือกแตะ -->
     <div id="view-select-card" style="display: none;" class="py-4">
       <div class="text-center mb-2">
         <div class="text-xs font-black text-emerald-950">สำรับไพ่ถูกประสิทธิ์แล้ว</div>
@@ -275,9 +270,9 @@
       <div class="text-center text-[10px] text-emerald-600 font-bold mt-1">⇄ เลื่อนแถวไพ่ไปมาเพื่อสัมผัสพลังงาน</div>
     </div>
 
-    <!-- STEP 4: ผลคำทำนาย (มีภาพไพ่สาร์นปู่ + คำทำนาย Column E) -->
+    <!-- STEP 4: ผลคำทำนาย (รองรับทั้งโหมดข้อความ + รูปภาพ และโหมดสาส์นครูภาพเดี่ยวเต็มจอ) -->
     <div id="view-result" style="display: none;" class="py-2">
-      <div class="card-3d-box relative w-72 h-[460px] mx-auto mb-6" id="result-flipper">
+      <div class="card-3d-box relative w-72 h-[480px] mx-auto mb-6" id="result-flipper">
         <div class="card-3d-inner">
           <!-- หลังไพ่ -->
           <div class="card-front-face tarot-card flex flex-col items-center justify-center">
@@ -285,34 +280,55 @@
             <div class="text-xs font-bold text-amber-200">กำลังเปิดรับสาส์น...</div>
           </div>
 
-          <!-- หน้าไพ่ (แสดงภาพสาร์นปู่ + คำทำนาย) -->
-          <div class="card-back-face p-4 flex flex-col justify-between text-left">
-            <div>
-              <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1.5 pb-1 border-b border-amber-200">
-                <span id="res-code">CARD --</span>
-                <span id="res-cat" class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">หมวด</span>
+          <!-- หน้าไพ่ -->
+          <div class="card-back-face p-3.5 flex flex-col justify-between text-left" id="card-result-container">
+            <!-- ส่วน A: โหมดสาส์นครู (แสดงเฉพาะภาพเต็มใบ) -->
+            <div id="mode-image-only" style="display: none;" class="w-full h-full flex flex-col justify-between">
+              <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1">
+                <span>สาส์นครู • องค์นาคราช</span>
+                <span id="res-guru-code" class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">CARD 01</span>
               </div>
-
-              <!-- กรอบภาพสาร์นปู่ (Drive Image) -->
-              <div class="w-full h-44 rounded-xl overflow-hidden border border-amber-300 mb-2.5 bg-emerald-950 flex items-center justify-center shadow-inner relative">
-                <img id="res-img" src="" alt="ภาพสาร์นปู่" class="w-full h-full object-cover" style="display: none;" onload="this.style.display='block'; document.getElementById('res-loader').style.display='none';">
-                <div id="res-loader" class="text-center text-amber-300 text-xs font-bold p-2">
-                  <div class="text-3xl mb-1 animate-pulse">🐍</div>
-                  กำลังอัญเชิญภาพสาส์น...
+              <div class="w-full flex-1 rounded-2xl overflow-hidden border-2 border-amber-400 bg-emerald-950 flex items-center justify-center shadow-lg relative my-1">
+                <img id="res-guru-img" src="" alt="สาส์นครู" class="w-full h-full object-contain" style="display: none;" onload="this.style.display='block'; document.getElementById('res-guru-loader').style.display='none';">
+                <div id="res-guru-loader" class="text-center text-amber-300 text-xs font-bold p-4">
+                  <div class="text-4xl mb-2 animate-bounce">🐍</div>
+                  กำลังอัญเชิญภาพสาส์นครู...
                 </div>
               </div>
-
-              <!-- Column C: CardName -->
-              <h2 id="res-title" class="text-sm font-black text-emerald-950 mb-1 leading-snug">-</h2>
-
-              <!-- Column E: Meaning -->
-              <div class="text-[11px] text-slate-700 font-normal leading-relaxed overflow-y-auto max-h-32 pr-1" id="res-meaning">
-                กำลังอ่านคำทำนาย...
+              <div class="text-[9px] text-emerald-800 text-center font-bold pt-1">
+                ภาพสาส์นครูแท้จากมณฑลพิธีวินทร์ทรัพย์นาคราช
               </div>
             </div>
 
-            <div class="text-[9px] text-emerald-700 text-center border-t border-slate-100 pt-2 font-bold">
-              วินทร์ทรัพย์นาคราช • สาส์นเพื่อเป็นแสงสว่างแห่งปัญญา
+            <!-- ส่วน B: โหมดข้อความคำทำนาย (การงาน, การเงิน, ความรัก, สุขภาพ, Cards Of the Day) -->
+            <div id="mode-text-card" style="display: none;" class="w-full h-full flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1.5 pb-1 border-b border-amber-200">
+                  <span id="res-code">CARD --</span>
+                  <span id="res-cat" class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">หมวด</span>
+                </div>
+
+                <!-- กรอบภาพสาร์นปู่ (ถ้ามี) -->
+                <div id="box-sub-img" class="w-full h-40 rounded-xl overflow-hidden border border-amber-300 mb-2.5 bg-emerald-950 flex items-center justify-center shadow-inner relative">
+                  <img id="res-img" src="" alt="ภาพไพ่" class="w-full h-full object-cover" style="display: none;" onload="this.style.display='block'; document.getElementById('res-loader').style.display='none';">
+                  <div id="res-loader" class="text-center text-amber-300 text-xs font-bold p-2">
+                    <div class="text-3xl mb-1 animate-pulse">🐍</div>
+                    กำลังอัญเชิญภาพ...
+                  </div>
+                </div>
+
+                <!-- Col C: CardName -->
+                <h2 id="res-title" class="text-sm font-black text-emerald-950 mb-1 leading-snug">-</h2>
+
+                <!-- Col E: Meaning -->
+                <div class="text-[11px] text-slate-700 font-normal leading-relaxed overflow-y-auto max-h-28 pr-1" id="res-meaning">
+                  กำลังอ่านคำทำนาย...
+                </div>
+              </div>
+
+              <div class="text-[9px] text-emerald-700 text-center border-t border-slate-100 pt-2 font-bold">
+                วินทร์ทรัพย์นาคราช • สาส์นเพื่อเป็นแนวทางแห่งปัญญา
+              </div>
             </div>
           </div>
         </div>
@@ -342,7 +358,6 @@
     let cardsData = [];
 
     window.addEventListener('DOMContentLoaded', () => {
-      // เตรียมเชื่อมต่อ LIFF
       if (typeof liff !== 'undefined') {
         liff.init({ liffId: "2007499712-O7LXXVaY" }).catch(e => console.warn("LIFF Init:", e));
       }
@@ -355,7 +370,7 @@
       document.getElementById('view-shuffle').style.display = 'block';
       document.getElementById('sub-title').innerText = "หมวด: " + catName;
 
-      // ดึงข้อมูลไพ่ตามหมวดจากชีต pickacard (Column B)
+      // ส่งชื่อหมวดหมู่ไปกรองใน Column B แบบแม่นยำ
       fetch(`${WEB_URL}?action=get_cards&category=${encodeURIComponent(catName)}`, {
         method: "GET",
         mode: "cors",
@@ -363,21 +378,11 @@
       })
       .then(r => r.json())
       .then(res => {
-        if (res.status === "success" && Array.isArray(res.cards) && res.cards.length > 0) {
+        if (res.status === "success" && Array.isArray(res.cards)) {
           cardsData = res.cards;
-        } else {
-          loadFallbackCards();
         }
       })
-      .catch(e => loadFallbackCards());
-    }
-
-    function loadFallbackCards() {
-      fetch(`${WEB_URL}?action=get_cards`, { method: "GET", mode: "cors", redirect: "follow" })
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success" && Array.isArray(res.cards)) cardsData = res.cards;
-        });
+      .catch(e => console.warn("Fetch cards error:", e));
     }
 
     function backToHub() {
@@ -387,7 +392,7 @@
       document.getElementById('view-select-card').style.display = 'none';
       document.getElementById('view-shuffle').style.display = 'none';
       document.getElementById('view-categories').style.display = 'block';
-      document.getElementById('sub-title').innerText = "เลือกเรื่องที่จิตต้องการคำตอบ แล้วเริ่มเสี่ยงทาย";
+      document.getElementById('sub-title').innerText = "เลือกหมวดหมู่ที่ต้องการเปิดคำทำนาย";
       const btn = document.getElementById('btn-shuffle-action');
       btn.innerText = "✨ อธิษฐานจิต & เริ่มสับไพ่";
       btn.disabled = false;
@@ -418,7 +423,8 @@
       box.innerHTML = "";
       document.getElementById('view-select-card').style.display = 'block';
 
-      const total = cardsData.length > 0 ? cardsData.length : 24;
+      // แสดงจำนวนไพ่ตามที่กรองได้จาก Column B จริง
+      const total = cardsData.length > 0 ? cardsData.length : 15;
 
       for (let i = 0; i < total; i++) {
         let el = document.createElement('div');
@@ -438,28 +444,49 @@
       const flipper = document.getElementById('result-flipper');
       viewResult.style.display = 'block';
 
-      // สุ่มหรือเลือกไพ่ที่ตรงกับ index จาก Column A, C, E
+      // ดึงไพ่ที่ตรงกับ Index ในชุดข้อมูลที่กรองมาแล้ว
       let card = (cardsData.length > 0 && cardsData[idx]) 
                  ? cardsData[idx] 
-                 : { id: String(idx + 1).padStart(2, '0'), category: selectedCat, name: "จิตแห่งแสงสว่าง", meaning: "สถานการณ์กำลังเปิดทาง ขอให้รักษาความตั้งใจจริง ความสำเร็จจะปรากฏเด่นชัด", imageUrl: "" };
+                 : { id: String(idx + 1).padStart(2, '0'), category: selectedCat, name: "จิตแห่งแสงสว่าง", meaning: "สถานการณ์กำลังเปิดทาง ขอให้รักษาความตั้งใจจริง", imageUrl: "", isImageOnly: false };
 
-      document.getElementById('res-code').innerText = `CARD ${card.id}`;
-      document.getElementById('res-cat').innerText = card.category || selectedCat;
-      document.getElementById('res-title').innerText = card.name;
-      document.getElementById('res-meaning').innerText = card.meaning;
+      const modeImgOnly = document.getElementById('mode-image-only');
+      const modeTextCard = document.getElementById('mode-text-card');
 
-      // จัดการภาพไพ่สาร์นปู่ (Google Drive)
-      const img = document.getElementById('res-img');
-      const ldr = document.getElementById('res-loader');
-      if (card.imageUrl) {
-        img.style.display = 'none';
-        ldr.style.display = 'block';
-        img.src = card.imageUrl;
-      } else {
-        ldr.innerHTML = `
-          <div class="text-3xl text-amber-300 mb-1">🐍</div>
-          <div class="text-[10px] text-amber-300 font-bold">${card.name}</div>
-        `;
+      // 1. ถ้าเป็น "สาส์นครู" -> แสดงภาพอย่างเดียว
+      if (card.isImageOnly || selectedCat === "สาส์นครู") {
+        modeTextCard.style.display = 'none';
+        modeImgOnly.style.display = 'flex';
+
+        document.getElementById('res-guru-code').innerText = `CARD ${card.id}`;
+        const guruImg = document.getElementById('res-guru-img');
+        const guruLdr = document.getElementById('res-guru-loader');
+        
+        guruImg.style.display = 'none';
+        guruLdr.style.display = 'block';
+        guruImg.src = card.imageUrl || "https://drive.google.com/uc?export=view&id=16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2";
+      } 
+      // 2. ถ้าเป็นหมวดปกติ (ความรัก, การเงิน, การงาน, สุขภาพ, Cards Of the Day) -> แสดงภาพ + ข้อความคำทำนาย
+      else {
+        modeImgOnly.style.display = 'none';
+        modeTextCard.style.display = 'flex';
+
+        document.getElementById('res-code').innerText = `CARD ${card.id}`;
+        document.getElementById('res-cat').innerText = card.category;
+        document.getElementById('res-title').innerText = card.name;
+        document.getElementById('res-meaning').innerText = card.meaning;
+
+        const img = document.getElementById('res-img');
+        const ldr = document.getElementById('res-loader');
+        const boxImg = document.getElementById('box-sub-img');
+
+        if (card.imageUrl) {
+          boxImg.style.display = 'flex';
+          img.style.display = 'none';
+          ldr.style.display = 'block';
+          img.src = card.imageUrl;
+        } else {
+          boxImg.style.display = 'none'; // ถ้าไม่มีรูปให้ซ่อนเพื่อขยายพื้นที่ข้อความ
+        }
       }
 
       setTimeout(() => {

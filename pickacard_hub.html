@@ -202,7 +202,7 @@
         </button>
       </div>
 
-      <!-- 5. Card Of the Days (แก้ไขชื่อเรียบร้อย) -->
+      <!-- 5. Card Of the Days -->
       <button onclick="pickCategory('Card Of the Days', false)" class="luxury-card w-full p-4 rounded-3xl flex items-center justify-between text-left transition active:scale-98 border-2 border-amber-400/80 bg-gradient-to-r from-white via-amber-50/30 to-emerald-50/30">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-2xl bg-amber-100/60 border border-amber-300 flex items-center justify-center text-2xl shadow-inner">
@@ -219,11 +219,11 @@
         <div class="text-amber-600 font-black text-lg pr-1">➔</div>
       </button>
 
-      <!-- ส่วนแยกพิเศษ: สาส์นครู (เฉพาะรูปภาพใน Drive เท่านั้น ไม่ยุ่งกับ Sheet) -->
+      <!-- ส่วนแยกพิเศษ: สาส์นครู (ดึงเฉพาะภาพจาก Drive ล้วนๆ) -->
       <div class="pt-3">
         <button onclick="pickCategory('สาส์นครู', true)" class="w-full bg-emerald-950 text-amber-200 border border-amber-400 p-3.5 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold shadow-md active:scale-95 transition">
           <span>🐍</span>
-          <span>สาส์นครู (เปิดชมภาพสาร์นปู่จาก Drive ล้วนๆ)</span>
+          <span>สาส์นครู (ชมพลังภาพไพ่สาร์นปู่จาก Drive ล้วนๆ)</span>
         </button>
       </div>
     </div>
@@ -272,7 +272,7 @@
 
     <!-- STEP 4: ผลคำทำนาย -->
     <div id="view-result" style="display: none;" class="py-2">
-      <div class="card-3d-box relative w-72 h-[480px] mx-auto mb-6" id="result-flipper">
+      <div class="card-3d-box relative w-72 h-[490px] mx-auto mb-6" id="result-flipper">
         <div class="card-3d-inner">
           <!-- หลังไพ่ -->
           <div class="card-front-face tarot-card flex flex-col items-center justify-center">
@@ -282,21 +282,22 @@
 
           <!-- หน้าไพ่ -->
           <div class="card-back-face p-3.5 flex flex-col justify-between text-left" id="card-result-container">
-            <!-- ส่วน A: โหมดสาส์นครู (ภาพขนาดใหญ่เต็มใบ 100% ไม่มีกล่องข้อความทับ) -->
+            
+            <!-- ส่วน A: โหมดสาส์นครู (ภาพล้วนๆ เต็มใบ 100% ไม่ต้องมีข้อความใดๆ) -->
             <div id="mode-image-only" style="display: none;" class="w-full h-full flex flex-col justify-between">
               <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1">
                 <span>สาส์นครู • องค์นาคราช</span>
-                <span id="res-guru-code" class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">CARD 01</span>
+                <span class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">สาร์นปู่</span>
               </div>
               <div class="w-full flex-1 rounded-2xl overflow-hidden border-2 border-amber-400 bg-emerald-950 flex items-center justify-center shadow-lg relative my-1">
-                <img id="res-guru-img" src="" alt="สาส์นครู" class="w-full h-full object-contain" style="display: none;" onload="this.style.display='block'; document.getElementById('res-guru-loader').style.display='none';">
+                <img id="res-guru-img" src="" alt="ภาพสาส์นครู" class="w-full h-full object-contain" style="display: none;" onload="this.style.display='block'; document.getElementById('res-guru-loader').style.display='none';">
                 <div id="res-guru-loader" class="text-center text-amber-300 text-xs font-bold p-4">
                   <div class="text-4xl mb-2 animate-bounce">🐍</div>
                   กำลังอัญเชิญภาพสาส์นครู...
                 </div>
               </div>
               <div class="text-[9px] text-emerald-800 text-center font-bold pt-1">
-                ภาพสาส์นครูแท้จากโฟลเดอร์บารมีองค์นาคราช
+                บารมีองค์นาคราชประสิทธิ์
               </div>
             </div>
 
@@ -311,7 +312,7 @@
                 <!-- Col C: CardName -->
                 <h2 id="res-title" class="text-base font-black text-emerald-950 mb-2 leading-snug border-b border-emerald-100 pb-1.5">-</h2>
 
-                <!-- Col E: Meaning (กล่องอ่านข้อความคำทำนายเต็มตา) -->
+                <!-- Col E: Meaning -->
                 <div class="text-xs text-slate-800 font-normal leading-relaxed overflow-y-auto max-h-72 pr-1 space-y-2" id="res-meaning">
                   กำลังอ่านคำทำนาย...
                 </div>
@@ -364,12 +365,9 @@
       document.getElementById('sub-title').innerText = "หมวด: " + catName;
       document.getElementById('deck-sub-badge').innerText = isGuru ? "✦ สาส์นครู ✦" : "✦ PICK A CARD ✦";
 
-      let requestUrl = "";
-      if (isGuru) {
-        requestUrl = `${WEB_URL}?action=get_guru_cards`;
-      } else {
-        requestUrl = `${WEB_URL}?action=get_cards&category=${encodeURIComponent(catName)}`;
-      }
+      let requestUrl = isGuru 
+        ? `${WEB_URL}?action=get_guru_cards` 
+        : `${WEB_URL}?action=get_cards&category=${encodeURIComponent(catName)}`;
 
       fetch(requestUrl, {
         method: "GET",
@@ -450,12 +448,11 @@
       const modeImgOnly = document.getElementById('mode-image-only');
       const modeTextCard = document.getElementById('mode-text-card');
 
-      // 1. ถ้าเป็น "สาส์นครู" -> แสดงภาพจาก Drive 100% เต็มใบ
+      // 1. สาส์นครู -> แสดงเฉพาะภาพล้วนๆ เต็มใบ
       if (isGuruMode || card.isGuruImage) {
         modeTextCard.style.display = 'none';
         modeImgOnly.style.display = 'flex';
 
-        document.getElementById('res-guru-code').innerText = `CARD ${card.id}`;
         const guruImg = document.getElementById('res-guru-img');
         const guruLdr = document.getElementById('res-guru-loader');
         
@@ -463,7 +460,7 @@
         guruLdr.style.display = 'block';
         guruImg.src = card.imageUrl;
       } 
-      // 2. ถ้าเป็นหมวดหมู่จาก Sheet (ความรัก, การเงิน, การงาน, สุขภาพ, Card Of the Days) -> แสดงข้อความคำทำนายเต็มตา
+      // 2. หมวดหมู่จาก Sheet -> แสดงข้อความคำทำนาย
       else {
         modeImgOnly.style.display = 'none';
         modeTextCard.style.display = 'flex';

@@ -4,145 +4,213 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบจองคิวพยากรณ์ | วินทร์ทรัพย์นาคราช</title>
+  
+  <!-- โหลดคอนฟิกส่วนกลาง -->
+  <script src="./config.js"></script>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #0F172A; font-weight: 500; }
-    .executive-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-left: 4px solid #B45309; }
+    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+    .emerald-gradient { background: linear-gradient(135deg, #065F46 0%, #047857 100%); }
+    .card-luxury { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 1.25rem; box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04); }
+    .slot-avail { background-color: #ECFDF5; border: 1.5px solid #10B981; color: #065F46; }
+    .slot-avail:hover { background-color: #D1FAE5; }
+    .slot-busy { background-color: #FEF2F2; border: 1.5px solid #F87171; color: #991B1B; opacity: 0.65; cursor: not-allowed; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col p-4 max-w-md mx-auto justify-between">
+<body class="min-h-screen flex flex-col justify-between p-4 max-w-md mx-auto">
   <div>
-    <header class="text-center py-5 border-b mb-5 bg-white rounded-2xl shadow-sm px-4">
-      <h1 class="text-base font-bold text-slate-900">วินทร์ทรัพย์นาคราช</h1>
-      <p id="user-display" class="text-xs text-slate-500 mt-1">กำลังเชื่อมต่อระบบ...</p>
+    <!-- Top Executive Header -->
+    <header class="text-center py-5 border-b mb-4 bg-white rounded-2xl shadow-sm px-4">
+      <div class="inline-flex items-center gap-2 mb-1">
+        <span class="w-3 h-3 rounded-full bg-emerald-600"></span>
+        <h1 class="text-base font-extrabold text-slate-900 tracking-tight" id="brand-title">วินทร์ทรัพย์นาคราช</h1>
+      </div>
+      <p id="user-display" class="text-xs text-slate-500 font-medium">กำลังเชื่อมต่อ LINE...</p>
     </header>
 
+    <!-- STEP 1: รายการบริการ (กรองเฉพาะประเภท "บริการ" เท่านั้น) -->
     <div id="step-packages" class="space-y-3">
-      <div class="text-center text-xs text-slate-400 py-10">กำลังโหลดบริการ...</div>
+      <div class="text-center text-xs text-slate-400 py-12 font-bold">กำลังโหลดรายการบริการดูดวง...</div>
     </div>
 
+    <!-- STEP 2: ปฏิทินรอบเวลา (09:00 - 20:00 น. ทุก 30 นาที) -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
-      <button onclick="backToPkgs()" class="text-xs font-bold text-slate-600 mb-2">❮ เลือกบริการอื่น</button>
-      <div class="bg-white border rounded-xl p-3 text-sm font-bold text-slate-900" id="selected-pkg-txt"></div>
-      
-      <div>
-        <label class="text-xs text-slate-700 block mb-1 font-bold">เลือกวันที่จอง (15 วัน)</label>
-        <select id="booking-date" onchange="loadSlots()" class="w-full bg-white border rounded-xl p-3 text-sm font-semibold"></select>
+      <button onclick="backToPkgs()" class="text-xs font-bold text-slate-600 mb-1 flex items-center gap-1 hover:text-slate-900">
+        ❮ เปลี่ยนบริการ
+      </button>
+
+      <!-- สรุปบริการที่เลือก -->
+      <div class="card-luxury p-4">
+        <div class="text-[11px] text-slate-400 font-bold">บริการที่เลือก:</div>
+        <div class="text-sm font-black text-emerald-900 mt-0.5" id="selected-pkg-txt"></div>
+        <div class="text-xs font-bold text-amber-700 mt-1" id="selected-price-txt"></div>
       </div>
 
+      <!-- เลือกวันที่ (ปฏิทิน 15 วันข้างหน้า) -->
       <div>
-        <label class="text-xs text-slate-700 block mb-1 font-bold">รอบเวลา 09:00 - 22:00 น.</label>
-        <div id="slots-container" class="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto p-1"></div>
+        <label class="text-xs font-bold text-slate-700 block mb-1.5">📅 เลือกวันที่ต้องการจอง</label>
+        <select id="booking-date" onchange="loadSlots()" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs font-bold text-slate-800 shadow-sm focus:ring-2 focus:ring-emerald-600 outline-none"></select>
+      </div>
+
+      <!-- รอบเวลา 30 นาที เขียว/แดง -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label class="text-xs font-bold text-slate-700">⏰ เลือกรอบเวลา (09:00 - 20:00 น.)</label>
+          <div class="text-[10px] font-bold flex gap-2">
+            <span class="text-emerald-700">🟢 ว่าง</span>
+            <span class="text-rose-700">🔴 จองแล้ว</span>
+          </div>
+        </div>
+        <div id="slots-container" class="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto p-1"></div>
       </div>
     </div>
   </div>
 
+  <!-- ปุ่มกดยืนยันการจอง -->
   <div id="action-box" style="display: none;" class="mt-6">
-    <button id="sub-btn" onclick="submit()" class="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl text-sm shadow-lg">ยืนยันการจองคิว</button>
+    <button id="sub-btn" onclick="submitBooking()" class="w-full emerald-gradient text-white font-extrabold py-4 rounded-2xl text-xs shadow-lg shadow-emerald-800/20 active:scale-95 transition">
+      ยืนยันการจองและออกบิลชำระเงิน
+    </button>
   </div>
 
   <script>
-    // URL ตั้งต้นสำหรับดึง Config ครั้งแรก
-    let WEB_URL = "https://script.google.com/macros/s/AKfycbzIDSycXni3-s9YtjOmDbZA2ZH2iE_Tfon1nOnBhTCl6gYVyqL9rC3jxIe9CwhXa5E9w/exec";
-    
-    let userId = "U8065e05dc54f0ddc3fb46e97492eb53a";
+    const WEB_URL = APP_CONFIG.WEB_URL;
+    const LIFF_ID = APP_CONFIG.LIFF.BOOKING;
+
+    let userId = "U_DEFAULT_USER";
     let userName = "คุณลูกค้า";
-    let booking = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
+    let bookingData = { packageId: "", packageName: "", price: 0, bookingDate: "", bookingTime: "" };
 
     window.onload = async function() {
+      if (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.BRAND_NAME) {
+        document.getElementById('brand-title').innerText = APP_CONFIG.BRAND_NAME;
+      }
+
       try {
-        await liff.init({ liffId: "2007499712-B0uid9G3" });
+        await liff.init({ liffId: LIFF_ID });
         if (liff.isLoggedIn()) {
           const profile = await liff.getProfile();
           userId = profile.userId;
           userName = profile.displayName;
-          document.getElementById('user-display').innerText = "ผู้ใช้งาน: " + userName;
+          document.getElementById('user-display').innerText = "ลูกค้า: " + userName;
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log("LIFF outside LINE:", e);
+      }
 
-      initDates();
+      initDateSelector();
 
-      // ดึง URL ล่าสุดจากชีต config เซลล์ A2 อัตโนมัติ
-      try {
-        let res = await fetch(WEB_URL + "?action=get_config_url");
-        let data = await res.json();
-        if (data.status === "success" && data.webAppUrl) {
-          WEB_URL = data.webAppUrl;
-        }
-      } catch (e) {}
-
+      // ตรวจสอบ Parameter จาก URL (กรณีส่งต่อมาจาก Flex Carousel)
       const params = new URLSearchParams(window.location.search);
-      let p = params.get('pkg'), pr = params.get('price');
-      if (p && pr) {
-        selectPkg(p, Number(pr));
+      const pkgId = params.get('id');
+      const pkgName = params.get('pkg');
+      const pkgPrice = params.get('price');
+
+      if (pkgName && pkgPrice) {
+        selectPackage(pkgId || "", pkgName, Number(pkgPrice));
       } else {
-        loadPkgs();
+        loadPackages();
       }
     };
 
-    function initDates() {
+    function initDateSelector() {
       const sel = document.getElementById('booking-date');
       const days = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
       const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
       for (let i = 0; i < 15; i++) {
-        let d = new Date(); d.setDate(d.getDate() + i);
-        let val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        let d = new Date();
+        d.setDate(d.getDate() + i);
+        let val = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         let opt = document.createElement('option');
         opt.value = val;
-        opt.innerText = `วัน${days[d.getDay()]}ที่ ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()+543}`;
+        opt.innerText = `วัน${days[d.getDay()]}ที่ ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
         sel.appendChild(opt);
       }
     }
 
-    function loadPkgs() {
-      fetch(WEB_URL + "?action=get_packages").then(r => r.json()).then(res => {
-        if (res.status === "success") {
-          let c = document.getElementById('step-packages');
-          c.innerHTML = "";
-          res.packages.forEach(p => {
-            let div = document.createElement('div');
-            div.className = "executive-card rounded-xl p-4 cursor-pointer";
-            div.onclick = () => selectPkg(p.name, p.price);
-            div.innerHTML = `<div class="flex justify-between font-bold text-sm"><span>${p.name}</span><span>${p.price} ฿</span></div>`;
-            c.appendChild(div);
-          });
-        }
-      });
+    function loadPackages() {
+      fetch(WEB_URL + "?action=get_packages")
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            const container = document.getElementById('step-packages');
+            container.innerHTML = "";
+
+            // กรองแสดงเฉพาะประเภท "บริการ" เท่านั้น
+            const servicePackages = (res.packages || []).filter(p => !p.type || p.type === "บริการ");
+
+            if (servicePackages.length === 0) {
+              container.innerHTML = '<div class="text-center text-xs text-slate-400 py-10 font-bold">ไม่พบรายการบริการดูดวงในขณะนี้</div>';
+              return;
+            }
+
+            servicePackages.forEach(p => {
+              let div = document.createElement('div');
+              div.className = "card-luxury p-4 cursor-pointer hover:border-emerald-600 transition";
+              div.onclick = () => selectPackage(p.id, p.name, p.price);
+              div.innerHTML = `
+                <div class="flex justify-between items-center font-bold text-xs">
+                  <div>
+                    <div class="text-slate-900 font-extrabold text-sm">${p.name}</div>
+                    <div class="text-[10px] text-slate-400 font-normal">รหัส: ${p.id}</div>
+                  </div>
+                  <div class="text-emerald-700 font-black text-sm">${p.price.toLocaleString()} ฿</div>
+                </div>
+              `;
+              container.appendChild(div);
+            });
+          }
+        })
+        .catch(err => {
+          document.getElementById('step-packages').innerHTML = '<div class="text-center text-xs text-rose-500 py-10">ไม่สามารถเชื่อมต่อกับระบบได้</div>';
+        });
     }
 
-    function selectPkg(name, price) {
-      booking.packageName = name; booking.price = price;
+    function selectPackage(id, name, price) {
+      bookingData.packageId = id;
+      bookingData.packageName = name;
+      bookingData.price = price;
+
       document.getElementById('step-packages').style.display = 'none';
       document.getElementById('step-datetime').style.display = 'block';
-      document.getElementById('selected-pkg-txt').innerText = name + " (" + price + " บาท)";
+      document.getElementById('selected-pkg-txt').innerText = name;
+      document.getElementById('selected-price-txt').innerText = `ค่าบูชาครู: ${price.toLocaleString()} บาท`;
+
       loadSlots();
     }
 
     function loadSlots() {
-      let date = document.getElementById('booking-date').value;
-      fetch(WEB_URL + "?action=check_slots&date=" + date).then(r => r.json()).then(res => {
-        let c = document.getElementById('slots-container');
-        c.innerHTML = "";
-        res.slots.forEach(s => {
-          let btn = document.createElement('button');
-          if (s.available) {
-            btn.className = "bg-emerald-50 border border-emerald-300 p-2.5 rounded-xl text-xs font-bold text-emerald-900";
-            btn.innerText = "🟩 " + s.time;
-            btn.onclick = () => {
-              booking.bookingTime = s.time;
-              document.querySelectorAll('#slots-container button').forEach(b => b.classList.remove('ring-2', 'ring-slate-900'));
-              btn.classList.add('ring-2', 'ring-slate-900');
-              document.getElementById('action-box').style.display = 'block';
-            };
-          } else {
-            btn.className = "bg-slate-100 border p-2.5 rounded-xl text-xs font-bold text-slate-400 opacity-60";
-            btn.innerText = "🟥 " + s.time; btn.disabled = true;
-          }
-          c.appendChild(btn);
+      const date = document.getElementById('booking-date').value;
+      const c = document.getElementById('slots-container');
+      c.innerHTML = '<div class="text-center text-xs text-slate-400 py-6 col-span-2">กำลังเช็ครอบเวลาว่าง...</div>';
+
+      fetch(WEB_URL + "?action=check_slots&date=" + date)
+        .then(r => r.json())
+        .then(res => {
+          c.innerHTML = "";
+          (res.slots || []).forEach(s => {
+            let btn = document.createElement('button');
+            if (s.available) {
+              btn.className = "slot-avail p-3 rounded-xl text-xs font-bold transition active:scale-95 text-center";
+              btn.innerHTML = `<div>${s.time}</div><div class="text-[9px] text-emerald-700 font-bold">🟢 ว่าง</div>`;
+              btn.onclick = () => {
+                bookingData.bookingTime = s.time;
+                document.querySelectorAll('#slots-container button').forEach(b => b.classList.remove('ring-2', 'ring-slate-900'));
+                btn.classList.add('ring-2', 'ring-slate-900');
+                document.getElementById('action-box').style.display = 'block';
+              };
+            } else {
+              btn.className = "slot-busy p-3 rounded-xl text-xs font-bold text-center";
+              btn.innerHTML = `<div>${s.time}</div><div class="text-[9px] text-rose-700 font-bold">🔴 ${s.statusText || 'จองแล้ว'}</div>`;
+              btn.disabled = true;
+            }
+            c.appendChild(btn);
+          });
         });
-      });
     }
 
     function backToPkgs() {
@@ -151,39 +219,46 @@
       document.getElementById('action-box').style.display = 'none';
     }
 
-    function submit() {
-      booking.bookingDate = document.getElementById('booking-date').value;
-      if (!booking.bookingDate || !booking.bookingTime) {
-        alert("กรุณาเลือกวันและรอบเวลาให้เรียบร้อยครับ");
+    function submitBooking() {
+      bookingData.bookingDate = document.getElementById('booking-date').value;
+      if (!bookingData.bookingDate || !bookingData.bookingTime) {
+        alert("กรุณาเลือกรอบเวลาที่ต้องการจองให้เรียบร้อยครับ");
         return;
       }
 
-      let btn = document.getElementById('sub-btn');
-      btn.innerText = "กำลังจองคิว..."; 
+      const btn = document.getElementById('sub-btn');
+      btn.innerText = "กำลังจองคิว...";
       btn.disabled = true;
 
       fetch(WEB_URL, {
-        method: "post", 
+        method: "post",
         contentType: "application/json",
-        body: JSON.stringify({ action: "create_booking", userId, customerName: userName, ...booking })
+        body: JSON.stringify({
+          action: "create_booking",
+          userId: userId,
+          customerName: userName,
+          ...bookingData
+        })
       })
       .then(r => r.json())
       .then(res => {
         if (res.status === "success") {
+          alert("🎉 จองคิวสำเร็จ! ระบบส่งบิลสรุปยอดชำระเงินและเลขบัญชีไปที่แชท LINE ของคุณแล้ว");
           if (liff.isInClient()) {
-            liff.closeWindow(); 
+            liff.closeWindow();
           } else {
-            window.close(); 
+            window.close();
           }
         } else {
-          alert("❌ แจ้งเตือน: " + (res.message || "เกิดข้อผิดพลาด")); 
-          btn.innerText = "ยืนยันการจองคิว"; 
+          alert("❌ ไม่สามารถจองได้: " + (res.message || "รอบเวลานี้ไม่ว่าง"));
+          btn.innerText = "ยืนยันการจองและออกบิลชำระเงิน";
           btn.disabled = false;
+          loadSlots();
         }
       })
       .catch(err => {
-        alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
-        btn.innerText = "ยืนยันการจองคิว"; 
+        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
+        btn.innerText = "ยืนยันการจองและออกบิลชำระเงิน";
         btn.disabled = false;
       });
     }

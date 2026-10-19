@@ -123,12 +123,13 @@
     let currentUserId = "";
     let activeFolderId = ""; // ตัวแปรเก็บ Folder ID ที่ลูกค้าเลือก
 
-    // ⚠️ อย่าลืมใส่ URL Web App ตัวจริงของคุณ
+    // ⚠️ อย่าลืมเช็ก URL Web App ของคุณให้ตรงนะครับ
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec";
 
     window.onload = async function() {
       try {
-        await liff.init({ liffId: "2007499712-EtMhu4c2" }); // LIFF ID เดิมของคุณ
+        // 🚀 อัปเดต LIFF ID เป็นตัวใหม่ของคุณ
+        await liff.init({ liffId: "2007499712-O7LXXVaY" }); 
         if (liff.isLoggedIn()) { currentUserId = (await liff.getProfile()).userId; } else { liff.login(); }
       } catch (err) { currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a"; }
     };

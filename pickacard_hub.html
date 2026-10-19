@@ -6,8 +6,8 @@
   <title>โถงพยากรณ์ | วินทร์ทรัพย์นาคราช</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <!-- 🔗 ดึงการตั้งค่าทั้งหมดมาจากไฟล์ config.js ที่เดียว -->
-  <script src="config.js?v=3"></script>
+  <!-- โหลดไฟล์ config.js (ถ้ามี) -->
+  <script src="./config.js?v=5"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; }
@@ -34,13 +34,13 @@
 
   <main class="max-w-md mx-auto p-6 w-full flex-1 flex flex-col items-center justify-center relative z-10 text-center">
     
-    <!-- เมนูเลือกไพ่ -->
+    <!-- เมนูเลือกไพ่ (แยกชื่อปุ่มออกจากตัวแปร เพื่อให้กดติด 100% ทุกสถานการณ์) -->
     <div id="menu-section" class="w-full space-y-5 animate-fade-in">
       <div class="mb-6"><h2 class="text-xl font-bold text-amber-400 font-['Prompt']">เลือกรูปแบบสาส์น</h2><p class="text-sm text-slate-400 mt-2">ค่าครู 20 บาท หรือใช้สิทธิ์เปิดฟรี</p></div>
-      <button onclick="selectMenu('Pick a Card', SYSTEM_CONFIG.FOLDER.KRU)" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
+      <button onclick="selectMenu('Pick a Card', 'KRU')" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
         <span class="text-3xl">🔮</span><span class="font-bold text-lg font-['Prompt']">Pick a Card</span><span class="text-xs text-slate-400">สุ่มไพ่จากสาส์นครู</span>
       </button>
-      <button onclick="selectMenu('สาส์นเทวดา', SYSTEM_CONFIG.FOLDER.ANGEL)" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
+      <button onclick="selectMenu('สาส์นเทวดา', 'ANGEL')" class="w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 py-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all">
         <span class="text-3xl">👼</span><span class="font-bold text-lg font-['Prompt']">สาส์นเทวดา</span><span class="text-xs text-slate-400">สุ่มไพ่จากสาส์นเทวดา</span>
       </button>
     </div>
@@ -86,20 +86,30 @@
   </main>
 
   <script>
+    // 🛡️ ระบบตั้งค่าสำรองอัตโนมัติ: ถ้าโหลดไฟล์ config.js สำเร็จจะใช้ค่าจาก config.js แต่ถ้าโหลดไม่ติดจะใช้ค่าด้านล่างนี้แทน ปุ่มจึงไม่มีวันค้าง!
+    const DEFAULT_CONFIG = {
+      WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwWUVLc2LbWDgws-QYyUBqKkxGRor3APsXEjm1Ml9Xoj0A6X1fUDmXOw7jk9jeiSVgdmw/exec",
+      LIFF: { HUB: "2007499712-O7LXXVaY" },
+      FOLDER: {
+        KRU: "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN",
+        ANGEL: "16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2"
+      }
+    };
+
+    const APP_CONFIG = (typeof SYSTEM_CONFIG !== "undefined") ? SYSTEM_CONFIG : DEFAULT_CONFIG;
+    const WEB_APP_URL = APP_CONFIG.WEB_APP_URL;
+
     let currentUserId = "", activeFolderId = "";
-    
-    // ดึง WEB_APP_URL มาจากไฟล์ config.js โดยตรง ไม่ต้องแก้ในหน้านี้แล้วครับ
-    const WEB_APP_URL = SYSTEM_CONFIG.WEB_APP_URL;
 
     window.onload = async function() {
       try {
-        await liff.init({ liffId: SYSTEM_CONFIG.LIFF.HUB }); 
+        await liff.init({ liffId: APP_CONFIG.LIFF.HUB }); 
         if (liff.isLoggedIn()) { currentUserId = (await liff.getProfile()).userId; } else { liff.login(); }
       } catch (err) { currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a"; }
     };
 
-    function selectMenu(name, folderId) {
-      activeFolderId = folderId; 
+    function selectMenu(name, typeKey) {
+      activeFolderId = APP_CONFIG.FOLDER[typeKey]; 
       document.getElementById('header-title').innerText = name;
       document.getElementById('menu-section').classList.add('hidden');
       document.getElementById('intro-section').classList.remove('hidden');
@@ -120,7 +130,7 @@
           try {
             data = JSON.parse(text);
           } catch (e) {
-            alert("❌ ลิงก์ใน config.js ไม่ถูกต้อง หรือยังไม่ได้ Deploy เป็น Anyone:\n" + text.substring(0, 100));
+            alert("⚠️ ระบบหลังบ้านส่งค่ากลับผิดปกติ (เช็ค WEB_APP_URL ใน config.js ว่าตรงกับลิงก์ Deploy ล่าสุดหรือไม่)");
             window.location.reload();
             return;
           }
@@ -134,7 +144,7 @@
             window.location.reload(); 
           }
         }).catch(err => { 
-          alert("❌ เชื่อมต่อหลังบ้านไม่ได้ (กรุณาเช็คลิงก์ WEB_APP_URL ในไฟล์ config.js): " + err.message); 
+          alert("❌ เชื่อมต่อเซิร์ฟเวอร์ไม่ได้: " + err.message); 
           window.location.reload(); 
         });
     }
@@ -157,9 +167,10 @@
       
       const imgEl = document.getElementById('res-image');
       imgEl.onerror = function() {
-        if (fileId && !this.dataset.retried) {
+        const idToUse = fileId || (imgUrl.match(/[-\w]{25,}/) ? imgUrl.match(/[-\w]{25,}/)[0] : "");
+        if (idToUse && !this.dataset.retried) {
           this.dataset.retried = "true";
-          this.src = "https://drive.google.com/thumbnail?id=" + fileId + "&sz=w1000";
+          this.src = "https://drive.google.com/thumbnail?id=" + idToUse + "&sz=w1000";
         }
       };
       

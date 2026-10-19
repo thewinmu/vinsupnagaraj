@@ -4,7 +4,7 @@
  */
 const APP_CONFIG = {
   // 🌐 Web App Script URL ปัจจุบัน
-  WEB_URL: "https://script.google.com/macros/s/AKfycbzw9wNTFL7T4VmrzTt27Iy64RVejAVBJJ-cVSh7nyaqPEkgxeCDNOUiOXNq_00vfJ_Erw/exec",
+  WEB_URL: "https://script.google.com/macros/s/AKfycbxVltJk-AnBjSQneK3HNgTgE5shsXsW7oQ-M_he-VX7haSJ3fmScsD6TisPTGRMupDyvg/exec",
 
   // 📱 LIFF IDs ทั้งหมดสำหรับแต่ละโมดูล
   LIFF: {

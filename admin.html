@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจัดการหลังบ้าน (Admin Console) | วินทร์ทรัพย์นาคราช</title>
+  
+  <!-- โหลดคอนฟิกส่วนกลาง -->
+  <script src="./config.js"></script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #0F172A; color: #F8FAFC; }
+    .nav-active { border-bottom: 2px solid #F59E0B; color: #F59E0B; font-weight: bold; }
+  </style>
+</head>
+<body class="min-h-screen p-4 max-w-4xl mx-auto flex flex-col justify-between">
+  <div>
+    <!-- Header -->
+    <header class="flex justify-between items-center py-4 border-b border-slate-800">
+      <div>
+        <h1 class="text-lg font-bold text-amber-500">วินทร์ทรัพย์นาคราช (Admin Console)</h1>
+        <p class="text-xs text-slate-400">ระบบบริหารจัดการสมาชิก & ตั้งค่าคอนฟิกระบบ</p>
+      </div>
+      <button onclick="refreshData()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700">🔄 รีเฟรช</button>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex space-x-6 border-b border-slate-800 mt-4 text-sm text-slate-400">
+      <button id="tab-members" onclick="switchTab('members')" class="pb-3 nav-active">👥 จัดการสมาชิก (CRM)</button>
+      <button id="tab-config" onclick="switchTab('config')" class="pb-3">⚙️ ตั้งค่าระบบ (Config)</button>
+    </nav>
+
+    <!-- ================= TAB 1: MEMBERS MANAGEMENT ================= -->
+    <div id="section-members" class="mt-6 space-y-4">
+      <div class="flex justify-between items-center gap-2">
+        <input type="text" id="member-search" oninput="filterMembers()" placeholder="ค้นหาชื่อ, เบอร์โทร, หรือ User ID..." 
+          class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+      </div>
+
+      <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-2xl p-2 shadow-xl">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-3">ชื่อ-นามสกุล / ID</th>
+              <th class="p-3">ข้อมูลดวง (ว/ด/ป เวลา)</th>
+              <th class="p-3">ระดับ (Tier)</th>
+              <th class="p-3">คะแนน</th>
+              <th class="p-3 text-center">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="member-table-body">
+            <tr><td colspan="5" class="text-center p-8 text-slate-500">กำลังโหลดข้อมูลสมาชิก...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================= TAB 2: SYSTEM CONFIG ================= -->
+    <div id="section-config" style="display: none;" class="mt-6 space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <h2 class="text-sm font-bold text-amber-400">⚙️ การตั้งค่าทั่วไป (System Parameters)</h2>
+        
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">ข้อความประกาศหน้าแรก (Announcement / Notice)</label>
+          <input type="text" id="cfg-notice" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white">
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">สถานะระบบการจอง (Booking System Status)</label>
+          <select id="cfg-booking-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white">
+            <option value="OPEN">🟢 เปิดรับจองคิวตามปกติ</option>
+            <option value="CLOSED">🔴 ปิดรับจองชั่วคราว</option>
+          </select>
+        </div>
+
+        <button onclick="saveConfig()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-3 px-6 rounded-xl">
+          💾 บันทึกการตั้งค่า
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal แก้ไขสมาชิก -->
+  <div id="edit-modal" style="display: none;" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 max-w-sm w-full space-y-3">
+      <h3 class="text-sm font-bold text-amber-400">แก้ไขข้อมูลสมาชิก</h3>
+      <input type="hidden" id="edit-userId">
+      
+      <div>
+        <label class="text-xs text-slate-400">ชื่อลูกค้า</label>
+        <input type="text" id="edit-name" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white">
+      </div>
+      <div>
+        <label class="text-xs text-slate-400">ระดับสมาชิก (Tier)</label>
+        <select id="edit-tier" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white">
+          <option value="Standard">Standard (ทั่วไป)</option>
+          <option value="VIP">VIP (สายมูคนสำคัญ)</option>
+          <option value="VVIP">VVIP (ศิษย์เอก)</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs text-slate-400">คะแนนสะสม (Points)</label>
+        <input type="number" id="edit-points" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white">
+      </div>
+
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="closeModal()" class="bg-slate-700 text-xs px-4 py-2 rounded-lg">ยกเลิก</button>
+        <button onclick="submitMemberEdit()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs px-4 py-2 rounded-lg">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-xs text-slate-600 border-t border-slate-900 mt-10">
+    วินทร์ทรัพย์นาคราช ERP System &copy; 2026
+  </footer>
+
+  <script>
+    const WEB_URL = APP_CONFIG.WEB_URL;
+    let allMembers = [];
+
+    window.onload = function() {
+      loadMembers();
+      loadConfig();
+    };
+
+    function switchTab(tab) {
+      document.getElementById('section-members').style.display = tab === 'members' ? 'block' : 'none';
+      document.getElementById('section-config').style.display = tab === 'config' ? 'block' : 'none';
+      document.getElementById('tab-members').className = tab === 'members' ? 'pb-3 nav-active' : 'pb-3';
+      document.getElementById('tab-config').className = tab === 'config' ? 'pb-3 nav-active' : 'pb-3';
+    }
+
+    function refreshData() {
+      loadMembers();
+      loadConfig();
+    }
+
+    function loadMembers() {
+      fetch(WEB_URL + "?action=admin_get_members")
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            allMembers = res.members || [];
+            renderMembers(allMembers);
+          }
+        });
+    }
+
+    function renderMembers(list) {
+      const tbody = document.getElementById('member-table-body');
+      tbody.innerHTML = "";
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center p-6 text-slate-500">ไม่พบข้อมูลสมาชิก</td></tr>';
+        return;
+      }
+      list.forEach(m => {
+        let tr = document.createElement('tr');
+        tr.className = "border-b border-slate-800 hover:bg-slate-800/50";
+        tr.innerHTML = `
+          <td class="p-3">
+            <div class="font-bold text-white">${m.name || "ไม่ระบุชื่อ"}</div>
+            <div class="text-[10px] text-slate-500">${m.phone || "-"} | ${m.userId.substring(0, 10)}...</div>
+          </td>
+          <td class="p-3 text-slate-400">
+            <div>📅 ${m.birthDate || "-"}</div>
+            <div>⏰ ${m.birthTime || "-"}</div>
+          </td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${m.tier === 'VVIP' ? 'bg-purple-900 text-purple-300' : m.tier === 'VIP' ? 'bg-amber-900 text-amber-300' : 'bg-slate-800 text-slate-400'}">
+              ${m.tier}
+            </span>
+          </td>
+          <td class="p-3 font-bold text-amber-400">${m.points} 🪙</td>
+          <td class="p-3 text-center">
+            <button onclick="openEditModal('${m.userId}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1 rounded text-xs">✏️ แก้ไข</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterMembers() {
+      const q = document.getElementById('member-search').value.toLowerCase();
+      const filtered = allMembers.filter(m => 
+        (m.name && m.name.toLowerCase().includes(q)) ||
+        (m.phone && m.phone.includes(q)) ||
+        (m.userId && m.userId.toLowerCase().includes(q))
+      );
+      renderMembers(filtered);
+    }
+
+    function openEditModal(userId) {
+      const m = allMembers.find(x => x.userId === userId);
+      if (!m) return;
+      document.getElementById('edit-userId').value = m.userId;
+      document.getElementById('edit-name').value = m.name;
+      document.getElementById('edit-tier').value = m.tier;
+      document.getElementById('edit-points').value = m.points;
+      document.getElementById('edit-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('edit-modal').style.display = 'none';
+    }
+
+    function submitMemberEdit() {
+      const userId = document.getElementById('edit-userId').value;
+      const name = document.getElementById('edit-name').value;
+      const tier = document.getElementById('edit-tier').value;
+      const points = Number(document.getElementById('edit-points').value);
+
+      fetch(WEB_URL, {
+        method: "post",
+        contentType: "application/json",
+        body: JSON.stringify({ action: "admin_update_member", userId, name, tier, points })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          alert("อัปเดตสมาชิกสำเร็จ!");
+          closeModal();
+          loadMembers();
+        } else {
+          alert("เกิดข้อผิดพลาด: " + res.message);
+        }
+      });
+    }
+
+    function loadConfig() {
+      fetch(WEB_URL + "?action=admin_get_config")
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success" && res.config) {
+            document.getElementById('cfg-notice').value = res.config.ANNOUNCEMENT || "";
+            document.getElementById('cfg-booking-status').value = res.config.BOOKING_STATUS || "OPEN";
+          }
+        });
+    }
+
+    function saveConfig() {
+      const notice = document.getElementById('cfg-notice').value;
+      const bookingStatus = document.getElementById('cfg-booking-status').value;
+
+      fetch(WEB_URL, {
+        method: "post",
+        contentType: "application/json",
+        body: JSON.stringify({
+          action: "admin_update_config",
+          settings: {
+            ANNOUNCEMENT: notice,
+            BOOKING_STATUS: bookingStatus
+          }
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          alert("บันทึกการตั้งค่าระบบเรียบร้อยแล้ว!");
+        } else {
+          alert("เกิดข้อผิดพลาด: " + res.message);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

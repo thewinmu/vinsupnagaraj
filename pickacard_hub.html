@@ -11,7 +11,6 @@
     body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; background-color: #020617; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.2); } 50% { box-shadow: 0 0 30px rgba(217, 119, 6, 0.7); } }
     .animate-fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .animate-float { animation: float 4s ease-in-out infinite; }
     .perspective-1000 { perspective: 1000px; }
@@ -60,7 +59,6 @@
       <div class="bg-slate-900 border border-red-500/50 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <h2 class="text-lg font-bold text-red-400 mb-2">⚠️ พลังงานเวทมนตร์ไม่เพียงพอ</h2>
         <p class="text-sm text-slate-300 mb-4">ยอดเงินของคุณเหลือ <span id="current-balance" class="text-white font-bold">0</span> บาท<br>(ค่าครู 20 บาท)</p>
-        <p class="text-xs text-amber-400 mb-3">กรุณาเลือกยอดที่ต้องการเติมเงิน:</p>
         <div class="grid grid-cols-3 gap-2.5">
           <button onclick="requestTopup(20)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 text-sm font-bold py-2.5 rounded-xl transition">20 ฿</button>
           <button onclick="requestTopup(50)" class="bg-slate-800 hover:bg-amber-600 border border-amber-500/50 text-amber-400 text-sm font-bold py-2.5 rounded-xl transition">50 ฿</button>
@@ -76,6 +74,7 @@
         <div id="card-inner" class="relative w-full h-full transform-style-3d">
           <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-slate-800 to-slate-950 border-2 border-amber-500 rounded-2xl shadow-[0_0_20px_rgba(217,119,6,0.4)] flex items-center justify-center"><span class="text-amber-500/50 text-5xl font-serif">✧</span></div>
           <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-slate-900 border border-amber-400 rounded-2xl shadow-2xl overflow-hidden flex items-center justify-center">
+            <!-- ⚡️ แก้ไขไม่ให้ซ่อนรูปภาพเมื่อโหลด -->
             <img id="res-image" src="" alt="Card" class="w-full h-full object-cover bg-slate-800">
           </div>
         </div>
@@ -86,14 +85,10 @@
   </main>
 
   <script>
-    // รวมตั้งค่าไว้ที่นี่ ตัดปัญหาเว็บหาไฟล์ config ไม่เจอ
+    // ⚡️ นำ URL ใหม่ใส่ไว้ให้แล้วครับ
     const SYSTEM_CONFIG = {
-        WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwnrWpJNYY_JXQSpWDwP2GhG9jgLWZifwz8NKKRu68E4KHO5YU8oZMLvr-Xr9dVwgme3w/exec",
-        LIFF: {
-            HUB: "2007499712-O7LXXVaY",     
-            KRU: "2007499712-EtMhu4c2",     
-            MEMBER: "2007499712-J15McRGz"   
-        },
+        WEB_APP_URL: "https://script.google.com/macros/s/AKfycbzAJeHPfi9p4K-ouN-9z-8rG79REIP0qNiQwWzM1F9M5BfWJ2H1WZQ_4V4P0d8v0uM/exec",
+        LIFF: { HUB: "2007499712-O7LXXVaY" },
         FOLDER: {
             KRU: "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN",   
             ANGEL: "16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2"  
@@ -122,12 +117,15 @@
       document.querySelector('.flex.justify-center').style.pointerEvents = 'none';
       document.getElementById('loading-text').classList.remove('hidden');
 
-      fetch(WEB_APP_URL + "?action=draw_folder_card&folderId=" + activeFolderId + "&userId=" + currentUserId)
+      const timestamp = new Date().getTime();
+      const requestUrl = WEB_APP_URL + "?action=draw_folder_card&folderId=" + activeFolderId + "&userId=" + currentUserId + "&t=" + timestamp;
+
+      fetch(requestUrl, { redirect: "follow" })
         .then(res => res.json())
         .then(data => {
           if (data && data.status === "success") { showResult(data.imgUrl); } 
           else if (data && data.status === "insufficient_funds") { showTopupGate(data.balance); } 
-          else { alert("⚠️ พลังงานขัดข้อง: " + (data.message || "กรุณาลองใหม่")); window.location.reload(); }
+          else { alert("⚠️ แจ้งเตือน: " + (data.message || "เกิดข้อผิดพลาด")); window.location.reload(); }
         }).catch(err => { alert("❌ พลังงานขัดข้อง กรุณาลองใหม่"); window.location.reload(); });
     }
 
@@ -139,7 +137,7 @@
 
     function requestTopup(amount) {
       if (liff.isInClient()) {
-        liff.sendMessages([{ type: 'text', text: 'เติมเงิน_' + amount }]).then(() => liff.closeWindow()).catch(() => alert("ตรวจสอบ Scope ใน LINE Dev"));
+        liff.sendMessages([{ type: 'text', text: 'เติมเงิน_' + amount }]).then(() => liff.closeWindow());
       } else { alert("กรุณาพิมพ์ 'เติมเงิน_" + amount + "' ในแชท LINE"); }
     }
 

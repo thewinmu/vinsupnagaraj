@@ -4,7 +4,7 @@
  */
 const APP_CONFIG = {
   // 🌐 Web App Script URL ล่าสุด
-  WEB_URL: "https://script.google.com/macros/s/AKfycbxVltJk-AnBjSQneK3HNgTgE5shsXsW7oQ-M_he-VX7haSJ3fmScsD6TisPTGRMupDyvg/exec",
+  WEB_URL: https://script.google.com/macros/s/AKfycbx3LX000XBAZ63J7s3vgPKYkw2SM78WM8O6Z0YMbGaxOa7krdt_8tcmiQMrURnvniveJg/exec",
 
   // 🤖 ระบบเชื่อมต่อบอท LINE (รองรับกรณีเชื่อมต่อกับบอท LINE หลายตัว)
   LINE: {

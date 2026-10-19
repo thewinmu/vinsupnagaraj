@@ -16,7 +16,7 @@
   <div>
     <header class="text-center py-5 border-b mb-5 bg-white rounded-2xl shadow-sm px-4">
       <h1 class="text-base font-bold text-slate-900">วินทร์ทรัพย์นาคราช</h1>
-      <p id="user-display" class="text-xs text-slate-500 mt-1">กำลังเชื่อมต่อ LINE...</p>
+      <p id="user-display" class="text-xs text-slate-500 mt-1">กำลังเชื่อมต่อระบบ...</p>
     </header>
 
     <div id="step-packages" class="space-y-3">
@@ -44,7 +44,9 @@
   </div>
 
   <script>
-    const WEB_URL = "https://script.google.com/macros/s/AKfycby72vUTZJf-eGaWdZg5XwDn4oSo-AkV0RHOCgI54UrAmUQ_SX2zZP97HIvgdrWp8fhzSw/exec";
+    // URL ตั้งต้นสำหรับดึง Config ครั้งแรก
+    let WEB_URL = "https://script.google.com/macros/s/AKfycbzIDSycXni3-s9YtjOmDbZA2ZH2iE_Tfon1nOnBhTCl6gYVyqL9rC3jxIe9CwhXa5E9w/exec";
+    
     let userId = "U8065e05dc54f0ddc3fb46e97492eb53a";
     let userName = "คุณลูกค้า";
     let booking = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
@@ -61,6 +63,15 @@
       } catch (e) {}
 
       initDates();
+
+      // ดึง URL ล่าสุดจากชีต config เซลล์ A2 อัตโนมัติ
+      try {
+        let res = await fetch(WEB_URL + "?action=get_config_url");
+        let data = await res.json();
+        if (data.status === "success" && data.webAppUrl) {
+          WEB_URL = data.webAppUrl;
+        }
+      } catch (e) {}
 
       const params = new URLSearchParams(window.location.search);
       let p = params.get('pkg'), pr = params.get('price');
@@ -148,7 +159,7 @@
       }
 
       let btn = document.getElementById('sub-btn');
-      btn.innerText = "กำลังส่งข้อมูล..."; 
+      btn.innerText = "กำลังจองคิว..."; 
       btn.disabled = true;
 
       fetch(WEB_URL, {
@@ -159,13 +170,11 @@
       .then(r => r.json())
       .then(res => {
         if (res.status === "success") {
-          setTimeout(() => { 
-            if (liff.isInClient()) {
-              liff.closeWindow(); 
-            } else {
-              window.close(); 
-            }
-          }, 300);
+          if (liff.isInClient()) {
+            liff.closeWindow(); 
+          } else {
+            window.close(); 
+          }
         } else {
           alert("❌ แจ้งเตือน: " + (res.message || "เกิดข้อผิดพลาด")); 
           btn.innerText = "ยืนยันการจองคิว"; 
@@ -173,7 +182,7 @@
         }
       })
       .catch(err => {
-        alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์หลังบ้านได้ (กรุณาตรวจสอบสิทธิ์ Deploy เป็น 'Anyone' ใน Apps Script)");
+        alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
         btn.innerText = "ยืนยันการจองคิว"; 
         btn.disabled = false;
       });

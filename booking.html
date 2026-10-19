@@ -192,9 +192,7 @@
 
     function submitBooking() {
       bookingData.bookingDate = document.getElementById('booking-date').value;
-      if(!bookingData.bookingDate) {
-        return;
-      }
+      if(!bookingData.bookingDate) return;
       
       const payload = { action: "create_booking", userId: currentUserId, memberCode: memberInfo.memberCode, customerName: memberInfo.name, ...bookingData };
 
@@ -202,7 +200,6 @@
         .then(res => res.json())
         .then(data => {
           if (data.status === "success") {
-            // ปิดหน้า LIFF ทันทีอย่างไร้รอยต่อ ไม่มี Popup แจ้งเตือน เพื่อให้ลูกค้ากลับสู่แชทมารับ Flex สรุปยอดโอน
             if (liff.isInClient()) {
               liff.closeWindow();
             } else {

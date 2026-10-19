@@ -8,46 +8,48 @@
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Prompt', sans-serif; background-color: #FAFAFA; color: #111827; font-weight: 500; }
-    /* ธีมสีหรูหรา: ทองคำ, ดำเข้ม, และม่วงอมชมพูพรีเมียม */
-    .luxury-gradient { background: linear-gradient(135deg, #7E22CE 0%, #B45309 100%); }
-    .gold-border { border-color: rgba(217, 119, 6, 0.35); }
-    .luxury-card { background: #FFFFFF; border: 1.5px solid rgba(126, 34, 206, 0.15); box-shadow: 0 10px 30px -5px rgba(126, 34, 206, 0.08); }
-    .text-purple-gold { background: linear-gradient(135deg, #7E22CE 0%, #D97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #0F172A; font-weight: 500; }
+    /* ธีมธุรกิจระดับพรีเมียม: กรมท่าเข้ม, ทองคำหรูหรา, ขาวสะอาดตา */
+    .corporate-gradient { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); }
+    .gold-accent { color: #B45309; }
+    .gold-border { border-color: rgba(180, 83, 9, 0.25); }
+    .executive-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-left: 4px solid #B45309; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05); }
+    .executive-btn { background: #0F172A; color: #FFFFFF; transition: all 0.2s ease; }
+    .executive-btn:hover { background: #1E293B; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col p-4 max-w-md mx-auto justify-between">
   
   <div>
-    <!-- ส่วนหัว: ธีมสว่าง ขาว-ทอง-ดำ-ม่วงอมชมพู พร้อมสัญลักษณ์พญานาค -->
-    <header class="text-center py-6 border-b gold-border mb-6 bg-white/80 backdrop-blur rounded-2xl shadow-sm">
-      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-purple-50 border-2 gold-border mb-2 shadow-inner">
-        <span class="text-2xl">🐉</span>
+    <!-- ส่วนหัว: สไตล์องค์กรธุรกิจชั้นนำ (Corporate Brand Identity) -->
+    <header class="text-center py-6 border-b gold-border mb-6 bg-white rounded-2xl shadow-sm px-4">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl corporate-gradient border gold-border mb-2 shadow-sm">
+        <span class="text-xl">🐉</span>
       </div>
-      <p class="text-[11px] tracking-[0.3em] text-purple-700 uppercase font-bold">THE WIN MU</p>
-      <h1 class="text-xl font-bold text-slate-900 mt-1 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
-      <p class="text-xs text-slate-500 mt-0.5 font-normal">ระบบจองคิวพยากรณ์และศรัทธามหามงคล</p>
+      <p class="text-[10px] tracking-[0.3em] gold-accent uppercase font-bold">THE WIN MU CORPORATE</p>
+      <h1 class="text-lg font-bold text-slate-900 mt-1 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
+      <p class="text-xs text-slate-500 mt-0.5 font-normal">ระบบจองคิวบริการพยากรณ์และปรึกษาธุรกิจ</p>
       
-      <div id="member-badge" class="mt-3 inline-block bg-purple-50/80 border gold-border px-4 py-1.5 rounded-full text-xs text-purple-900 font-bold shadow-sm">
+      <div id="member-badge" class="mt-3 inline-block bg-slate-50 border border-slate-200 px-4 py-1.5 rounded-lg text-xs text-slate-700 font-semibold shadow-inner">
         กำลังตรวจสอบข้อมูลสมาชิก...
       </div>
     </header>
 
-    <!-- รายการแพ็กเกจ (ดึงจากชีต products อัตโนมัติ) -->
-    <div id="step-packages" class="space-y-4">
-      <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังเชื่อมต่อฐานข้อมูลแพ็กเกจศักดิ์สิทธิ์...</div>
+    <!-- รายการแพ็กเกจ (ดึงจากชีต products อัตโนมัติในสไตล์ Corporate Card) -->
+    <div id="step-packages" class="space-y-3.5">
+      <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังเชื่อมต่อฐานข้อมูลระบบ...</div>
     </div>
 
     <!-- เลือกรอบวันเวลาและเช็กสถานะคิวว่าง 15 วัน -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
-      <button onclick="backToPackages()" class="text-purple-700 text-xs font-bold flex items-center gap-1 mb-2 hover:opacity-80">❮ กลับไปเลือกแพ็กเกจอื่น</button>
-      <div class="bg-purple-50/50 border gold-border rounded-2xl p-4 shadow-sm">
-        <p class="text-[11px] text-purple-800 font-semibold uppercase tracking-wider">แพ็กเกจที่ท่านเลือก</p>
+      <button onclick="backToPackages()" class="text-slate-600 text-xs font-bold flex items-center gap-1 mb-2 hover:text-slate-900">❮ กลับไปเลือกแพ็กเกจ</button>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wider">แพ็กเกจที่เลือก</p>
         <p id="selected-pkg-name" class="text-sm font-bold text-slate-900 mt-1"></p>
       </div>
       <div>
         <label class="text-xs text-slate-700 block mb-2 font-bold">เลือกวันที่ต้องการ (ภายใน 15 วันนี้)</label>
-        <input type="date" id="booking-date" onchange="checkSlots()" class="w-full bg-white border gold-border rounded-xl p-3 text-sm text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500/20 shadow-sm">
+        <input type="date" id="booking-date" onchange="checkSlots()" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-sm">
       </div>
       <div>
         <label class="text-xs text-slate-700 block mb-2 font-bold">สถานะรอบเวลา (🟩 ว่าง | 🟥 เต็ม)</label>
@@ -59,15 +61,15 @@
   </div>
 
   <div id="action-box" style="display: none;" class="mt-8">
-    <button onclick="submitBooking()" class="w-full luxury-gradient text-white font-bold py-4 rounded-xl text-sm shadow-xl shadow-purple-900/20 transition-all active:scale-95 tracking-wide">ยืนยันการจองคิว & รับใบกำกับภาษี</button>
+    <button onclick="submitBooking()" class="w-full executive-btn font-bold py-4 rounded-xl text-sm shadow-lg tracking-wide active:scale-95">ยืนยันการจองคิว & รับใบเสร็จระบบ</button>
   </div>
 
   <footer class="text-center text-[11px] text-slate-400 py-6 border-t border-slate-200 mt-8 font-normal">
-    The Win Mu Official © 2026 — All Rights Reserved.
+    The Win Mu Enterprise © 2026 — All Rights Reserved.
   </footer>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAJeHPfi9p4K-ouN-9z-8rG79REIP0qNiQwWzM1F9M5BfWJ2H1WZQ_4V4P0d8v0uM/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwW1QU-BCXYMAPlEoRTHhPzG-JZtjrA92Z1HKdUKmy8E3TPy5wMi2sKrBeq6G01jCvHUw/exec";
     let currentUserId = "U8065e05dc54f0ddc3fb46e97492eb53a";
     let memberInfo = { memberCode: "M0000", name: "สมาชิก" };
     let bookingData = { packageName: "", price: 0, bookingDate: "", bookingTime: "" };
@@ -112,12 +114,12 @@
             container.innerHTML = "";
             data.packages.forEach(pkg => {
               const card = document.createElement('div');
-              card.className = "luxury-card rounded-2xl p-4 cursor-pointer hover:border-purple-500 transition-all transform hover:-translate-y-0.5";
+              card.className = "executive-card rounded-xl p-4 cursor-pointer hover:border-slate-400 transition-all transform hover:-translate-y-0.5";
               card.onclick = () => selectPackage(pkg.name, pkg.price);
               card.innerHTML = `
                 <div class="flex justify-between items-start gap-2">
-                  <h3 class="font-bold text-base text-slate-900">${pkg.name}</h3>
-                  <span class="text-purple-800 font-bold text-sm bg-purple-50 px-3 py-1 rounded-xl border gold-border whitespace-nowrap">${pkg.price} ฿</span>
+                  <h3 class="font-bold text-sm text-slate-900">${pkg.name}</h3>
+                  <span class="text-slate-900 font-bold text-xs bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 whitespace-nowrap">${pkg.price} ฿</span>
                 </div>
                 <p class="text-xs text-slate-500 mt-2 leading-relaxed font-normal">${pkg.description}</p>
               `;
@@ -150,7 +152,7 @@
               btn.innerText = "🟩 " + slot.time + " (ว่าง)";
               btn.onclick = () => selectTime(slot.time, btn);
             } else {
-              btn.className = "bg-red-50 border border-red-200 p-3 rounded-xl text-xs text-red-400 opacity-60 cursor-not-allowed font-bold";
+              btn.className = "bg-slate-100 border border-slate-200 p-3 rounded-xl text-xs text-slate-400 opacity-60 cursor-not-allowed font-bold";
               btn.innerText = "🟥 " + slot.time + " (เต็ม)";
               btn.disabled = true;
             }
@@ -161,8 +163,8 @@
 
     function selectTime(timeStr, btnEl) {
       bookingData.bookingTime = timeStr;
-      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('ring-2', 'ring-purple-600', 'bg-purple-50'));
-      btnEl.classList.add('time-btn', 'ring-2', 'ring-purple-600', 'bg-purple-50');
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('ring-2', 'ring-slate-900', 'bg-slate-100'));
+      btnEl.classList.add('time-btn', 'ring-2', 'ring-slate-900', 'bg-slate-100');
       document.getElementById('action-box').style.display = 'block';
     }
 
@@ -185,7 +187,7 @@
         .then(res => res.json())
         .then(data => {
           if (data.status === "success") {
-            alert("✅ จองคิวสำเร็จ! ระบบได้ส่งใบกำกับภาษีแบบย่อไปยังแชท LINE ของท่านแล้ว");
+            alert("✅ จองคิวสำเร็จ! ระบบได้ส่งใบเสร็จยืนยันไปยังแชท LINE ของท่านแล้ว");
             window.location.reload();
           } else { alert("❌ เกิดข้อผิดพลาด: " + data.message); }
         });

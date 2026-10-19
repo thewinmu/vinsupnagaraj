@@ -1,5 +1,5 @@
 const SYSTEM_CONFIG = {
-    // 🔗 URL ของ Google Apps Script (เอาไว้ให้เว็บคุยกับฐานข้อมูล)
+    // 🔗 วาง Web App URL ตัวเต็มของคุณที่บรรทัดนี้ที่เดียวครับ
     WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwiFVI4CCl1eGEqD9KkNnmdoNE9y8ZO0llllb-Nzk18Bzx9sPhlU64b4sNY0BEXrnFidg/exec",
     
     // 🆔 LIFF ID สำหรับแต่ละหน้าเว็บ

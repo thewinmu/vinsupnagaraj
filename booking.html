@@ -38,7 +38,7 @@
       <div class="text-center text-xs text-slate-400 py-10 font-normal">กำลังโหลดรายการบริการ...</div>
     </div>
 
-    <!-- เลือกรอบวันเวลา (เปลี่ยนช่องเลือกวันที่เป็นแบบ Dropdown 15 วัน) -->
+    <!-- เลือกรอบวันเวลา (Dropdown วันที่ และ รอบเวลา 09:00 - 22:00 น.) -->
     <div id="step-datetime" style="display: none;" class="space-y-4">
       <button id="back-btn" onclick="backToPackages()" class="text-slate-600 text-xs font-bold flex items-center gap-1 mb-2 hover:text-slate-900">❮ กลับไปเลือกบริการอื่น</button>
       <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
@@ -61,7 +61,7 @@
   </div>
 
   <div id="action-box" style="display: none;" class="mt-8">
-    <button onclick="submitBooking()" class="w-full executive-btn font-bold py-4 rounded-xl text-sm shadow-lg tracking-wide active:scale-95">ยืนยันการจองคิว & รับใบสรุปยอดโอน</button>
+    <button id="submit-btn" onclick="submitBooking()" class="w-full executive-btn font-bold py-4 rounded-xl text-sm shadow-lg tracking-wide active:scale-95">ยืนยันการจองคิว & รับใบสรุปยอดโอน</button>
   </div>
 
   <footer class="text-center text-[11px] text-slate-400 py-6 border-t border-slate-200 mt-8 font-normal">
@@ -99,7 +99,6 @@
       }
     };
 
-    // สร้างตัวเลือกวันที่แบบ Dropdown ล่วงหน้า 15 วัน
     function generateDateDropdown() {
       const select = document.getElementById('booking-date');
       const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
@@ -112,7 +111,7 @@
         let year = d.getFullYear();
         let month = String(d.getMonth() + 1).padStart(2, '0');
         let day = String(d.getDate()).padStart(2, '0');
-        let dateValue = `${year}-${month}-${day}`; // รูปแบบส่งค่าหลังบ้าน YYYY-MM-DD
+        let dateValue = `${year}-${month}-${day}`;
 
         let dayName = thaiDays[d.getDay()];
         let monthName = thaiMonths[d.getMonth()];
@@ -156,8 +155,6 @@
               `;
               container.appendChild(card);
             });
-          } else {
-            document.getElementById('step-packages').innerHTML = '<div class="text-center text-xs text-slate-400 py-6">ไม่พบรายการบริการในระบบ</div>';
           }
         });
     }
@@ -209,28 +206,56 @@
     }
 
     function submitBooking() {
-      bookingData.bookingDate = document.getElementById('booking-date').value;
-      if(!bookingData.bookingDate) {
+      const dateSelect = document.getElementById('booking-date');
+      bookingData.bookingDate = dateSelect.value;
+      
+      if (!bookingData.bookingDate) {
         alert("กรุณาเลือกวันที่ต้องการจองคิวก่อนครับ");
         return;
       }
-      
-      const payload = { action: "create_booking", userId: currentUserId, memberCode: memberInfo.memberCode, customerName: memberInfo.name, ...bookingData };
+      if (!bookingData.bookingTime) {
+        alert("กรุณาเลือกรอบเวลาที่ต้องการจองครับ");
+        return;
+      }
 
-      fetch(WEB_APP_URL, { method: "post", contentType: "application/json", body: JSON.stringify(payload) })
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === "success") {
+      const btn = document.getElementById('submit-btn');
+      btn.innerText = "กำลังบันทึกข้อมูล...";
+      btn.disabled = true;
+      
+      const payload = { 
+        action: "create_booking", 
+        userId: currentUserId, 
+        memberCode: memberInfo.memberCode, 
+        customerName: memberInfo.name, 
+        ...bookingData 
+      };
+
+      fetch(WEB_APP_URL, { 
+        method: "post", 
+        contentType: "application/json", 
+        body: JSON.stringify(payload) 
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          setTimeout(() => {
             if (liff.isInClient()) {
               liff.closeWindow();
             } else {
               window.close();
             }
-          } else {
-            alert("❌ " + data.message);
-          }
-        })
-        .catch(err => {});
+          }, 500);
+        } else {
+          alert("❌ " + (data.message || "เกิดข้อผิดพลาดในการจอง"));
+          btn.innerText = "ยืนยันการจองคิว & รับใบสรุปยอดโอน";
+          btn.disabled = false;
+        }
+      })
+      .catch(err => {
+        alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+        btn.innerText = "ยืนยันการจองคิว & รับใบสรุปยอดโอน";
+        btn.disabled = false;
+      });
     }
   </script>
 </body>

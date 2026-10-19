@@ -1,17 +1,12 @@
 const SYSTEM_CONFIG = {
-    // 🔗 วาง Web App URL ตัวเต็มของคุณที่บรรทัดนี้ที่เดียวครับ
-    WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwiFVI4CCl1eGEqD9KkNnmdoNE9y8ZO0llllb-Nzk18Bzx9sPhlU64b4sNY0BEXrnFidg/exec",
-    
-    // 🆔 LIFF ID สำหรับแต่ละหน้าเว็บ
+    WEB_APP_URL: "https://script.google.com/macros/s/ใส่รหัสของคุณตรงนี้/exec",
     LIFF: {
-        HUB: "2007499712-O7LXXVaY",     // หน้าโถงพยากรณ์รวม
-        KRU: "2007499712-EtMhu4c2",     // หน้าสุ่มไพ่สาส์นครู
-        MEMBER: "2007499712-J15McRGz"   // หน้าสมาชิก
+        HUB: "2007499712-O7LXXVaY",
+        KRU: "2007499712-EtMhu4c2",
+        MEMBER: "2007499712-J15McRGz"
     },
-
-    // 📁 รหัสโฟลเดอร์ Google Drive สำหรับดึงรูปไพ่
     FOLDER: {
-        KRU: "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN",   // โฟลเดอร์สาส์นครู
-        ANGEL: "16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2"  // โฟลเดอร์สาส์นเทวดา
+        KRU: "1g4nh17S_I8_0UK4mdhwTBYRKhF3FVVkN",
+        ANGEL: "16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2"
     }
 };

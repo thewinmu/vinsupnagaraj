@@ -148,7 +148,6 @@
           <button onclick="window.location.href='./memberships.html'" class="bg-emerald-900/90 text-amber-300 border border-emerald-600 px-2.5 py-1.5 rounded-xl text-[10px] font-bold hover:bg-emerald-800 transition">
             📋 สถานะสมาชิก
           </button>
-          <!-- เมื่อกดเติมเงิน จะส่งคำว่า "เติมเงิน" และปิดหน้าต่าง LIFF ทันที -->
           <button onclick="triggerChatTopup()" class="emerald-gold-btn px-3 py-1.5 rounded-xl text-[10px] font-black shadow-md">
             + เติมเงิน
           </button>
@@ -260,7 +259,7 @@
       <div id="fan-scroll-box" class="card-fan-scroll py-6"></div>
     </div>
 
-    <!-- STEP 4: ผลคำทำนาย (แก้ปัญหารูปภาพไม่แสดงและไม่ค้าง 100%) -->
+    <!-- STEP 4: ผลคำทำนาย (มี 2 ปุ่มเด่นชัดตามที่ต้องการ) -->
     <div id="view-result" style="display: none;" class="py-2">
       <div class="card-3d-box relative w-72 h-[510px] mx-auto mb-4" id="result-flipper">
         <div class="card-3d-inner">
@@ -309,9 +308,14 @@
         </div>
       </div>
 
+      <!-- สองปุ่มเด่นชัดตามที่ต้องการ -->
       <div class="space-y-2 mt-2">
-        <button onclick="window.location.href='./booking.html'" class="emerald-gold-btn w-full py-3.5 rounded-2xl text-xs font-black shadow-md active:scale-95 transition">🗓️ จองคิวพยากรณ์เจาะลึกส่วนตัวกับอาจารย์</button>
-        <button onclick="backToHub()" class="w-full bg-white text-emerald-800 border border-emerald-200 py-2.5 rounded-2xl text-[11px] font-bold hover:bg-emerald-50 transition">↺ เลือกหัวข้ออื่นเพื่อเสี่ยงทายใหม่</button>
+        <button onclick="retryCurrentCategory()" class="emerald-gold-btn w-full py-3.5 rounded-2xl text-xs font-black shadow-lg active:scale-95 transition flex items-center justify-center gap-1.5">
+          <span>✨</span> <span>เสี่ยงทายเปิดไพ่อีกครั้ง</span>
+        </button>
+        <button onclick="backToHub()" class="w-full bg-white text-emerald-900 border-2 border-emerald-300 py-3 rounded-2xl text-xs font-bold hover:bg-emerald-50 shadow-sm active:scale-95 transition flex items-center justify-center gap-1.5">
+          <span>↺</span> <span>เลือกหัวข้ออื่นเพื่อเสี่ยงทายใหม่</span>
+        </button>
       </div>
     </div>
   </div>
@@ -383,16 +387,11 @@
       document.getElementById('bar-points').innerText = (userData.points || 0) + " PTS";
     }
 
-    // ฟังก์ชันส่งคำว่า "เติมเงิน" และปิดหน้าต่าง LIFF ทันที
     function triggerChatTopup() {
       if (typeof liff !== 'undefined' && liff.isInClient()) {
         liff.sendMessages([{ type: 'text', text: 'เติมเงิน' }])
-          .then(() => {
-            liff.closeWindow(); // ปิดหน้าต่าง Pick a Card ทันที
-          })
-          .catch(() => {
-            liff.closeWindow();
-          });
+          .then(() => liff.closeWindow())
+          .catch(() => liff.closeWindow());
       } else {
         window.location.href = "https://line.me/R/oaMessage/@thewinmu/?%E0%B9%80%E0%B8%55%E0%B8%B4%E0%B8%A1%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99";
       }
@@ -428,6 +427,21 @@
         });
     }
 
+    // ปุ่มที่ 1: เสี่ยงทายเปิดไพ่อีกครั้ง (ในหมวดเดิมทันที)
+    function retryCurrentCategory() {
+      const flipper = document.getElementById('result-flipper');
+      if (flipper) flipper.classList.remove('flipped');
+      document.getElementById('view-result').style.display = 'none';
+      document.getElementById('view-select-card').style.display = 'none';
+      document.getElementById('view-categories').style.display = 'none';
+      document.getElementById('view-shuffle').style.display = 'block';
+
+      const btn = document.getElementById('btn-shuffle-action');
+      btn.innerText = "✨ สับไพ่อลังการเวทมนต์";
+      btn.disabled = false;
+    }
+
+    // ปุ่มที่ 2: กลับไปหน้าเลือกหมวดหมู่หลักทั้งหมด
     function backToHub() {
       const flipper = document.getElementById('result-flipper');
       if (flipper) flipper.classList.remove('flipped');
@@ -489,6 +503,7 @@
       return picked.substring(0, 200);
     }
 
+    // คำนวณตัดสิทธิ์จริง และอัปเดตหน้าจอทันที
     function revealSelectedCard(idx) {
       fetch(`${WEB_URL}?action=deduct_reading_quota&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedCat)}`)
         .then(r => r.json())
@@ -505,7 +520,12 @@
             return;
           }
 
-          checkUserQuota();
+          // เมื่อตัดสิทธิ์สำเร็จ ให้อัปเดตตัวเลขแสดงผลบนหน้าจอทันที
+          userData.freeQuota = res.freeQuota;
+          userData.balance = res.balance;
+          if (res.points !== undefined) userData.points = res.points;
+          updateStatusBar();
+
           displayCardResult(idx);
         })
         .catch(err => {
@@ -520,9 +540,9 @@
       const flipper = document.getElementById('result-flipper');
       viewResult.style.display = 'block';
 
-      let card = (cardsData.length > 0 && cardsData[idx]) 
-                 ? cardsData[idx] 
-                 : { id: String(idx + 1).padStart(2, '0'), category: selectedCat, name: "จิตแห่งแสงสว่าง", meaning: "สถานการณ์กำลังเปิดทาง ขอให้รักษาความตั้งใจจริง" };
+      let card = (cardsData.length > 0)
+                 ? cardsData[idx % cardsData.length] 
+                 : { id: String(idx + 1).padStart(2, '0'), category: selectedCat, name: "สาส์นญาณบารมี", meaning: "สถานการณ์กำลังเปิดทาง ขอให้รักษาความตั้งใจจริง" };
 
       const modeImgOnly = document.getElementById('mode-image-only');
       const modeTextCard = document.getElementById('mode-text-card');
@@ -544,7 +564,7 @@
         const tryUrls = [
           card.imageUrl,
           card.fallbackUrl,
-          "https://drive.google.com/thumbnail?id=" + (card.fileId || "15Tl1jvCAGZ6OjHw5K0j69I00quKiPmqA") + "&sz=w1000"
+          "https://drive.google.com/thumbnail?id=" + card.fileId + "&sz=w1000"
         ].filter(Boolean);
 
         let currentAttempt = 0;

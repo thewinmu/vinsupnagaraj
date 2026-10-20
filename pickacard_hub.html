@@ -157,7 +157,7 @@
       <div class="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-emerald-900/80 text-center">
         <div class="bg-emerald-900/40 p-1.5 rounded-xl border border-emerald-800">
           <div class="text-[9px] text-emerald-400 font-medium">สิทธิ์ฟรีคงเหลือ</div>
-          <div class="text-xs font-black text-amber-300" id="bar-free-quota">5 ครั้ง</div>
+          <div class="text-xs font-black text-amber-300" id="bar-free-quota">0 ครั้ง</div>
         </div>
         <div class="bg-emerald-900/40 p-1.5 rounded-xl border border-emerald-800">
           <div class="text-[9px] text-emerald-400 font-medium">ยอดเงินคงเหลือ</div>
@@ -259,7 +259,7 @@
       <div id="fan-scroll-box" class="card-fan-scroll py-6"></div>
     </div>
 
-    <!-- STEP 4: ผลคำทำนาย (มี 2 ปุ่มเด่นชัด) -->
+    <!-- STEP 4: ผลคำทำนาย -->
     <div id="view-result" style="display: none;" class="py-2">
       <div class="card-3d-box relative w-72 h-[510px] mx-auto mb-4" id="result-flipper">
         <div class="card-3d-inner">
@@ -308,7 +308,6 @@
         </div>
       </div>
 
-      <!-- สองปุ่มเด่นชัดตามที่ต้องการ -->
       <div class="space-y-2 mt-2">
         <button onclick="retryCurrentCategory()" class="emerald-gold-btn w-full py-3.5 rounded-2xl text-xs font-black shadow-lg active:scale-95 transition flex items-center justify-center gap-1.5">
           <span>✨</span> <span>เสี่ยงทายเปิดไพ่อีกครั้ง</span>
@@ -328,7 +327,7 @@
 
     let currentUserId = "guest_user";
     let currentDisplayName = "LINE User";
-    let userData = { isMember: true, freeQuota: 5, balance: 0, points: 0, isUnlimited: false, expiryDate: "" };
+    let userData = { isMember: true, freeQuota: 0, balance: 0, points: 0, isUnlimited: false, expiryDate: "" };
     let selectedCat = "";
     let isGuruMode = false;
     let cardsData = [];
@@ -368,7 +367,7 @@
     }
 
     function checkUserQuota() {
-      fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}`)
+      return fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}&_t=${new Date().getTime()}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.isMember) {
@@ -382,8 +381,8 @@
     function updateStatusBar() {
       document.getElementById('bar-name').innerText = userData.name || currentDisplayName;
       document.getElementById('bar-code').innerText = "ID: " + (userData.memberCode || "M0000");
-      document.getElementById('bar-free-quota').innerText = userData.freeQuota + " ครั้ง";
-      document.getElementById('bar-balance').innerText = userData.balance + " ฿";
+      document.getElementById('bar-free-quota').innerText = (userData.freeQuota || 0) + " ครั้ง";
+      document.getElementById('bar-balance').innerText = (userData.balance || 0) + " ฿";
       document.getElementById('bar-points').innerText = (userData.points || 0) + " PTS";
     }
 
@@ -397,13 +396,16 @@
       }
     }
 
-    function pickCategory(catName, isGuru) {
+    // บังคับดึงยอดเงินสดจากชีตก่อนตัดสินใจบล็อก
+    async function pickCategory(catName, isGuru) {
+      await checkUserQuota();
+
       const hasUnlimited = userData.isUnlimited;
       const hasFreeQuota = (Number(userData.freeQuota) || 0) > 0;
       const hasBalance = (Number(userData.balance) || 0) >= 9;
 
       if (!hasUnlimited && !hasFreeQuota && !hasBalance) {
-        alert("⚠️ สิทธิ์การใช้งานของคุณหมดแล้ว\n• โควตาฟรี: 0 ครั้ง\n• ยอดเงินคงเหลือ: " + (userData.balance || 0) + " บาท (ครั้งละ 9 บาท)\n\nระบบจะปิดหน้านี้และพาไปยังห้องแชทเพื่อแจ้งเติมเงินครับ");
+        alert("⚠️ สิทธิ์การใช้งานของคุณหมดแล้ว\n• สิทธิ์ฟรีคงเหลือ: " + (userData.freeQuota || 0) + " ครั้ง\n• ยอดเงินคงเหลือ: " + (userData.balance || 0) + " บาท (ค่าบริการครั้งละ 9 บาท)\n\nระบบจะปิดหน้านี้เพื่อพาไปยังห้องแชทเติมเงินครับ");
         triggerChatTopup();
         return;
       }

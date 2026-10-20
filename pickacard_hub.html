@@ -275,7 +275,7 @@
           </div>
 
           <div class="card-face card-back-face p-3.5 flex flex-col justify-between text-left">
-            <!-- โหมดสาส์นครู -->
+            <!-- ส่วนโหมดสาส์นครู (แสดงภาพตรงบนการ์ดทันที) -->
             <div id="mode-image-only" style="display: none;" class="w-full h-full flex flex-col justify-between">
               <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1">
                 <span>สาส์นครู • สาร์นปู่</span>
@@ -291,7 +291,7 @@
               <div class="text-[9px] text-emerald-800 text-center font-bold pt-1">บารมีองค์นาคราชประสิทธิ์</div>
             </div>
 
-            <!-- โหมด Pick a Card ทั่วไป -->
+            <!-- ส่วนโหมด Pick a Card ทั่วไป -->
             <div id="mode-text-card" style="display: none;" class="w-full h-full flex flex-col justify-between">
               <div class="overflow-y-auto pr-1 max-h-[440px]">
                 <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-700 mb-1.5 pb-1 border-b border-amber-200">
@@ -512,7 +512,6 @@
       return templates[Math.floor(Math.random() * templates.length)].substring(0, 200);
     }
 
-    // ฟังก์ชันตัดสิทธิ์และอัปเดตหน้าจอทันที
     function revealSelectedCard(idx) {
       fetch(`${WEB_URL}?action=deduct_reading_quota&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedCat)}`)
         .then(r => r.json())
@@ -542,6 +541,7 @@
         });
     }
 
+    // แสดงผลไพ่ (สาส์นครูแสดงรูปภาพตรงทันที ไม่ต้องกดลิงก์ออกไปดู)
     function displayCardResult(idx) {
       document.getElementById('view-select-card').style.display = 'none';
       const viewResult = document.getElementById('view-result');
@@ -562,48 +562,10 @@
         const guruImg = document.getElementById('res-guru-img');
         const guruLdr = document.getElementById('res-guru-loader');
 
-        guruImg.style.display = 'none';
-        guruLdr.style.display = 'block';
-        guruLdr.innerHTML = `
-          <div class="text-4xl mb-2 animate-bounce">🐍</div>
-          <div class="text-xs text-amber-300 font-bold">กำลังอัญเชิญสาส์นญาณบารมี...</div>
-        `;
-
-        const tryUrls = [
-          card.imageUrl,
-          card.fallbackUrl,
-          "https://drive.google.com/thumbnail?id=" + card.fileId + "&sz=w1000"
-        ].filter(Boolean);
-
-        let currentAttempt = 0;
-
-        function tryLoadNextImage() {
-          if (currentAttempt < tryUrls.length) {
-            guruImg.src = tryUrls[currentAttempt];
-            currentAttempt++;
-          } else {
-            guruLdr.innerHTML = `
-              <div class="p-3 text-center">
-                <div class="text-3xl mb-1 text-amber-400">✨</div>
-                <div class="text-xs text-amber-200 font-bold mb-2">สาส์นครู: ${card.name || "สาร์นปู่"}</div>
-                <a href="${card.imageUrl}" target="_blank" class="inline-block bg-amber-500 text-emerald-950 font-black px-4 py-2 rounded-xl text-xs shadow-md">
-                  🔍 แตะเพื่อดูภาพสาส์นครูขนาดใหญ่
-                </a>
-              </div>
-            `;
-          }
-        }
-
-        guruImg.onload = function() {
-          guruImg.style.display = 'block';
-          guruLdr.style.display = 'none';
-        };
-
-        guruImg.onerror = function() {
-          tryLoadNextImage();
-        };
-
-        tryLoadNextImage();
+        // แสดงภาพบนการ์ดทันที ไม่ต้องมีปุ่มกดลิงก์ออกไปดูข้างนอก
+        guruLdr.style.display = 'none';
+        guruImg.style.display = 'block';
+        guruImg.src = card.imageUrl || "";
       } else {
         modeImgOnly.style.display = 'none';
         modeTextCard.style.display = 'flex';

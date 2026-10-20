@@ -7,129 +7,170 @@
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at center, #064E3B 0%, #022C22 50%, #000000 100%);
-      color: #FDE08B;
+      background: linear-gradient(135deg, #022c22 0%, #064e3b 40%, #09090b 100%);
+      color: #fafaf9;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
     .gold-text {
-      background: linear-gradient(135deg, #FDE08B 0%, #D4AF37 50%, #AA771C 100%);
+      background: linear-gradient(135deg, #fef08a 0%, #fde047 50%, #ca8a04 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .luxury-card {
-      background: linear-gradient(145deg, rgba(18, 18, 18, 0.9) 0%, rgba(6, 78, 59, 0.8) 100%);
-      border: 1px solid rgba(212, 175, 55, 0.5);
-      border-radius: 28px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2);
-    }
-    .glass-box {
-      background: rgba(18, 18, 18, 0.7);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
+    .pearl-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.2);
     }
     .btn-gold {
-      background: linear-gradient(135deg, #FDE08B 0%, #D4AF37 50%, #B48608 100%);
-      color: #121212;
+      background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+      color: #09090b;
+      font-weight: 800;
       border-radius: 9999px;
-      font-weight: 600;
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(234, 179, 8, 0.4);
+      transition: all 0.3s ease;
     }
-    .btn-gold:active { transform: scale(0.98); opacity: 0.9; }
-    .btn-line-luxury {
-      background: #06C755;
-      color: #FFFFFF;
+    .btn-gold:active { transform: scale(0.98); }
+    .btn-line {
+      background: #06c755;
+      color: #ffffff;
+      font-weight: 800;
       border-radius: 9999px;
-      font-weight: 600;
-      box-shadow: 0 4px 15px rgba(6, 199, 85, 0.4);
+      box-shadow: 0 4px 20px rgba(6, 199, 85, 0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-line:active { transform: scale(0.98); }
+    .naga-crest { filter: drop-shadow(0 0 14px rgba(234, 179, 8, 0.7)); }
+    
+    /* Animation สำหรับการโหลด */
+    .pulse-gold { animation: pulseGold 2s infinite; }
+    @keyframes pulseGold {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
   </style>
 </head>
-<body class="p-5 max-w-md mx-auto flex flex-col justify-between pb-10">
+<body class="p-5 max-w-md mx-auto flex flex-col justify-between pb-12">
 
   <div>
-    <!-- Header แบบหรูหรา -->
-    <div class="text-center py-6 relative">
-      <div class="text-[#D4AF37] text-xl mb-1">⚜️</div>
-      <h1 class="text-xl font-bold tracking-wider gold-text">วินทร์ทรัพย์นาคราช</h1>
-      <p class="text-[11px] text-[#A7F3D0] tracking-widest mt-0.5 uppercase">✦ Membership & Sacred System ✦</p>
+    <!-- ส่วนหัว (Header) -->
+    <div class="flex items-center justify-between py-4 mb-2">
+      <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-amber-300 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30">⟨ กลับหน้าร้าน</button>
+      <div class="text-xl naga-crest">🐍</div>
     </div>
 
-    <!-- ส่วนที่ยังไม่ได้เข้าสู่ระบบ -->
-    <div id="section-login" class="text-center py-10">
-      <div class="luxury-card p-8 text-center space-y-4">
-        <div class="text-4xl mb-2">🐍</div>
-        <h2 class="text-sm font-bold gold-text">เข้าสู่ระบบสมาชิกศักดิ์สิทธิ์</h2>
-        <p class="text-xs text-gray-300 leading-relaxed">เชื่อมต่อด้วยบัญชี LINE เพื่อเปิดรับพลังงาน บันทึกสิทธิ์ และเข้าถึงระบบพยากรณ์</p>
-        <button onclick="loginWithLine()" class="btn-line-luxury w-full py-4 text-xs flex items-center justify-center gap-2 mt-2">
-          <span>💚</span> เข้าสู่ระบบ / ลงทะเบียนด้วย LINE
+    <div class="text-center py-2 space-y-2 mb-6">
+      <h1 class="text-2xl font-extrabold gold-text tracking-wide">บัญชีมงคล</h1>
+      <p class="text-xs font-medium text-emerald-200/80 uppercase tracking-widest">✦ Win Sap Nakharat Member ✦</p>
+    </div>
+
+    <!-- 1. หน้าจอตอนยังไม่ล็อกอิน (ปุ่มสมัคร/ล็อกอิน) -->
+    <div id="section-login" class="py-4 text-center">
+      <div class="pearl-card p-8 space-y-5">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-b from-amber-200/20 to-amber-600/10 border border-amber-400/40 naga-crest mb-2">
+          <span class="text-4xl">👑</span>
+        </div>
+        <h2 class="text-lg font-bold text-white">เข้าสู่ระบบ / ลงทะเบียน</h2>
+        <p class="text-xs text-amber-200/80 font-medium leading-relaxed">
+          ระบบจะทำการตรวจสอบข้อมูล<br>หากยังไม่มีบัญชี ระบบจะสร้างรหัสสมาชิก<br>พร้อมรับสิทธิ์เปิดไพ่ฟรี 10 ครั้งทันที
+        </p>
+        <button onclick="loginWithLine()" class="btn-line w-full py-4 text-sm flex items-center justify-center gap-2 mt-4">
+          <span class="text-lg">💬</span> เข้าสู่ระบบด้วย LINE
         </button>
       </div>
     </div>
 
-    <!-- ส่วนแสดงข้อมูลสมาชิก (ดีไซน์การ์ดทองคำเขียวมรกต) -->
-    <div id="section-member" class="luxury-card p-6 mb-6 hidden space-y-6">
-      <div class="flex justify-between items-start border-b border-[#D4AF37]/30 pb-4">
+    <!-- 2. หน้าจอตอนกำลังโหลดดึงข้อมูล -->
+    <div id="section-loading" style="display: none;" class="py-12 text-center space-y-4">
+      <div class="text-4xl naga-crest pulse-gold">🐍</div>
+      <p class="text-xs font-semibold text-amber-300 tracking-widest pulse-gold" id="loading-text">กำลังตรวจสอบสถานะบัญชีมงคล...</p>
+    </div>
+
+    <!-- 3. หน้าจอเมื่อล็อกอินสำเร็จ (บัตรสมาชิกหรูหรา) -->
+    <div id="section-member" class="pearl-card p-6 space-y-6" style="display: none;">
+      
+      <!-- หัวบัตรสมาชิก -->
+      <div class="flex justify-between items-start border-b border-amber-500/30 pb-5">
         <div>
-          <div class="text-[9px] text-[#A7F3D0] uppercase tracking-widest mb-1">Naga Member Name</div>
-          <div class="text-lg font-bold text-white" id="m-name">-</div>
+          <div class="text-[10px] text-emerald-300 uppercase tracking-widest font-bold mb-1">ชื่อสมาชิก (LINE)</div>
+          <div class="text-lg font-extrabold text-white" id="m-name">-</div>
         </div>
         <div class="text-right">
-          <div class="text-[9px] text-[#A7F3D0] uppercase tracking-widest mb-1">Member ID</div>
-          <div class="text-sm font-bold text-[#FDE08B] font-mono" id="m-code">-</div>
+          <div class="text-[10px] text-emerald-300 uppercase tracking-widest font-bold mb-1">รหัสบัญชีมงคล</div>
+          <div class="text-base font-extrabold gold-text font-mono bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20" id="m-code">-</div>
         </div>
       </div>
 
-      <!-- สรุปสิทธิ์และยอดเงิน -->
-      <div class="grid grid-cols-2 gap-3 text-center">
-        <div class="glass-box p-3.5 border border-[#D4AF37]/40">
-          <div class="text-[10px] text-[#A7F3D0] mb-1">สิทธิ์ฟรีคงเหลือ</div>
-          <div class="text-lg font-bold text-white" id="m-free">- ครั้ง</div>
+      <!-- กล่องแสดงยอดคงเหลือและสิทธิ์ -->
+      <div class="grid grid-cols-2 gap-4 text-center">
+        <div class="bg-black/50 p-4 rounded-2xl border border-amber-500/20 shadow-inner">
+          <div class="text-[11px] text-emerald-300 font-bold mb-1">สิทธิ์เสี่ยงทายฟรี</div>
+          <div class="text-xl font-extrabold text-white"><span id="m-free">-</span> <span class="text-xs font-medium text-gray-400">ครั้ง</span></div>
         </div>
-        <div class="glass-box p-3.5 border border-[#D4AF37]/40">
-          <div class="text-[10px] text-[#A7F3D0] mb-1">ยอดเงินคงเหลือ</div>
-          <div class="text-lg font-bold gold-text" id="m-balance">- ฿</div>
+        <div class="bg-black/50 p-4 rounded-2xl border border-amber-500/20 shadow-inner">
+          <div class="text-[11px] text-emerald-300 font-bold mb-1">ยอดทรัพย์คงเหลือ</div>
+          <div class="text-xl font-extrabold gold-text"><span id="m-balance">-</span> <span class="text-xs font-medium text-amber-500/50">฿</span></div>
         </div>
       </div>
 
-      <!-- ข้อมูลรายละเอียด -->
-      <div class="space-y-2.5 text-xs pt-1 text-gray-200">
-        <div class="flex justify-between py-1 border-b border-white/10"><span class="text-gray-400">สถานะสิทธิ์</span><span class="font-medium text-[#FDE08B]" id="m-privilege">สิทธิ์มาตรฐาน</span></div>
-        <div class="flex justify-between py-1 border-b border-white/10"><span class="text-gray-400">เบอร์โทรศัพท์</span><span class="font-medium" id="m-phone">-</span></div>
-        <div class="flex justify-between py-1"><span class="text-gray-400">อีเมล</span><span class="font-medium" id="m-email">-</span></div>
+      <!-- รายละเอียดข้อมูล -->
+      <div class="space-y-3 text-xs pt-2 text-gray-200">
+        <div class="flex justify-between py-1.5 border-b border-white/10">
+          <span class="text-gray-400 font-medium">ระดับสิทธิพิเศษ</span>
+          <span class="font-extrabold text-amber-400 flex items-center gap-1"><span class="text-[10px]">✨</span> <span id="m-privilege">สิทธิ์มาตรฐาน</span></span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-white/10">
+          <span class="text-gray-400 font-medium">เบอร์โทรศัพท์</span>
+          <span class="font-semibold text-white" id="m-phone">-</span>
+        </div>
+        <div class="flex justify-between py-1.5">
+          <span class="text-gray-400 font-medium">อีเมล</span>
+          <span class="font-semibold text-white" id="m-email">-</span>
+        </div>
       </div>
 
-      <button onclick="logout()" class="text-[11px] text-gray-400 underline w-full text-center pt-2">ออกจากระบบ / เปลี่ยนบัญชี</button>
+      <!-- ปุ่มนำทางไปเปิดไพ่ -->
+      <div class="pt-4 border-t border-amber-500/20">
+        <button onclick="window.location.href='./pickacard_hub.html'" class="btn-gold w-full py-4 text-xs uppercase tracking-wider flex justify-center items-center gap-2">
+          <span class="text-lg">🔮</span> ไปหน้าเสี่ยงทาย Pick a Card
+        </button>
+      </div>
+
+    </div>
+    
+    <!-- ปุ่มออกจากระบบ (แสดงเมื่อเข้าระบบแล้ว) -->
+    <div id="section-logout" style="display: none;" class="mt-4 text-center">
+      <button onclick="logout()" class="text-[11px] text-gray-500 underline font-medium hover:text-gray-300">ออกจากระบบ / สลับบัญชี LINE</button>
     </div>
 
-    <!-- ปุ่มนำทางไปหน้าพยากรณ์ Pick a Card -->
-    <div id="section-nav" class="hidden space-y-3">
-      <button onclick="window.location.href='./index.html'" class="btn-gold w-full py-4 text-xs uppercase tracking-wider flex items-center justify-center gap-2">
-        <span>🔮</span> ไปหน้าพยากรณ์ Pick a Card
-      </button>
-    </div>
   </div>
 
-  <div class="text-center text-[10px] text-gray-500 pt-8 tracking-widest">✨ WIN SAP NAKHARAT LUXURY SYSTEM ✨</div>
+  <div class="text-center text-[10px] text-amber-100/30 pt-8 tracking-widest uppercase font-semibold">
+    ✨ Win Sap Nakharat Membership ✨
+  </div>
 
   <script>
+    // ดึงตั้งค่าจาก config.js
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : "";
-    const LIFF_ID = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.LIFF && APP_CONFIG.LIFF.MEMBERSHIP) ? APP_CONFIG.LIFF.MEMBERSHIP : "2007499712-J15McRGz";
+    const LIFF_ID = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.LIFF && APP_CONFIG.LIFF.MEMBERSHIPS) ? APP_CONFIG.LIFF.MEMBERSHIPS : "";
 
     window.addEventListener('DOMContentLoaded', () => {
-      if (typeof liff !== 'undefined') {
+      if (typeof liff !== 'undefined' && LIFF_ID) {
         liff.init({ liffId: LIFF_ID }).then(() => {
           if (liff.isLoggedIn()) {
-            liff.getProfile().then(p => {
-              fetchUserData(p.userId, p.displayName);
-            });
+            document.getElementById('section-login').style.display = 'none';
+            document.getElementById('section-loading').style.display = 'block';
+            liff.getProfile().then(p => fetchUserData(p.userId, p.displayName));
           }
-        }).catch(() => {});
+        }).catch((err) => {
+          console.error("LIFF Init Error:", err);
+        });
       }
     });
 
@@ -138,35 +179,48 @@
         if (!liff.isLoggedIn()) {
           liff.login();
         } else {
+          document.getElementById('section-login').style.display = 'none';
+          document.getElementById('section-loading').style.display = 'block';
           liff.getProfile().then(p => fetchUserData(p.userId, p.displayName));
         }
       } else {
-        fetchUserData("test_user_001", "เจ้านางน้อย (ทดสอบ)");
+        // สำหรับทดสอบบน Browser คอมพิวเตอร์
+        document.getElementById('section-login').style.display = 'none';
+        document.getElementById('section-loading').style.display = 'block';
+        fetchUserData("test_user_999", "ผู้ศรัทธา (ทดสอบ)");
       }
     }
 
     function fetchUserData(uid, uname) {
+      document.getElementById('loading-text').innerText = "กำลังซิงค์ข้อมูลกับฐานข้อมูล...";
+      
       fetch(`${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(uid)}&name=${encodeURIComponent(uname)}`)
         .then(r => r.json())
         .then(res => {
+          document.getElementById('section-loading').style.display = 'none';
+          
           if (res && res.status === "success") {
+            // อัปเดตข้อมูลลงบนบัตรสมาชิก
             document.getElementById('m-name').innerText = res.name;
             document.getElementById('m-code').innerText = res.memberCode;
-            document.getElementById('m-free').innerText = res.freeQuota + " ครั้ง";
-            document.getElementById('m-balance').innerText = res.balance.toLocaleString() + " ฿";
+            document.getElementById('m-free').innerText = res.freeQuota;
+            document.getElementById('m-balance').innerText = res.balance.toLocaleString();
             document.getElementById('m-privilege').innerText = res.specialPrivilege || "สิทธิ์มาตรฐาน";
             document.getElementById('m-phone').innerText = res.phone && res.phone !== "-" ? res.phone : "ยังไม่ระบุ";
             document.getElementById('m-email').innerText = res.email && res.email !== "-" ? res.email : "ยังไม่ระบุ";
 
-            document.getElementById('section-login').classList.add('hidden');
-            document.getElementById('section-member').classList.remove('hidden');
-            document.getElementById('section-nav').classList.remove('hidden');
+            // แสดงส่วนของสมาชิก
+            document.getElementById('section-member').style.display = 'block';
+            document.getElementById('section-logout').style.display = 'block';
           } else {
-            alert("ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่");
+            alert("ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่อีกครั้ง");
+            document.getElementById('section-login').style.display = 'block';
           }
         })
         .catch(() => {
-          alert("เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย");
+          document.getElementById('section-loading').style.display = 'none';
+          alert("เชื่อมต่อเซิร์ฟเวอร์ล้มเหลว กรุณาตรวจสอบอินเทอร์เน็ต");
+          document.getElementById('section-login').style.display = 'block';
         });
     }
 

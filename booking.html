@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ระบบจองคิวบริการ • วินทร์ทรัพย์นาคราช</title>
+  <title>ระบบจองคิวดูดวง • วินทร์ทรัพย์นาคราช</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -12,69 +12,81 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: linear-gradient(135deg, #064e3b 0%, #022c22 50%, #022015 100%);
-      color: #fafaf9;
+      /* ธีมดำเงา (Glossy Black) ผสมเขียวมรกตลุ่มลึก */
+      background: radial-gradient(circle at top, #022c22 0%, #031410 50%, #000000 100%);
+      color: #f8fafc;
       min-height: 100vh;
       margin: 0;
     }
-    .gold-text {
-      background: linear-gradient(135deg, #fef08a 0%, #fde047 50%, #ca8a04 100%);
+    /* สีทองครีมพรีเมียม */
+    .gold-cream-text {
+      background: linear-gradient(135deg, #fef08a 0%, #fde047 40%, #d4af37 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .card-soft-luxury {
-      background: rgba(6, 78, 59, 0.4);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(234, 179, 8, 0.3);
+    /* การ์ดสไตล์เขียวมรกต ขอบทองครีม โปร่งแสงเงางาม */
+    .card-emerald-pearl {
+      background: rgba(4, 47, 46, 0.55);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(212, 175, 55, 0.35);
       border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
-    .btn-gold {
-      background: linear-gradient(135deg, #fde047 0%, #ca8a04 100%);
-      color: #022015;
+    /* ปุ่มทองครีมตัดขาวมุก */
+    .btn-gold-cream {
+      background: linear-gradient(135deg, #fef08a 0%, #d4af37 100%);
+      color: #031410;
       font-weight: 800;
       border-radius: 9999px;
-      box-shadow: 0 4px 15px rgba(234, 179, 8, 0.2);
-      transition: transform 0.2s;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      transition: all 0.2s ease;
     }
-    .btn-gold:active { transform: scale(0.96); }
+    .btn-gold-cream:active { transform: scale(0.96); }
+    
+    /* สไตล์ข้อความขาวมุก */
+    .text-pearl {
+      color: #f1f5f9;
+    }
+    .text-pearl-muted {
+      color: #cbd5e1;
+    }
   </style>
 </head>
 <body class="p-5 max-w-md mx-auto flex flex-col pb-12">
 
   <!-- Header -->
   <div class="flex items-center justify-between py-4 mb-2">
-    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-amber-300 px-3 py-1 rounded-full border border-amber-500/30 bg-black/20">⟨ กลับหน้าร้าน</button>
-    <div class="text-lg text-amber-400 font-bold">วินทร์ทรัพย์นาคราช</div>
+    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-amber-200 px-3.5 py-1.5 rounded-full border border-amber-400/30 bg-emerald-950/40 hover:bg-emerald-900/50 transition">⟨ กลับหน้าร้าน</button>
+    <div class="text-sm text-amber-300 font-bold tracking-wider">วินทร์ทรัพย์นาคราช</div>
   </div>
 
   <div class="text-center mb-6">
-    <h1 class="text-2xl font-extrabold gold-text tracking-wide">จองคิวบริการมงคล</h1>
-    <p class="text-xs text-emerald-200/80 mt-1">เลือกบริการและรอบเวลาที่คุณต้องการ</p>
+    <h1 class="text-2xl font-extrabold gold-cream-text tracking-wide">จองคิวดูดวงมงคล</h1>
+    <p class="text-xs text-pearl-muted mt-1">เลือกแพ็กเกจและช่วงเวลาเพื่อรับคำพยากรณ์</p>
   </div>
 
   <!-- กล่องประกาศสถานะจาก Admin (ถ้าปิดรับจอง) -->
-  <div id="admin-notice" class="hidden mb-6 p-4 rounded-2xl bg-amber-950/80 border border-amber-500/60 text-center text-xs text-amber-200 leading-relaxed shadow-lg">
+  <div id="admin-notice" class="hidden mb-6 p-4 rounded-2xl bg-amber-950/90 border border-amber-500/60 text-center text-xs text-amber-200 leading-relaxed shadow-xl">
     ⚠️ <span id="notice-text">ขณะนี้ปิดรับจองคิวชั่วคราว</span>
   </div>
 
-  <!-- รายการบริการเฉพาะบริการดูดวง -->
+  <!-- รายการแพ็กเกจดูดวง -->
   <div id="service-list" class="space-y-4">
-    <div class="text-center py-10 text-amber-300 animate-pulse text-xs">กำลังโหลดบริการมงคล...</div>
+    <div class="text-center py-10 text-amber-300 animate-pulse text-xs">กำลังโหลดแพ็กเกจมงคล...</div>
   </div>
 
   <!-- Modal เลือกเวลาจอง -->
-  <div id="booking-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-    <div class="card-soft-luxury p-6 w-full max-w-sm space-y-4 bg-emerald-950/95 border border-amber-500/50">
-      <div class="flex justify-between items-center border-b border-amber-500/20 pb-3">
-        <h3 class="text-sm font-bold text-amber-300" id="modal-service-title">เลือกช่วงเวลานัดหมาย</h3>
-        <button onclick="closeModal()" class="text-gray-400 text-sm px-2">✕</button>
+  <div id="booking-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
+    <div class="card-emerald-pearl p-6 w-full max-w-sm space-y-4 bg-emerald-950/95 border border-amber-400/50 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-amber-400/20 pb-3">
+        <h3 class="text-sm font-bold gold-cream-text" id="modal-service-title">เลือกช่วงเวลานัดหมาย</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white text-base px-2">✕</button>
       </div>
       
       <div class="space-y-2 text-xs">
-        <label class="block text-emerald-200 font-medium">รอบเวลา (สถานะ ว่าง/เต็ม):</label>
-        <div id="slot-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-          <div class="text-gray-400 text-center py-4">กำลังโหลดรอบเวลา...</div>
+        <label class="block text-pearl font-medium">รอบเวลา (สถานะ ว่าง / เต็ม):</label>
+        <div id="slot-container" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+          <div class="text-gray-400 text-center py-4">กำลังตรวจสอบรอบเวลา...</div>
         </div>
       </div>
     </div>
@@ -117,7 +129,7 @@
         .catch(() => loadServices());
     }
 
-    // 2. โหลดรายการเฉพาะบริการ
+    // 2. โหลดรายการแพ็กเกจดูดวง
     function loadServices() {
       fetch(`${WEB_URL}?action=get_booking_services`)
         .then(r => r.json())
@@ -127,24 +139,24 @@
           
           if(res && res.items && res.items.length > 0) {
             res.items.forEach(item => {
-              const btnStyle = isBookingOpen ? "btn-gold cursor-pointer" : "bg-gray-700 text-gray-400 cursor-not-allowed opacity-50";
+              const btnStyle = isBookingOpen ? "btn-gold-cream cursor-pointer" : "bg-gray-800 text-gray-500 cursor-not-allowed opacity-50";
               const btnAction = isBookingOpen ? `onclick="openBookingModal('${item.name}')"` : "";
               
               container.innerHTML += `
-                <div class="card-soft-luxury p-4 flex flex-col gap-3">
+                <div class="card-emerald-pearl p-4 flex flex-col gap-3">
                   <div>
-                    <div class="text-base font-bold text-white">${item.name}</div>
-                    <div class="text-xs text-emerald-100/70 mt-1 leading-relaxed">${item.desc}</div>
-                    <div class="text-sm font-extrabold gold-text mt-2">${item.price > 0 ? item.price.toLocaleString() + ' ฿' : 'บูชาฟรี'}</div>
+                    <div class="text-base font-bold text-pearl">${item.name}</div>
+                    <div class="text-xs text-pearl-muted mt-1 leading-relaxed">${item.desc}</div>
+                    <div class="text-sm font-extrabold gold-cream-text mt-2">${item.price > 0 ? item.price.toLocaleString() + ' บาท' : 'บูชาฟรี'}</div>
                   </div>
-                  <button ${btnAction} class="${btnStyle} w-full py-2.5 text-xs font-bold tracking-wide flex items-center justify-center gap-1">
-                    ${isBookingOpen ? '🔮 จองคิวดูดวง' : '🔒 ปิดรับจองชั่วคราว'}
+                  <button ${btnAction} class="${btnStyle} w-full py-2.5 text-xs tracking-wide flex items-center justify-center gap-1 shadow-md">
+                    ${isBookingOpen ? '🔮 เลือกจองเวลานี้' : '🔒 ปิดรับจองชั่วคราว'}
                   </button>
                 </div>
               `;
             });
           } else {
-            container.innerHTML = `<div class="text-center text-xs text-gray-400 py-10">ไม่พบรายการบริการในขณะนี้</div>`;
+            container.innerHTML = `<div class="text-center text-xs text-gray-400 py-10">ไม่พบรายการแพ็กเกจดูดวงในขณะนี้</div>`;
           }
         })
         .catch(() => {
@@ -155,7 +167,7 @@
     function openBookingModal(serviceName) {
       if (!isBookingOpen) return;
       selectedService = serviceName;
-      document.getElementById('modal-service-title').innerText = `จอง: ${serviceName}`;
+      document.getElementById('modal-service-title').innerText = `จองคิว: ${serviceName}`;
       document.getElementById('booking-modal').classList.remove('hidden');
       loadTimeSlots();
     }
@@ -164,7 +176,7 @@
       document.getElementById('booking-modal').classList.add('hidden');
     }
 
-    // 3. โหลดรอบเวลาพร้อมแถบสถานะ ว่าง/เต็ม
+    // 3. โหลดรอบเวลาพร้อมแถบสถานะ ว่าง/เต็ม (09:00 - 20:00 น.)
     function loadTimeSlots() {
       const container = document.getElementById('slot-container');
       container.innerHTML = `<div class="text-gray-300 text-center py-3 text-xs">กำลังตรวจสอบรอบเวลา...</div>`;
@@ -185,14 +197,14 @@
             
             if (isOpen) {
               container.innerHTML += `
-                <div class="p-3 rounded-xl bg-black/40 border border-emerald-500/30 flex items-center justify-between">
+                <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
                   <div>
-                    <div class="text-white font-bold text-xs">⏰ ${slot.time}</div>
-                    <span class="inline-flex items-center gap-1 text-[10px] text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-500/30 mt-1">
+                    <div class="text-pearl font-bold text-xs">⏰ ${slot.time}</div>
+                    <span class="inline-flex items-center gap-1 text-[10px] text-emerald-300 bg-emerald-900/60 px-2 py-0.5 rounded-full border border-emerald-500/40 mt-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ว่าง
                     </span>
                   </div>
-                  <button onclick="confirmSlot('${slot.time}')" class="btn-gold px-3 py-1.5 text-xs">จอง</button>
+                  <button onclick="confirmSlot('${slot.time}')" class="btn-gold-cream px-3 py-1.5 text-xs shadow">จอง</button>
                 </div>
               `;
             } else {
@@ -215,13 +227,13 @@
         });
     }
 
-    // 4. บันทึกการจอง
+    // 4. บันทึกการจองและแจ้งเตือน
     function confirmSlot(slotTime) {
-      if (confirm(`ยืนยันการจองบริการ "${selectedService}" รอบเวลา ${slotTime} ใช่หรือไม่?`)) {
+      if (confirm(`ยืนยันการจองแพ็กเกจ "${selectedService}" รอบเวลา ${slotTime} ใช่หรือไม่?`)) {
         fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&slotTime=${encodeURIComponent(slotTime)}`)
           .then(r => r.json())
           .then(res => {
-            alert(`✨ ทำการจองคิวสำเร็จ! แอดมินบันทึกข้อมูลของคุณเรียบร้อยแล้ว`);
+            alert(`✨ ทำการจองคิวสำเร็จ! ระบบบันทึกข้อมูลเรียบร้อยแล้ว กรุณากลับไปที่แชท LINE เพื่อรับใบเสร็จและชำระเงินครับ`);
             closeModal();
           })
           .catch(() => {

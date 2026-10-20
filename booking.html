@@ -12,26 +12,22 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      /* ธีมสว่าง: พื้นหลังไล่ระดับสีขาวนวลและทองอ่อน */
       background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
       color: #0f172a;
       min-height: 100vh;
       margin: 0;
     }
-    /* ข้อความสีทองหรูหราบนพื้นสว่าง */
     .gold-dark-text {
       background: linear-gradient(135deg, #854d0e 0%, #a16207 50%, #ca8a04 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    /* การ์ดสไตล์เขียวมรกตพรีเมียมบนพื้นสว่าง ขอบทอง */
     .card-light-emerald {
       background: #ffffff;
       border: 1px solid rgba(202, 138, 4, 0.3);
       border-radius: 24px;
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-    /* ปุ่มพรีเมียมเขียวมรกตตัดทองหรูหรา */
     .btn-emerald-gold {
       background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
       color: #fef08a;
@@ -41,9 +37,18 @@
       transition: all 0.2s ease;
     }
     .btn-emerald-gold:active { transform: scale(0.96); }
-    
-    .text-dark-main { color: #0f172a; }
-    .text-dark-muted { color: #475569; }
+    .date-pill {
+      background: #ffffff;
+      border: 1px solid rgba(6, 78, 59, 0.2);
+      border-radius: 16px;
+      transition: all 0.2s;
+    }
+    .date-pill.active {
+      background: #064e3b;
+      color: #fef08a;
+      border-color: #064e3b;
+      box-shadow: 0 4px 12px rgba(6, 78, 59, 0.3);
+    }
   </style>
 </head>
 <body class="p-5 max-w-md mx-auto flex flex-col pb-12">
@@ -55,32 +60,41 @@
   </div>
 
   <div class="text-center mb-6">
-    <h1 class="text-2xl font-extrabold gold-dark-text tracking-wide">ยืนยันการจองคิวดูดวง</h1>
-    <p class="text-xs text-dark-muted mt-1" id="subtitle-mode">เลือกช่วงเวลาเพื่อรับคำพยากรณ์</p>
+    <h1 class="text-2xl font-extrabold gold-dark-text tracking-wide">จองคิวดูดวงล่วงหน้า</h1>
+    <p class="text-xs text-slate-600 mt-1" id="subtitle-mode">เลือกแพ็กเกจและวันเวลาที่ท่านสะดวก</p>
   </div>
 
-  <!-- กล่องประกาศสถานะจาก Admin -->
+  <!-- Admin Notice -->
   <div id="admin-notice" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-center text-xs text-amber-900 leading-relaxed shadow-sm">
     ⚠️ <span id="notice-text">ขณะนี้ปิดรับจองคิวชั่วคราว</span>
   </div>
 
-  <!-- แสดงแพ็กเกจที่เลือก -->
+  <!-- Package List -->
   <div id="service-list" class="space-y-4">
-    <div class="text-center py-10 text-dark-muted animate-pulse text-xs">กำลังโหลดแพ็กเกจที่ท่านเลือก...</div>
+    <div class="text-center py-10 text-slate-500 animate-pulse text-xs">กำลังโหลดแพ็กเกจ...</div>
   </div>
 
-  <!-- Modal เลือกเวลาจอง (2 คอลัมน์) -->
+  <!-- Booking Modal (เลือกวัน 7 วัน + เวลา) -->
   <div id="booking-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-    <div class="bg-white p-6 w-full max-w-md space-y-4 rounded-3xl border border-amber-500/30 shadow-2xl">
+    <div class="bg-white p-6 w-full max-w-md space-y-4 rounded-3xl border border-amber-500/30 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-        <h3 class="text-sm font-bold text-emerald-950" id="modal-service-title">เลือกช่วงเวลานัดหมาย</h3>
+        <h3 class="text-sm font-bold text-emerald-950" id="modal-service-title">เลือกวันและเวลา</h3>
         <button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 text-base px-2">✕</button>
       </div>
       
-      <div class="space-y-2 text-xs">
-        <label class="block text-dark-muted font-medium mb-2">รอบเวลาบริการ (สถานะ ว่าง / เต็ม):</label>
-        <div id="slot-container" class="grid grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-1">
-          <div class="text-gray-400 text-center py-4 col-span-2">กำลังตรวจสอบรอบเวลา...</div>
+      <!-- เลือกวันที่ (7 วันล่วงหน้า) -->
+      <div>
+        <label class="block text-slate-600 font-medium text-xs mb-2">1. เลือกวันที่ต้องการจอง (ล่วงหน้า 7 วัน):</label>
+        <div id="date-container" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <!-- สร้างปุ่ม 7 วันผ่าน JavaScript -->
+        </div>
+      </div>
+
+      <!-- เลือกช่วงเวลา -->
+      <div class="pt-2">
+        <label class="block text-slate-600 font-medium text-xs mb-2">2. เลือกรอบเวลา (สถานะ ว่าง / เต็ม):</label>
+        <div id="slot-container" class="grid grid-cols-2 gap-2.5 max-h-48 overflow-y-auto pr-1">
+          <div class="text-gray-400 text-center py-4 col-span-2 text-xs">กรุณาเลือกวันที่ด้านบนก่อน</div>
         </div>
       </div>
     </div>
@@ -90,6 +104,7 @@
     const WEB_URL = "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec";
     const LIFF_ID = "2007499712-B0uid9G3";
     let selectedService = "";
+    let selectedDate = "";
     let isBookingOpen = true;
     let currentUserId = "guest_user";
     let targetServiceFromURL = "";
@@ -137,11 +152,7 @@
             let itemsToShow = res.items;
             if (targetServiceFromURL) {
               itemsToShow = res.items.filter(item => item.name.toLowerCase().includes(targetServiceFromURL.toLowerCase()));
-              if (itemsToShow.length === 0) {
-                itemsToShow = res.items;
-              } else {
-                document.getElementById('subtitle-mode').innerText = "แพ็กเกจที่คุณเลือกจากแชท LINE";
-              }
+              if (itemsToShow.length === 0) itemsToShow = res.items;
             }
 
             itemsToShow.forEach(item => {
@@ -152,7 +163,7 @@
                 <div class="card-light-emerald p-5 flex flex-col gap-3">
                   <div>
                     <div class="text-base font-bold text-emerald-950">${item.name}</div>
-                    <div class="text-xs text-dark-muted mt-1.5 leading-relaxed">${item.desc || 'เปิดดวงพยากรณ์มงคล เจาะลึกเฉพาะประเด็น'}</div>
+                    <div class="text-xs text-slate-600 mt-1.5 leading-relaxed">${item.desc || 'เปิดดวงพยากรณ์มงคล เจาะลึกเฉพาะประเด็น'}</div>
                     <div class="text-sm font-extrabold gold-dark-text mt-3">${item.price > 0 ? item.price.toLocaleString() + ' บาท' : 'บูชาฟรี'}</div>
                   </div>
                   <button ${btnAction} class="${btnStyle} w-full text-xs tracking-wide flex items-center justify-center gap-1 shadow-sm">
@@ -162,7 +173,7 @@
               `;
             });
           } else {
-            container.innerHTML = `<div class="text-center text-xs text-gray-500 py-10">ไม่พบแพ็กเกจดูดวงในขณะนี้</div>`;
+            container.innerHTML = `<div class="text-center text-xs text-slate-500 py-10">ไม่พบแพ็กเกจดูดวงในขณะนี้</div>`;
           }
         })
         .catch(() => {
@@ -173,27 +184,64 @@
     function openBookingModal(serviceName) {
       if (!isBookingOpen) return;
       selectedService = serviceName;
-      document.getElementById('modal-service-title').innerText = `จองคิว: ${serviceName}`;
+      document.getElementById('modal-service-title').innerText = `จอง: ${serviceName}`;
       document.getElementById('booking-modal').classList.remove('hidden');
-      loadTimeSlots();
+      generate7DaysOptions();
     }
 
     function closeModal() {
       document.getElementById('booking-modal').classList.add('hidden');
     }
 
-    function loadTimeSlots() {
-      const container = document.getElementById('slot-container');
-      container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">กำลังตรวจสอบรอบเวลา...</div>`;
+    // สร้างปุ่มเลือก 7 วันล่วงหน้า
+    function generate7DaysOptions() {
+      const container = document.getElementById('date-container');
+      container.innerHTML = "";
+      
+      const daysOfWeek = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+      const today = new Date();
 
-      fetch(`${WEB_URL}?action=get_time_slots`)
+      for (let i = 0; i < 7; i++) {
+        let d = new Date();
+        d.setDate(today.getDate() + i);
+        
+        let dayName = daysOfWeek[d.getDay()];
+        let dateNum = d.getDate();
+        let monthNum = d.getMonth() + 1;
+        let fullDateStr = `${String(dateNum).padStart(2, '0')}/${String(monthNum).padStart(2, '0')}/${d.getFullYear()}`;
+        
+        let isActive = (i === 0); // ค่าเริ่มต้นเลือกวันแรก (วันนี้)
+        if (isActive) selectedDate = fullDateStr;
+
+        container.innerHTML += `
+          <button onclick="selectDate('${fullDateStr}', this)" class="date-pill ${isActive ? 'active' : ''} px-3.5 py-2.5 text-center flex-shrink-0 min-w-[70px]">
+            <div class="text-[10px] opacity-80">${dayName}</div>
+            <div class="text-sm font-bold">${dateNum}</div>
+          </button>
+        `;
+      }
+      loadTimeSlots(selectedDate);
+    }
+
+    function selectDate(dateStr, btnElement) {
+      selectedDate = dateStr;
+      document.querySelectorAll('.date-pill').forEach(el => el.classList.remove('active'));
+      btnElement.classList.add('active');
+      loadTimeSlots(dateStr);
+    }
+
+    function loadTimeSlots(dateStr) {
+      const container = document.getElementById('slot-container');
+      container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">กำลังโหลดรอบเวลา...</div>`;
+
+      fetch(`${WEB_URL}?action=get_time_slots&date=${encodeURIComponent(dateStr)}`)
         .then(r => r.json())
         .then(res => {
           container.innerHTML = "";
           const slots = (res && res.slots) ? res.slots : [];
 
           if(slots.length === 0) {
-            container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">ไม่พบรอบเวลาเปิดบริการ</div>`;
+            container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">ไม่พบรอบเวลาในวันนี้</div>`;
             return;
           }
 
@@ -202,14 +250,14 @@
             
             if (isOpen) {
               container.innerHTML += `
-                <div class="p-2.5 rounded-2xl bg-emerald-50/60 border border-emerald-600/20 flex flex-col justify-between gap-2 shadow-2xs">
+                <div class="p-2.5 rounded-2xl bg-emerald-50/60 border border-emerald-600/20 flex flex-col justify-between gap-2">
                   <div>
                     <div class="text-emerald-950 font-bold text-[11px]">⏰ ${slot.time}</div>
                     <span class="inline-flex items-center gap-1 text-[9px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300 mt-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span> ว่าง
                     </span>
                   </div>
-                  <button onclick="confirmSlotWithoutPopup('${slot.time}')" class="btn-emerald-gold w-full py-1.5 text-[11px] shadow-sm">จอง</button>
+                  <button onclick="confirmBooking('${slot.time}')" class="btn-emerald-gold w-full py-1.5 text-[11px] shadow-sm">จอง</button>
                 </div>
               `;
             } else {
@@ -232,7 +280,7 @@
         });
     }
 
-    function confirmSlotWithoutPopup(slotTime) {
+    function confirmBooking(slotTime) {
       if (currentUserId === "guest_user") {
         alert("⚠️ กรุณาเปิดใช้งานผ่านแอปพลิเคชัน LINE ครับ");
         return;
@@ -240,7 +288,7 @@
 
       closeModal();
 
-      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&slotTime=${encodeURIComponent(slotTime)}`)
+      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&bookingDate=${encodeURIComponent(selectedDate)}&slotTime=${encodeURIComponent(slotTime)}`)
         .then(r => r.json())
         .then(res => {
           if (typeof liff !== 'undefined' && liff.isInClient()) {

@@ -56,37 +56,37 @@
         </div>
       </div>
 
-      <!-- สถิติยอดเงิน / สิทธิ์ฟรี / แต้ม -->
+      <!-- สถิติยอดเงิน / สิทธิ์ฟรี / แต้ม ตาม Col H, J, K จริง -->
       <div class="grid grid-cols-3 gap-2 pt-3 border-t border-emerald-800/80 text-center">
         <div class="bg-emerald-900/60 p-2 rounded-2xl border border-emerald-700/60">
-          <div class="text-[9px] text-emerald-300 font-medium">สิทธิ์ฟรีคงเหลือ</div>
+          <div class="text-[9px] text-emerald-300 font-medium">สิทธิ์ฟรีคงเหลือ (Col J)</div>
           <div class="text-sm font-black text-amber-300 mt-0.5" id="mb-free">0 ครั้ง</div>
         </div>
         <div class="bg-emerald-900/60 p-2 rounded-2xl border border-emerald-700/60">
-          <div class="text-[9px] text-emerald-300 font-medium">ยอดเงินคงเหลือ</div>
+          <div class="text-[9px] text-emerald-300 font-medium">ยอดเงินคงเหลือ (Col H)</div>
           <div class="text-sm font-black text-amber-300 mt-0.5" id="mb-balance">0 บาท</div>
         </div>
         <div class="bg-emerald-900/60 p-2 rounded-2xl border border-emerald-700/60">
-          <div class="text-[9px] text-emerald-300 font-medium">แต้มสะสม</div>
+          <div class="text-[9px] text-emerald-300 font-medium">แต้มสะสม (Col K)</div>
           <div class="text-sm font-black text-amber-300 mt-0.5" id="mb-points">0 PTS</div>
         </div>
       </div>
     </div>
 
-    <!-- กล่องแสดงสิทธิ์พิเศษที่มีอยู่ (Privileges) -->
+    <!-- กล่องแสดงสิทธิ์พิเศษ (Col M, N, O) -->
     <div class="bg-emerald-50 rounded-3xl p-4 border border-emerald-200 shadow-sm mb-4">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-lg">👑</span>
-        <h3 class="text-xs font-black text-emerald-950 uppercase tracking-wide">สิทธิ์พิเศษที่มีอยู่ของคุณ</h3>
+        <h3 class="text-xs font-black text-emerald-950 uppercase tracking-wide">สิทธิ์พิเศษที่มีอยู่ (Col M, N, O)</h3>
       </div>
       <div class="bg-white p-3 rounded-2xl border border-emerald-100 space-y-1.5 text-xs">
         <div class="flex justify-between items-center">
-          <span class="text-slate-500">สถานะการใช้งาน:</span>
-          <span class="font-bold text-amber-700" id="mb-unlimited">ตรวจสอบสถานะ...</span>
+          <span class="text-slate-500">สถานะสิทธิ์พิเศษ:</span>
+          <span class="font-bold text-amber-700" id="mb-privilege">กำลังตรวจสอบ...</span>
         </div>
         <div class="flex justify-between items-center">
           <span class="text-slate-500">อัตราค่าบริการปกติ:</span>
-          <span class="font-bold text-emerald-900">เปิดไพ่ครั้งละ 9 บาท</span>
+          <span class="font-bold text-emerald-900">เปิดไพ่ครั้งละ 9 บาท (หลังสิทธิ์ฟรีหมด)</span>
         </div>
         <div class="flex justify-between items-center">
           <span class="text-slate-500">สะสมแต้มพอยต์:</span>
@@ -99,22 +99,22 @@
     <div class="bg-amber-50/70 rounded-3xl p-4 border border-amber-300/80 shadow-sm mb-4">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-lg">📜</span>
-        <h3 class="text-xs font-black text-amber-950">สิทธิประโยชน์พิเศษสำหรับสมาชิก</h3>
+        <h3 class="text-xs font-black text-amber-950">เงื่อนไขสิทธิประโยชน์สำหรับสมาชิก</h3>
       </div>
       <div class="space-y-2 text-xs">
         <div class="flex items-start gap-2 bg-white/90 p-2.5 rounded-2xl border border-amber-200">
           <span class="text-base leading-none">🎁</span>
           <div>
             <div class="font-black text-emerald-950">สมาชิกใหม่เปิดไพ่ฟรี 5 ครั้ง</div>
-            <div class="text-[10px] text-slate-500">รับสิทธิ์เปิดไพ่ Pick a Card ฟรีทันทีเมื่อเข้าสู่ระบบ</div>
+            <div class="text-[10px] text-slate-500">รับสิทธิ์เปิดไพ่ Pick a Card ฟรีทันทีเมื่อสมัครสมาชิก</div>
           </div>
         </div>
 
         <div class="flex items-start gap-2 bg-white/90 p-2.5 rounded-2xl border border-amber-200">
           <span class="text-base leading-none">👑</span>
           <div>
-            <div class="font-black text-amber-900">ดูดวง 300 บาท ใช้ระบบฟรี 3 เดือน</div>
-            <div class="text-[10px] text-slate-500">เมื่อจองคิวดูดวง 300 บาทขึ้นไป หรือเติมเงิน 300 บาท รับสิทธิ์เปิดไพ่ไม่จำกัด 90 วันเต็ม</div>
+            <div class="font-black text-amber-900">ดูดวง 300 บาท / เติมเงิน 300 บาท ใช้ระบบฟรี 3 เดือน</div>
+            <div class="text-[10px] text-slate-500">เปิดไพ่ไม่จำกัดครั้ง 90 วันเต็ม (สิทธิ์พิเศษใน Col M)</div>
           </div>
         </div>
 
@@ -198,8 +198,8 @@
     const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw9RJdnqieYUY6QombS0Zmkkim0C8zecq71k0p7kMvwRPzy_Y5NMr8D54WHjd2qUCodEA/exec";
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
-    let currentUserId = "guest_user";
-    let currentDisplayName = "LINE User";
+    let currentUserId = "";
+    let currentDisplayName = "สมาชิกวินทร์ทรัพย์นาคราช";
 
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof liff !== 'undefined') {
@@ -207,35 +207,34 @@
           if (liff.isLoggedIn()) {
             liff.getProfile().then(p => {
               currentUserId = p.userId;
-              currentDisplayName = p.displayName || "LINE User";
+              currentDisplayName = p.displayName || "สมาชิก";
               loadUserData();
             });
           } else {
             loadUserData();
           }
-        }).catch(e => loadUserData());
+        }).catch(() => loadUserData());
       } else {
         loadUserData();
       }
     });
 
     function loadUserData() {
-      fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}`)
+      fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}&_t=${new Date().getTime()}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.isMember) {
             document.getElementById('mb-name').innerText = res.name || currentDisplayName;
-            document.getElementById('mb-code').innerText = "ID: " + (res.memberCode || "M0000");
-            document.getElementById('mb-free').innerText = res.freeQuota + " ครั้ง";
-            document.getElementById('mb-balance').innerText = res.balance + " ฿";
-            document.getElementById('mb-points').innerText = res.points + " PTS";
+            document.getElementById('mb-code').innerText = "ID: " + (res.memberCode || "M0001");
+            document.getElementById('mb-free').innerText = (res.freeQuota || 0) + " ครั้ง";
+            document.getElementById('mb-balance').innerText = (res.balance || 0).toLocaleString() + " บาท";
+            document.getElementById('mb-points').innerText = (res.points || 0) + " PTS";
             document.getElementById('mb-phone').innerText = res.phone !== "-" ? res.phone : "-";
             document.getElementById('mb-email').innerText = res.email !== "-" ? res.email : "-";
             document.getElementById('mb-address').innerText = res.address !== "-" ? res.address : "ยังไม่ได้ระบุที่อยู่";
             
-            document.getElementById('mb-unlimited').innerText = res.isUnlimited 
-              ? `👑 สิทธิ์บุฟเฟต์ใช้งานฟรีถึง ${res.expiryDate.split("T")[0]}` 
-              : (res.freeQuota > 0 ? `🎁 สิทธิ์ฟรีคงเหลือ ${res.freeQuota} ครั้ง` : "สิทธิ์มาตรฐาน (ครั้งละ 9 บาท)");
+            // แสดงสิทธิ์พิเศษตาม Col M / Col N
+            document.getElementById('mb-privilege').innerText = res.specialPrivilege || (res.isUnlimited ? "ใช้งานฟรี 3 เดือน" : "สิทธิ์มาตรฐาน");
             
             document.getElementById('edit-name').value = res.name || currentDisplayName;
             document.getElementById('edit-phone').value = res.phone !== "-" ? res.phone : "";

@@ -12,19 +12,16 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      /* Theme ดำเงาหรูหรา (Glossy Black / Deep Obsidian) ผสมเขียวมรกต */
       background: radial-gradient(circle at top, #022c22 0%, #03120e 45%, #000000 100%);
       color: #f8fafc;
       min-height: 100vh;
       margin: 0;
     }
-    /* โทนสีขาวมุกและเงินประกายทองอ่อนๆ หรูหรา */
     .pearl-gold-text {
       background: linear-gradient(135deg, #ffffff 0%, #fef08a 60%, #e2e8f0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    /* การ์ดเขียวมรกตเข้ม ขอบขาวมุกโปร่งแสงเงางาม */
     .card-emerald-glossy {
       background: linear-gradient(135deg, rgba(6, 78, 59, 0.45) 0%, rgba(2, 44, 34, 0.75) 100%);
       backdrop-filter: blur(16px);
@@ -32,7 +29,6 @@
       border-radius: 24px;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
-    /* ปุ่มสไตล์พรีเมียมเขียว-ขาว-ดำ */
     .btn-pearl-emerald {
       background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
       color: #022c22;
@@ -42,7 +38,6 @@
       transition: all 0.2s ease;
     }
     .btn-pearl-emerald:active { transform: scale(0.96); }
-    
     .text-pearl { color: #f8fafc; }
     .text-pearl-muted { color: #94a3b8; }
   </style>
@@ -70,7 +65,7 @@
     <div class="text-center py-10 text-pearl-muted animate-pulse text-xs">กำลังโหลดแพ็กเกจที่ท่านเลือก...</div>
   </div>
 
-  <!-- Modal เลือกเวลาจอง (ปรับเวลาเป็น 2 คอลัมน์) -->
+  <!-- Modal เลือกเวลาจอง (เวลา 2 คอลัมน์) -->
   <div id="booking-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
     <div class="card-emerald-glossy p-6 w-full max-w-md space-y-4 border border-white/20 shadow-2xl">
       <div class="flex justify-between items-center border-b border-white/10 pb-3">
@@ -80,7 +75,6 @@
       
       <div class="space-y-2 text-xs">
         <label class="block text-pearl-muted font-medium mb-2">รอบเวลาบริการ (สถานะ ว่าง / เต็ม):</label>
-        <!-- 💡 ปรับเวลาเป็น 2 คอลัมน์ด้วย grid-cols-2 -->
         <div id="slot-container" class="grid grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-1">
           <div class="text-gray-400 text-center py-4 col-span-2">กำลังตรวจสอบรอบเวลา...</div>
         </div>

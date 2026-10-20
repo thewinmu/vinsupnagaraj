@@ -40,7 +40,7 @@
         <span class="text-amber-500 text-xs">✦</span>
       </div>
       <h1 class="text-lg font-black gold-gradient-text">MEMBERSHIP DASHBOARD</h1>
-      <p class="text-xs text-emerald-700 font-medium mt-0.5">สถานะสมาชิก & ข้อมูลการจัดส่ง</p>
+      <p class="text-xs text-emerald-700 font-medium mt-0.5">สถานะสมาชิก & สิทธิประโยชน์พิเศษ</p>
     </header>
 
     <!-- บัตรสมาชิกเสมือนจริง -->
@@ -73,7 +73,62 @@
       </div>
     </div>
 
-    <!-- ข้อมูลสมาชิกและการจัดส่ง (ขยายรองรับส่งของสายมู) -->
+    <!-- 🌟 กล่องแสดงสิทธิ์พิเศษที่มีอยู่ (Privileges) -->
+    <div class="bg-emerald-50 rounded-3xl p-4 border border-emerald-200 shadow-sm mb-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-lg">👑</span>
+        <h3 class="text-xs font-black text-emerald-950 uppercase tracking-wide">สิทธิ์พิเศษที่มีอยู่ของคุณ</h3>
+      </div>
+      <div class="bg-white p-3 rounded-2xl border border-emerald-100 space-y-1.5 text-xs">
+        <div class="flex justify-between items-center">
+          <span class="text-slate-500">สถานะการใช้งาน:</span>
+          <span class="font-bold text-amber-700" id="mb-unlimited">ตรวจสอบสถานะ...</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-slate-500">อัตราค่าบริการปกติ:</span>
+          <span class="font-bold text-emerald-900">เปิดไพ่ครั้งละ 9 บาท</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-slate-500">สะสมแต้มพอยต์:</span>
+          <span class="font-bold text-amber-800">ทุก 20 บาท = 1 Point</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📢 การ์ดแจ้งรายละเอียดสิทธิประโยชน์ของสมาชิก -->
+    <div class="bg-amber-50/70 rounded-3xl p-4 border border-amber-300/80 shadow-sm mb-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-lg">📜</span>
+        <h3 class="text-xs font-black text-amber-950">สิทธิประโยชน์พิเศษสำหรับสมาชิก</h3>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex items-start gap-2 bg-white/90 p-2.5 rounded-2xl border border-amber-200">
+          <span class="text-base leading-none">🎁</span>
+          <div>
+            <div class="font-black text-emerald-950">สมาชิกใหม่เปิดไพ่ฟรี 5 ครั้ง</div>
+            <div class="text-[10px] text-slate-500">รับสิทธิ์เปิดไพ่ Pick a Card ฟรีทันทีเมื่อเข้าสู่ระบบ</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2 bg-white/90 p-2.5 rounded-2xl border border-amber-200">
+          <span class="text-base leading-none">👑</span>
+          <div>
+            <div class="font-black text-amber-900">ดูดวง 300 บาท ใช้ระบบฟรี 3 เดือน</div>
+            <div class="text-[10px] text-slate-500">เมื่อจองคิวดูดวง 300 บาทขึ้นไป หรือเติมเงิน 300 บาท รับสิทธิ์เปิดไพ่ไม่จำกัด 90 วันเต็ม</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2 bg-white/90 p-2.5 rounded-2xl border border-amber-200">
+          <span class="text-base leading-none">📦</span>
+          <div>
+            <div class="font-black text-emerald-950">ข้อมูลสมาชิกสำหรับจัดส่งพัสดุ</div>
+            <div class="text-[10px] text-slate-500">ใช้สำหรับการรับสิทธิพิเศษและจัดส่งไอเทมสายมูถึงบ้าน</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ข้อมูลส่วนตัว & การจัดส่ง -->
     <div class="bg-white rounded-3xl p-4 border border-emerald-200 shadow-sm mb-4 space-y-2.5 text-xs">
       <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
         <span class="text-slate-500 font-medium">เบอร์โทรศัพท์</span>
@@ -87,16 +142,12 @@
         <div class="text-slate-500 font-medium mb-0.5">ที่อยู่จัดส่งพัสดุ (ไอเทมสายมู)</div>
         <div class="font-bold text-emerald-950 leading-relaxed" id="mb-address">-</div>
       </div>
-      <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
-        <span class="text-slate-500 font-medium">สถานะบุฟเฟต์</span>
-        <span class="font-bold text-amber-700" id="mb-unlimited">สิทธิ์มาตรฐาน</span>
-      </div>
     </div>
 
-    <!-- ปุ่มการทำงาน -->
+    <!-- ปุ่มดำเนินการ -->
     <div class="space-y-2">
       <button onclick="openEditModal()" class="w-full bg-white text-emerald-800 border-2 border-emerald-600 py-3 rounded-2xl text-xs font-black hover:bg-emerald-50 transition active:scale-95 shadow-sm">
-        📦 แก้ไขข้อมูลสมาชิก & ที่อยู่จัดส่งของ
+        📦 แก้ไขข้อมูลส่วนตัว & ที่อยู่จัดส่ง
       </button>
       <button onclick="window.location.href='./pickacard_hub.html'" class="emerald-gold-btn w-full py-3.5 rounded-2xl text-xs font-black shadow transition active:scale-95">
         🔮 เข้าสู่หน้า Pick a Card & สาส์นครู
@@ -104,12 +155,12 @@
     </div>
   </div>
 
-  <!-- MODAL: แก้ไขข้อมูลสมาชิกและที่อยู่จัดส่ง -->
+  <!-- MODAL: แก้ไขข้อมูล -->
   <div id="modal-edit" style="display: none;" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-emerald-500 text-center shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="text-2xl mb-1">📦</div>
       <h3 class="text-sm font-black text-emerald-950">ข้อมูลสมาชิก & ที่อยู่จัดส่ง</h3>
-      <p class="text-[10px] text-slate-500 mt-0.5">ใช้สำหรับการจัดส่งไอเทมสายมูในอนาคต</p>
+      <p class="text-[10px] text-slate-500 mt-0.5">ใช้สำหรับการจัดส่งไอเทมสายมูและติดต่อรับสิทธิพิเศษ</p>
 
       <div class="space-y-2.5 my-3.5 text-left">
         <div>
@@ -181,7 +232,11 @@
             document.getElementById('mb-phone').innerText = res.phone !== "-" ? res.phone : "-";
             document.getElementById('mb-email').innerText = res.email !== "-" ? res.email : "-";
             document.getElementById('mb-address').innerText = res.address !== "-" ? res.address : "ยังไม่ได้ระบุที่อยู่";
-            document.getElementById('mb-unlimited').innerText = res.isUnlimited ? `ฟรีบุฟเฟต์ถึง ${res.expiryDate.split("T")[0]}` : "สิทธิ์มาตรฐาน";
+            
+            // แสดงสถานะสิทธิ์พิเศษ
+            document.getElementById('mb-unlimited').innerText = res.isUnlimited 
+              ? `👑 สิทธิ์บุฟเฟต์ใช้งานฟรีถึง ${res.expiryDate.split("T")[0]}` 
+              : (res.freeQuota > 0 ? `🎁 สิทธิ์ฟรีคงเหลือ ${res.freeQuota} ครั้ง` : "สิทธิ์มาตรฐาน (ครั้งละ 9 บาท)");
             
             document.getElementById('edit-name').value = res.name || currentDisplayName;
             document.getElementById('edit-phone').value = res.phone !== "-" ? res.phone : "";

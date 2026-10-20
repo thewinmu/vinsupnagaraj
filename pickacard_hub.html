@@ -259,7 +259,7 @@
       <div id="fan-scroll-box" class="card-fan-scroll py-6"></div>
     </div>
 
-    <!-- STEP 4: ผลคำทำนาย (มี 2 ปุ่มเด่นชัดตามที่ต้องการ) -->
+    <!-- STEP 4: ผลคำทำนาย (มี 2 ปุ่มเด่นชัด) -->
     <div id="view-result" style="display: none;" class="py-2">
       <div class="card-3d-box relative w-72 h-[510px] mx-auto mb-4" id="result-flipper">
         <div class="card-3d-inner">
@@ -427,7 +427,6 @@
         });
     }
 
-    // ปุ่มที่ 1: เสี่ยงทายเปิดไพ่อีกครั้ง (ในหมวดเดิมทันที)
     function retryCurrentCategory() {
       const flipper = document.getElementById('result-flipper');
       if (flipper) flipper.classList.remove('flipped');
@@ -441,7 +440,6 @@
       btn.disabled = false;
     }
 
-    // ปุ่มที่ 2: กลับไปหน้าเลือกหมวดหมู่หลักทั้งหมด
     function backToHub() {
       const flipper = document.getElementById('result-flipper');
       if (flipper) flipper.classList.remove('flipped');
@@ -503,7 +501,6 @@
       return picked.substring(0, 200);
     }
 
-    // คำนวณตัดสิทธิ์จริง และอัปเดตหน้าจอทันที
     function revealSelectedCard(idx) {
       fetch(`${WEB_URL}?action=deduct_reading_quota&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedCat)}`)
         .then(r => r.json())
@@ -520,7 +517,6 @@
             return;
           }
 
-          // เมื่อตัดสิทธิ์สำเร็จ ให้อัปเดตตัวเลขแสดงผลบนหน้าจอทันที
           userData.freeQuota = res.freeQuota;
           userData.balance = res.balance;
           if (res.points !== undefined) userData.points = res.points;

@@ -3,147 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>วินทร์ทรัพย์นาคราช</title>
+  <title>Pick a Card • วินทร์ทรัพย์นาคราช</title>
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Prompt', sans-serif; background-color: #FAFAFA; color: #111; min-height: 100vh; }
-    .card-box { background: #FFFFFF; border: 1px solid #E5E5EA; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-    .btn-dark { background: #111; color: #FDE08B; border-radius: 9999px; transition: opacity 0.2s; }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at center, #064E3B 0%, #022C22 50%, #000000 100%);
+      color: #FDE08B;
+      min-height: 100vh;
+    }
+    .gold-text {
+      background: linear-gradient(135deg, #FDE08B 0%, #D4AF37 50%, #AA771C 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .luxury-card {
+      background: linear-gradient(145deg, rgba(18, 18, 18, 0.9) 0%, rgba(6, 78, 59, 0.8) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      border-radius: 28px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+    .glass-box {
+      background: rgba(18, 18, 18, 0.7);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #FDE08B 0%, #D4AF37 50%, #B48608 100%);
+      color: #121212;
+      border-radius: 9999px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+      transition: all 0.2s ease;
+    }
+    .btn-gold:active { transform: scale(0.98); }
+    /* สไตล์สำรับไพ่ */
+    .card-fan { display: flex; overflow-x: auto; gap: 12px; padding: 20px 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .card-fan::-webkit-scrollbar { display: none; }
+    .fan-item {
+      flex: 0 0 110px; height: 160px; border-radius: 16px;
+      background: linear-gradient(145deg, #121212 0%, #064E3B 100%);
+      border: 1px solid #D4AF37; scroll-snap-align: center; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #FDE08B; box-shadow: 0 4px 15px rgba(0,0,0,0.6); transition: transform 0.2s;
+    }
+    .fan-item:active { transform: translateY(-5px); }
   </style>
 </head>
 <body class="p-5 max-w-md mx-auto flex flex-col justify-between pb-10">
 
   <div>
-    <div class="text-center py-6">
-      <div class="text-2xl mb-1">🐍</div>
-      <h1 class="text-lg font-semibold tracking-wider text-gray-900">วินทร์ทรัพย์นาคราช</h1>
-      <p class="text-xs text-gray-400 mt-0.5" id="user-status-text">กำลังตรวจสอบข้อมูล LINE...</p>
+    <!-- Header -->
+    <div class="text-center py-4 relative">
+      <div class="text-[#D4AF37] text-lg mb-1">⚜️</div>
+      <h1 class="text-xl font-bold tracking-wider gold-text">วินทร์ทรัพย์นาคราช</h1>
+      <p class="text-[10px] text-[#A7F3D0] tracking-widest mt-0.5 uppercase">✦ Pick a Card • เสี่ยงทายรับพลังงาน ✦</p>
     </div>
 
-    <!-- ส่วนสถานะสมาชิก (แสดงอัตโนมัติเมื่อล็อกอินผ่าน LINE สำเร็จ) -->
-    <div id="section-member" class="card-box p-5 mb-4 hidden">
-      <div class="flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-400" id="welcome-name">ยินดีต้อนรับ</div>
-          <div class="text-sm font-semibold text-gray-900" id="m-code">รหัส: -</div>
-        </div>
-        <div class="text-right">
-          <div class="text-xs text-gray-400">สิทธิ์ฟรีคงเหลือ</div>
-          <div class="text-sm font-semibold text-emerald-600" id="m-free">- ครั้ง</div>
-        </div>
-      </div>
+    <!-- แถบเมนูด้านบน (ลิงก์ไปหน้าสมาชิก) -->
+    <div class="flex justify-between items-center px-2 mb-4">
+      <div class="text-xs text-[#A7F3D0]">✨ ทดลองใช้ฟรีทันที</div>
+      <button onclick="window.location.href='./memberships.html'" class="text-[11px] text-[#FDE08B] underline">👤 หน้าสมาชิก / สมัครสมาชิก</button>
     </div>
 
-    <!-- เมนูพยากรณ์ -->
-    <div id="section-hub" class="space-y-3 hidden">
-      <div class="text-xs font-medium text-gray-400 px-1 mb-2">เลือกหัวข้อเสี่ยงทาย</div>
-      <button onclick="pickCard('สาส์นครู')" class="card-box w-full p-4 flex items-center justify-between text-left">
-        <div class="flex items-center gap-3"><span class="text-xl">🐍</span><span class="text-xs font-medium text-gray-800">สาส์นครู • สาร์นปู่</span></div>
-        <span class="text-gray-300">›</span>
+    <!-- ส่วนที่ 1: เลือกหมวดหมู่ -->
+    <div id="sec-cats" class="space-y-3">
+      <button onclick="selectCategory('สาส์นครู')" class="luxury-card w-full p-4 flex items-center justify-between text-left">
+        <div class="flex items-center gap-3"><span class="text-2xl">🐍</span><div><div class="text-sm font-bold gold-text">สาส์นครู • สาร์นปู่</div><div class="text-[10px] text-[#A7F3D0]">รับกระแสญาณบารมีโดยตรง</div></div></div><span class="text-[#D4AF37]">➔</span>
       </button>
-      <div class="grid grid-cols-2 gap-3">
-        <button onclick="pickCard('การงาน')" class="card-box p-4 text-center"><div class="text-xl mb-1">💼</div><span class="text-xs font-medium text-gray-800">การงาน</span></button>
-        <button onclick="pickCard('การเงิน')" class="card-box p-4 text-center"><div class="text-xl mb-1">💰</div><span class="text-xs font-medium text-gray-800">การเงิน</span></button>
-        <button onclick="pickCard('ความรัก')" class="card-box p-4 text-center"><div class="text-xl mb-1">❤️</div><span class="text-xs font-medium text-gray-800">ความรัก</span></button>
-        <button onclick="pickCard('สุขภาพ')" class="card-box p-4 text-center"><div class="text-xl mb-1">🌿</div><span class="text-xs font-medium text-gray-800">สุขภาพ</span></button>
+      
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <button onclick="selectCategory('การงาน')" class="glass-box p-4 text-center border border-[#D4AF37]/30 hover:border-[#D4AF37]">
+          <div class="text-2xl mb-1">💼</div><div class="text-xs font-semibold text-white">การงาน</div>
+        </button>
+        <button onclick="selectCategory('การเงิน')" class="glass-box p-4 text-center border border-[#D4AF37]/30 hover:border-[#D4AF37]">
+          <div class="text-2xl mb-1">💰</div><div class="text-xs font-semibold text-white">การเงิน</div>
+        </button>
+        <button onclick="selectCategory('ความรัก')" class="glass-box p-4 text-center border border-[#D4AF37]/30 hover:border-[#D4AF37]">
+          <div class="text-2xl mb-1">❤️</div><div class="text-xs font-semibold text-white">ความรัก</div>
+        </button>
+        <button onclick="selectCategory('สุขภาพ')" class="glass-box p-4 text-center border border-[#D4AF37]/30 hover:border-[#D4AF37]">
+          <div class="text-2xl mb-1">🌿</div><div class="text-xs font-semibold text-white">สุขภาพ</div>
+        </button>
       </div>
     </div>
 
-    <!-- ผลคำทำนาย -->
-    <div id="section-result" class="card-box p-6 text-center hidden space-y-4">
-      <div class="text-3xl">🎴</div>
-      <div>
-        <div class="text-[10px] text-gray-400 uppercase tracking-widest mb-1" id="res-cat">หมวด</div>
-        <h2 class="text-sm font-semibold text-gray-900" id="res-title">คำทำนายของคุณ</h2>
+    <!-- ส่วนที่ 2: หน้าเลือกไพ่ (Fan Cards) -->
+    <div id="sec-select" style="display: none;" class="py-6 text-center">
+      <button onclick="backToHub()" class="text-xs text-[#A7F3D0] mb-4 underline">⟨ เลือกหมวดหมู่ใหม่</button>
+      <div class="text-sm font-bold gold-text mb-2" id="selected-cat-title">เลือกไพ่เสี่ยงทาย</div>
+      <p class="text-[11px] text-gray-300 mb-6">ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 1 ใบที่ดึงดูดสายตาคุณที่สุด</p>
+      
+      <div id="fan-box" class="card-fan"></div>
+    </div>
+
+    <!-- ส่วนที่ 3: แสดงผลคำทำนาย -->
+    <div id="sec-res" style="display: none;" class="py-2 text-center">
+      <div class="luxury-card p-6 text-left mb-5 space-y-3">
+        <div class="text-[10px] text-[#A7F3D0] uppercase tracking-widest" id="res-cat">หมวด</div>
+        <h3 class="text-base font-bold gold-text" id="res-title">คำทำนายมงคล</h3>
+        <p class="text-xs text-gray-200 leading-relaxed bg-black/40 p-4 rounded-xl border border-[#D4AF37]/30" id="res-meaning">
+          กำลังสื่อดวงจิตรับคำทำนาย...
+        </p>
       </div>
-      <p class="text-xs text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100" id="res-desc">-</p>
-      <button onclick="resetView()" class="btn-dark w-full py-3 text-xs font-medium">🔄 เสี่ยงทายใหม่อีกครั้ง</button>
+      <button onclick="backToHub()" class="btn-gold w-full py-3.5 text-xs uppercase tracking-wider">🔄 เสี่ยงทายใหม่อีกครั้ง</button>
     </div>
   </div>
 
+  <div class="text-center text-[10px] text-gray-500 pt-6 tracking-widest">✨ WIN SAP NAKHARAT PICK A CARD ✨</div>
+
   <script>
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : "";
-    const LIFF_ID = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.LIFF && APP_CONFIG.LIFF.MEMBERSHIP) ? APP_CONFIG.LIFF.MEMBERSHIP : "2007499712-J15McRGz";
-    
-    let currentUserId = "guest_user", currentUserName = "เจ้านางน้อย", userData = null;
+    let activeCategory = "";
+    let fetchedCards = [];
 
-    window.addEventListener('DOMContentLoaded', () => {
-      if (typeof liff !== 'undefined') {
-        liff.init({ liffId: LIFF_ID }).then(() => {
-          if (liff.isLoggedIn()) {
-            liff.getProfile().then(p => {
-              currentUserId = p.userId;
-              currentUserName = p.displayName || "เจ้านางน้อย";
-              authenticateUser();
-            }).catch(() => { authenticateUser(); });
-          } else {
-            // ถ้านอกแอป LINE ให้ล็อกอินอัตโนมัติแบบ Guest
-            authenticateUser();
-          }
-        }).catch(() => { authenticateUser(); });
-      } else {
-        authenticateUser();
-      }
-    });
-
-    function authenticateUser() {
-      const url = `${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(currentUserName)}`;
+    function selectCategory(category) {
+      activeCategory = category;
+      document.getElementById('sec-cats').style.display = 'none';
+      document.getElementById('selected-cat-title').innerText = "หมวด: " + category;
+      document.getElementById('sec-select').style.display = 'block';
       
-      fetch(url)
+      // ดึงข้อมูลไพ่จาก Google Sheets (แท็บ pickacard)
+      fetch(`${WEB_URL}?action=get_cards&category=${encodeURIComponent(category)}`)
         .then(r => r.json())
         .then(res => {
-          if (res && res.isMember) {
-            userData = res;
-            document.getElementById('user-status-text').innerText = "เข้าสู่ระบบสำเร็จ";
-            document.getElementById('welcome-name').innerText = res.name;
-            document.getElementById('m-code').innerText = "รหัส: " + res.memberCode;
-            document.getElementById('m-free').innerText = res.freeQuota + " ครั้ง";
-            
-            document.getElementById('section-member').classList.remove('hidden');
-            document.getElementById('section-hub').classList.remove('hidden');
+          if (res && res.cards && res.cards.length > 0) {
+            fetchedCards = res.cards;
           } else {
-            document.getElementById('user-status-text').innerText = "ไม่สามารถโหลดข้อมูลสมาชิกได้";
+            // ไพ่สำรองจำลองกรณีข้อมูลในชีียตยังว่าง
+            fetchedCards = [
+              { name: "ไพ่บารมีพญานาคราช", meaning: "ช่วงเวลานี้สิ่งศักดิ์สิทธิ์หนุนนำ จะหยิบจับกิจการใดก็ราบรื่น มีโชคลาภเข้ามาไม่ขาดสาย" },
+              { name: "ไพ่ทรัพย์นาคา", meaning: "การเงินคล่องตัว มั่งคั่ง มั่นคง มีเกณฑ์ได้รับทรัพย์ก้อนใหญ่จากความเพียรพยายาม" },
+              { name: "ไพ่เมตตามหานิยม", meaning: "ผู้ใหญ่รักใคร่ เมตตาเอ็นดู เจรจาค้าขายสิ่งใดประสบความสำเร็จเกินคาด" }
+            ];
           }
-        })
-        .catch(err => {
-          document.getElementById('user-status-text').innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย";
-        });
-    }
-
-    function pickCard(cat) {
-      if (userData.freeQuota <= 0 && userData.balance < 9) {
-        alert("สิทธิ์ฟรีหมด และยอดเงินคงเหลือไม่พอ กรุณาเติมเงิน");
-        return;
-      }
-      
-      const deductUrl = `${WEB_URL}?action=deduct_reading_quota&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(cat)}`;
-      
-      fetch(deductUrl)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success") {
-            document.getElementById('section-hub').classList.add('hidden');
-            document.getElementById('section-member').classList.add('hidden');
-            document.getElementById('res-cat').innerText = "หมวด: " + cat;
-            document.getElementById('res-desc').innerText = "ญาณบารมีเปิดเผยว่า: ช่วงเวลานี้พลังงานหนุนนำให้เกิดความสำเร็จสมหวังในสิ่งที่มุ่งมั่น ตั้งจิตอธิษฐานรับโชคลาภและสิ่งดีที่จะเข้ามาสู่ชีวิต";
-            document.getElementById('section-result').classList.remove('hidden');
-          } else {
-            alert(res.message || "ไม่สามารถทำรายการได้");
-          }
+          renderFanCards();
         })
         .catch(() => {
-          alert("เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่");
+          fetchedCards = [
+            { name: "ไพ่ครูบาอาจารย์คุ้มครอง", meaning: "ครูบาอาจารย์และสิ่งศักดิ์สิทธิ์คุ้มครอง แคล้วคลาดปลอดภัย ทำมาค้าขึ้น" }
+          ];
+          renderFanCards();
         });
     }
 
-    function resetView() {
-      document.getElementById('section-result').classList.add('hidden');
-      document.getElementById('section-member').classList.remove('hidden');
-      document.getElementById('section-hub').classList.remove('hidden');
-      authenticateUser();
+    function renderFanCards() {
+      const box = document.getElementById('fan-box');
+      box.innerHTML = "";
+      // สร้างกองไพ่จำลอง 8 ใบให้ผู้ใช้เลือก
+      for (let i = 0; i < 8; i++) {
+        let el = document.createElement('div');
+        el.className = "fan-item";
+        el.innerHTML = `<div class="text-2xl mb-1">🎴</div><div class="text-[10px] gold-text">ใบที่ ${i+1}</div>`;
+        el.onclick = () => revealCard(i);
+        box.appendChild(el);
+      }
+    }
+
+    function revealCard(index) {
+      // สุ่มหรือเลือกความหมายจากรายการไพ่
+      const selectedCard = fetchedCards[index % fetchedCards.length];
+      
+      document.getElementById('sec-select').style.display = 'none';
+      document.getElementById('sec-res').style.display = 'block';
+      document.getElementById('res-cat').innerText = "หมวดเสี่ยงทาย: " + activeCategory;
+      document.getElementById('res-title').innerText = selectedCard.name || "คำทำนายพิเศษ";
+      document.getElementById('res-meaning').innerText = selectedCard.meaning || "พลังงานแห่งความสำเร็จกำลังแผ่ซาย จงตั้งจิตอธิษฐานรับสิ่งมงคล";
+    }
+
+    function backToHub() {
+      document.getElementById('sec-select').style.display = 'none';
+      document.getElementById('sec-res').style.display = 'none';
+      document.getElementById('sec-cats').style.display = 'block';
     }
   </script>
 </body>

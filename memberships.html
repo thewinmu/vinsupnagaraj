@@ -40,7 +40,7 @@
         <span class="text-amber-500 text-xs">✦</span>
       </div>
       <h1 class="text-lg font-black gold-gradient-text">MEMBERSHIP DASHBOARD</h1>
-      <p class="text-xs text-emerald-700 font-medium mt-0.5">สถานะสมาชิก & ข้อมูลส่วนตัว</p>
+      <p class="text-xs text-emerald-700 font-medium mt-0.5">สถานะสมาชิก & ข้อมูลการจัดส่ง</p>
     </header>
 
     <!-- บัตรสมาชิกเสมือนจริง -->
@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <!-- สรุปสถิติ -->
+      <!-- สถิติยอดเงิน / สิทธิ์ฟรี / แต้ม -->
       <div class="grid grid-cols-3 gap-2 pt-3 border-t border-emerald-800/80 text-center">
         <div class="bg-emerald-900/60 p-2 rounded-2xl border border-emerald-700/60">
           <div class="text-[9px] text-emerald-300 font-medium">สิทธิ์ฟรีคงเหลือ</div>
@@ -73,26 +73,30 @@
       </div>
     </div>
 
-    <!-- รายละเอียดข้อมูล -->
+    <!-- ข้อมูลสมาชิกและการจัดส่ง (ขยายรองรับส่งของสายมู) -->
     <div class="bg-white rounded-3xl p-4 border border-emerald-200 shadow-sm mb-4 space-y-2.5 text-xs">
       <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
         <span class="text-slate-500 font-medium">เบอร์โทรศัพท์</span>
         <span class="font-bold text-emerald-950" id="mb-phone">-</span>
       </div>
       <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
-        <span class="text-slate-500 font-medium">สถานะบุฟเฟต์</span>
-        <span class="font-bold text-amber-700" id="mb-unlimited">สิทธิ์มาตรฐาน</span>
+        <span class="text-slate-500 font-medium">อีเมล</span>
+        <span class="font-bold text-emerald-950" id="mb-email">-</span>
+      </div>
+      <div class="py-1.5 border-b border-slate-100">
+        <div class="text-slate-500 font-medium mb-0.5">ที่อยู่จัดส่งพัสดุ (ไอเทมสายมู)</div>
+        <div class="font-bold text-emerald-950 leading-relaxed" id="mb-address">-</div>
       </div>
       <div class="flex justify-between items-center py-1.5 border-b border-slate-100">
-        <span class="text-slate-500 font-medium">รายการล่าสุด</span>
-        <span class="font-medium text-slate-700 text-[11px]" id="mb-service">-</span>
+        <span class="text-slate-500 font-medium">สถานะบุฟเฟต์</span>
+        <span class="font-bold text-amber-700" id="mb-unlimited">สิทธิ์มาตรฐาน</span>
       </div>
     </div>
 
     <!-- ปุ่มการทำงาน -->
     <div class="space-y-2">
       <button onclick="openEditModal()" class="w-full bg-white text-emerald-800 border-2 border-emerald-600 py-3 rounded-2xl text-xs font-black hover:bg-emerald-50 transition active:scale-95 shadow-sm">
-        ⚙️ แก้ไขข้อมูลโปรไฟล์ (ชื่อ / เบอร์โทรศัพท์)
+        📦 แก้ไขข้อมูลสมาชิก & ที่อยู่จัดส่งของ
       </button>
       <button onclick="window.location.href='./pickacard_hub.html'" class="emerald-gold-btn w-full py-3.5 rounded-2xl text-xs font-black shadow transition active:scale-95">
         🔮 เข้าสู่หน้า Pick a Card & สาส์นครู
@@ -100,26 +104,34 @@
     </div>
   </div>
 
-  <!-- MODAL: แก้ไขข้อมูล -->
+  <!-- MODAL: แก้ไขข้อมูลสมาชิกและที่อยู่จัดส่ง -->
   <div id="modal-edit" style="display: none;" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-emerald-500 text-center shadow-2xl">
-      <div class="text-2xl mb-1">⚙️</div>
-      <h3 class="text-sm font-black text-emerald-950">แก้ไขข้อมูลส่วนตัว</h3>
-      <p class="text-[10px] text-slate-500 mt-0.5">ข้อมูลนี้จะอัปเดตลงตารางชีต member อัตโนมัติ</p>
+    <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-emerald-500 text-center shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="text-2xl mb-1">📦</div>
+      <h3 class="text-sm font-black text-emerald-950">ข้อมูลสมาชิก & ที่อยู่จัดส่ง</h3>
+      <p class="text-[10px] text-slate-500 mt-0.5">ใช้สำหรับการจัดส่งไอเทมสายมูในอนาคต</p>
 
       <div class="space-y-2.5 my-3.5 text-left">
         <div>
-          <label class="text-[10px] font-bold text-slate-600">ชื่อสมาชิก</label>
+          <label class="text-[10px] font-bold text-slate-600">ชื่อ - นามสกุล ผู้รับ</label>
           <input type="text" id="edit-name" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
         </div>
         <div>
-          <label class="text-[10px] font-bold text-slate-600">เบอร์โทรศัพท์</label>
+          <label class="text-[10px] font-bold text-slate-600">เบอร์โทรศัพท์ติดต่อ</label>
           <input type="tel" id="edit-phone" placeholder="08xxxxxxxx" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-600">อีเมล</label>
+          <input type="email" id="edit-email" placeholder="example@email.com" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-600">ที่อยู่จัดส่งโดยละเอียด</label>
+          <textarea id="edit-address" rows="3" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600"></textarea>
         </div>
       </div>
 
       <button onclick="submitUpdateProfile()" class="emerald-gold-btn w-full py-2.5 rounded-xl text-xs font-black shadow transition">
-        บันทึกการแก้ไข
+        บันทึกข้อมูล
       </button>
       <button onclick="closeEditModal()" class="w-full text-slate-400 text-[11px] font-bold mt-2">
         ยกเลิก
@@ -128,7 +140,7 @@
   </div>
 
   <footer class="text-center py-3 text-[10px] text-emerald-800/70 font-semibold">
-    วินทร์ทรัพย์นาคราช • ระบบจัดการสมาชิก
+    วินทร์ทรัพย์นาคราช • ระบบจัดการสมาชิก & ข้อมูลจัดส่ง
   </footer>
 
   <script>
@@ -166,12 +178,15 @@
             document.getElementById('mb-free').innerText = res.freeQuota + " ครั้ง";
             document.getElementById('mb-balance').innerText = res.balance + " ฿";
             document.getElementById('mb-points').innerText = res.points + " PTS";
-            document.getElementById('mb-phone').innerText = res.phone || "-";
-            document.getElementById('mb-service').innerText = res.latestService || "Pick a Card";
+            document.getElementById('mb-phone').innerText = res.phone !== "-" ? res.phone : "-";
+            document.getElementById('mb-email').innerText = res.email !== "-" ? res.email : "-";
+            document.getElementById('mb-address').innerText = res.address !== "-" ? res.address : "ยังไม่ได้ระบุที่อยู่";
             document.getElementById('mb-unlimited').innerText = res.isUnlimited ? `ฟรีบุฟเฟต์ถึง ${res.expiryDate.split("T")[0]}` : "สิทธิ์มาตรฐาน";
             
             document.getElementById('edit-name').value = res.name || currentDisplayName;
             document.getElementById('edit-phone').value = res.phone !== "-" ? res.phone : "";
+            document.getElementById('edit-email').value = res.email !== "-" ? res.email : "";
+            document.getElementById('edit-address').value = res.address !== "-" ? res.address : "";
           }
         })
         .catch(e => console.warn(e));
@@ -183,11 +198,15 @@
     function submitUpdateProfile() {
       const name = document.getElementById('edit-name').value.trim();
       const phone = document.getElementById('edit-phone').value.trim();
+      const email = document.getElementById('edit-email').value.trim();
+      const address = document.getElementById('edit-address').value.trim();
 
-      fetch(`${WEB_URL}?action=update_profile&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`)
+      const targetUrl = `${WEB_URL}?action=update_profile&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&email=${encodeURIComponent(email)}&address=${encodeURIComponent(address)}`;
+
+      fetch(targetUrl)
         .then(r => r.json())
         .then(res => {
-          alert("บันทึกข้อมูลเรียบร้อยแล้วครับ");
+          alert("บันทึกข้อมูลส่วนตัวและที่อยู่เรียบร้อยแล้วครับ");
           closeEditModal();
           loadUserData();
         });

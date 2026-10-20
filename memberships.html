@@ -92,7 +92,7 @@
   <!-- 3. หน้าแสดงข้อมูลสมาชิก และฟอร์มแก้ไข -->
   <div id="section-member" style="display: none;" class="space-y-5">
     
-    <!-- บัตรแสดงข้อมูลหลัก (เน้นชื่อลูกค้า) -->
+    <!-- บัตรแสดงข้อมูลหลัก -->
     <div class="card-luxury p-6 relative overflow-hidden">
       <div class="absolute -right-6 -bottom-6 text-7xl opacity-10">🐍</div>
       
@@ -102,7 +102,6 @@
         </div>
         <div class="overflow-hidden">
           <div class="text-[10px] text-emerald-300 font-bold uppercase tracking-wider">นามผู้ศรัทธา</div>
-          <!-- แสดงชื่อลูกค้าตัวใหญ่เด่นชัด -->
           <div class="text-lg font-extrabold text-white truncate gold-text" id="m-name">-</div>
           <div class="text-xs text-amber-400/80 font-mono mt-0.5" id="m-code">รหัส: B000</div>
         </div>
@@ -121,22 +120,25 @@
       </div>
     </div>
 
-    <!-- รายการข้อมูลส่วนตัว & ฟอร์มแก้ไข -->
+    <!-- ฟอร์มแก้ไข ชื่อ-นามสกุล, เบอร์โทร, และที่อยู่ -->
     <div class="card-luxury p-6 space-y-4">
       <div class="flex justify-between items-center border-b border-amber-500/20 pb-3">
-        <span class="text-xs font-bold text-amber-300 uppercase tracking-wide">📋 ข้อมูลและสถานะบัญชี</span>
+        <span class="text-xs font-bold text-amber-300 uppercase tracking-wide">✏️ แก้ไขข้อมูลส่วนตัว</span>
         <span class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300" id="m-privilege">สิทธิ์มาตรฐาน</span>
       </div>
 
-      <!-- ฟอร์มแก้ไขข้อมูล -->
       <div class="space-y-3 pt-1">
         <div>
-          <label class="block text-[11px] text-emerald-300 font-medium mb-1">เบอร์โทรศัพท์ติดต่อ</label>
-          <input type="tel" id="edit-phone" class="input-luxury" placeholder="ระบุเบอร์โทรศัพท์ของคุณ">
+          <label class="block text-[11px] text-emerald-300 font-medium mb-1">ชื่อ - นามสกุล</label>
+          <input type="text" id="edit-name" class="input-luxury" placeholder="ระบุชื่อ-นามสกุลจริงของคุณ">
         </div>
         <div>
-          <label class="block text-[11px] text-emerald-300 font-medium mb-1">อีเมล (Email)</label>
-          <input type="email" id="edit-email" class="input-luxury" placeholder="ระบุอีเมลของคุณ">
+          <label class="block text-[11px] text-emerald-300 font-medium mb-1">เบอร์โทรศัพท์ติดต่อ</label>
+          <input type="tel" id="edit-phone" class="input-luxury" placeholder="ระบุเบอร์โทรศัพท์">
+        </div>
+        <div>
+          <label class="block text-[11px] text-emerald-300 font-medium mb-1">ที่อยู่จัดส่ง / ที่อยู่มงคล</label>
+          <textarea id="edit-address" rows="3" class="input-luxury resize-none" placeholder="ระบุที่อยู่สำหรับจัดส่งวัตถุมงคล"></textarea>
         </div>
         
         <button onclick="updateProfile()" id="btn-save" class="btn-gold w-full py-3 text-xs uppercase font-bold tracking-wider mt-2">
@@ -145,7 +147,6 @@
       </div>
     </div>
 
-    <!-- ปุ่มนำทาง -->
     <button onclick="window.location.href='./pickacard_hub.html'" class="btn-gold w-full py-4 text-xs uppercase font-bold tracking-wider">
       🔮 เข้าสู่ระบบเสี่ยงทาย Pick a Card
     </button>
@@ -208,16 +209,17 @@
           document.getElementById('section-loading').style.display = 'none';
           
           if (res && res.status === "success") {
-            // แสดงชื่อลูกค้าแทนรหัสที่ส่วนหัวบัตร
+            // แสดงชื่อลูกค้าเด่นชัดที่หัวการ์ด
             document.getElementById('m-name').innerText = res.name;
             document.getElementById('m-code').innerText = "รหัส: " + res.memberCode;
             document.getElementById('m-free').innerText = res.freeQuota;
             document.getElementById('m-balance').innerText = Number(res.balance).toLocaleString();
             document.getElementById('m-privilege').innerText = res.specialPrivilege || "สิทธิ์มาตรฐาน";
 
-            // เติมข้อมูลลงในช่องฟอร์มแก้ไข
+            // เติมข้อมูลลงในฟอร์มแก้ไข (ชื่อ, เบอร์โทร, ที่อยู่)
+            document.getElementById('edit-name').value = res.name && res.name !== "-" ? res.name : "";
             document.getElementById('edit-phone').value = res.phone && res.phone !== "-" ? res.phone : "";
-            document.getElementById('edit-email').value = res.email && res.email !== "-" ? res.email : "";
+            document.getElementById('edit-address').value = res.address && res.address !== "-" ? res.address : "";
 
             if (picUrl) {
               document.getElementById('profile-img').innerHTML = `<img src="${picUrl}" class="w-full h-full rounded-full object-cover">`;
@@ -233,16 +235,21 @@
         });
     }
 
-    // ฟังก์ชันสำหรับบันทึกการแก้ไขข้อมูล
     function updateProfile() {
+      const name = document.getElementById('edit-name').value.trim();
       const phone = document.getElementById('edit-phone').value.trim();
-      const email = document.getElementById('edit-email').value.trim();
+      const address = document.getElementById('edit-address').value.trim();
       const btnSave = document.getElementById('btn-save');
+
+      if (!name) {
+        alert("กรุณากรอกชื่อ-นามสกุลครับ");
+        return;
+      }
 
       btnSave.innerText = "กำลังบันทึก...";
       btnSave.disabled = true;
 
-      const updateUrl = `${WEB_URL}?action=update_profile&userId=${encodeURIComponent(currentUserUid)}&phone=${encodeURIComponent(phone)}&email=${encodeURIComponent(email)}`;
+      const updateUrl = `${WEB_URL}?action=update_profile&userId=${encodeURIComponent(currentUserUid)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&address=${encodeURIComponent(address)}`;
 
       fetch(updateUrl)
         .then(r => r.json())
@@ -250,7 +257,8 @@
           btnSave.innerText = "💾 บันทึกการแก้ไขข้อมูล";
           btnSave.disabled = false;
           if (res && res.status === "success") {
-            alert("✨ บันทึกข้อมูลเรียบร้อยแล้วครับ");
+            document.getElementById('m-name').innerText = name; // อัปเดตชื่อบนการ์ดทันที
+            alert("✨ บันทึกข้อมูลส่วนตัวเรียบร้อยแล้วครับ");
           } else {
             alert("⚠️ ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
           }

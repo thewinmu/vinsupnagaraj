@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <!-- 🌟 กล่องแสดงสิทธิ์พิเศษที่มีอยู่ (Privileges) -->
+    <!-- กล่องแสดงสิทธิ์พิเศษที่มีอยู่ (Privileges) -->
     <div class="bg-emerald-50 rounded-3xl p-4 border border-emerald-200 shadow-sm mb-4">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-lg">👑</span>
@@ -95,7 +95,7 @@
       </div>
     </div>
 
-    <!-- 📢 การ์ดแจ้งรายละเอียดสิทธิประโยชน์ของสมาชิก -->
+    <!-- การ์ดแจ้งรายละเอียดสิทธิประโยชน์ของสมาชิก -->
     <div class="bg-amber-50/70 rounded-3xl p-4 border border-amber-300/80 shadow-sm mb-4">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-lg">📜</span>
@@ -233,7 +233,6 @@
             document.getElementById('mb-email').innerText = res.email !== "-" ? res.email : "-";
             document.getElementById('mb-address').innerText = res.address !== "-" ? res.address : "ยังไม่ได้ระบุที่อยู่";
             
-            // แสดงสถานะสิทธิ์พิเศษ
             document.getElementById('mb-unlimited').innerText = res.isUnlimited 
               ? `👑 สิทธิ์บุฟเฟต์ใช้งานฟรีถึง ${res.expiryDate.split("T")[0]}` 
               : (res.freeQuota > 0 ? `🎁 สิทธิ์ฟรีคงเหลือ ${res.freeQuota} ครั้ง` : "สิทธิ์มาตรฐาน (ครั้งละ 9 บาท)");

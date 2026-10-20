@@ -4,16 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ระบบสมาชิก • วินทร์ทรัพย์นาคราช</title>
-  <!-- โหลดตั้งค่าระบบ -->
-  <script src="./config.js"></script>
-  <!-- โหลด Tailwind CSS และ LIFF SDK -->
+  <script src="./config.js?v=5"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: #022015; /* สีเขียวมรกตเข้ม */
+      background: #022015;
       background-image: radial-gradient(circle at 50% 0%, #064e3b 0%, transparent 70%);
       color: #fafaf9;
       min-height: 100vh;
@@ -29,13 +27,6 @@
       border: 1px solid rgba(234, 179, 8, 0.5);
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(234, 179, 8, 0.1);
-      position: relative;
-      overflow: hidden;
-    }
-    .card-luxury::before {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, transparent 60%);
-      pointer-events: none;
     }
     .btn-gold {
       background: linear-gradient(135deg, #fde047 0%, #ca8a04 100%);
@@ -43,16 +34,13 @@
       font-weight: 800;
       border-radius: 9999px;
       box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
-      transition: transform 0.2s;
     }
-    .btn-gold:active { transform: scale(0.96); }
     .pulse-loading { animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
   </style>
 </head>
 <body class="p-5 max-w-md mx-auto flex flex-col pb-12">
 
-  <!-- Header -->
   <div class="flex items-center justify-between py-4 mb-2">
     <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-amber-300 px-3 py-1 rounded-full border border-amber-500/30 bg-black/30">⟨ กลับหน้าร้าน</button>
     <div class="text-lg text-amber-400 font-bold">วินทร์ทรัพย์นาคราช</div>
@@ -62,7 +50,7 @@
     <h1 class="text-2xl font-extrabold gold-text tracking-wide">บัญชีมงคล</h1>
   </div>
 
-  <!-- 1. หน้าจอหลัก (ปุ่มสมัคร/เข้าสู่ระบบ) -->
+  <!-- 1. หน้าแรก -->
   <div id="section-login" class="card-luxury p-8 text-center space-y-6">
     <div class="text-6xl mb-4">🐍</div>
     <h2 class="text-lg font-bold text-white">ลงทะเบียนรับสิทธิ์</h2>
@@ -74,25 +62,23 @@
     </button>
   </div>
 
-  <!-- 2. หน้าจอประมวลผล (Loading) -->
+  <!-- 2. หน้าโหลด -->
   <div id="section-loading" style="display: none;" class="py-20 text-center space-y-4">
     <div class="text-5xl pulse-loading">🐍</div>
     <p class="text-xs font-semibold text-amber-300 tracking-widest pulse-loading" id="loading-text">กำลังเชื่อมต่อระบบ...</p>
   </div>
 
-  <!-- 3. หน้าจอบัตรสมาชิก (แสดงเมื่อดึงข้อมูลสำเร็จ) -->
+  <!-- 3. หน้าบัตรสมาชิก -->
   <div id="section-member" style="display: none;" class="space-y-6 mt-4">
-    
-    <!-- รูปแบบบัตรแบบในภาพตัวอย่าง -->
     <div class="card-luxury p-6 flex flex-col items-center text-center">
       <div class="w-16 h-16 rounded-full bg-gradient-to-br from-amber-200 to-amber-600 p-1 mb-3">
-        <div class="w-full h-full bg-black rounded-full flex items-center justify-center text-2xl" id="profile-img">👤</div>
+        <div class="w-full h-full bg-black rounded-full flex items-center justify-center text-2xl overflow-hidden" id="profile-img">👤</div>
       </div>
-      <div class="text-amber-400 font-bold tracking-widest uppercase text-xs mb-1">MEMBER</div>
-      <div class="text-2xl font-extrabold text-white font-mono tracking-widest bg-black/40 px-4 py-1 rounded-lg border border-amber-500/30 mb-4" id="m-code">B000</div>
+      <div class="text-amber-400 font-bold tracking-widest uppercase text-xs mb-1">MEMBER CODE</div>
+      <div class="text-2xl font-extrabold gold-text font-mono tracking-widest bg-black/40 px-4 py-1 rounded-lg border border-amber-500/30 mb-4" id="m-code">B000</div>
       
-      <div class="w-full border-t border-amber-500/20 pt-4 grid grid-cols-2 gap-2">
-        <div class="text-left">
+      <div class="w-full border-t border-amber-500/20 pt-4 grid grid-cols-2 gap-2 text-left">
+        <div>
           <div class="text-[10px] text-emerald-300 mb-1">ชื่อบัญชี</div>
           <div class="text-sm font-bold text-white truncate" id="m-name">-</div>
         </div>
@@ -103,7 +89,6 @@
       </div>
     </div>
 
-    <!-- กล่องยอดคงเหลือ -->
     <div class="grid grid-cols-2 gap-4">
       <div class="card-luxury p-4 text-center">
         <div class="text-[11px] text-amber-200 font-bold mb-1">ยอดทรัพย์คงเหลือ</div>
@@ -120,11 +105,10 @@
     </button>
   </div>
 
-  <!-- ปุ่ม Debug แจ้งเตือน Error -->
-  <div id="error-box" class="hidden mt-6 p-4 bg-red-900/50 border border-red-500/50 rounded-xl text-xs text-red-200 text-center"></div>
+  <!-- กล่องแสดง Error ถ้าค้าง -->
+  <div id="error-box" class="hidden mt-6 p-4 bg-red-900/80 border border-red-500 rounded-xl text-xs text-red-200 text-center leading-relaxed"></div>
 
   <script>
-    // ดึงค่าจาก config.js ถ้าไม่มีให้ใช้ค่าว่าง
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : "";
     const LIFF_ID = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.LIFF && APP_CONFIG.LIFF.MEMBERSHIPS) ? APP_CONFIG.LIFF.MEMBERSHIPS : "";
 
@@ -132,19 +116,17 @@
       document.getElementById('section-loading').style.display = 'none';
       document.getElementById('section-login').style.display = 'block';
       const errBox = document.getElementById('error-box');
-      errBox.innerHTML = `⚠️ <b>พบข้อผิดพลาด:</b><br>${msg}`;
+      errBox.innerHTML = `⚠️ <b>เกิดข้อผิดพลาด:</b><br>${msg}`;
       errBox.style.display = 'block';
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       if (!WEB_URL) {
-        showError("หาลิงก์ WEB_URL ไม่พบ กรุณาตรวจสอบไฟล์ config.js");
+        showError("ไม่พบตัวแปร WEB_URL ในไฟล์ config.js");
         return;
       }
       if (typeof liff !== 'undefined' && LIFF_ID) {
-        liff.init({ liffId: LIFF_ID }).catch(err => {
-          showError("LIFF Init Error: " + err.message);
-        });
+        liff.init({ liffId: LIFF_ID }).catch(err => console.error("LIFF Init Error:", err));
       }
     });
 
@@ -152,60 +134,66 @@
       document.getElementById('section-login').style.display = 'none';
       document.getElementById('error-box').style.display = 'none';
       document.getElementById('section-loading').style.display = 'block';
-      document.getElementById('loading-text').innerText = "กำลังเชื่อมต่อ LINE...";
+      document.getElementById('loading-text').innerText = "กำลังตรวจสอบบัญชี LINE...";
 
       if (typeof liff !== 'undefined' && liff.isInClient()) {
         if (!liff.isLoggedIn()) {
           liff.login();
         } else {
           liff.getProfile()
-            .then(p => fetchUserData(p.userId, p.displayName))
-            .catch(err => showError("ไม่สามารถดึงข้อมูลโปรไฟล์ LINE ได้"));
+            .then(p => fetchUserData(p.userId, p.displayName, p.pictureUrl))
+            .catch(err => showError("ไม่สามารถดึงข้อมูลโปรไฟล์ LINE ได้: " + err.message));
         }
       } else if (typeof liff !== 'undefined' && !liff.isInClient() && liff.isLoggedIn()) {
-         liff.getProfile().then(p => fetchUserData(p.userId, p.displayName));
+         liff.getProfile().then(p => fetchUserData(p.userId, p.displayName, p.pictureUrl));
       } else if (typeof liff !== 'undefined' && !liff.isInClient() && !liff.isLoggedIn()) {
          liff.login();
       } else {
-        // กรณีเทสต์บนคอมพิวเตอร์ที่ไม่มี LIFF
-        fetchUserData("test_user_001", "ผู้ศรัทธา (ทดสอบบนเว็บ)");
+        // ทดสอบบนเบราว์เซอร์ทั่วไป
+        fetchUserData("test_user_001", "ผู้ศรัทธา (ทดสอบ)", "");
       }
     }
 
-    function fetchUserData(uid, uname) {
-      document.getElementById('loading-text').innerText = "กำลังซิงค์ข้อมูลกับฐานข้อมูล...";
+    function fetchUserData(uid, uname, picUrl) {
+      document.getElementById('loading-text').innerText = "กำลังดึงข้อมูลจาก Google Sheets...";
       
       const targetUrl = `${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(uid)}&name=${encodeURIComponent(uname)}`;
       
-      fetch(targetUrl)
-        .then(r => r.json())
+      // ตั้งระบบตัดจบการรอ (Timeout 10 วินาที) ป้องกันอาการค้างหมุนวนไม่รู้จบ
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      fetch(targetUrl, { signal: controller.signal })
+        .then(r => {
+          clearTimeout(timeoutId);
+          return r.json();
+        })
         .then(res => {
           document.getElementById('section-loading').style.display = 'none';
           
           if (res && res.status === "success") {
-            // ใส่ข้อมูลลงหน้าเว็บ
             document.getElementById('m-name').innerText = res.name;
             document.getElementById('m-code').innerText = res.memberCode;
             document.getElementById('m-free').innerText = res.freeQuota;
             document.getElementById('m-balance').innerText = Number(res.balance).toLocaleString();
             document.getElementById('m-privilege').innerText = res.specialPrivilege || "สิทธิ์มาตรฐาน";
 
-            // ดึงรูปโปรไฟล์ LINE มาแสดงถ้ามี
-            if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-              liff.getProfile().then(p => {
-                if(p.pictureUrl) {
-                  document.getElementById('profile-img').innerHTML = `<img src="${p.pictureUrl}" class="w-full h-full rounded-full object-cover">`;
-                }
-              });
+            if (picUrl) {
+              document.getElementById('profile-img').innerHTML = `<img src="${picUrl}" class="w-full h-full rounded-full object-cover">`;
             }
 
             document.getElementById('section-member').style.display = 'block';
           } else {
-            showError("ฐานข้อมูลปฏิเสธการเชื่อมต่อ หรือไม่พบข้อมูล Sheet");
+            showError("เซิร์ฟเวอร์ตอบกลับแต่ข้อมูลไม่ถูกต้อง (เช็คโค้ดฝั่ง Apps Script หรือชื่อแท็บ 'member' ในชีต)");
           }
         })
         .catch((err) => {
-          showError(`เชื่อมต่อ Apps Script ล้มเหลว (CORS/URL ผิด)<br>รายละเอียด: ${err.message}`);
+          clearTimeout(timeoutId);
+          if (err.name === 'AbortError') {
+            showError("การเชื่อมต่อหมดเวลา (Timeout 10 วินาที) เซิร์ฟเวอร์ Google Sheets ตอบช้าเกินไป");
+          } else {
+            showError(`เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ<br>รายละเอียด: ${err.message}`);
+          }
         });
     }
   </script>

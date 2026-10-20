@@ -29,6 +29,15 @@
       border-radius: 24px;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
+    .btn-gold-glow {
+      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
+      color: #022c22;
+      font-weight: 700;
+      border-radius: 9999px;
+      box-shadow: 0 4px 20px rgba(202, 138, 4, 0.4);
+      transition: all 0.2s ease;
+    }
+    .btn-gold-glow:active { transform: scale(0.96); }
   </style>
 </head>
 <body class="p-5 max-w-md mx-auto flex flex-col pb-12">
@@ -44,7 +53,7 @@
     <p class="text-xs text-slate-400 mt-1">MEMBER PROFILE & PRIVILEGES</p>
   </div>
 
-  <!-- หน้าจอโปรไฟล์หลัก (แสดงผลทันทีอัตโนมัติเมื่อเปิดเว็บ) -->
+  <!-- หน้าจอโปรไฟล์หลัก (แสดง LINE Profile ทันทีอัตโนมัติ) -->
   <div id="profile-container" class="space-y-4">
     
     <!-- การ์ดโปรไฟล์สมาชิก -->
@@ -91,7 +100,7 @@
 
     <!-- 🎴 ปุ่มเข้าสู่ระบบเสี่ยงทาย Pick a Card -->
     <div>
-      <button onclick="window.location.href='./pickacard.html'" class="w-full py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all duration-200" style="background: linear-gradient(135deg, #78350f 0%, #451a03 100%); border: 1px solid rgba(252, 211, 77, 0.4);">
+      <button onclick="accessPickACard()" class="w-full py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all duration-200" style="background: linear-gradient(135deg, #78350f 0%, #451a03 100%); border: 1px solid rgba(252, 211, 77, 0.4);">
         <span class="text-lg">🎴</span>
         <span class="text-sm font-bold text-amber-200 tracking-wide">เข้าสู่ระบบเสี่ยงทาย (Pick a Card)</span>
       </button>
@@ -110,6 +119,7 @@
   <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec";
     const LIFF_ID = "2007499712-B0uid9G3";
+    let isRegisteredMember = false;
 
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof liff !== 'undefined' && LIFF_ID) {
@@ -117,26 +127,24 @@
           .then(() => {
             if (liff.isLoggedIn()) {
               liff.getProfile().then(p => {
-                // ดึง LINE ID และชื่อจริงจาก LINE Profile มาเชื่อมต่อทันที
-                fetchMemberData(p.userId, p.displayName, p.pictureUrl);
+                loadProfileAndCheckRegistration(p.userId, p.displayName, p.pictureUrl);
               }).catch(() => {
-                // กรณีทดสอบนอกแอป LINE ให้ใช้ค่าจำลองของแอดมิน
-                fetchMemberData("admin_user_001", "พีรดิษฐ์ กิตติเขมานนท์", "");
+                loadProfileAndCheckRegistration("admin_user_001", "ผู้ศรัทธา", "");
               });
             } else {
-              liff.login(); // บังคับล็อกอินผ่าน LINE ทันทีเพื่อให้ได้ข้อมูลจริง
+              liff.login();
             }
           })
-          .catch(err => {
-            console.error("LIFF Init Error:", err);
-            fetchMemberData("admin_user_001", "พีรดิษฐ์ กิตติเขมานนท์", "");
+          .catch(() => {
+            loadProfileAndCheckRegistration("admin_user_001", "ผู้ศรัทธา", "");
           });
       } else {
-        fetchMemberData("admin_user_001", "พีรดิษฐ์ กิตติเขมานนท์", "");
+        loadProfileAndCheckRegistration("admin_user_001", "ผู้ศรัทธา", "");
       }
     });
 
-    function fetchMemberData(userId, displayName, pictureUrl) {
+    // โหลดแสดง LINE Profile และตรวจสอบข้อมูลกับ Google Sheets
+    function loadProfileAndCheckRegistration(userId, displayName, pictureUrl) {
       if (pictureUrl) {
         const avatarImg = document.getElementById('line-avatar');
         avatarImg.src = pictureUrl;
@@ -144,10 +152,16 @@
         document.getElementById('default-avatar').classList.add('hidden');
       }
 
+      // แสดงชื่อจาก LINE ให้เห็นทันที
+      document.getElementById('member-name').innerText = displayName;
+
+      // ดึงข้อมูลสมาชิกจากระบบหลังบ้าน
       fetch(`${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(userId)}&name=${encodeURIComponent(displayName)}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.status === "success") {
+            isRegisteredMember = true;
+
             document.getElementById('member-name').innerText = res.name || displayName;
             document.getElementById('member-code').innerText = "รหัส: " + (res.memberCode || "B001");
             document.getElementById('member-balance').innerText = (res.balance || 0) + " ฿";
@@ -158,7 +172,16 @@
             document.getElementById('info-address').innerText = res.address || "-";
           }
         })
-        .catch(err => console.error("Error fetching data:", err));
+        .catch(err => console.error("Error loading data:", err));
+    }
+
+    // ฟังก์ชันเข้าใช้งาน Pick a Card
+    function accessPickACard() {
+      if (isRegisteredMember) {
+        window.location.href = './pickacard.html';
+      } else {
+        window.location.href = './pickacard.html';
+      }
     }
   </script>
 </body>

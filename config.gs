@@ -1,27 +1,15 @@
-/**
- * config.js - การตั้งค่าส่วนกลางของระบบ (Centralized Configuration)
- * แบรนด์: วินทร์ทรัพย์นาคราช
- */
+// config.js - การตั้งค่าระบบเชื่อมต่อ วินทร์ทรัพย์นาคราช
+
 const APP_CONFIG = {
-  // 🌐 Web App Script URL ล่าสุดของ Google Apps Script
-  WEB_URL: "https://script.google.com/macros/s/AKfycbzrsGqScvhhIR3pnXGXw8KlOQ_rtWE86rzRjcJZoZd1Pl_knar_uvgH4EWEOinv2QKV/exec",
-
-  // 📱 รายการ LIFF ID ทั้งหมดตามโมดูล
+  // Web App URL จาก Google Apps Script
+  WEB_URL: "https://script.google.com/macros/s/AKfycbzNTanBA8hp2b3pkm9Rqaoq8O2lZbplHZq8BZPlfKbQP17u5fDAMrqRUu6-IdQampxJ/exec", 
+  
+  // ข้อมูล LIFF ID สำหรับเชื่อมต่อแต่ละหน้า
   LIFF: {
-    BOOKING: "2007499712-B0uid9G3",       // ระบบจองคิว (booking.html)
-    PICKACARD_HUB: "2007499712-07LXXVaY", // ฮับ Pick a Card
-    PICKACARD_KRU: "2007499712-EtMhu4c2", // Pick a Card ครู
-    MEMBERSHIP: "2007499712-J15McRGz"     // ระบบสมาชิก
-  },
-
-  // 🔗 ลิงก์ตรงสำหรับเปิดผ่าน LINE
-  LIFF_URL: {
-    BOOKING: "https://liff.line.me/2007499712-B0uid9G3",
-    PICKACARD_HUB: "https://liff.line.me/2007499712-07LXXVaY",
-    PICKACARD_KRU: "https://liff.line.me/2007499712-EtMhu4c2",
-    MEMBERSHIP: "https://liff.line.me/2007499712-J15McRGz"
-  },
-
-  // 🏛️ ข้อมูลแบรนด์
-  BRAND_NAME: "วินทร์ทรัพย์นาคราช"
+    BOOKING: "2007499712-B0uid9G3",
+    PICKACARD_HUB: "2007499712-07LXXVaY",
+    PICKACARD: "2007499712-EtMhu4c2",
+    MEMBERSHIPS: "2007499712-J15McRGz",
+    MUTERU_SHOP: "2007499712-3e6TMnJJ"
+  }
 };

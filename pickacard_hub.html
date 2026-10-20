@@ -19,7 +19,6 @@
     .white-box:active { transform: scale(0.97); }
     .btn-luxury { background: #1C1C1E; color: #FDE08B; border: 1px solid rgba(212, 175, 55, 0.5); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
     
-    /* Tarot Animation */
     .deck-container { width: 145px; height: 225px; position: relative; perspective: 1200px; margin: 0 auto; }
     .tarot-card { position: absolute; width: 100%; height: 100%; border-radius: 20px; background: linear-gradient(145deg, #1C1C1E 0%, #064E3B 100%); border: 1px solid #D4AF37; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
     @keyframes epicShuffleLeft { 0% { transform: translateX(0) rotate(0deg) scale(1); } 50% { transform: translateX(-100px) translateY(-10px) rotate(-15deg) scale(1.05); } 100% { transform: translateX(0) rotate(0deg) scale(1); } }
@@ -29,94 +28,100 @@
     
     .card-fan-scroll { display: flex; overflow-x: auto; gap: 16px; padding: 30px 20px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .card-fan-scroll::-webkit-scrollbar { display: none; }
-    .fan-item { flex: 0 0 130px; height: 200px; border-radius: 20px; background: linear-gradient(145deg, #1C1C1E 0%, #064E3B 100%); border: 1px solid #D4AF37; box-shadow: 0 10px 20px rgba(0,0,0,0.2); scroll-snap-align: center; cursor: pointer; transition: transform 0.2s; }
-    .fan-item:active { transform: scale(0.95); }
+    .fan-item { flex: 0 0 130px; height: 200px; border-radius: 20px; background: linear-gradient(145deg, #1C1C1E 0%, #064E3B 100%); border: 1px solid #D4AF37; box-shadow: 0 10px 20px rgba(0,0,0,0.2); scroll-snap-align: center; cursor: pointer; }
     
     .card-3d-box { perspective: 1200px; }
     .card-3d-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; }
     .flipped .card-3d-inner { transform: rotateY(180deg); }
     .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 24px; }
     .card-back-face { transform: rotateY(180deg); background: #FFFFFF; border: 1px solid #E5E5EA; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-up { animation: fadeUp 0.5s ease-out forwards; }
   </style>
 </head>
-<body class="p-4 max-w-md mx-auto flex flex-col justify-between">
-  <div>
-    <!-- Header -->
+<body class="p-4 max-w-md mx-auto flex flex-col justify-between pb-10">
+  
+  <div id="view-loading" class="text-center py-24 animate-fade-up">
+    <div class="text-4xl mb-3 animate-bounce">🐍</div>
+    <div class="text-xs font-medium text-gray-500">กำลังตรวจสอบข้อมูลเจ้านางน้อย...</div>
+  </div>
+
+  <!-- หน้าจอสำหรับผู้ที่ยังไม่ได้สมัครสมาชิก -->
+  <div id="view-register" style="display: none;" class="text-center py-12 animate-fade-up">
+    <div class="text-6xl mb-4">🔮</div>
+    <h2 class="text-xl font-bold gold-gradient-text mb-2">วินทร์ทรัพย์นาคราช</h2>
+    <p class="text-xs text-gray-600 mb-6">กรุณาสมัครสมาชิกก่อนเริ่มต้นใช้งานพยากรณ์</p>
+    
+    <div class="white-box p-5 mb-6 text-left space-y-2.5">
+      <div class="text-xs text-gray-800 flex items-center gap-2"><span>🏷️</span> รับรหัสสมาชิกประจำตัว (B001...)</div>
+      <div class="text-xs text-gray-800 flex items-center gap-2"><span>🎁</span> <span class="font-bold text-[#B48608]">รับสิทธิ์เปิดไพ่ฟรีทันที 10 ครั้ง</span></div>
+      <div class="text-xs text-gray-800 flex items-center gap-2"><span>🪙</span> หลังจากนั้นค่าครูเพียง 9 บาท / ครั้ง</div>
+    </div>
+    
+    <button onclick="registerMe()" id="btn-register" class="btn-luxury w-full py-4 rounded-full text-sm font-semibold transition active:scale-95 shadow-lg">
+      ✨ กดเพื่อสมัครสมาชิกฟรี
+    </button>
+  </div>
+
+  <!-- หน้าจอหลักเมื่อเป็นสมาชิกแล้ว -->
+  <div id="view-main" style="display: none;" class="animate-fade-up">
     <header class="text-center py-4 ios-glass rounded-[24px] mb-4 px-4">
       <div class="inline-flex items-center gap-1.5 mb-1"><span class="text-[#D4AF37] text-xs">✦</span><span class="text-[10px] font-semibold tracking-widest text-gray-500 uppercase">วินทร์ทรัพย์นาคราช</span><span class="text-[#D4AF37] text-xs">✦</span></div>
       <h1 class="text-xl font-bold gold-gradient-text">PICK A CARD</h1>
-      <p id="sub-title" class="text-[11px] text-gray-500 font-medium mt-1">เปิดญาณพยากรณ์ • 9 บาท / ครั้ง</p>
     </header>
 
-    <!-- User Wallet Bar -->
     <div class="premium-card rounded-[24px] p-5 mb-5 shadow-lg">
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-black/40 border border-[#D4AF37]/50 flex items-center justify-center text-xl backdrop-blur-md">👑</div>
-          <div><div class="font-semibold text-sm" id="bar-name">กำลังโหลด...</div><div class="text-[10px] font-mono opacity-70" id="bar-code">ID: -</div></div>
+          <div class="w-10 h-10 rounded-full bg-black/40 border border-[#D4AF37]/50 flex items-center justify-center text-xl">👑</div>
+          <div><div class="font-semibold text-sm" id="bar-name">เจ้านางน้อย</div><div class="text-[10px] font-mono opacity-70" id="bar-code">ID: -</div></div>
         </div>
-        <div class="flex flex-col gap-2">
-          <button onclick="triggerChatTopup()" class="bg-[#FDE08B] text-[#1C1C1E] px-4 py-1.5 rounded-full text-[11px] font-bold shadow-sm">เติมเงิน</button>
-          <button onclick="window.location.href='./memberships.html'" class="bg-black/30 text-[#FDE08B] px-4 py-1.5 rounded-full text-[11px] font-medium border border-[#D4AF37]/30">สถานะ</button>
+        <div class="flex gap-2">
+          <button onclick="window.location.href='./memberships.html'" class="bg-black/30 text-[#FDE08B] px-3 py-1.5 rounded-full text-[11px] font-medium border border-[#D4AF37]/30">สถานะ</button>
+          <button onclick="triggerChatTopup()" class="bg-[#FDE08B] text-[#1C1C1E] px-3 py-1.5 rounded-full text-[11px] font-bold">เติมเงิน</button>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3 pt-3 border-t border-[#D4AF37]/20 text-center">
-        <div><div class="text-[10px] opacity-80 mb-0.5">สิทธิ์ฟรี</div><div class="text-sm font-semibold" id="bar-free-quota">- ครั้ง</div></div>
+        <div><div class="text-[10px] opacity-80 mb-0.5">สิทธิ์ฟรีคงเหลือ</div><div class="text-sm font-semibold text-[#A7F3D0]" id="bar-free-quota">- ครั้ง</div></div>
         <div><div class="text-[10px] opacity-80 mb-0.5">ยอดเงินคงเหลือ</div><div class="text-sm font-semibold" id="bar-balance">- ฿</div></div>
       </div>
     </div>
 
-    <!-- View: Categories -->
+    <!-- หมวดหมู่ -->
     <div id="view-categories" class="space-y-4">
       <button onclick="pickCategory('สาส์นครู', true)" class="premium-card w-full p-5 rounded-[24px] flex items-center justify-between text-left shadow-md transition active:scale-95">
-        <div class="flex items-center gap-4">
-          <div class="text-3xl">🐍</div>
-          <div>
-            <div class="text-base font-bold text-[#FDE08B] mb-1">สาส์นครู • สาร์นปู่แท้</div>
-            <div class="text-[11px] opacity-80">เปิดรับภาพญาณบารมีตรงจากครูบาอาจารย์</div>
-          </div>
-        </div>
-        <div class="text-[#D4AF37] font-bold">➔</div>
+        <div class="flex items-center gap-4"><div class="text-3xl">🐍</div><div><div class="text-base font-bold text-[#FDE08B] mb-1">สาส์นครู • สาร์นปู่แท้</div><div class="text-[11px] opacity-80">เปิดรับภาพญาณบารมีตรงจากครูบาอาจารย์</div></div></div><div class="text-[#D4AF37] font-bold">➔</div>
       </button>
-
       <div class="text-center text-[12px] font-semibold text-gray-400 my-2">หมวดหมู่ Pick a Card ทั่วไป</div>
-
       <div class="grid grid-cols-2 gap-3">
         <button onclick="pickCategory('การงาน', false)" class="white-box p-4 flex flex-col items-center text-center"><div class="text-3xl mb-2">💼</div><div class="text-sm font-semibold text-gray-800">การงาน</div></button>
         <button onclick="pickCategory('การเงิน', false)" class="white-box p-4 flex flex-col items-center text-center"><div class="text-3xl mb-2">💰</div><div class="text-sm font-semibold text-gray-800">การเงิน</div></button>
         <button onclick="pickCategory('ความรัก', false)" class="white-box p-4 flex flex-col items-center text-center"><div class="text-3xl mb-2">❤️</div><div class="text-sm font-semibold text-gray-800">ความรัก</div></button>
         <button onclick="pickCategory('สุขภาพ', false)" class="white-box p-4 flex flex-col items-center text-center"><div class="text-3xl mb-2">🌿</div><div class="text-sm font-semibold text-gray-800">สุขภาพ</div></button>
       </div>
-
-      <button onclick="pickCategory('Card Of the Days', false)" class="white-box w-full p-4 flex items-center justify-between text-left mt-2">
-        <div class="flex items-center gap-3"><div class="text-2xl">🔮</div><div><div class="text-sm font-semibold text-gray-800">Card Of the Days</div><div class="text-[11px] text-gray-500">พลังงานมงคลประจำวัน</div></div></div>
-        <div class="text-gray-300 font-bold">➔</div>
-      </button>
     </div>
 
-    <!-- View: Shuffle -->
+    <!-- หน้าสับไพ่ -->
     <div id="view-shuffle" style="display: none;" class="py-4 text-center">
       <button onclick="backToHub()" class="text-[12px] font-medium text-blue-500 mb-6 flex items-center justify-center gap-1 w-full">⟨ ย้อนกลับ</button>
-      <div class="inline-block ios-glass px-5 py-2 rounded-full text-[12px] font-semibold text-gray-800 mb-8">
-        หมวด: <span id="category-badge" class="text-[#B48608]">-</span>
-      </div>
+      <div class="inline-block ios-glass px-5 py-2 rounded-full text-[12px] font-semibold text-gray-800 mb-8">หมวด: <span id="category-badge" class="text-[#B48608]">-</span></div>
       <div class="deck-container mb-10">
         <div class="tarot-card" style="transform: rotate(-5deg);"><div class="opacity-20 text-[#D4AF37] text-4xl">🎴</div></div>
         <div class="tarot-card" style="transform: rotate(3deg);"><div class="opacity-40 text-[#D4AF37] text-4xl">🎴</div></div>
         <div class="tarot-card" id="front-card">
-          <div class="text-center"><div class="text-5xl mb-2 drop-shadow-md">🐍</div><div class="text-[11px] font-semibold tracking-widest text-[#FDE08B]">วินทร์ทรัพย์นาคราช</div></div>
+          <div class="text-center"><div class="text-5xl mb-2">🐍</div><div class="text-[11px] font-semibold tracking-widest text-[#FDE08B]">วินทร์ทรัพย์นาคราช</div></div>
         </div>
       </div>
       <button id="btn-shuffle-action" onclick="performMagicShuffle()" class="btn-luxury w-full py-4 rounded-full text-sm font-semibold">✨ สับไพ่เสี่ยงทาย</button>
     </div>
 
-    <!-- View: Select Card -->
+    <!-- หน้าเลือกไพ่ -->
     <div id="view-select-card" style="display: none;" class="py-4">
-      <div class="text-center mb-4"><div class="text-sm font-semibold text-gray-800">สำรับไพ่ประสิทธิ์พลังแล้ว</div><div class="text-[12px] text-gray-500 mt-1">เลื่อนซ้าย-ขวา แล้วแตะเลือกไพ่ 1 ใบ</div></div>
+      <div class="text-center mb-4"><div class="text-sm font-semibold text-gray-800">สำรับไพ่ประสิทธิ์พลังแล้ว</div><div class="text-[12px] text-gray-500 mt-1">แตะเลือกไพ่ 1 ใบเพื่อเปิดคำทำนาย</div></div>
       <div id="fan-scroll-box" class="card-fan-scroll"></div>
     </div>
 
-    <!-- View: Result -->
+    <!-- หน้าผลลัพธ์ -->
     <div id="view-result" style="display: none;" class="py-2">
       <div class="card-3d-box relative w-[280px] h-[480px] mx-auto mb-6" id="result-flipper">
         <div class="card-3d-inner">
@@ -125,18 +130,18 @@
           </div>
           <div class="card-face card-back-face p-5 flex flex-col text-left">
             <div id="mode-image-only" style="display: none;" class="w-full h-full flex flex-col">
-              <div class="text-[11px] font-semibold text-gray-400 mb-3 uppercase tracking-wider text-center">สาส์นครู • สาร์นปู่</div>
+              <div class="text-[11px] font-semibold text-gray-400 mb-3 uppercase text-center">สาส์นครู • สาร์นปู่</div>
               <div class="flex-1 rounded-2xl overflow-hidden bg-gray-100 flex items-center justify-center relative">
                 <img id="res-guru-img" src="" alt="สาส์นครู" class="w-full h-full object-cover" style="display: none;">
-                <div id="res-guru-loader" class="text-gray-400 text-[12px] font-medium">กำลังอัญเชิญภาพ...</div>
+                <div id="res-guru-loader" class="text-gray-400 text-[12px]">กำลังอัญเชิญภาพ...</div>
               </div>
             </div>
             <div id="mode-text-card" style="display: none;" class="w-full h-full flex flex-col">
-              <div class="text-[11px] font-semibold text-gray-400 mb-2 uppercase tracking-wider border-b border-gray-100 pb-2 flex justify-between"><span id="res-code">CARD --</span><span id="res-cat">หมวด</span></div>
+              <div class="text-[11px] font-semibold text-gray-400 mb-2 border-b border-gray-100 pb-2 flex justify-between"><span id="res-code">CARD --</span><span id="res-cat">หมวด</span></div>
               <h2 id="res-title" class="text-lg font-bold text-gray-900 mb-2">-</h2>
-              <div class="text-[13px] text-gray-600 leading-relaxed mb-4 flex-1 overflow-y-auto pr-2" id="res-meaning">-</div>
-              <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                <div class="text-[10px] font-semibold text-gray-500 mb-1 flex items-center gap-1"><span>✨</span> AI Interpretation</div>
+              <div class="text-[13px] text-gray-600 leading-relaxed mb-4 flex-1 overflow-y-auto" id="res-meaning">-</div>
+              <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                <div class="text-[10px] font-semibold text-gray-500 mb-1">✨ AI Interpretation</div>
                 <p id="res-ai-interpretation" class="text-[11px] text-gray-800 leading-relaxed">-</p>
               </div>
             </div>
@@ -151,35 +156,60 @@
   </div>
 
   <script>
-    // JS Logic เดิม
     const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw9RJdnqieYUY6QombS0Zmkkim0C8zecq71k0p7kMvwRPzy_Y5NMr8D54WHjd2qUCodEA/exec";
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
-    let currentUserId = "guest_user"; let currentDisplayName = "สมาชิก";
-    let userData = { freeQuota: 0, balance: 0, points: 0, specialPrivilege: "" };
+    let currentUserId = "guest_user"; 
+    let userData = null;
     let selectedCat = ""; let isGuruMode = false; let cardsData = [];
 
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof liff !== 'undefined') {
-        liff.init({ liffId: "2007499712-O7LXXVaY" }).then(() => {
-          if (liff.isLoggedIn()) { liff.getProfile().then(p => { currentUserId = p.userId; currentDisplayName = p.displayName || "สมาชิก"; loadLiveQuota(); }); }
-          else { loadLiveQuota(); }
+        liff.init({ liffId: "2007499712-J15McRGz" }).then(() => {
+          if (liff.isLoggedIn()) { 
+            liff.getProfile().then(p => { currentUserId = p.userId; checkMembership(); }); 
+          } else { checkMembership(); }
         });
-      } else { loadLiveQuota(); }
+      } else { checkMembership(); }
     });
 
-    function loadLiveQuota() {
-      fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(currentDisplayName)}&_t=${Date.now()}`)
-        .then(r => r.json()).then(res => {
-          if (res && res.isMember) { userData = res; updateStatusBar(); }
+    function checkMembership() {
+      fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}&_t=${Date.now()}`)
+        .then(r => r.json())
+        .then(res => {
+          document.getElementById('view-loading').style.display = 'none';
+          if (res && res.isMember) {
+            userData = res;
+            document.getElementById('view-register').style.display = 'none';
+            document.getElementById('view-main').style.display = 'block';
+            document.getElementById('bar-name').innerText = userData.name || "เจ้านางน้อย";
+            document.getElementById('bar-code').innerText = "ID: " + userData.memberCode;
+            document.getElementById('bar-free-quota').innerText = userData.freeQuota + " ครั้ง";
+            document.getElementById('bar-balance').innerText = Number(userData.balance).toLocaleString() + " ฿";
+          } else {
+            document.getElementById('view-main').style.display = 'none';
+            document.getElementById('view-register').style.display = 'block';
+          }
         });
     }
 
-    function updateStatusBar() {
-      document.getElementById('bar-name').innerText = userData.name || currentDisplayName;
-      document.getElementById('bar-code').innerText = "ID: " + (userData.memberCode || "M0001");
-      document.getElementById('bar-free-quota').innerText = (userData.freeQuota || 0) + " ครั้ง";
-      document.getElementById('bar-balance').innerText = Number(userData.balance || 0).toLocaleString() + " ฿";
+    function registerMe() {
+      const btn = document.getElementById('btn-register');
+      btn.innerText = "⏳ กำลังบันทึกข้อมูล...";
+      btn.disabled = true;
+
+      fetch(`${WEB_URL}?action=register_member&userId=${encodeURIComponent(currentUserId)}&_t=${Date.now()}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success" || res.status === "already_registered") {
+            alert("🎉 สมัครสมาชิกสำเร็จ! รหัสของคุณคือ " + res.memberCode + " รับสิทธิ์ฟรี 10 ครั้ง");
+            checkMembership();
+          } else {
+            btn.innerText = "✨ กดเพื่อสมัครสมาชิกฟรี";
+            btn.disabled = false;
+            alert("⚠️ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+          }
+        });
     }
 
     function triggerChatTopup() {
@@ -188,6 +218,11 @@
     }
 
     function pickCategory(catName, isGuru) {
+      if (userData.freeQuota <= 0 && userData.balance < 9) {
+        alert(`สิทธิ์ฟรี 10 ครั้งหมดแล้ว และยอดเงินคงเหลือ (${userData.balance} บาท) ไม่เพียงพอ\nกรุณาเติมเงินเพื่อใช้งานต่อครับ`);
+        triggerChatTopup();
+        return;
+      }
       selectedCat = catName; isGuruMode = isGuru;
       document.getElementById('category-badge').innerText = catName;
       document.getElementById('view-categories').style.display = 'none'; document.getElementById('view-shuffle').style.display = 'block';
@@ -220,7 +255,7 @@
       fetch(`${WEB_URL}?action=deduct_reading_quota&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedCat)}&_t=${Date.now()}`)
         .then(r => r.json()).then(res => {
           if (res.status === "insufficient") { alert(res.message); triggerChatTopup(); backToHub(); return; }
-          if (res.status === "success") { userData.freeQuota = res.freeQuota; userData.balance = res.balance; updateStatusBar(); displayCardResult(idx); }
+          if (res.status === "success") { userData.freeQuota = res.freeQuota; userData.balance = res.balance; checkMembership(); displayCardResult(idx); }
         }).catch(err => { alert("ระบบขัดข้อง"); backToHub(); });
     }
 
@@ -236,7 +271,7 @@
         document.getElementById('mode-image-only').style.display = 'none'; document.getElementById('mode-text-card').style.display = 'flex';
         document.getElementById('res-code').innerText = `CARD ${card.id}`; document.getElementById('res-cat').innerText = card.category || selectedCat;
         document.getElementById('res-title').innerText = card.name; document.getElementById('res-meaning').innerText = card.meaning;
-        document.getElementById('res-ai-interpretation').innerText = `ญาณแห่ง${card.name} ชี้ชัดว่าพลังงานกำลังเปิดรับโอกาสสำคัญ ปาฏิหาริย์พร้อมหนุนนำให้ก้าวสู่ความสำเร็จ`;
+        document.getElementById('res-ai-interpretation').innerText = `ญาณแห่ง${card.name} ชี้ชัดว่าพลังงานกำลังเปิดทาง ปาฏิหาริย์พร้อมหนุนนำให้ก้าวสู่ความสำเร็จ`;
       }
       setTimeout(() => { document.getElementById('result-flipper').classList.add('flipped'); }, 150);
     }

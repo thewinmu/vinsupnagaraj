@@ -33,7 +33,7 @@
       backdrop-filter: blur(8px);
     }
 
-    /* สาส์นครู เมนูเด่นขลัง */
+    /* สาส์นครู ดีไซน์ขลังเด่น */
     .sacred-guru-card {
       background: linear-gradient(145deg, #022019 0%, #064E3B 60%, #031D16 100%);
       border: 2px solid #F59E0B;
@@ -63,7 +63,7 @@
       box-shadow: 0 4px 15px rgba(6, 95, 70, 0.25), 0 0 10px rgba(245, 158, 11, 0.3);
     }
 
-    /* สำรับไพ่ 3D กลางจอ */
+    /* สำรับไพ่ 3D */
     .deck-container {
       width: 145px;
       height: 225px;
@@ -86,7 +86,7 @@
       transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* อนิเมชันสับไพ่อลังการเวทมนต์ */
+    /* แอนิเมชันสับไพ่อลังการ */
     @keyframes mysticFloat {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-14px) rotate(1.5deg); }
@@ -178,16 +178,22 @@
 
     <!-- แถบแสดงสถานะสมาชิก / สิทธิ์คงเหลือ / กระเป๋าเงิน -->
     <div id="user-status-bar" class="mb-4 bg-emerald-950 text-amber-200 p-3 rounded-2xl border border-amber-400/70 flex items-center justify-between text-xs shadow-md">
-      <div>
+      <div class="flex-1 mr-2">
         <div class="font-bold flex items-center gap-1.5">
           <span>👤</span> <span id="bar-name">กำลังตรวจสอบสมาชิก...</span>
         </div>
         <div class="text-[10px] text-emerald-300 mt-0.5" id="bar-quota-desc">โควตาฟรี: - | ยอดเงิน: -</div>
       </div>
       <div class="flex gap-1.5">
-        <button id="btn-show-register" onclick="openRegisterModal()" style="display: none;" class="bg-amber-400 text-emerald-950 font-black px-2.5 py-1 rounded-xl text-[10px]">
+        <!-- ปุ่มสมัครแบบยืนยันอัตโนมัติ -->
+        <button id="btn-show-register" onclick="openRegisterModal()" style="display: none;" class="bg-amber-400 hover:bg-amber-500 text-emerald-950 font-black px-2.5 py-1 rounded-xl text-[10px] transition shadow">
           สมัครฟรี
         </button>
+        <!-- ปุ่มแก้ไขข้อมูลภายหลัง -->
+        <button id="btn-edit-profile" onclick="openEditModal()" style="display: none;" class="bg-emerald-900 text-amber-200 border border-emerald-700 px-2 py-1 rounded-xl text-[10px] font-medium">
+          ⚙️
+        </button>
+        <!-- ปุ่มเติมเงิน -->
         <button onclick="openTopupModal()" class="bg-emerald-800 text-amber-200 border border-amber-400/80 px-2.5 py-1 rounded-xl text-[10px] font-bold">
           เติมเงิน
         </button>
@@ -196,7 +202,7 @@
 
     <!-- STEP 1: หน้าเลือกหมวดหมู่ -->
     <div id="view-categories" class="space-y-3">
-      <!-- 🌟 เมนู สาส์นครู (ดีไซน์ขลัง เด่น สง่างาม) -->
+      <!-- 🌟 เมนู สาส์นครู (เด่น ขลัง สง่างาม) -->
       <button onclick="pickCategory('สาส์นครู', true)" class="sacred-guru-card w-full p-4 rounded-3xl flex items-center justify-between text-left transition active:scale-98">
         <div class="flex items-center gap-3.5 z-10">
           <div class="w-14 h-14 rounded-2xl bg-black/50 border border-amber-400/80 flex items-center justify-center text-3xl shadow-inner">
@@ -342,7 +348,7 @@
                   กำลังอ่านคำทำนาย...
                 </div>
 
-                <!-- 🤖 กล่องถอดรหัสพลังงาน AI (150-200 ตัวอักษร) -->
+                <!-- กล่องถอดรหัส AI (150-200 ตัวอักษร) -->
                 <div class="bg-gradient-to-br from-emerald-50 to-amber-50/50 p-2.5 rounded-xl border border-amber-300/80 mt-2">
                   <div class="flex items-center gap-1.5 text-[10px] font-black text-amber-800 mb-1">
                     <span>✨</span> <span>ถอดรหัสญาณพยากรณ์ AI (เชิงลึก):</span>
@@ -373,26 +379,26 @@
     </div>
   </div>
 
-  <!-- MODAL: สมัครสมาชิก (รับฟรี 5 ครั้ง) -->
+  <!-- MODAL: สมัครสมาชิก (ไม่ต้องกรอกอะไร แค่ยืนยันด้วย LINE ID) -->
   <div id="modal-register" style="display: none;" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-amber-400 text-center shadow-2xl">
-      <div class="text-3xl mb-1">🎁</div>
+      <div class="w-16 h-16 rounded-full bg-emerald-50 border-2 border-amber-400 flex items-center justify-center mx-auto mb-2 text-3xl shadow-inner">
+        🐍
+      </div>
       <h3 class="text-base font-black text-emerald-950">สมัครสมาชิกรับสิทธิ์ฟรี</h3>
-      <p class="text-xs text-amber-700 font-bold mt-1">รับสิทธิ์เปิดไพ่ Pick a Card ฟรีทันที 5 ครั้ง!</p>
-      
-      <div class="space-y-2.5 my-4 text-left">
-        <div>
-          <label class="text-[10px] font-bold text-slate-600">ชื่อของคุณ</label>
-          <input type="text" id="reg-name" placeholder="ระบุชื่อเรียก" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
-        </div>
-        <div>
-          <label class="text-[10px] font-bold text-slate-600">เบอร์โทรศัพท์</label>
-          <input type="tel" id="reg-phone" placeholder="08xxxxxxxx" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+      <p class="text-xs text-amber-700 font-bold mt-0.5">รับสิทธิ์เปิดไพ่ Pick a Card ฟรีทันที 5 ครั้ง!</p>
+
+      <div class="bg-emerald-50/70 p-3 rounded-2xl border border-emerald-200 my-4 text-center">
+        <div class="text-[10px] text-slate-500 font-medium">บัญชี LINE ที่จะใช้เชื่อมต่อ:</div>
+        <div id="modal-line-name" class="text-sm font-black text-emerald-950 mt-0.5">LINE User</div>
+        <div id="modal-line-id" class="text-[9px] text-slate-400 font-mono mt-0.5">ID: -</div>
+        <div class="text-[10px] text-emerald-700 font-semibold mt-2 pt-2 border-t border-emerald-100">
+          ✓ ไม่ต้องกรอกข้อมูลใดๆ สามารถแก้ไขชื่อและเบอร์โทรได้ภายหลัง
         </div>
       </div>
 
-      <button onclick="submitRegister()" class="emerald-gold-btn w-full py-3 rounded-xl text-xs font-black shadow">
-        ยืนยันการรับสิทธิ์ฟรี 5 ครั้ง
+      <button id="btn-submit-reg" onclick="submitRegisterInstant()" class="emerald-gold-btn w-full py-3.5 rounded-xl text-xs font-black shadow-md active:scale-95 transition">
+        ✨ ยืนยันสมัครด้วยบัญชีนี้ (รับฟรี 5 ครั้ง)
       </button>
       <button onclick="closeRegisterModal()" class="w-full text-slate-400 text-[11px] font-bold mt-2.5">
         ไว้คราวหลัง
@@ -400,7 +406,34 @@
     </div>
   </div>
 
-  <!-- MODAL: เติมเงิน (ขั้นต่ำ 10 บาท / 100 บาท ฟรี 1 เดือน) -->
+  <!-- MODAL: แก้ไขข้อมูลโปรไฟล์ภายหลัง (ชื่อ / เบอร์โทร) -->
+  <div id="modal-edit-profile" style="display: none;" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-emerald-500 text-center shadow-2xl">
+      <div class="text-2xl mb-1">⚙️</div>
+      <h3 class="text-sm font-black text-emerald-950">แก้ไขข้อมูลสมาชิก</h3>
+      <p class="text-[11px] text-slate-500 mt-0.5">อัปเดตข้อมูลเพื่อให้ระบบเรียกชื่อและติดต่อได้ถูกต้อง</p>
+
+      <div class="space-y-2.5 my-3.5 text-left">
+        <div>
+          <label class="text-[10px] font-bold text-slate-600">ชื่อที่ต้องการให้ระบบเรียก</label>
+          <input type="text" id="edit-name" placeholder="ชื่อเรียกของคุณ" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-600">เบอร์โทรศัพท์ (ถ้ามี)</label>
+          <input type="tel" id="edit-phone" placeholder="08xxxxxxxx" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+        </div>
+      </div>
+
+      <button onclick="submitUpdateProfile()" class="emerald-gold-btn w-full py-2.5 rounded-xl text-xs font-black shadow transition">
+        บันทึกข้อมูล
+      </button>
+      <button onclick="closeEditModal()" class="w-full text-slate-400 text-[11px] font-bold mt-2">
+        ยกเลิก
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: เติมเงิน -->
   <div id="modal-topup" style="display: none;" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-amber-400 text-center shadow-2xl">
       <div class="text-2xl mb-1">💳</div>
@@ -439,6 +472,7 @@
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
     let currentUserId = "guest_user";
+    let currentDisplayName = "LINE User";
     let userData = { isMember: false, freeQuota: 0, balance: 0, isUnlimited: false, expiryDate: "" };
     let selectedCat = "";
     let isGuruMode = false;
@@ -450,7 +484,10 @@
           if (liff.isLoggedIn()) {
             liff.getProfile().then(p => {
               currentUserId = p.userId;
-              document.getElementById('reg-name').value = p.displayName || "";
+              currentDisplayName = p.displayName || "LINE User";
+              document.getElementById('modal-line-name').innerText = currentDisplayName;
+              document.getElementById('modal-line-id').innerText = "ID: " + currentUserId.substring(0, 10) + "...";
+              document.getElementById('edit-name').value = currentDisplayName;
               checkUserQuota();
             });
           } else {
@@ -476,14 +513,17 @@
       const nameElem = document.getElementById('bar-name');
       const descElem = document.getElementById('bar-quota-desc');
       const btnReg = document.getElementById('btn-show-register');
+      const btnEdit = document.getElementById('btn-edit-profile');
 
       if (!userData.isMember) {
         nameElem.innerText = "ผู้ใช้ทั่วไป (ยังไม่ได้สมัคร)";
         descElem.innerText = "กดสมัครสมาชิกเพื่อรับสิทธิ์เปิดไพ่ฟรี 5 ครั้ง";
         btnReg.style.display = "inline-block";
+        btnEdit.style.display = "none";
       } else {
         btnReg.style.display = "none";
-        nameElem.innerText = userData.name || "สมาชิกวินทร์ทรัพย์นาคราช";
+        btnEdit.style.display = "inline-block";
+        nameElem.innerText = userData.name || currentDisplayName;
         if (userData.isUnlimited) {
           descElem.innerText = `🌟 ใช้งานฟรีบุฟเฟต์ถึง: ${userData.expiryDate.split("T")[0]}`;
         } else {
@@ -494,6 +534,8 @@
 
     function openRegisterModal() { document.getElementById('modal-register').style.display = 'flex'; }
     function closeRegisterModal() { document.getElementById('modal-register').style.display = 'none'; }
+    function openEditModal() { document.getElementById('modal-edit-profile').style.display = 'flex'; }
+    function closeEditModal() { document.getElementById('modal-edit-profile').style.display = 'none'; }
     function openTopupModal() { document.getElementById('modal-topup').style.display = 'flex'; }
     function closeTopupModal() { document.getElementById('modal-topup').style.display = 'none'; }
 
@@ -502,18 +544,19 @@
       alert("คัดลอกเลขที่บัญชี 2251495656 เรียบร้อยแล้วครับ");
     }
 
-    function submitRegister() {
-      const name = document.getElementById('reg-name').value.trim();
-      const phone = document.getElementById('reg-phone').value.trim();
-      if (!name) return alert("กรุณาระบุชื่อของคุณครับ");
+    // สมัครสมาชิกทันทีแบบ One-Click ไม่ต้องกรอก
+    function submitRegisterInstant() {
+      const btn = document.getElementById('btn-submit-reg');
+      btn.innerText = "กำลังยืนยัน...";
+      btn.disabled = true;
 
       fetch(WEB_URL, {
         method: "POST",
         body: JSON.stringify({
           action: "register_member",
           userId: currentUserId,
-          name: name,
-          phone: phone
+          name: currentDisplayName,
+          phone: ""
         })
       })
       .then(r => r.json())
@@ -521,17 +564,41 @@
         alert(res.message);
         closeRegisterModal();
         checkUserQuota();
+      })
+      .finally(() => {
+        btn.innerText = "✨ ยืนยันสมัครด้วยบัญชีนี้ (รับฟรี 5 ครั้ง)";
+        btn.disabled = false;
       });
     }
 
-    // ฟังก์ชันเริ่มเลือกหมวดหมู่ (เช็คสิทธิ์โควตา)
+    // บันทึกแก้ไขข้อมูลโปรไฟล์ภายหลัง
+    function submitUpdateProfile() {
+      const newName = document.getElementById('edit-name').value.trim();
+      const newPhone = document.getElementById('edit-phone').value.trim();
+
+      fetch(WEB_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "update_profile",
+          userId: currentUserId,
+          name: newName,
+          phone: newPhone
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        alert("บันทึกการแก้ไขข้อมูลเรียบร้อยแล้วครับ");
+        closeEditModal();
+        checkUserQuota();
+      });
+    }
+
     function pickCategory(catName, isGuru) {
       if (!userData.isMember) {
         openRegisterModal();
         return;
       }
 
-      // เช็คว่ามีสิทธิ์เปิดไพ่ไหม (unlimited หรือ โควตาฟรี > 0 หรือ ยอดเงิน >= 9)
       if (!userData.isUnlimited && userData.freeQuota <= 0 && userData.balance < 9) {
         alert("คุณไม่มีโควตาเปิดไพ่คงเหลือ (ครั้งละ 9 บาท)\nกรุณาเติมเงินขั้นต่ำ 10 บาท เพื่อเริ่มเปิดไพ่ครับ");
         openTopupModal();
@@ -615,13 +682,12 @@
         `กระแสพลังนาคราชประจำสาส์น${cardName}สะท้อนถึงการเปลี่ยนแปลงเชิงบวกในเรื่อง${category} อุปสรรคที่เคยติดขัดจะเริ่มคลี่คลาย มีเกณฑ์พบกัลยาณมิตรหรือหนทางใหม่ที่นำพาความเจริญ จงเชื่อมั่นในคุณงามความดีและศักยภาพของตนเอง`,
         `สาส์นเตือนใจจาก${cardName}ส่งพลังตรงถึงเรื่อง${category}ของคุณ ความพยายามที่สั่งสมมาถึงเวลาผลิดอกออกผล ขอเพียงรักษาวาจาและความซื่อตรง ทุกก้าวเดินจะมีบารมีคุ้มครอง นำพาทรัพย์สินและความสุขใจมาสู่ชีวิตอย่างยั่งยืนแน่นอน`
       ];
-      // สุ่มคำแปลที่มีความยาว 160-195 ตัวอักษรพอดี
       const picked = templates[Math.floor(Math.random() * templates.length)];
       return picked.substring(0, 200);
     }
 
     function revealSelectedCard(idx) {
-      // หักโควตา 1 ครั้ง (9 บาท หรือโควตาฟรี)
+      // ตัดโควตา 1 ครั้ง
       fetch(WEB_URL, {
         method: "POST",
         body: JSON.stringify({
@@ -660,7 +726,6 @@
         document.getElementById('res-title').innerText = card.name;
         document.getElementById('res-meaning').innerText = card.meaning;
 
-        // เรียก AI สังเคราะห์คำทำนาย 150-200 ตัวอักษร
         const aiText = generateAIInterpretation(card.name, card.category || selectedCat, card.meaning);
         document.getElementById('res-ai-interpretation').innerText = aiText;
       }

@@ -11,12 +11,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Prompt', sans-serif; background-color: #F5F5F7; color: #1D1D1F; -webkit-tap-highlight-color: transparent; min-height: 100vh; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Prompt', sans-serif; background-color: #F8F9FA; color: #1D1D1F; -webkit-tap-highlight-color: transparent; min-height: 100vh; }
     .gold-gradient-text { background: linear-gradient(135deg, #D4AF37 0%, #FDE08B 50%, #B48608 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .ios-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-    .premium-card { background: linear-gradient(135deg, #1C1C1E 0%, #064E3B 70%, #000000 100%); border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.3); color: #FDE08B; }
-    .smooth-box { background: #FFFFFF; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #E5E5EA; }
-    .btn-luxury { background: #1C1C1E; color: #FDE08B; border: 1px solid rgba(212, 175, 55, 0.5); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
+    .ios-glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+    .premium-card { background: linear-gradient(135deg, #121212 0%, #064E3B 70%, #000000 100%); border: 1px solid rgba(212, 175, 55, 0.5); box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.3); color: #FDE08B; }
+    .smooth-box { background: #FFFFFF; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(229, 229, 234, 0.8); }
+    .btn-luxury { background: #121212; color: #FDE08B; border: 1px solid rgba(212, 175, 55, 0.6); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); transition: transform 0.2s; }
+    .btn-luxury:active { transform: scale(0.97); }
   </style>
 </head>
 <body class="p-4 max-w-md mx-auto flex flex-col justify-between pb-10">
@@ -27,46 +28,46 @@
       <h1 class="text-xl font-bold gold-gradient-text">MEMBERSHIP</h1>
     </header>
 
-    <!-- ส่วนแสดงผลเมื่อยังไม่เป็นสมาชิก -->
-    <div id="box-unregistered" style="display: none;" class="smooth-box p-6 text-center my-10">
+    <!-- Unregistered State -->
+    <div id="box-unregistered" style="display: none;" class="smooth-box p-8 text-center my-10">
       <div class="text-5xl mb-3">🏷️</div>
       <h2 class="text-base font-bold text-gray-900 mb-1">ยังไม่พบข้อมูลสมาชิก</h2>
-      <p class="text-xs text-gray-500 mb-6">กดปุ่มด้านล่างเพื่อสมัครสมาชิกรับสิทธิ์ฟรี 10 ครั้ง</p>
-      <button onclick="registerMemberNow()" id="btn-reg" class="btn-luxury w-full py-3.5 rounded-full text-xs font-semibold shadow">📝 สมัครสมาชิกตอนนี้</button>
+      <p class="text-xs text-gray-500 mb-6">กดปุ่มด้านล่างเพื่อสมัครสมาชิกรับสิทธิ์ฟรี 10 ครั้งทันที</p>
+      <button onclick="registerMemberNow()" id="btn-reg" class="btn-luxury w-full py-4 rounded-full text-xs font-semibold shadow">📝 สมัครสมาชิกตอนนี้</button>
     </div>
 
-    <!-- ส่วนแสดงผลข้อมูลสมาชิกปกติ -->
-    <div id="box-member-data">
+    <!-- Member Data State -->
+    <div id="box-member-data" style="display: none;">
       <div class="premium-card p-6 rounded-[24px] mb-5">
         <div class="flex justify-between items-start mb-6">
           <div>
             <div class="text-[9px] tracking-widest text-[#A7F3D0] font-semibold uppercase mb-1">Naga Win Sap Member</div>
-            <div class="text-xl font-bold" id="mb-name">กำลังเชื่อมต่อฐานข้อมูล...</div>
-            <div class="text-[11px] font-mono mt-1 opacity-70" id="mb-code">ID: -</div>
+            <div class="text-xl font-bold text-white" id="mb-name">กำลังโหลด...</div>
+            <div class="text-[11px] font-mono mt-1 text-[#D4AF37]" id="mb-code">ID: -</div>
           </div>
-          <div class="w-10 h-10 rounded-full bg-black/40 border border-[#D4AF37]/50 flex items-center justify-center text-xl">🐍</div>
+          <div class="w-10 h-10 rounded-full bg-black/50 border border-[#D4AF37]/60 flex items-center justify-center text-xl shadow-inner">🐍</div>
         </div>
-        <div class="grid grid-cols-3 gap-3 pt-4 border-t border-[#D4AF37]/20 text-center">
-          <div><div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">สิทธิ์ฟรี</div><div class="text-base font-semibold" id="mb-free">-</div></div>
-          <div><div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">ยอดเงิน (฿)</div><div class="text-base font-semibold" id="mb-balance">-</div></div>
-          <div><div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">แต้มสะสม</div><div class="text-base font-semibold" id="mb-points">-</div></div>
+        <div class="grid grid-cols-3 gap-3 pt-4 border-t border-[#D4AF37]/30 text-center">
+          <div><div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">สิทธิ์ฟรี</div><div class="text-base font-semibold text-white" id="mb-free">-</div></div>
+          <div><div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">ยอดเงิน (฿)</div><div class="text-base font-semibold text-white" id="mb-balance">-</div></div>
+          <div><div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">แต้มสะสม</div><div class="text-base font-semibold text-white" id="mb-points">-</div></div>
         </div>
       </div>
 
       <div class="smooth-box p-5 mb-5">
         <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100"><span class="text-lg">👑</span><h3 class="text-sm font-semibold text-gray-800">สถานะสิทธิประโยชน์</h3></div>
-        <div class="flex justify-between items-center"><span class="text-[11px] text-gray-500">ระดับสถานะ</span><span class="text-[11px] font-semibold text-[#B48608] bg-[#FEF3C7] px-3 py-1 rounded-full" id="mb-privilege">กำลังตรวจสอบ...</span></div>
+        <div class="flex justify-between items-center"><span class="text-[11px] text-gray-500">ระดับสถานะ</span><span class="text-[11px] font-semibold text-[#B48608] bg-[#FEF3C7] px-3 py-1 rounded-full border border-[#D4AF37]/30" id="mb-privilege">สิทธิ์มาตรฐาน</span></div>
       </div>
 
       <div class="smooth-box p-5 mb-6">
         <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
           <h3 class="text-sm font-semibold text-gray-800 flex items-center gap-2"><span class="text-lg">📦</span> ข้อมูลจัดส่ง</h3>
-          <button onclick="openEditModal()" class="text-[11px] font-semibold text-blue-500">แก้ไข</button>
+          <button onclick="openEditModal()" class="text-[11px] font-semibold text-[#B48608]">แก้ไข</button>
         </div>
         <div class="space-y-3 text-sm">
           <div class="flex justify-between"><span class="text-gray-500 text-[12px]">โทรศัพท์</span><span class="font-medium text-gray-800 text-[12px]" id="mb-phone">-</span></div>
           <div class="flex justify-between"><span class="text-gray-500 text-[12px]">อีเมล</span><span class="font-medium text-gray-800 text-[12px]" id="mb-email">-</span></div>
-          <div class="pt-2"><div class="text-gray-500 text-[12px] mb-1">ที่อยู่จัดส่งพัสดุ</div><div class="font-medium text-gray-800 text-[12px] leading-relaxed bg-gray-50 p-3 rounded-xl" id="mb-address">-</div></div>
+          <div class="pt-2"><div class="text-gray-500 text-[12px] mb-1">ที่อยู่จัดส่งพัสดุ</div><div class="font-medium text-gray-800 text-[12px] leading-relaxed bg-[#F8F9FA] p-3 rounded-xl border border-gray-100" id="mb-address">-</div></div>
         </div>
       </div>
     </div>
@@ -76,11 +77,11 @@
     </button>
   </div>
 
-  <!-- Modal แก้ไข -->
-  <div id="modal-edit" style="display: none;" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-    <div class="bg-[#F5F5F7] w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-5"><h3 class="text-base font-semibold text-gray-900">แก้ไขข้อมูลส่วนตัว</h3><button onclick="closeEditModal()" class="text-blue-500 font-semibold text-sm">เสร็จสิ้น</button></div>
-      <div class="space-y-4 text-left bg-white p-4 rounded-[24px] shadow-sm mb-4">
+  <!-- Modal แก้ไขข้อมูล -->
+  <div id="modal-edit" style="display: none;" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div class="bg-[#F8F9FA] w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-[#D4AF37]/30">
+      <div class="flex justify-between items-center mb-5"><h3 class="text-base font-semibold text-gray-900">แก้ไขข้อมูลส่วนตัว</h3><button onclick="closeEditModal()" class="text-[#B48608] font-semibold text-sm">เสร็จสิ้น</button></div>
+      <div class="space-y-4 text-left bg-white p-4 rounded-[24px] shadow-sm mb-4 border border-gray-100">
         <div><label class="text-[10px] text-gray-400 block mb-1">ชื่อ - นามสกุล</label><input type="text" id="edit-name" class="w-full text-sm text-gray-900 focus:outline-none bg-transparent"></div>
         <div><label class="text-[10px] text-gray-400 block mb-1">เบอร์โทรศัพท์</label><input type="tel" id="edit-phone" class="w-full text-sm text-gray-900 focus:outline-none bg-transparent"></div>
         <div><label class="text-[10px] text-gray-400 block mb-1">อีเมล</label><input type="email" id="edit-email" class="w-full text-sm text-gray-900 focus:outline-none bg-transparent"></div>
@@ -91,9 +92,7 @@
   </div>
 
   <script>
-    const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw9RJdnqieYUY6QombS0Zmkkim0C8zecq71k0p7kMvwRPzy_Y5NMr8D54WHjd2qUCodEA/exec";
-    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
-
+    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : "";
     let currentUserId = "guest_user"; 
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -102,7 +101,7 @@
           if (liff.isLoggedIn()) { 
             liff.getProfile().then(p => { currentUserId = p.userId; loadUserData(); }); 
           } else { loadUserData(); }
-        }).catch(e => { loadUserData(); });
+        }).catch(() => { loadUserData(); });
       } else { loadUserData(); }
     });
 
@@ -129,13 +128,12 @@
             document.getElementById('edit-email').value = res.email !== "-" ? res.email : "";
             document.getElementById('edit-address').value = res.address !== "-" ? res.address : "";
           } else {
-            // ยังไม่เป็นสมาชิก ให้แสดงกล่องสมัครสมาชิก
             document.getElementById('box-member-data').style.display = 'none';
             document.getElementById('box-unregistered').style.display = 'block';
           }
         })
-        .catch(err => {
-          document.getElementById('mb-name').innerText = "❌ เชื่อมต่อล้มเหลว";
+        .catch(() => {
+          document.getElementById('box-unregistered').style.display = 'block';
         });
     }
 
@@ -153,8 +151,13 @@
           } else {
             btn.innerText = "📝 สมัครสมาชิกตอนนี้";
             btn.disabled = false;
-            alert("⚠️ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+            alert("⚠️ " + (res.message || "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"));
           }
+        })
+        .catch(() => {
+          btn.innerText = "📝 สมัครสมาชิกตอนนี้";
+          btn.disabled = false;
+          alert("⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย");
         });
     }
 
@@ -169,7 +172,7 @@
       const address = document.getElementById('edit-address').value.trim();
 
       fetch(`${WEB_URL}?action=update_profile&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&email=${encodeURIComponent(email)}&address=${encodeURIComponent(address)}`)
-        .then(r => r.json()).then(res => {
+        .then(r => r.json()).then(() => {
           btn.innerText = "บันทึกการแก้ไข"; btn.disabled = false; closeEditModal(); loadUserData();
         });
     }

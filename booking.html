@@ -12,69 +12,73 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at top, #022c22 0%, #03120e 45%, #000000 100%);
-      color: #f8fafc;
+      /* ธีมสว่าง: พื้นหลังไล่ระดับสีขาวนวลและทองอ่อน */
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+      color: #0f172a;
       min-height: 100vh;
       margin: 0;
     }
-    .pearl-gold-text {
-      background: linear-gradient(135deg, #ffffff 0%, #fef08a 60%, #e2e8f0 100%);
+    /* ข้อความสีทองหรูหราบนพื้นสว่าง */
+    .gold-dark-text {
+      background: linear-gradient(135deg, #854d0e 0%, #a16207 50%, #ca8a04 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .card-emerald-glossy {
-      background: linear-gradient(135deg, rgba(6, 78, 59, 0.45) 0%, rgba(2, 44, 34, 0.75) 100%);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+    /* การ์ดสไตล์เขียวมรกตพรีเมียมบนพื้นสว่าง ขอบทอง */
+    .card-light-emerald {
+      background: #ffffff;
+      border: 1px solid rgba(202, 138, 4, 0.3);
       border-radius: 24px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-    .btn-pearl-emerald {
-      background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
-      color: #022c22;
+    /* ปุ่มพรีเมียมเขียวมรกตตัดทองหรูหรา */
+    .btn-emerald-gold {
+      background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+      color: #fef08a;
       font-weight: 700;
       border-radius: 9999px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(2, 44, 34, 0.25);
       transition: all 0.2s ease;
     }
-    .btn-pearl-emerald:active { transform: scale(0.96); }
-    .text-pearl { color: #f8fafc; }
-    .text-pearl-muted { color: #94a3b8; }
+    .btn-emerald-gold:active { transform: scale(0.96); }
+    
+    .text-dark-main { color: #0f172a; }
+    .text-dark-muted { color: #475569; }
   </style>
 </head>
 <body class="p-5 max-w-md mx-auto flex flex-col pb-12">
 
   <!-- Header -->
   <div class="flex items-center justify-between py-4 mb-2">
-    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-pearl px-4 py-2 rounded-full border border-white/20 bg-black/40 hover:bg-emerald-950/60 transition shadow">⟨ กลับหน้าร้าน</button>
-    <div class="text-sm text-pearl font-bold tracking-wider">วินทร์ทรัพย์นาคราช</div>
+    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-emerald-900 px-4 py-2 rounded-full border border-emerald-900/20 bg-white hover:bg-emerald-50 transition shadow-sm">⟨ กลับหน้าร้าน</button>
+    <div class="text-sm text-emerald-950 font-bold tracking-wider">วินทร์ทรัพย์นาคราช</div>
   </div>
 
   <div class="text-center mb-6">
-    <h1 class="text-2xl font-extrabold pearl-gold-text tracking-wide">ยืนยันการจองคิวดูดวง</h1>
-    <p class="text-xs text-pearl-muted mt-1" id="subtitle-mode">เลือกช่วงเวลาเพื่อรับคำพยากรณ์</p>
+    <h1 class="text-2xl font-extrabold gold-dark-text tracking-wide">ยืนยันการจองคิวดูดวง</h1>
+    <p class="text-xs text-dark-muted mt-1" id="subtitle-mode">เลือกช่วงเวลาเพื่อรับคำพยากรณ์</p>
   </div>
 
-  <!-- กล่องประกาศสถานะจาก Admin (ถ้าปิดรับจอง) -->
-  <div id="admin-notice" class="hidden mb-6 p-4 rounded-2xl bg-zinc-900 border border-red-500/50 text-center text-xs text-red-300 leading-relaxed shadow-xl">
+  <!-- กล่องประกาศสถานะจาก Admin -->
+  <div id="admin-notice" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-center text-xs text-amber-900 leading-relaxed shadow-sm">
     ⚠️ <span id="notice-text">ขณะนี้ปิดรับจองคิวชั่วคราว</span>
   </div>
 
   <!-- แสดงแพ็กเกจที่เลือก -->
   <div id="service-list" class="space-y-4">
-    <div class="text-center py-10 text-pearl-muted animate-pulse text-xs">กำลังโหลดแพ็กเกจที่ท่านเลือก...</div>
+    <div class="text-center py-10 text-dark-muted animate-pulse text-xs">กำลังโหลดแพ็กเกจที่ท่านเลือก...</div>
   </div>
 
-  <!-- Modal เลือกเวลาจอง (เวลา 2 คอลัมน์) -->
-  <div id="booking-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
-    <div class="card-emerald-glossy p-6 w-full max-w-md space-y-4 border border-white/20 shadow-2xl">
-      <div class="flex justify-between items-center border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-pearl" id="modal-service-title">เลือกช่วงเวลานัดหมาย</h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-white text-base px-2">✕</button>
+  <!-- Modal เลือกเวลาจอง (2 คอลัมน์) -->
+  <div id="booking-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div class="bg-white p-6 w-full max-w-md space-y-4 rounded-3xl border border-amber-500/30 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 class="text-sm font-bold text-emerald-950" id="modal-service-title">เลือกช่วงเวลานัดหมาย</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 text-base px-2">✕</button>
       </div>
       
       <div class="space-y-2 text-xs">
-        <label class="block text-pearl-muted font-medium mb-2">รอบเวลาบริการ (สถานะ ว่าง / เต็ม):</label>
+        <label class="block text-dark-muted font-medium mb-2">รอบเวลาบริการ (สถานะ ว่าง / เต็ม):</label>
         <div id="slot-container" class="grid grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-1">
           <div class="text-gray-400 text-center py-4 col-span-2">กำลังตรวจสอบรอบเวลา...</div>
         </div>
@@ -141,28 +145,28 @@
             }
 
             itemsToShow.forEach(item => {
-              const btnStyle = isBookingOpen ? "btn-pearl-emerald cursor-pointer py-3" : "bg-zinc-800 text-zinc-500 cursor-not-allowed opacity-50 py-3";
+              const btnStyle = isBookingOpen ? "btn-emerald-gold cursor-pointer py-3" : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-60 py-3 font-bold rounded-full";
               const btnAction = isBookingOpen ? `onclick="openBookingModal('${item.name}')"` : "";
               
               container.innerHTML += `
-                <div class="card-emerald-glossy p-5 flex flex-col gap-3">
+                <div class="card-light-emerald p-5 flex flex-col gap-3">
                   <div>
-                    <div class="text-base font-bold text-pearl">${item.name}</div>
-                    <div class="text-xs text-pearl-muted mt-1.5 leading-relaxed">${item.desc || 'เปิดดวงพยากรณ์มงคล เจาะลึกเฉพาะประเด็น'}</div>
-                    <div class="text-sm font-extrabold pearl-gold-text mt-3">${item.price > 0 ? item.price.toLocaleString() + ' บาท' : 'บูชาฟรี'}</div>
+                    <div class="text-base font-bold text-emerald-950">${item.name}</div>
+                    <div class="text-xs text-dark-muted mt-1.5 leading-relaxed">${item.desc || 'เปิดดวงพยากรณ์มงคล เจาะลึกเฉพาะประเด็น'}</div>
+                    <div class="text-sm font-extrabold gold-dark-text mt-3">${item.price > 0 ? item.price.toLocaleString() + ' บาท' : 'บูชาฟรี'}</div>
                   </div>
-                  <button ${btnAction} class="${btnStyle} w-full text-xs tracking-wide flex items-center justify-center gap-1 shadow-md">
+                  <button ${btnAction} class="${btnStyle} w-full text-xs tracking-wide flex items-center justify-center gap-1 shadow-sm">
                     ${isBookingOpen ? '🔮 เลือกจองเวลานี้' : '🔒 ปิดรับจองชั่วคราว'}
                   </button>
                 </div>
               `;
             });
           } else {
-            container.innerHTML = `<div class="text-center text-xs text-gray-400 py-10">ไม่พบแพ็กเกจดูดวงในขณะนี้</div>`;
+            container.innerHTML = `<div class="text-center text-xs text-gray-500 py-10">ไม่พบแพ็กเกจดูดวงในขณะนี้</div>`;
           }
         })
         .catch(() => {
-          document.getElementById('service-list').innerHTML = `<div class="text-center text-xs text-red-300 py-10">ไม่สามารถเชื่อมต่อฐานข้อมูลได้</div>`;
+          document.getElementById('service-list').innerHTML = `<div class="text-center text-xs text-red-500 py-10">ไม่สามารถเชื่อมต่อฐานข้อมูลได้</div>`;
         });
     }
 
@@ -180,7 +184,7 @@
 
     function loadTimeSlots() {
       const container = document.getElementById('slot-container');
-      container.innerHTML = `<div class="text-gray-300 text-center py-4 col-span-2 text-xs">กำลังตรวจสอบรอบเวลา...</div>`;
+      container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">กำลังตรวจสอบรอบเวลา...</div>`;
 
       fetch(`${WEB_URL}?action=get_time_slots`)
         .then(r => r.json())
@@ -189,7 +193,7 @@
           const slots = (res && res.slots) ? res.slots : [];
 
           if(slots.length === 0) {
-            container.innerHTML = `<div class="text-gray-400 text-center py-4 col-span-2 text-xs">ไม่พบรอบเวลาเปิดบริการ</div>`;
+            container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">ไม่พบรอบเวลาเปิดบริการ</div>`;
             return;
           }
 
@@ -198,49 +202,58 @@
             
             if (isOpen) {
               container.innerHTML += `
-                <div class="p-2.5 rounded-xl bg-black/40 border border-emerald-500/30 flex flex-col justify-between gap-2">
+                <div class="p-2.5 rounded-2xl bg-emerald-50/60 border border-emerald-600/20 flex flex-col justify-between gap-2 shadow-2xs">
                   <div>
-                    <div class="text-pearl font-bold text-[11px]">⏰ ${slot.time}</div>
-                    <span class="inline-flex items-center gap-1 text-[9px] text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-500/40 mt-1">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ว่าง
+                    <div class="text-emerald-950 font-bold text-[11px]">⏰ ${slot.time}</div>
+                    <span class="inline-flex items-center gap-1 text-[9px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300 mt-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span> ว่าง
                     </span>
                   </div>
-                  <button onclick="confirmSlot('${slot.time}')" class="btn-pearl-emerald w-full py-1.5 text-[11px] shadow">จอง</button>
+                  <button onclick="confirmSlotWithoutPopup('${slot.time}')" class="btn-emerald-gold w-full py-1.5 text-[11px] shadow-sm">จอง</button>
                 </div>
               `;
             } else {
               container.innerHTML += `
-                <div class="p-2.5 rounded-xl bg-zinc-900/60 border border-red-500/20 flex flex-col justify-between gap-2 opacity-60">
+                <div class="p-2.5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-2 opacity-60">
                   <div>
-                    <div class="text-zinc-500 font-bold text-[11px]">⏰ ${slot.time}</div>
-                    <span class="inline-flex items-center gap-1 text-[9px] text-red-400 bg-red-950 px-2 py-0.5 rounded-full border border-red-500/30 mt-1">
+                    <div class="text-gray-400 font-bold text-[11px]">⏰ ${slot.time}</div>
+                    <span class="inline-flex items-center gap-1 text-[9px] text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200 mt-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> เต็มแล้ว
                     </span>
                   </div>
-                  <button disabled class="bg-zinc-800 text-zinc-600 w-full py-1.5 text-[11px] rounded-full cursor-not-allowed">เต็ม</button>
+                  <button disabled class="bg-gray-200 text-gray-400 w-full py-1.5 text-[11px] rounded-full cursor-not-allowed font-medium">เต็ม</button>
                 </div>
               `;
             }
           });
         })
         .catch(() => {
-          container.innerHTML = `<div class="text-red-300 text-center py-4 col-span-2 text-xs">โหลดรอบเวลาไม่สำเร็จ</div>`;
+          container.innerHTML = `<div class="text-red-500 text-center py-4 col-span-2 text-xs">โหลดรอบเวลาไม่สำเร็จ</div>`;
         });
     }
 
-    function confirmSlot(slotTime) {
-      if (confirm(`ยืนยันการจองแพ็กเกจ "${selectedService}" รอบเวลา ${slotTime} ใช่หรือไม่?`)) {
-        fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&slotTime=${encodeURIComponent(slotTime)}`)
-          .then(r => r.json())
-          .then(res => {
-            alert(`✨ ทำการจองคิวสำเร็จ! ระบบบันทึกข้อมูลเรียบร้อยแล้ว กรุณากลับไปที่แชท LINE เพื่อรับใบเสร็จและชำระเงินครับ`);
-            closeModal();
-          })
-          .catch(() => {
-            alert(`✨ บันทึกการจองเรียบร้อยแล้ว`);
-            closeModal();
-          });
+    function confirmSlotWithoutPopup(slotTime) {
+      if (currentUserId === "guest_user") {
+        alert("⚠️ กรุณาเปิดใช้งานผ่านแอปพลิเคชัน LINE ครับ");
+        return;
       }
+
+      closeModal();
+
+      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&slotTime=${encodeURIComponent(slotTime)}`)
+        .then(r => r.json())
+        .then(res => {
+          if (typeof liff !== 'undefined' && liff.isInClient()) {
+            liff.closeWindow();
+          } else {
+            window.location.href = "https://line.me/R/";
+          }
+        })
+        .catch(() => {
+          if (typeof liff !== 'undefined' && liff.isInClient()) {
+            liff.closeWindow();
+          }
+        });
     }
   </script>
 </body>

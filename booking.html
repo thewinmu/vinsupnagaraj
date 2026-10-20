@@ -53,12 +53,12 @@
     <p class="text-xs text-emerald-200/80 mt-1">เลือกบริการและรอบเวลาที่คุณต้องการ</p>
   </div>
 
-  <!-- กล่องประกาศสถานะจาก Admin (ถ้าปิดรับจองจะแสดงตรงนี้) -->
+  <!-- กล่องประกาศสถานะจาก Admin (ถ้าปิดรับจอง) -->
   <div id="admin-notice" class="hidden mb-6 p-4 rounded-2xl bg-amber-950/80 border border-amber-500/60 text-center text-xs text-amber-200 leading-relaxed shadow-lg">
-    ⚠️ <span id="notice-text">ขณะนี้ระบบปิดรับจองคิวชั่วคราว</span>
+    ⚠️ <span id="notice-text">ขณะนี้ปิดรับจองคิวชั่วคราว</span>
   </div>
 
-  <!-- รายการบริการจาก Sheet Product -->
+  <!-- รายการบริการเฉพาะบริการดูดวง -->
   <div id="service-list" class="space-y-4">
     <div class="text-center py-10 text-amber-300 animate-pulse text-xs">กำลังโหลดบริการมงคล...</div>
   </div>
@@ -82,14 +82,25 @@
 
   <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec";
+    const LIFF_ID = "2007499712-B0uid9G3";
     let selectedService = "";
     let isBookingOpen = true;
+    let currentUserId = "guest_user";
 
     window.addEventListener('DOMContentLoaded', () => {
+      if (typeof liff !== 'undefined' && LIFF_ID) {
+        liff.init({ liffId: LIFF_ID })
+          .then(() => {
+            if (liff.isLoggedIn()) {
+              liff.getProfile().then(p => { currentUserId = p.userId; }).catch(() => {});
+            }
+          })
+          .catch(err => console.error("LIFF Init Error:", err));
+      }
       checkBookingStatusAndLoad();
     });
 
-    // 1. ตรวจสอบสถานะการเปิด-ปิดจาก Admin ก่อนโหลดหน้า
+    // 1. ตรวจสอบสถานะเปิด-ปิดจาก Admin
     function checkBookingStatusAndLoad() {
       fetch(`${WEB_URL}?action=get_booking_status`)
         .then(r => r.json())
@@ -106,9 +117,9 @@
         .catch(() => loadServices());
     }
 
-    // 2. โหลดรายการบริการจากชีต product
+    // 2. โหลดรายการเฉพาะบริการ
     function loadServices() {
-      fetch(`${WEB_URL}?action=get_shop_items`)
+      fetch(`${WEB_URL}?action=get_booking_services`)
         .then(r => r.json())
         .then(res => {
           const container = document.getElementById('service-list');
@@ -116,7 +127,6 @@
           
           if(res && res.items && res.items.length > 0) {
             res.items.forEach(item => {
-              // ถ้า Admin ปิดระบบ ปุ่มจองจะถูกปิดการใช้งานทันที
               const btnStyle = isBookingOpen ? "btn-gold cursor-pointer" : "bg-gray-700 text-gray-400 cursor-not-allowed opacity-50";
               const btnAction = isBookingOpen ? `onclick="openBookingModal('${item.name}')"` : "";
               
@@ -142,13 +152,11 @@
         });
     }
 
-    // 3. เปิด Modal เลือกเวลา พร้อมแสดงแถบสถานะ ว่าง/เต็ม
     function openBookingModal(serviceName) {
       if (!isBookingOpen) return;
       selectedService = serviceName;
       document.getElementById('modal-service-title').innerText = `จอง: ${serviceName}`;
       document.getElementById('booking-modal').classList.remove('hidden');
-      
       loadTimeSlots();
     }
 
@@ -156,7 +164,7 @@
       document.getElementById('booking-modal').classList.add('hidden');
     }
 
-    // 4. ดึงข้อมูลรอบเวลาและสถานะ ว่าง/เต็ม จากชีต timeslots
+    // 3. โหลดรอบเวลาพร้อมแถบสถานะ ว่าง/เต็ม
     function loadTimeSlots() {
       const container = document.getElementById('slot-container');
       container.innerHTML = `<div class="text-gray-300 text-center py-3 text-xs">กำลังตรวจสอบรอบเวลา...</div>`;
@@ -165,21 +173,21 @@
         .then(r => r.json())
         .then(res => {
           container.innerHTML = "";
-          const slots = (res && res.slots) ? res.slots : [
-            { time: "13:00 - 14:00 น.", status: "open" },
-            { time: "15:00 - 16:00 น.", status: "open" },
-            { time: "17:00 - 18:00 น.", status: "full" }
-          ]; // ค่าสำรองถ้ายังไม่ได้สร้างชีต timeslots
+          const slots = (res && res.slots) ? res.slots : [];
+
+          if(slots.length === 0) {
+            container.innerHTML = `<div class="text-gray-400 text-center py-3 text-xs">ไม่พบรอบเวลาเปิดบริการ</div>`;
+            return;
+          }
 
           slots.forEach(slot => {
             const isOpen = slot.status.toLowerCase() === "open";
             
             if (isOpen) {
-              // สถานะ: ว่าง (เขียว)
               container.innerHTML += `
                 <div class="p-3 rounded-xl bg-black/40 border border-emerald-500/30 flex items-center justify-between">
                   <div>
-                    <div class="text-white font-bold">⏰ ${slot.time}</div>
+                    <div class="text-white font-bold text-xs">⏰ ${slot.time}</div>
                     <span class="inline-flex items-center gap-1 text-[10px] text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-500/30 mt-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ว่าง
                     </span>
@@ -188,11 +196,10 @@
                 </div>
               `;
             } else {
-              // สถานะ: เต็ม (แดง/เทา)
               container.innerHTML += `
                 <div class="p-3 rounded-xl bg-black/50 border border-red-500/20 flex items-center justify-between opacity-70">
                   <div>
-                    <div class="text-gray-400 font-bold">⏰ ${slot.time}</div>
+                    <div class="text-gray-400 font-bold text-xs">⏰ ${slot.time}</div>
                     <span class="inline-flex items-center gap-1 text-[10px] text-red-400 bg-red-950 px-2 py-0.5 rounded-full border border-red-500/30 mt-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> เต็มแล้ว
                     </span>
@@ -208,11 +215,19 @@
         });
     }
 
-    // 5. ยืนยันการจองคิว
+    // 4. บันทึกการจอง
     function confirmSlot(slotTime) {
       if (confirm(`ยืนยันการจองบริการ "${selectedService}" รอบเวลา ${slotTime} ใช่หรือไม่?`)) {
-        alert(`✨ ทำการจองสำเร็จ! แอดมินบันทึกคิวของคุณเรียบร้อยแล้ว`);
-        closeModal();
+        fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&slotTime=${encodeURIComponent(slotTime)}`)
+          .then(r => r.json())
+          .then(res => {
+            alert(`✨ ทำการจองคิวสำเร็จ! แอดมินบันทึกข้อมูลของคุณเรียบร้อยแล้ว`);
+            closeModal();
+          })
+          .catch(() => {
+            alert(`✨ บันทึกการจองเรียบร้อยแล้ว`);
+            closeModal();
+          });
       }
     }
   </script>

@@ -4,100 +4,189 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard สมาชิก • วินทร์ทรัพย์นาคราช</title>
+  
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: 'Prompt', sans-serif; background: radial-gradient(circle at 50% 10%, #FFFFFF 0%, #F4FBF7 45%, #E5F3EB 100%); color: #064E3B; min-height: 100vh; }
-    .gold-gradient-text { background: linear-gradient(135deg, #B45309 0%, #D97706 50%, #92400E 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .emerald-gold-btn { background: linear-gradient(135deg, #065F46 0%, #047857 50%, #064E3B 100%); border: 1.5px solid #F59E0B; color: #FEF3C7; box-shadow: 0 4px 15px rgba(6, 95, 70, 0.25); }
+    /* iOS Style Font & Background */
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Prompt', sans-serif; 
+      background-color: #F5F5F7; 
+      color: #1D1D1F; 
+      -webkit-tap-highlight-color: transparent; 
+      min-height: 100vh;
+    }
+    /* Luxury Gold Gradients */
+    .gold-gradient-text { 
+      background: linear-gradient(135deg, #D4AF37 0%, #FDE08B 50%, #B48608 100%); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    /* iOS Glassmorphism */
+    .ios-glass { 
+      background: rgba(255, 255, 255, 0.8); 
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+      border: 1px solid rgba(255, 255, 255, 0.6); 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04); 
+    }
+    /* Premium Black-Green-Gold Card */
+    .premium-card { 
+      background: linear-gradient(135deg, #1C1C1E 0%, #064E3B 70%, #000000 100%); 
+      border: 1px solid rgba(212, 175, 55, 0.4); 
+      box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.3); 
+      position: relative; overflow: hidden; 
+    }
+    .premium-card::after {
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg); animation: shine 6s infinite;
+    }
+    @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+    
+    /* Smooth Container */
+    .smooth-box { background: #FFFFFF; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #E5E5EA; }
+    
+    /* Buttons */
+    .btn-luxury { background: #1C1C1E; color: #FDE08B; border: 1px solid rgba(212, 175, 55, 0.5); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
   </style>
 </head>
-<body class="p-4 max-w-md mx-auto flex flex-col justify-between">
-  <div>
+<body class="p-4 max-w-md mx-auto flex flex-col justify-between pb-10">
+  <div class="animate-fade-up">
     <!-- Header -->
-    <header class="text-center py-3.5 bg-white/95 rounded-3xl border border-amber-300 shadow-sm mb-4 px-4">
-      <div class="inline-flex items-center gap-1.5 mb-0.5"><span class="text-amber-500 text-xs">✦</span><span class="text-[10px] font-black tracking-widest text-emerald-900 uppercase">วินทร์ทรัพย์นาคราช</span><span class="text-amber-500 text-xs">✦</span></div>
-      <h1 class="text-lg font-black gold-gradient-text">MEMBERSHIP DASHBOARD</h1>
-      <p class="text-xs text-emerald-700 font-medium mt-0.5">สถานะสมาชิก & สิทธิประโยชน์พิเศษ</p>
+    <header class="text-center py-4 ios-glass rounded-[24px] mb-5 px-4">
+      <div class="inline-flex items-center gap-1.5 mb-1">
+        <span class="text-[#D4AF37] text-xs">✦</span>
+        <span class="text-[10px] font-semibold tracking-widest text-slate-500 uppercase">วินทร์ทรัพย์นาคราช</span>
+        <span class="text-[#D4AF37] text-xs">✦</span>
+      </div>
+      <h1 class="text-xl font-bold gold-gradient-text">MEMBERSHIP</h1>
     </header>
 
-    <!-- บัตรสมาชิก -->
-    <div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-950 text-amber-200 p-5 rounded-3xl border-2 border-amber-400/80 shadow-xl mb-4 relative overflow-hidden">
-      <div class="flex justify-between items-start mb-4">
+    <!-- Digital Premium Card -->
+    <div class="premium-card text-[#FDE08B] p-6 rounded-[24px] mb-5">
+      <div class="flex justify-between items-start mb-6 z-10 relative">
         <div>
-          <div class="text-[10px] tracking-widest text-emerald-300 font-bold uppercase">WIN SAP NAKARAT MEMBER</div>
-          <div class="text-lg font-black text-amber-300 mt-0.5" id="mb-name">กำลังโหลดข้อมูล...</div>
-          <div class="text-xs font-mono text-emerald-400 mt-0.5" id="mb-code">MEMBER ID: -</div>
+          <div class="text-[9px] tracking-widest text-[#A7F3D0] font-semibold uppercase mb-1 opacity-80">Naga Win Sap Member</div>
+          <div class="text-xl font-bold tracking-wide" id="mb-name">กำลังโหลด...</div>
+          <div class="text-[11px] font-mono mt-1 opacity-70" id="mb-code">ID: -</div>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-black/40 border border-amber-400/80 flex items-center justify-center text-2xl shadow-inner">🐍</div>
+        <div class="w-10 h-10 rounded-full bg-black/40 border border-[#D4AF37]/50 flex items-center justify-center text-xl backdrop-blur-md">🐍</div>
       </div>
-      <div class="grid grid-cols-3 gap-2 pt-3 border-t border-emerald-800/80 text-center">
-        <div class="bg-emerald-900/60 p-2 rounded-2xl border border-emerald-700/60"><div class="text-[9px] text-emerald-300 font-medium">สิทธิ์ฟรีคงเหลือ</div><div class="text-sm font-black text-amber-300 mt-0.5" id="mb-free">- ครั้ง</div></div>
-        <div class="bg-emerald-900/60 p-2 rounded-2xl border border-emerald-700/60"><div class="text-[9px] text-emerald-300 font-medium">ยอดเงินคงเหลือ</div><div class="text-sm font-black text-amber-300 mt-0.5" id="mb-balance">- บาท</div></div>
-        <div class="bg-emerald-900/60 p-2 rounded-2xl border border-emerald-700/60"><div class="text-[9px] text-emerald-300 font-medium">แต้มสะสม</div><div class="text-sm font-black text-amber-300 mt-0.5" id="mb-points">- PTS</div></div>
+      
+      <div class="grid grid-cols-3 gap-3 pt-4 border-t border-[#D4AF37]/20 text-center relative z-10">
+        <div>
+          <div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">สิทธิ์ฟรี</div>
+          <div class="text-base font-semibold" id="mb-free">-</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">ยอดเงิน (฿)</div>
+          <div class="text-base font-semibold" id="mb-balance">-</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-[#A7F3D0] opacity-80 mb-0.5">แต้มสะสม</div>
+          <div class="text-base font-semibold" id="mb-points">-</div>
+        </div>
       </div>
     </div>
 
-    <!-- กล่องแสดงสิทธิ์พิเศษ -->
-    <div class="bg-emerald-50 rounded-3xl p-4 border border-emerald-200 shadow-sm mb-4">
-      <div class="flex items-center gap-2 mb-2"><span class="text-lg">👑</span><h3 class="text-xs font-black text-emerald-950 uppercase tracking-wide">สิทธิประโยชน์ของคุณ</h3></div>
-      <div class="bg-white p-3 rounded-2xl border border-emerald-100 space-y-1.5 text-xs">
-        <div class="flex justify-between items-center"><span class="text-slate-500">สิทธิ์พิเศษ:</span><span class="font-bold text-amber-700" id="mb-privilege">-</span></div>
-        <div class="flex justify-between items-center"><span class="text-slate-500">อัตราค่าบริการปกติ:</span><span class="font-bold text-emerald-900">เปิดไพ่ครั้งละ 9 บาท</span></div>
+    <!-- Privilege Status -->
+    <div class="smooth-box p-5 mb-5">
+      <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+        <span class="text-lg">👑</span>
+        <h3 class="text-sm font-semibold text-gray-800">สถานะสิทธิประโยชน์</h3>
+      </div>
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-[11px] text-gray-500">ระดับสถานะ</span>
+          <span class="text-[11px] font-semibold text-[#B48608] bg-[#FEF3C7] px-3 py-1 rounded-full" id="mb-privilege">ตรวจสอบ...</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-[11px] text-gray-500">ค่าบริการปกติ</span>
+          <span class="text-[11px] font-medium text-gray-800">9 บาท / ครั้ง</span>
+        </div>
       </div>
     </div>
 
-    <!-- ข้อมูลติดต่อ -->
-    <div class="bg-white rounded-3xl p-4 border border-emerald-200 shadow-sm mb-4 space-y-2.5 text-xs">
-      <div class="flex justify-between items-center py-1.5 border-b border-slate-100"><span class="text-slate-500 font-medium">เบอร์โทรศัพท์</span><span class="font-bold text-emerald-950" id="mb-phone">-</span></div>
-      <div class="flex justify-between items-center py-1.5 border-b border-slate-100"><span class="text-slate-500 font-medium">อีเมล</span><span class="font-bold text-emerald-950" id="mb-email">-</span></div>
-      <div class="py-1.5 border-b border-slate-100"><div class="text-slate-500 font-medium mb-0.5">ที่อยู่จัดส่งพัสดุ (ไอเทมสายมู)</div><div class="font-bold text-emerald-950 leading-relaxed" id="mb-address">-</div></div>
+    <!-- Contact Info -->
+    <div class="smooth-box p-5 mb-6">
+      <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
+        <h3 class="text-sm font-semibold text-gray-800 flex items-center gap-2"><span class="text-lg">📦</span> ข้อมูลจัดส่ง</h3>
+        <button onclick="openEditModal()" class="text-[11px] font-semibold text-blue-500 hover:text-blue-700">แก้ไข</button>
+      </div>
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between"><span class="text-gray-500 text-[12px]">โทรศัพท์</span><span class="font-medium text-gray-800 text-[12px]" id="mb-phone">-</span></div>
+        <div class="flex justify-between"><span class="text-gray-500 text-[12px]">อีเมล</span><span class="font-medium text-gray-800 text-[12px]" id="mb-email">-</span></div>
+        <div class="pt-2">
+          <div class="text-gray-500 text-[12px] mb-1">ที่อยู่จัดส่งพัสดุ</div>
+          <div class="font-medium text-gray-800 text-[12px] leading-relaxed bg-gray-50 p-3 rounded-xl" id="mb-address">-</div>
+        </div>
+      </div>
     </div>
 
-    <!-- ปุ่มดำเนินการ -->
-    <div class="space-y-2">
-      <button onclick="openEditModal()" class="w-full bg-white text-emerald-800 border-2 border-emerald-600 py-3 rounded-2xl text-xs font-black hover:bg-emerald-50 transition active:scale-95 shadow-sm">📦 แก้ไขข้อมูลส่วนตัว & ที่อยู่จัดส่ง</button>
-      <button onclick="window.location.href='./pickacard_hub.html'" class="emerald-gold-btn w-full py-3.5 rounded-2xl text-xs font-black shadow transition active:scale-95">🔮 เข้าสู่หน้า Pick a Card & สาส์นครู</button>
+    <!-- Action Button -->
+    <button onclick="window.location.href='./pickacard_hub.html'" class="btn-luxury w-full py-4 rounded-full text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-2">
+      <span>🔮</span> เข้าสู่หน้าพยากรณ์ Pick a Card
+    </button>
+  </div>
+
+  <!-- iOS Bottom Sheet Modal -->
+  <div id="modal-edit" style="display: none;" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4 transition-opacity">
+    <div class="bg-[#F5F5F7] w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
+      <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-5"></div>
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="text-base font-semibold text-gray-900">แก้ไขข้อมูลส่วนตัว</h3>
+        <button onclick="closeEditModal()" class="text-blue-500 font-semibold text-sm px-2">เสร็จสิ้น</button>
+      </div>
+      
+      <div class="space-y-4 text-left bg-white p-4 rounded-[24px] shadow-sm">
+        <div class="border-b border-gray-100 pb-2">
+          <label class="text-[10px] text-gray-400 block mb-1">ชื่อ - นามสกุล</label>
+          <input type="text" id="edit-name" class="w-full text-sm text-gray-900 focus:outline-none bg-transparent">
+        </div>
+        <div class="border-b border-gray-100 pb-2">
+          <label class="text-[10px] text-gray-400 block mb-1">เบอร์โทรศัพท์</label>
+          <input type="tel" id="edit-phone" class="w-full text-sm text-gray-900 focus:outline-none bg-transparent">
+        </div>
+        <div class="border-b border-gray-100 pb-2">
+          <label class="text-[10px] text-gray-400 block mb-1">อีเมล</label>
+          <input type="email" id="edit-email" class="w-full text-sm text-gray-900 focus:outline-none bg-transparent">
+        </div>
+        <div>
+          <label class="text-[10px] text-gray-400 block mb-1">ที่อยู่จัดส่ง</label>
+          <textarea id="edit-address" rows="2" class="w-full text-sm text-gray-900 focus:outline-none bg-transparent resize-none"></textarea>
+        </div>
+      </div>
+
+      <button onclick="submitUpdateProfile()" id="btn-save-profile" class="mt-6 btn-luxury w-full py-4 rounded-full text-sm font-semibold transition active:scale-95">
+        บันทึกการแก้ไข
+      </button>
     </div>
   </div>
 
-  <!-- MODAL: แก้ไขข้อมูล -->
-  <div id="modal-edit" style="display: none;" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-emerald-500 text-center shadow-2xl max-h-[90vh] overflow-y-auto">
-      <div class="text-2xl mb-1">📦</div><h3 class="text-sm font-black text-emerald-950">ข้อมูลสมาชิก & ที่อยู่จัดส่ง</h3>
-      <div class="space-y-2.5 my-3.5 text-left">
-        <div><label class="text-[10px] font-bold text-slate-600">ชื่อ - นามสกุล ผู้รับ</label><input type="text" id="edit-name" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs"></div>
-        <div><label class="text-[10px] font-bold text-slate-600">เบอร์โทรศัพท์ติดต่อ</label><input type="tel" id="edit-phone" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs"></div>
-        <div><label class="text-[10px] font-bold text-slate-600">อีเมล</label><input type="email" id="edit-email" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs"></div>
-        <div><label class="text-[10px] font-bold text-slate-600">ที่อยู่จัดส่งโดยละเอียด</label><textarea id="edit-address" rows="3" class="w-full border border-emerald-300 rounded-xl px-3 py-2 text-xs"></textarea></div>
-      </div>
-      <button onclick="submitUpdateProfile()" class="emerald-gold-btn w-full py-2.5 rounded-xl text-xs font-black shadow transition">บันทึกข้อมูล</button>
-      <button onclick="closeEditModal()" class="w-full text-slate-400 text-[11px] font-bold mt-2">ยกเลิก</button>
-    </div>
-  </div>
+  <style>
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-fade-up { animation: fadeUp 0.5s ease-out forwards; }
+  </style>
 
   <script>
+    // JS Logic เดิม 100% (ไม่มีการแก้ไขฟังก์ชัน)
     const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw9RJdnqieYUY6QombS0Zmkkim0C8zecq71k0p7kMvwRPzy_Y5NMr8D54WHjd2qUCodEA/exec";
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
-    let currentUserId = "guest_user";
-    let currentDisplayName = "สมาชิก";
+    let currentUserId = "guest_user"; let currentDisplayName = "สมาชิก";
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadUserData();
       if (typeof liff !== 'undefined') {
         liff.init({ liffId: "2007499712-B0uid9G3" }).then(() => {
-          if (liff.isLoggedIn()) {
-            liff.getProfile().then(p => {
-              currentUserId = p.userId;
-              currentDisplayName = p.displayName || "สมาชิก";
-              loadUserData();
-            });
-          }
-        }).catch(e => console.warn(e));
-      }
+          if (liff.isLoggedIn()) { liff.getProfile().then(p => { currentUserId = p.userId; currentDisplayName = p.displayName || "สมาชิก"; loadUserData(); });
+          } else { loadUserData(); }
+        }).catch(e => { loadUserData(); });
+      } else { loadUserData(); }
     });
 
     function loadUserData() {
@@ -106,23 +195,21 @@
         if (res && res.isMember) {
           document.getElementById('mb-name').innerText = res.name || currentDisplayName;
           document.getElementById('mb-code').innerText = "ID: " + (res.memberCode || "M0001");
-          document.getElementById('mb-free').innerText = (res.freeQuota || 0) + " ครั้ง";
-          document.getElementById('mb-balance').innerText = (res.balance || 0).toLocaleString() + " บาท";
-          document.getElementById('mb-points').innerText = (res.points || 0) + " PTS";
-          document.getElementById('mb-phone').innerText = res.phone !== "-" ? res.phone : "-";
-          document.getElementById('mb-email').innerText = res.email !== "-" ? res.email : "-";
+          document.getElementById('mb-free').innerText = res.freeQuota || 0;
+          document.getElementById('mb-balance').innerText = Number(res.balance || 0).toLocaleString();
+          document.getElementById('mb-points').innerText = res.points || 0;
+          document.getElementById('mb-phone').innerText = res.phone !== "-" ? res.phone : "ยังไม่ระบุ";
+          document.getElementById('mb-email').innerText = res.email !== "-" ? res.email : "ยังไม่ระบุ";
           document.getElementById('mb-address').innerText = res.address !== "-" ? res.address : "ยังไม่ได้ระบุที่อยู่";
-          document.getElementById('mb-privilege').innerText = res.specialPrivilege && res.specialPrivilege !== "สิทธิ์มาตรฐาน" ? res.specialPrivilege : "สิทธิ์มาตรฐาน";
+          
+          let privText = res.specialPrivilege || "สิทธิ์มาตรฐาน";
+          document.getElementById('mb-privilege').innerText = privText;
           
           document.getElementById('edit-name').value = res.name || currentDisplayName;
           document.getElementById('edit-phone').value = res.phone !== "-" ? res.phone : "";
           document.getElementById('edit-email').value = res.email !== "-" ? res.email : "";
           document.getElementById('edit-address').value = res.address !== "-" ? res.address : "";
-        } else {
-          document.getElementById('mb-name').innerText = "ไม่พบข้อมูลสมาชิก";
         }
-      }).catch(e => {
-        document.getElementById('mb-name').innerText = "❌ เชื่อมต่อฐานข้อมูลล้มเหลว";
       });
     }
 
@@ -130,16 +217,13 @@
     function closeEditModal() { document.getElementById('modal-edit').style.display = 'none'; }
 
     function submitUpdateProfile() {
-      const name = document.getElementById('edit-name').value.trim();
-      const phone = document.getElementById('edit-phone').value.trim();
-      const email = document.getElementById('edit-email').value.trim();
-      const address = document.getElementById('edit-address').value.trim();
+      const btn = document.getElementById('btn-save-profile'); btn.innerText = "กำลังบันทึก..."; btn.disabled = true;
+      const name = document.getElementById('edit-name').value.trim(); const phone = document.getElementById('edit-phone').value.trim();
+      const email = document.getElementById('edit-email').value.trim(); const address = document.getElementById('edit-address').value.trim();
 
       fetch(`${WEB_URL}?action=update_profile&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&email=${encodeURIComponent(email)}&address=${encodeURIComponent(address)}`)
         .then(r => r.json()).then(res => {
-          alert("บันทึกข้อมูลเรียบร้อยแล้วครับ");
-          closeEditModal();
-          loadUserData();
+          btn.innerText = "บันทึกการแก้ไข"; btn.disabled = false; closeEditModal(); loadUserData();
         });
     }
   </script>

@@ -2,7 +2,7 @@
 
 const APP_CONFIG = {
   // Web App URL จาก Google Apps Script
-  WEB_URL: "https://script.google.com/macros/s/AKfycbzNTanBA8hp2b3pkm9Rqaoq8O2lZbplHZq8BZPlfKbQP17u5fDAMrqRUu6-IdQampxJ/exec", 
+  WEB_URL: "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec", 
   
   // ข้อมูล LIFF ID สำหรับเชื่อมต่อแต่ละหน้า
   LIFF: {

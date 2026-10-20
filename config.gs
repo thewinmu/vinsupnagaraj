@@ -4,7 +4,7 @@
  */
 const APP_CONFIG = {
   // 🌐 Web App Script URL ล่าสุดของ Google Apps Script
-  WEB_URL: "https://script.google.com/macros/s/AKfycbxDGA6RTxqT5QAbeIlSrWj4Wmxa1qwWb4jYWHJ9tao67mdpWhjt_OnThxbHlLwCmBjAbw/exec",
+  WEB_URL: "https://script.google.com/macros/s/AKfycbxHiLwX4OE2yOJyohq5nERDV0gcUXUEEiXoHgy2SvA6cbsSvQV4Z6PESy8ykvlUwwSz/exec",
 
   // 📱 รายการ LIFF ID ทั้งหมดตามโมดูล
   LIFF: {

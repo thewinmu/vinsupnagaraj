@@ -165,7 +165,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof liff !== 'undefined') {
-        liff.init({ liffId: "2007499712-J15McRGz" }).then(() => {
+        liff.init({ liffId: "2007499712-O7LXXVaY" }).then(() => {
           if (liff.isLoggedIn()) { 
             liff.getProfile().then(p => { currentUserId = p.userId; checkMembership(); }); 
           } else { checkMembership(); }
@@ -207,8 +207,13 @@
           } else {
             btn.innerText = "✨ กดเพื่อสมัครสมาชิกฟรี";
             btn.disabled = false;
-            alert("⚠️ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+            alert("⚠️ " + (res.message || "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"));
           }
+        })
+        .catch(err => {
+          btn.innerText = "✨ กดเพื่อสมัครสมาชิกฟรี";
+          btn.disabled = false;
+          alert("⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ");
         });
     }
 

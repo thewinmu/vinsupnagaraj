@@ -173,13 +173,11 @@
       <p id="sub-title" class="text-xs text-emerald-700 font-medium mt-0.5">เปิดญาณพยากรณ์ • ครั้งละ 9 บาท (ฟรี 5 ครั้งแรก)</p>
     </header>
 
-    <!-- แถบแสดงสถานะสมาชิก & กระเป๋าเงิน (เชื่อมโยงชีต member แสดงผลที่ memberships) -->
+    <!-- แถบแสดงสถานะสมาชิก & กระเป๋าเงิน (ชีต member) -->
     <div id="user-status-bar" class="mb-4 bg-emerald-950 text-amber-200 p-3.5 rounded-3xl border border-amber-400/80 shadow-lg">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-full bg-emerald-900 border border-amber-400 flex items-center justify-center text-lg">
-            👑
-          </div>
+          <div class="w-9 h-9 rounded-full bg-emerald-900 border border-amber-400 flex items-center justify-center text-lg">👑</div>
           <div>
             <div class="font-extrabold text-xs text-amber-300" id="bar-name">กำลังเข้าสู่ระบบ...</div>
             <div class="text-[10px] text-emerald-300 font-mono" id="bar-code">MEMBER ID: -</div>
@@ -195,7 +193,6 @@
         </div>
       </div>
 
-      <!-- สรุปสิทธิ์ฟรีคงเหลือ / ยอดเงินคงเหลือ / แต้มสะสม -->
       <div class="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-emerald-900/80 text-center">
         <div class="bg-emerald-900/40 p-1.5 rounded-xl border border-emerald-800">
           <div class="text-[9px] text-emerald-400 font-medium">สิทธิ์ฟรีคงเหลือ</div>
@@ -214,7 +211,7 @@
 
     <!-- STEP 1: หน้าเลือกหมวดหมู่ -->
     <div id="view-categories" class="space-y-3">
-      <!-- 🌟 สาส์นครู (เด่น ขลัง สง่างาม) -->
+      <!-- 🌟 สาส์นครู -->
       <button onclick="pickCategory('สาส์นครู', true)" class="sacred-guru-card w-full p-4 rounded-3xl flex items-center justify-between text-left transition active:scale-98">
         <div class="flex items-center gap-3.5 z-10">
           <div class="w-14 h-14 rounded-2xl bg-black/50 border border-amber-400/80 flex items-center justify-center text-3xl shadow-inner">🐍</div>
@@ -229,9 +226,7 @@
         <div class="text-amber-400 font-black text-xl pr-1 z-10">➔</div>
       </button>
 
-      <div class="text-center text-xs font-bold text-emerald-900 pt-1">
-        หรือเลือกหมวดหมู่ Pick a Card ทั่วไป:
-      </div>
+      <div class="text-center text-xs font-bold text-emerald-900 pt-1">หรือเลือกหมวดหมู่ Pick a Card ทั่วไป:</div>
 
       <div class="grid grid-cols-2 gap-2.5">
         <button onclick="pickCategory('การงาน', false)" class="luxury-card p-3.5 rounded-3xl flex flex-col items-center text-center transition active:scale-95">
@@ -321,7 +316,7 @@
                 <span class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">สาร์นปู่</span>
               </div>
               <div class="w-full flex-1 rounded-2xl overflow-hidden border-2 border-amber-400 bg-emerald-950 flex items-center justify-center shadow-lg relative my-1">
-                <img id="res-guru-img" src="" alt="ภาพสาส์นครู" class="w-full h-full object-contain" style="display: none;" onload="this.style.display='block'; document.getElementById('res-guru-loader').style.display='none';">
+                <img id="res-guru-img" src="" alt="ภาพสาส์นครู" class="w-full h-full object-contain" style="display: none;">
                 <div id="res-guru-loader" class="text-center text-amber-300 text-xs font-bold p-4">
                   <div class="text-4xl mb-2 animate-bounce">🐍</div>
                   กำลังอัญเชิญภาพสาส์นครู...
@@ -340,7 +335,7 @@
                 <h2 id="res-title" class="text-sm font-black text-emerald-950 mb-1 leading-snug border-b border-emerald-100 pb-1">-</h2>
                 <div class="text-xs text-slate-800 font-medium leading-relaxed mb-2" id="res-meaning">กำลังอ่านคำทำนาย...</div>
 
-                <!-- กล่องถอดรหัส AI ญาณพยากรณ์ 150-200 ตัวอักษร -->
+                <!-- กล่อง AI ญาณพยากรณ์ 150-200 ตัวอักษร -->
                 <div class="bg-gradient-to-br from-emerald-50 to-amber-50/50 p-2.5 rounded-xl border border-amber-300/80 mt-2">
                   <div class="flex items-center gap-1.5 text-[10px] font-black text-amber-800 mb-1">
                     <span>✨</span> <span>ถอดรหัสญาณพยากรณ์ AI (เชิงลึก):</span>
@@ -397,63 +392,76 @@
         <button onclick="closeMembershipDetailModal(); openTopupModal();" class="emerald-gold-btn w-full py-2.5 rounded-xl text-xs font-black shadow transition">
           💳 เติมเงินเพื่อรับแต้ม & สิทธิ์ฟรี
         </button>
-        <button onclick="closeMembershipDetailModal()" class="w-full text-slate-400 text-[11px] font-bold py-1">
-          ปิดหน้าต่าง
-        </button>
+        <button onclick="closeMembershipDetailModal()" class="w-full text-slate-400 text-[11px] font-bold py-1">ปิดหน้าต่าง</button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== MODAL 2: หน้าจอเติมเงิน WALLET (10-500 บาท) ==================== -->
+  <!-- ==================== MODAL 2: แนบสลิปเติมเงิน SlipOK (15 นาที) ==================== -->
   <div id="modal-topup" style="display: none;" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-amber-400 text-center shadow-2xl">
+    <div class="bg-white rounded-3xl p-5 w-full max-w-sm border-2 border-amber-400 text-center shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center pb-2 border-b border-amber-200 mb-3 text-left">
         <div>
           <h3 class="text-sm font-black text-emerald-950">เติมเงินระบบ Pick a Card</h3>
-          <p class="text-[10px] text-amber-800 font-bold">ทุก 20 บาท = รับแต้มสะสม 1 Point 🌟</p>
+          <p class="text-[10px] text-amber-800 font-bold">ทุก 20 บาท = รับ 1 Point 🌟 (โอนภายใน 15 นาที)</p>
         </div>
         <button onclick="closeTopupModal()" class="text-slate-400 text-sm font-bold">✕</button>
       </div>
 
-      <div class="grid grid-cols-3 gap-2 my-3">
-        <button onclick="selectTopupAmount(10, 0)" class="border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
+      <!-- ปุ่มเลือกยอดเงิน -->
+      <div class="grid grid-cols-3 gap-2 my-2">
+        <button type="button" onclick="selectTopupAmount(10, 0, this)" class="topup-btn border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
           <div class="text-xs font-black text-emerald-950">10 บาท</div>
-          <div class="text-[8px] text-slate-500 mt-0.5">ขั้นต่ำระบบ</div>
+          <div class="text-[8px] text-slate-500 mt-0.5">ขั้นต่ำ</div>
         </button>
-        <button onclick="selectTopupAmount(20, 1)" class="border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
+        <button type="button" onclick="selectTopupAmount(20, 1, this)" class="topup-btn border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
           <div class="text-xs font-black text-emerald-950">20 บาท</div>
           <div class="text-[8px] text-amber-700 font-bold mt-0.5">+1 Point</div>
         </button>
-        <button onclick="selectTopupAmount(50, 2)" class="border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
+        <button type="button" onclick="selectTopupAmount(50, 2, this)" class="topup-btn border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
           <div class="text-xs font-black text-emerald-950">50 บาท</div>
           <div class="text-[8px] text-amber-700 font-bold mt-0.5">+2 Points</div>
         </button>
-        <button onclick="selectTopupAmount(100, 5)" class="border-2 border-amber-400 p-2 rounded-2xl text-center active:scale-95 transition bg-amber-50/60 relative">
+        <button type="button" onclick="selectTopupAmount(100, 5, this)" class="topup-btn border-2 border-amber-400 p-2 rounded-2xl text-center active:scale-95 transition bg-amber-50/60 relative ring-2 ring-amber-400">
           <span class="absolute -top-1.5 -right-1 bg-rose-500 text-white text-[7px] font-black px-1 rounded-full">ฟรี 1 ด.</span>
           <div class="text-xs font-black text-emerald-950">100 บาท</div>
           <div class="text-[8px] text-amber-800 font-bold mt-0.5">+5 Points</div>
         </button>
-        <button onclick="selectTopupAmount(300, 15)" class="border-2 border-amber-400 p-2 rounded-2xl text-center active:scale-95 transition bg-amber-50/60 relative">
+        <button type="button" onclick="selectTopupAmount(300, 15, this)" class="topup-btn border-2 border-amber-400 p-2 rounded-2xl text-center active:scale-95 transition bg-amber-50/60 relative">
           <span class="absolute -top-1.5 -right-1 bg-rose-500 text-white text-[7px] font-black px-1 rounded-full">ฟรี 3 ด.</span>
           <div class="text-xs font-black text-emerald-950">300 บาท</div>
           <div class="text-[8px] text-amber-800 font-bold mt-0.5">+15 Points</div>
         </button>
-        <button onclick="selectTopupAmount(500, 25)" class="border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
+        <button type="button" onclick="selectTopupAmount(500, 25, this)" class="topup-btn border-2 border-emerald-200 p-2 rounded-2xl text-center active:scale-95 transition bg-slate-50">
           <div class="text-xs font-black text-emerald-950">500 บาท</div>
           <div class="text-[8px] text-amber-700 font-bold mt-0.5">+25 Points</div>
         </button>
       </div>
 
-      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 mb-3 text-center">
+      <!-- บัญชีโอนเงิน -->
+      <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200 mb-2.5 text-center">
         <div class="text-[10px] text-slate-500 font-bold">ธนาคารกสิกรไทย</div>
         <div class="text-base font-black text-emerald-900 tracking-wider">2251495656</div>
         <div class="text-[9px] text-slate-600 font-medium">ชื่อบัญชี: พีระดิษฐ์ กิตติเขมานนท์</div>
+        <button type="button" onclick="copyBankAcc()" class="mt-1 text-[10px] text-emerald-700 underline font-bold">📋 คัดลอกเลขบัญชี</button>
         <div class="mt-1 text-[11px] font-black text-amber-800" id="topup-selected-text">ยอดที่เลือก: 100 บาท (+5 Points)</div>
       </div>
 
-      <button onclick="copyBankAcc()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-800 py-2 rounded-xl text-xs font-bold mb-2 transition">📋 คัดลอกเลขที่บัญชี</button>
-      <button onclick="window.location.href='https://line.me/R/ti/p/@thewinmu'" class="emerald-gold-btn w-full py-2.5 rounded-xl text-xs font-black shadow">ส่งสลิปแจ้งเติมเงินใน LINE OA</button>
-      <button onclick="closeTopupModal()" class="w-full text-slate-400 text-[11px] font-bold mt-2.5">ปิด</button>
+      <!-- ฟอร์มแนบรูปสลิป -->
+      <div class="border-2 border-dashed border-emerald-300 rounded-2xl p-3 bg-emerald-50/40 mb-3 text-left">
+        <label class="block text-[10px] font-bold text-emerald-900 mb-1">
+          📷 แนบรูปภาพสลิปโอนเงิน (ทำรายการไม่เกิน 15 นาที):
+        </label>
+        <input type="file" id="topup-slip-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:bg-emerald-700 file:text-white hover:file:bg-emerald-800 cursor-pointer">
+        <div id="slip-preview-box" style="display: none;" class="mt-2 text-center">
+          <img id="slip-preview-img" src="" class="h-28 mx-auto rounded-lg border border-emerald-200 object-contain shadow-sm">
+        </div>
+      </div>
+
+      <button id="btn-submit-slip" onclick="submitTopupSlip()" class="emerald-gold-btn w-full py-3 rounded-xl text-xs font-black shadow transition">
+        ⚡ ยืนยันการเติมเงินและตรวจสอบสลิป
+      </button>
+      <button type="button" onclick="closeTopupModal()" class="w-full text-slate-400 text-[11px] font-bold mt-2">ยกเลิก</button>
     </div>
   </div>
 
@@ -469,8 +477,28 @@
     let selectedCat = "";
     let isGuruMode = false;
     let cardsData = [];
+    let selectedTopupAmount = 100;
+    let currentSlipBase64 = "";
 
     window.addEventListener('DOMContentLoaded', () => {
+      // ตรวจจับการเลือกไฟล์สลิป
+      const slipInput = document.getElementById('topup-slip-input');
+      if (slipInput) {
+        slipInput.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              currentSlipBase64 = evt.target.result;
+              document.getElementById('slip-preview-img').src = currentSlipBase64;
+              document.getElementById('slip-preview-box').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // LIFF Init
       if (typeof liff !== 'undefined') {
         liff.init({ liffId: "2007499712-O7LXXVaY" }).then(() => {
           if (liff.isLoggedIn()) {
@@ -488,7 +516,7 @@
       }
     });
 
-    // Zero-Click Auto Login บันทึกตรงเข้าชีต member
+    // Zero-Click Login บันทึกตรงเข้าชีต member
     function autoSilentRegister() {
       userData.name = currentDisplayName;
       updateStatusBar();
@@ -543,10 +571,57 @@
       alert("คัดลอกเลขที่บัญชี 2251495656 เรียบร้อยแล้วครับ");
     }
 
-    let selectedAmount = 100;
-    function selectTopupAmount(amt, pts) {
-      selectedAmount = amt;
+    function selectTopupAmount(amt, pts, btnElem) {
+      selectedTopupAmount = amt;
+      document.querySelectorAll('.topup-btn').forEach(b => b.classList.remove('ring-2', 'ring-amber-400'));
+      if (btnElem) btnElem.classList.add('ring-2', 'ring-amber-400');
       document.getElementById('topup-selected-text').innerText = `ยอดที่เลือก: ${amt} บาท (+${pts} Points)`;
+    }
+
+    // ฟังก์ชันส่งสลิปไปตรวจสอบที่ Apps Script ผ่าน SlipOK (จำกัด 15 นาที)
+    function submitTopupSlip() {
+      if (!currentSlipBase64) {
+        alert("กรุณาเลือกไฟล์รูปภาพสลิปก่อนกดยืนยันครับ");
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit-slip');
+      btn.innerText = "กำลังตรวจสอบสลิปผ่าน SlipOK...";
+      btn.disabled = true;
+
+      const payload = {
+        action: "verify_topup_slip",
+        userId: currentUserId,
+        amount: selectedTopupAmount,
+        slipBase64: currentSlipBase64
+      };
+
+      fetch(WEB_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          alert("✅ " + res.message);
+          closeTopupModal();
+          currentSlipBase64 = "";
+          document.getElementById('topup-slip-input').value = "";
+          document.getElementById('slip-preview-box').style.display = "none";
+          checkUserQuota();
+        } else {
+          alert("❌ " + res.message);
+        }
+      })
+      .catch(err => {
+        console.error("Topup error:", err);
+        alert("เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
+      })
+      .finally(() => {
+        btn.innerText = "⚡ ยืนยันการเติมเงินและตรวจสอบสลิป";
+        btn.disabled = false;
+      });
     }
 
     function pickCategory(catName, isGuru) {
@@ -626,6 +701,7 @@
       }
     }
 
+    // ระบบ AI สังเคราะห์คำทำนายเจาะลึก 150-200 ตัวอักษร
     function generateAIInterpretation(cardName, category, baseMeaning) {
       const templates = [
         `ญาณแห่ง${cardName}ในหมวด${category}ชี้ชัดว่า ช่วงนี้พลังงานรอบตัวกำลังเปิดรับโอกาสสำคัญ ขอให้คุณตั้งจิตให้มั่นคง ละทิ้งความลังเล แล้วลงมือทำอย่างมีสติ ปาฏิหาริย์และสิ่งศักดิ์สิทธิ์พร้อมหนุนนำให้ก้าวสู่ความสำเร็จที่ปรารถนาอย่างงดงาม`,
@@ -661,7 +737,21 @@
         const guruLdr = document.getElementById('res-guru-loader');
         guruImg.style.display = 'none';
         guruLdr.style.display = 'block';
-        guruImg.src = card.imageUrl || "https://drive.google.com/thumbnail?id=16SSHTmxmWyIiSCrwCNLlZkBl6ALGGEc2&sz=w1000";
+
+        guruImg.onload = function() {
+          guruImg.style.display = 'block';
+          guruLdr.style.display = 'none';
+        };
+
+        guruImg.onerror = function() {
+          if (card.fallbackUrl && guruImg.src !== card.fallbackUrl) {
+            guruImg.src = card.fallbackUrl;
+          } else {
+            guruLdr.innerHTML = `<div class="text-xs text-amber-300 font-bold p-4">บารมีครูอาจารย์คุ้มครอง<br>(ภาพกำลังประมวลผล)</div>`;
+          }
+        };
+
+        guruImg.src = card.imageUrl;
       } else {
         modeImgOnly.style.display = 'none';
         modeTextCard.style.display = 'flex';

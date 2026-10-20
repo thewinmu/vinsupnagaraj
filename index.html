@@ -2,152 +2,148 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วินทร์ทรัพย์นาคราช - หน้าร้านสายมู & พยากรณ์</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>วินทร์ทรัพย์นาคราช</title>
+  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #FAFAFA; color: #111; min-height: 100vh; }
+    .card-box { background: #FFFFFF; border: 1px solid #E5E5EA; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    .btn-dark { background: #111; color: #FDE08B; border-radius: 9999px; transition: opacity 0.2s; }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
-  
-  <!-- Header Navbar -->
-  <header class="bg-blue-950 border-b border-blue-900 p-4 text-center sticky top-0 z-50 shadow-md">
-    <h1 class="text-xl font-bold text-amber-400">✨ วินทร์ทรัพย์นาคราช ✨</h1>
-    <p id="user-welcome" class="text-xs text-blue-200 mt-1">กำลังเชื่อมต่อระบบสมาชิก LINE...</p>
-  </header>
+<body class="p-5 max-w-md mx-auto flex flex-col justify-between pb-10">
 
-  <!-- Main Container -->
-  <main class="max-w-md mx-auto p-4 pb-20">
-    
-    <!-- Tab Navigation -->
-    <div class="flex bg-slate-800 rounded-xl p-1 mb-4 border border-slate-700">
-      <button onclick="switchTab('shop')" id="btn-shop" class="flex-1 py-2 text-xs font-bold rounded-lg bg-blue-950 text-amber-400 transition">🛒 ร้านค้ามงคล</button>
-      <button onclick="switchTab('wallpapers')" id="btn-wallpapers" class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition">📱 วอลเปเปอร์</button>
-      <button onclick="switchTab('profile')" id="btn-profile" class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition">👤 สมาชิก</button>
+  <div>
+    <div class="text-center py-6">
+      <div class="text-2xl mb-1">🐍</div>
+      <h1 class="text-lg font-semibold tracking-wider text-gray-900">วินทร์ทรัพย์นาคราช</h1>
+      <p class="text-xs text-gray-400 mt-0.5" id="user-status-text">กำลังตรวจสอบข้อมูล LINE...</p>
     </div>
 
-    <!-- TAB 1: Shop & Services -->
-    <div id="tab-shop" class="space-y-3">
-      <div class="bg-gradient-to-r from-amber-600 to-amber-800 p-4 rounded-xl shadow-lg text-white">
-        <h2 class="font-bold text-sm">🔥 โปรโมชันฉลองเปิดตัว</h2>
-        <p class="text-xs mt-1 text-amber-100">ลดราคาพิเศษสำหรับสินค้าและพิธีกรรมมงคล ด่วน! มีจำนวนจำกัด</p>
-      </div>
-      <div id="product-list" class="grid grid-cols-1 gap-3">
-        <div class="text-center py-10 text-slate-400 text-xs">กำลังโหลดรายการสินค้า...</div>
-      </div>
-    </div>
-
-    <!-- TAB 2: Wallpapers -->
-    <div id="tab-wallpapers" class="hidden space-y-3">
-      <div class="bg-purple-950 border border-purple-800 p-4 rounded-xl text-center">
-        <h2 class="font-bold text-sm text-purple-200">✨ วอลเปเปอร์เสริมดวงพญานาคราช</h2>
-        <p class="text-xs text-purple-300 mt-1">รับฟรี! สำหรับสมาชิก หรือเลือกบูชาแบบพรีเมียม</p>
-        <button onclick="claimFreeWallpaper()" class="mt-3 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-4 py-2 rounded-lg shadow">🎁 กดรับวอลเปเปอร์ฟรีเข้า LINE</button>
-      </div>
-    </div>
-
-    <!-- TAB 3: Member Profile -->
-    <div id="tab-profile" class="hidden space-y-3">
-      <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl space-y-2">
-        <h2 class="text-sm font-bold text-amber-400 border-b border-slate-700 pb-2">💳 ข้อมูลสมาชิก</h2>
-        <div id="member-info" class="text-xs space-y-1 text-slate-300">
-          <p>กำลังโหลดข้อมูลสมาชิก...</p>
+    <!-- ส่วนสถานะสมาชิก (แสดงอัตโนมัติเมื่อล็อกอินผ่าน LINE สำเร็จ) -->
+    <div id="section-member" class="card-box p-5 mb-4 hidden">
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="text-xs text-gray-400" id="welcome-name">ยินดีต้อนรับ</div>
+          <div class="text-sm font-semibold text-gray-900" id="m-code">รหัส: -</div>
         </div>
-        <button onclick="openUpdateChat()" class="w-full mt-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold py-2 rounded-lg">⚙️ อัปเดตข้อมูล / เติมเงิน</button>
+        <div class="text-right">
+          <div class="text-xs text-gray-400">สิทธิ์ฟรีคงเหลือ</div>
+          <div class="text-sm font-semibold text-emerald-600" id="m-free">- ครั้ง</div>
+        </div>
       </div>
     </div>
 
-  </main>
+    <!-- เมนูพยากรณ์ -->
+    <div id="section-hub" class="space-y-3 hidden">
+      <div class="text-xs font-medium text-gray-400 px-1 mb-2">เลือกหัวข้อเสี่ยงทาย</div>
+      <button onclick="pickCard('สาส์นครู')" class="card-box w-full p-4 flex items-center justify-between text-left">
+        <div class="flex items-center gap-3"><span class="text-xl">🐍</span><span class="text-xs font-medium text-gray-800">สาส์นครู • สาร์นปู่</span></div>
+        <span class="text-gray-300">›</span>
+      </button>
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="pickCard('การงาน')" class="card-box p-4 text-center"><div class="text-xl mb-1">💼</div><span class="text-xs font-medium text-gray-800">การงาน</span></button>
+        <button onclick="pickCard('การเงิน')" class="card-box p-4 text-center"><div class="text-xl mb-1">💰</div><span class="text-xs font-medium text-gray-800">การเงิน</span></button>
+        <button onclick="pickCard('ความรัก')" class="card-box p-4 text-center"><div class="text-xl mb-1">❤️</div><span class="text-xs font-medium text-gray-800">ความรัก</span></button>
+        <button onclick="pickCard('สุขภาพ')" class="card-box p-4 text-center"><div class="text-xl mb-1">🌿</div><span class="text-xs font-medium text-gray-800">สุขภาพ</span></button>
+      </div>
+    </div>
 
-  <!-- Script Logic -->
+    <!-- ผลคำทำนาย -->
+    <div id="section-result" class="card-box p-6 text-center hidden space-y-4">
+      <div class="text-3xl">🎴</div>
+      <div>
+        <div class="text-[10px] text-gray-400 uppercase tracking-widest mb-1" id="res-cat">หมวด</div>
+        <h2 class="text-sm font-semibold text-gray-900" id="res-title">คำทำนายของคุณ</h2>
+      </div>
+      <p class="text-xs text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100" id="res-desc">-</p>
+      <button onclick="resetView()" class="btn-dark w-full py-3 text-xs font-medium">🔄 เสี่ยงทายใหม่อีกครั้ง</button>
+    </div>
+  </div>
+
   <script>
-    let currentUser = null;
-    let cachedData = null;
+    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : "";
+    const LIFF_ID = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.LIFF && APP_CONFIG.LIFF.MEMBERSHIP) ? APP_CONFIG.LIFF.MEMBERSHIP : "2007499712-J15McRGz";
+    
+    let currentUserId = "guest_user", currentUserName = "เจ้านางน้อย", userData = null;
 
-    window.onload = async function() {
-      try {
-        await liff.init({ liffId: "YOUR_LIFF_ID" }); // ใส่ LIFF ID ของคุณ
-        if (!liff.isLoggedIn()) {
-          liff.login();
-          return;
-        }
-        const profile = await liff.getProfile();
-        loadAppData(profile.userId);
-      } catch (err) {
-        console.warn("โหมดทดสอบเบราว์เซอร์");
-        loadAppData("U8065e05dc54f0ddc3fb46e97492eb53a"); // ใช้ UserID จำลอง
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof liff !== 'undefined') {
+        liff.init({ liffId: LIFF_ID }).then(() => {
+          if (liff.isLoggedIn()) {
+            liff.getProfile().then(p => {
+              currentUserId = p.userId;
+              currentUserName = p.displayName || "เจ้านางน้อย";
+              authenticateUser();
+            }).catch(() => { authenticateUser(); });
+          } else {
+            // ถ้านอกแอป LINE ให้ล็อกอินอัตโนมัติแบบ Guest
+            authenticateUser();
+          }
+        }).catch(() => { authenticateUser(); });
+      } else {
+        authenticateUser();
       }
-    };
+    });
 
-    function loadAppData(userId) {
-      const webAppUrl = "YOUR_GAS_WEB_APP_URL"; // ใส่ URL Web App ของ Google Apps Script
-      if (!webAppUrl.startsWith("https")) {
-        document.getElementById('user-welcome').innerText = "https://script.google.com/macros/s/AKfycbwksOEbiqQP14T4VnrO_4FeOk9xiinHLKwdsl-AVcH5VYcNPWMdaCftuTFC51lvI9xk/exec";
+    function authenticateUser() {
+      const url = `${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(currentUserName)}`;
+      
+      fetch(url)
+        .then(r => r.json())
+        .then(res => {
+          if (res && res.isMember) {
+            userData = res;
+            document.getElementById('user-status-text').innerText = "เข้าสู่ระบบสำเร็จ";
+            document.getElementById('welcome-name').innerText = res.name;
+            document.getElementById('m-code').innerText = "รหัส: " + res.memberCode;
+            document.getElementById('m-free').innerText = res.freeQuota + " ครั้ง";
+            
+            document.getElementById('section-member').classList.remove('hidden');
+            document.getElementById('section-hub').classList.remove('hidden');
+          } else {
+            document.getElementById('user-status-text').innerText = "ไม่สามารถโหลดข้อมูลสมาชิกได้";
+          }
+        })
+        .catch(err => {
+          document.getElementById('user-status-text').innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย";
+        });
+    }
+
+    function pickCard(cat) {
+      if (userData.freeQuota <= 0 && userData.balance < 9) {
+        alert("สิทธิ์ฟรีหมด และยอดเงินคงเหลือไม่พอ กรุณาเติมเงิน");
         return;
       }
-
-      fetch(webAppUrl + "?action=api_init&userId=" + userId)
-        .then(res => res.json())
-        .then(data => {
-          cachedData = data;
-          currentUser = data.member;
-          renderUI();
+      
+      const deductUrl = `${WEB_URL}?action=deduct_reading_quota&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(cat)}`;
+      
+      fetch(deductUrl)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            document.getElementById('section-hub').classList.add('hidden');
+            document.getElementById('section-member').classList.add('hidden');
+            document.getElementById('res-cat').innerText = "หมวด: " + cat;
+            document.getElementById('res-desc').innerText = "ญาณบารมีเปิดเผยว่า: ช่วงเวลานี้พลังงานหนุนนำให้เกิดความสำเร็จสมหวังในสิ่งที่มุ่งมั่น ตั้งจิตอธิษฐานรับโชคลาภและสิ่งดีที่จะเข้ามาสู่ชีวิต";
+            document.getElementById('section-result').classList.remove('hidden');
+          } else {
+            alert(res.message || "ไม่สามารถทำรายการได้");
+          }
         })
-        .catch(err => console.error(err));
+        .catch(() => {
+          alert("เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่");
+        });
     }
 
-    function renderUI() {
-      if (currentUser) {
-        document.getElementById('user-welcome').innerText = "ยินดีต้อนรับคุณ " + currentUser.name + " (แต้ม: " + currentUser.balance + " บ.)";
-        document.getElementById('member-info').innerHTML = `
-          <p><b>รหัสสมาชิก:</b> ${currentUser.memberCode}</p>
-          <p><b>ชื่อ-นามสกุล:</b> ${currentUser.name}</p>
-          <p><b>เบอร์โทร:</b> ${currentUser.phone}</p>
-          <p><b>ยอดเงินคงเหลือ:</b> ${currentUser.balance} บาท</p>
-          <p><b>สิทธิ์เปิดไพ่ฟรี:</b> ${currentUser.remainingFree} ครั้ง/เดือน</p>
-        `;
-      }
-
-      const prodContainer = document.getElementById('product-list');
-      if (cachedData && cachedData.products) {
-        prodContainer.innerHTML = cachedData.products.map(p => `
-          <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl flex items-center space-x-3">
-            <img src="${p.img}" class="w-16 h-16 object-cover rounded-lg bg-slate-700" alt="img">
-            <div class="flex-1">
-              <h3 class="font-bold text-xs text-white">${p.name}</h3>
-              <p class="text-xs text-amber-400 font-bold mt-1">${p.price} บาท</p>
-            </div>
-            <button onclick="buyProduct('${p.id}')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-2 rounded-lg">สั่งซื้อ</button>
-          </div>
-        `).join('');
-      }
-    }
-
-    function switchTab(tab) {
-      ['shop', 'wallpapers', 'profile'].forEach(t => {
-        document.getElementById('tab-' + t).classList.add('hidden');
-        document.getElementById('btn-' + t).className = "flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition";
-      });
-      document.getElementById('tab-' + tab).classList.remove('hidden');
-      document.getElementById('btn-' + tab).className = "flex-1 py-2 text-xs font-bold rounded-lg bg-blue-950 text-amber-400 transition shadow";
-    }
-
-    function buyProduct(productId) {
-      if (!currentUser) return alert("กำลังโหลดข้อมูล");
-      liff.sendMessages([{ type: 'text', text: 'ยืนยันสั่งซื้อ_' + productId }])
-        .then(() => { alert("ส่งคำสั่งซื้อไปที่แชท LINE แล้ว!"); liff.closeWindow(); })
-        .catch(() => { alert("กรุณาส่งข้อความ 'ยืนยันสั่งซื้อ_" + productId + "' ในแชท LINE"); });
-    }
-
-    function claimFreeWallpaper() {
-      liff.sendMessages([{ type: 'text', text: 'รับวอลเปเปอร์ฟรี' }])
-        .then(() => { alert("ส่งคำขอรับวอลเปเปอร์เข้า LINE แล้ว!"); liff.closeWindow(); })
-        .catch(() => { alert("กรุณาพิมพ์ 'รับวอลเปเปอร์ฟรี' ในแชท LINE"); });
-    }
-
-    function openUpdateChat() {
-      liff.sendMessages([{ type: 'text', text: 'อัปเดตข้อมูล' }])
-        .then(() => liff.closeWindow())
-        .catch(() => alert("กรุณาพิมพ์ 'อัปเดตข้อมูล' ในแชท LINE"));
+    function resetView() {
+      document.getElementById('section-result').classList.add('hidden');
+      document.getElementById('section-member').classList.remove('hidden');
+      document.getElementById('section-hub').classList.remove('hidden');
+      authenticateUser();
     }
   </script>
 </body>

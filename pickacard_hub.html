@@ -140,7 +140,7 @@
         <div class="flex items-center gap-2">
           <div class="w-9 h-9 rounded-full bg-emerald-900 border border-amber-400 flex items-center justify-center text-lg">👑</div>
           <div>
-            <div class="font-extrabold text-xs text-amber-300" id="bar-name">กำลังเข้าสู่ระบบ...</div>
+            <div class="font-extrabold text-xs text-amber-300" id="bar-name">กำลังเชื่อมต่อ...</div>
             <div class="text-[10px] text-emerald-300 font-mono" id="bar-code">MEMBER ID: -</div>
           </div>
         </div>
@@ -154,19 +154,25 @@
         </div>
       </div>
 
+      <!-- สรุปสิทธิ์คงเหลือ & ยอดเงินจริงจาก Col H / Col J -->
       <div class="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-emerald-900/80 text-center">
         <div class="bg-emerald-900/40 p-1.5 rounded-xl border border-emerald-800">
-          <div class="text-[9px] text-emerald-400 font-medium">สิทธิ์ฟรีคงเหลือ</div>
+          <div class="text-[9px] text-emerald-400 font-medium">สิทธิ์ฟรีคงเหลือ (Col J)</div>
           <div class="text-xs font-black text-amber-300" id="bar-free-quota">0 ครั้ง</div>
         </div>
         <div class="bg-emerald-900/40 p-1.5 rounded-xl border border-emerald-800">
-          <div class="text-[9px] text-emerald-400 font-medium">ยอดเงินคงเหลือ</div>
+          <div class="text-[9px] text-emerald-400 font-medium">ยอดเงินคงเหลือ (Col H)</div>
           <div class="text-xs font-black text-amber-300" id="bar-balance">0 ฿</div>
         </div>
         <div class="bg-emerald-900/40 p-1.5 rounded-xl border border-emerald-800">
-          <div class="text-[9px] text-emerald-400 font-medium">แต้มสะสม</div>
+          <div class="text-[9px] text-emerald-400 font-medium">แต้มสะสม (Col K)</div>
           <div class="text-xs font-black text-amber-300" id="bar-points">0 PTS</div>
         </div>
+      </div>
+
+      <!-- แถบแสดงสิทธิ์พิเศษ (Col M / Col N) -->
+      <div id="bar-privilege-box" style="display: none;" class="mt-2.5 bg-amber-400/20 border border-amber-400/50 rounded-xl p-1.5 text-center">
+        <span class="text-[10px] font-bold text-amber-200" id="bar-privilege-text">👑 สิทธิ์พิเศษ: ใช้งานฟรี 3 เดือน</span>
       </div>
     </div>
 
@@ -325,65 +331,63 @@
     const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw9RJdnqieYUY6QombS0Zmkkim0C8zecq71k0p7kMvwRPzy_Y5NMr8D54WHjd2qUCodEA/exec";
     const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
 
-    let currentUserId = "guest_user";
-    let currentDisplayName = "LINE User";
-    let userData = { isMember: true, freeQuota: 0, balance: 0, points: 0, isUnlimited: false, expiryDate: "" };
+    let currentUserId = "";
+    let currentDisplayName = "สมาชิกวินทร์ทรัพย์นาคราช";
+    let userData = { isMember: true, freeQuota: 0, balance: 0, points: 0, isUnlimited: false, expiryDate: "", specialPrivilege: "" };
     let selectedCat = "";
     let isGuruMode = false;
     let cardsData = [];
 
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof liff !== 'undefined') {
-        liff.init({ liffId: "2007499712-O7LXXVaY" }).then(() => {
-          if (liff.isLoggedIn()) {
-            liff.getProfile().then(p => {
-              currentUserId = p.userId;
-              currentDisplayName = p.displayName || "LINE User";
-              autoSilentRegister();
-            });
-          } else {
-            autoSilentRegister();
-          }
-        }).catch(e => autoSilentRegister());
+        liff.init({ liffId: "2007499712-O7LXXVaY" })
+          .then(() => {
+            if (liff.isLoggedIn()) {
+              liff.getProfile().then(p => {
+                currentUserId = p.userId;
+                currentDisplayName = p.displayName || "สมาชิก";
+                loadLiveQuota();
+              });
+            } else {
+              loadLiveQuota();
+            }
+          })
+          .catch(() => loadLiveQuota());
       } else {
-        autoSilentRegister();
+        loadLiveQuota();
       }
     });
 
-    function autoSilentRegister() {
-      userData.name = currentDisplayName;
-      updateStatusBar();
-
-      const url = `${WEB_URL}?action=register_member&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(currentDisplayName)}`;
-      fetch(url)
-        .then(r => r.json())
-        .then(res => {
-          if (res && res.user) {
-            userData = res.user;
-            updateStatusBar();
-          }
-        })
-        .catch(e => console.warn(e));
-    }
-
-    function checkUserQuota() {
-      return fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}&_t=${new Date().getTime()}`)
+    // ดึงค่าสดจากตาราง Sheet จริงเสมอ
+    function loadLiveQuota() {
+      fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}&_t=${new Date().getTime()}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.isMember) {
             userData = res;
+            if (res.userId) currentUserId = res.userId;
             updateStatusBar();
           }
         })
-        .catch(e => console.warn(e));
+        .catch(e => console.error("Quota fetch error:", e));
     }
 
     function updateStatusBar() {
       document.getElementById('bar-name').innerText = userData.name || currentDisplayName;
-      document.getElementById('bar-code').innerText = "ID: " + (userData.memberCode || "M0000");
+      document.getElementById('bar-code').innerText = "ID: " + (userData.memberCode || "M0001");
       document.getElementById('bar-free-quota').innerText = (userData.freeQuota || 0) + " ครั้ง";
-      document.getElementById('bar-balance').innerText = (userData.balance || 0) + " ฿";
+      document.getElementById('bar-balance').innerText = (userData.balance || 0).toLocaleString() + " ฿";
       document.getElementById('bar-points').innerText = (userData.points || 0) + " PTS";
+
+      // แสดงสิทธิ์พิเศษ (Col M / Col N)
+      const privBox = document.getElementById('bar-privilege-box');
+      const privText = document.getElementById('bar-privilege-text');
+      if (userData.isUnlimited || (userData.specialPrivilege && userData.specialPrivilege !== "สิทธิ์มาตรฐาน")) {
+        privBox.style.display = 'block';
+        privText.innerText = "👑 สิทธิ์พิเศษ: " + (userData.specialPrivilege || "ใช้งานฟรี 3 เดือน");
+      } else {
+        privBox.style.display = 'none';
+      }
     }
 
     function triggerChatTopup() {
@@ -396,16 +400,24 @@
       }
     }
 
-    // บังคับดึงยอดเงินสดจากชีตก่อนตัดสินใจบล็อก
+    // ตรวจสอบสิทธิ์จริงก่อนเข้าสู่หน้าสับไพ่
     async function pickCategory(catName, isGuru) {
-      await checkUserQuota();
+      try {
+        const r = await fetch(`${WEB_URL}?action=check_user_quota&userId=${encodeURIComponent(currentUserId)}&_t=${new Date().getTime()}`);
+        const fresh = await r.json();
+        if (fresh && fresh.isMember) {
+          userData = fresh;
+          updateStatusBar();
+        }
+      } catch (e) {}
 
       const hasUnlimited = userData.isUnlimited;
       const hasFreeQuota = (Number(userData.freeQuota) || 0) > 0;
       const hasBalance = (Number(userData.balance) || 0) >= 9;
 
+      // บล็อกเฉพาะเมื่อไม่มีสิทธิ์บุฟเฟต์, สิทธิ์ฟรีหมด และเงินน้อยกว่า 9 บาท
       if (!hasUnlimited && !hasFreeQuota && !hasBalance) {
-        alert("⚠️ สิทธิ์การใช้งานของคุณหมดแล้ว\n• สิทธิ์ฟรีคงเหลือ: " + (userData.freeQuota || 0) + " ครั้ง\n• ยอดเงินคงเหลือ: " + (userData.balance || 0) + " บาท (ค่าบริการครั้งละ 9 บาท)\n\nระบบจะปิดหน้านี้เพื่อพาไปยังห้องแชทเติมเงินครับ");
+        alert("⚠️ สิทธิ์การใช้งานของคุณหมดแล้ว\n• สิทธิ์ฟรีคงเหลือ: " + (userData.freeQuota || 0) + " ครั้ง\n• ยอดเงินคงเหลือ: " + (userData.balance || 0) + " บาท (ครั้งละ 9 บาท)\n\nระบบจะปิดหน้านี้เพื่อพาไปยังห้องแชทเติมเงินครับ");
         triggerChatTopup();
         return;
       }
@@ -436,7 +448,6 @@
       document.getElementById('view-select-card').style.display = 'none';
       document.getElementById('view-categories').style.display = 'none';
       document.getElementById('view-shuffle').style.display = 'block';
-
       const btn = document.getElementById('btn-shuffle-action');
       btn.innerText = "✨ สับไพ่อลังการเวทมนต์";
       btn.disabled = false;
@@ -499,10 +510,10 @@
         `กระแสพลังนาคราชประจำสาส์น${cardName}สะท้อนถึงการเปลี่ยนแปลงเชิงบวกในเรื่อง${category} อุปสรรคที่เคยติดขัดจะเริ่มคลี่คลาย มีเกณฑ์พบกัลยาณมิตรหรือหนทางใหม่ที่นำพาความเจริญ จงเชื่อมั่นในคุณงามความดีและศักยภาพของตนเอง`,
         `สาส์นเตือนใจจาก${cardName}ส่งพลังตรงถึงเรื่อง${category}ของคุณ ความพยายามที่สั่งสมมาถึงเวลาผลิดอกออกผล ขอเพียงรักษาวาจาและความซื่อตรง ทุกก้าวเดินจะมีบารมีคุ้มครอง นำพาทรัพย์สินและความสุขใจมาสู่ชีวิตอย่างยั่งยืนแน่นอน`
       ];
-      const picked = templates[Math.floor(Math.random() * templates.length)];
-      return picked.substring(0, 200);
+      return templates[Math.floor(Math.random() * templates.length)].substring(0, 200);
     }
 
+    // สั่งตัดสิทธิ์และอัปเดตยอดคงเหลือทันที
     function revealSelectedCard(idx) {
       fetch(`${WEB_URL}?action=deduct_reading_quota&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedCat)}`)
         .then(r => r.json())
@@ -514,11 +525,12 @@
             return;
           }
           if (res.status === "not_member") {
-            alert("กรุณารอระบบบันทึกสมาชิกสักครู่ครับ");
+            alert("กรุณารอระบบบันทึกข้อมูลสมาชิกสักครู่ครับ");
             backToHub();
             return;
           }
 
+          // อัปเดตตัวเลขแสดงผลทันทีตามที่ตัดจริงใน Sheet
           userData.freeQuota = res.freeQuota;
           userData.balance = res.balance;
           if (res.points !== undefined) userData.points = res.points;

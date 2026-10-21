@@ -10,27 +10,24 @@
   
   <style>
     :root {
-      --bg-emerald-deep: #021a14;
-      --bg-emerald-surface: #04291f;
-      --white-gold-bright: #fef9c3;
-      --white-gold-mid: #fef08a;
-      --white-gold-dark: #ca8a04;
+      --bg-deep: #021a14;
       --pearl-cream: #fbfbee;
+      --gold-bright: #fef9c3;
+      --gold-mid: #fef08a;
+      --gold-dark: #ca8a04;
       --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.88) 0%, rgba(2, 16, 12, 0.96) 100%);
     }
 
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at 50% 0%, #064e3b 0%, var(--bg-emerald-deep) 42%, #010c09 100%);
+      background: radial-gradient(circle at 50% 0%, #064e3b 0%, var(--bg-deep) 42%, #010c09 100%);
       color: var(--pearl-cream);
       min-height: 100vh;
       margin: 0;
-      overflow-x: hidden;
-      overflow-y: auto;
     }
 
     .bright-white-gold-text {
-      background: linear-gradient(135deg, #ffffff 0%, var(--white-gold-bright) 30%, var(--white-gold-mid) 65%, var(--white-gold-dark) 100%);
+      background: linear-gradient(135deg, #ffffff 0%, var(--gold-bright) 30%, var(--gold-mid) 65%, var(--gold-dark) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 25px rgba(254, 249, 195, 0.45);
@@ -52,7 +49,6 @@
     }
     .menu-card:hover {
       border-color: #fef08a;
-      box-shadow: 0 10px 25px rgba(254, 240, 138, 0.25), inset 0 0 12px rgba(5, 150, 105, 0.2);
       transform: translateY(-2px);
     }
 
@@ -62,76 +58,61 @@
       box-shadow: 0 8px 25px rgba(234, 179, 8, 0.45);
       transition: all 0.25s ease;
     }
-    .btn-gold-action:hover {
-      box-shadow: 0 10px 30px rgba(254, 240, 138, 0.7);
-      transform: translateY(-2px);
-      filter: brightness(1.06);
-    }
   </style>
 </head>
-<body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-28 relative min-h-screen">
+<body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-28">
 
-  <!-- Header ด้านบน -->
-  <div class="flex items-center justify-between py-3 mb-2 relative z-30">
+  <div class="flex items-center justify-between py-3 mb-2">
     <div class="flex items-center gap-2">
-      <div class="w-9 h-9 rounded-full bg-emerald-950/90 border border-amber-300/40 flex items-center justify-center shadow-md">
+      <div class="w-9 h-9 rounded-full bg-emerald-950/90 border border-amber-300/40 flex items-center justify-center">
         <span class="text-xl">🐍</span>
       </div>
       <div>
         <h2 class="text-xs font-bold tracking-widest uppercase text-amber-200">วินทร์ทรัพย์นาคราช</h2>
-        <p class="text-[9px] text-emerald-300 font-light tracking-wide">ระบบสมาชิกมงคลบารมี</p>
+        <p class="text-[9px] text-emerald-300">ระบบสมาชิกมงคลบารมี</p>
       </div>
     </div>
-    <button onclick="window.location.href='./index.html'" class="text-[11px] text-slate-200 bg-black/60 border border-amber-300/30 px-3.5 py-1.5 rounded-full hover:border-amber-300 transition">
+    <button onclick="window.location.href='./index.html'" class="text-[11px] text-slate-200 bg-black/60 border border-amber-300/30 px-3.5 py-1.5 rounded-full">
       หน้าร้านค้า ⟨
     </button>
   </div>
 
-  <!-- บัตรสมาชิกดิจิทัล (Digital Membership Card) -->
-  <div class="glossy-panel rounded-3xl p-5 mb-5 relative overflow-hidden border border-amber-300/35">
-    <div class="absolute -top-12 -right-12 w-40 h-40 bg-emerald-500 rounded-full blur-[70px] opacity-25 pointer-events-none"></div>
-    <div class="absolute -bottom-10 -left-10 w-36 h-36 bg-amber-400 rounded-full blur-[80px] opacity-15 pointer-events-none"></div>
-
-    <div class="relative z-10">
-      <div class="flex justify-between items-start mb-4">
-        <div>
-          <span class="text-[10px] text-emerald-300 tracking-wider uppercase font-medium">รหัสประจำตัวมงคล</span>
-          <div id="disp-member-code" class="text-lg font-extrabold bright-white-gold-text tracking-wider">M-XXXX</div>
-        </div>
-        <span id="disp-privilege-tag" class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 border border-amber-400/50 text-amber-200">
-          กำลังตรวจสอบ...
-        </span>
+  <!-- บัตรสมาชิกดิจิทัล -->
+  <div class="glossy-panel rounded-3xl p-5 mb-5 relative overflow-hidden">
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <span class="text-[10px] text-emerald-300 uppercase font-medium">รหัสประจำตัวมงคล</span>
+        <div id="disp-member-code" class="text-lg font-extrabold bright-white-gold-text">M-XXXX</div>
       </div>
-
-      <div class="mb-4">
-        <span class="text-[10px] text-slate-300 font-light">นามผู้ถือครองญาณ</span>
-        <h1 id="disp-user-name" class="text-xl font-bold text-white tracking-wide">แขกผู้มีเกียรติ</h1>
-      </div>
-
-      <!-- แถบแสดงสถานะทรัพย์ & สิทธิ์ทดลองใช้ 30 วัน -->
-      <div class="grid grid-cols-2 gap-3 pt-3 border-t border-amber-300/20">
-        <div class="bg-black/40 rounded-xl p-2.5 border border-white/5">
-          <div class="text-[10px] text-emerald-300">💎 ทรัพย์คงเหลือ</div>
-          <div class="text-base font-extrabold bright-white-gold-text mt-0.5">
-            <span id="disp-balance">0</span> <span class="text-[11px] text-pearl-cream font-normal">บาท</span>
-          </div>
-        </div>
-        <div class="bg-black/40 rounded-xl p-2.5 border border-white/5">
-          <div class="text-[10px] text-amber-200">⏳ สิทธิ์เปิดไพ่ฟรี</div>
-          <div id="disp-trial-status" class="text-xs font-bold text-emerald-300 mt-1">
-            คำนวณสิทธิ์...
-          </div>
-        </div>
-      </div>
-
-      <!-- ปุ่มเติมทรัพย์ค่าครู -->
-      <button onclick="openTopupModal()" class="btn-gold-action w-full py-2.5 rounded-xl text-xs font-bold mt-4 flex items-center justify-center gap-2">
-        <span>🪙</span> เติมทรัพย์ค่าครู (เปิดไพ่ 9 บาท / บูชาวัตถุมงคล)
-      </button>
+      <span id="disp-privilege-tag" class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 border border-amber-400/50 text-amber-200">
+        สิทธิ์ฟรี 30 วัน
+      </span>
     </div>
+
+    <div class="mb-4">
+      <span class="text-[10px] text-slate-300 font-light">ผู้ถือครองญาณ</span>
+      <h1 id="disp-user-name" class="text-xl font-bold text-white">ผู้มีจิตศรัทธา</h1>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 pt-3 border-t border-amber-300/20">
+      <div class="bg-black/40 rounded-xl p-2.5">
+        <div class="text-[10px] text-emerald-300">💎 ทรัพย์คงเหลือ</div>
+        <div class="text-base font-extrabold bright-white-gold-text mt-0.5">
+          <span id="disp-balance">0</span> บาท
+        </div>
+      </div>
+      <div class="bg-black/40 rounded-xl p-2.5">
+        <div class="text-[10px] text-amber-200">⏳ สิทธิ์เปิดไพ่ฟรี</div>
+        <div id="disp-trial-status" class="text-xs font-bold text-emerald-300 mt-1">ฟรีอีก 30 วัน</div>
+      </div>
+    </div>
+
+    <button onclick="openTopupModal()" class="btn-gold-action w-full py-2.5 rounded-xl text-xs font-bold mt-4">
+      🪙 เติมทรัพย์ค่าครู (เปิดไพ่ 9 บาท / ชำระบูชา)
+    </button>
   </div>
 
-  <!-- ศูนย์รวมเมนูบริการทั้งหมด (ไม่รวม Admin) -->
+  <!-- เมนูระบบมงคลทั้งหมด (ตัดระบบดูดวงแบบแชทออกแล้ว) -->
   <div class="mb-5">
     <div class="flex items-center gap-1.5 mb-3 px-1">
       <span class="text-sm">🧭</span>
@@ -144,155 +125,79 @@
         <div>
           <div class="text-2xl mb-1.5">🔮</div>
           <h4 class="text-xs font-bold text-amber-200">เปิดไพ่นาคราช</h4>
-          <p class="text-[10px] text-slate-300 mt-1 font-light">Pick a Card เสี่ยงทายญาณ 6 หมวด</p>
+          <p class="text-[10px] text-slate-300 mt-1">Pick a Card เสี่ยงทายญาณ 6 หมวด</p>
         </div>
-        <span class="text-[9px] text-emerald-400 mt-3 flex items-center gap-1 font-medium">เข้าสู่เรือนไพ่ →</span>
+        <span class="text-[9px] text-emerald-400 mt-3 font-medium">เข้าสู่เรือนไพ่ →</span>
       </a>
 
-      <!-- 2. จองคิวดูดวง -->
+      <!-- 2. จองคิวดูดวง 15 นาที (เฉพาะรอบเวลา ไม่มีการแชท) -->
       <a href="./booking.html" class="menu-card p-4 flex flex-col justify-between">
         <div>
           <div class="text-2xl mb-1.5">📅</div>
           <h4 class="text-xs font-bold text-emerald-300">จองคิวตรวจดวง</h4>
-          <p class="text-[10px] text-slate-300 mt-1 font-light">รอบเวลาเจาะลึก 15 นาทีรายบุคคล</p>
+          <p class="text-[10px] text-slate-300 mt-1">จัดสรรเวลา 15 นาทีตามรอบว่าง</p>
         </div>
-        <span class="text-[9px] text-emerald-400 mt-3 flex items-center gap-1 font-medium">เลือกวัน & เวลา →</span>
+        <span class="text-[9px] text-emerald-400 mt-3 font-medium">เลือกวัน & เวลา →</span>
       </a>
 
-      <!-- 3. คลังวัตถุมงคล -->
-      <a href="./index.html" class="menu-card p-4 flex flex-col justify-between">
+      <!-- 3. ร้านค้า LINE MyShop -->
+      <a href="https://liff.line.me/1572442362-jGxDDGRp/@thewinmu" target="_blank" class="menu-card p-4 flex flex-col justify-between">
         <div>
-          <div class="text-2xl mb-1.5">📿</div>
-          <h4 class="text-xs font-bold text-amber-200">ร้านค้าวัตถุมงคล</h4>
-          <p class="text-[10px] text-slate-300 mt-1 font-light">มวลสารเบิกเนตร เครื่องหอม น้ำปรุง</p>
+          <div class="text-2xl mb-1.5">🛍️</div>
+          <h4 class="text-xs font-bold text-amber-200">LINE MyShop</h4>
+          <p class="text-[10px] text-slate-300 mt-1">ร้านค้าวัตถุมงคลทางการ</p>
         </div>
-        <span class="text-[9px] text-emerald-400 mt-3 flex items-center gap-1 font-medium">เลือกชมบูชา →</span>
+        <span class="text-[9px] text-emerald-400 mt-3 font-medium">เปิดร้าน MyShop →</span>
       </a>
 
-      <!-- 4. ติดต่อผู้ทำนาย / LINE OA -->
-      <a href="https://line.me/R/ti/p/@thewinmu" target="_blank" class="menu-card p-4 flex flex-col justify-between">
+      <!-- 4. TikTok ชุมชนนาคราช -->
+      <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="menu-card p-4 flex flex-col justify-between">
         <div>
-          <div class="text-2xl mb-1.5">💬</div>
-          <h4 class="text-xs font-bold text-emerald-300">ปรึกษาอาจารย์</h4>
-          <p class="text-[10px] text-slate-300 mt-1 font-light">ส่งสลิป สอบถามคิวทาง LINE OA</p>
+          <div class="text-2xl mb-1.5">🎵</div>
+          <h4 class="text-xs font-bold text-emerald-300">TikTok @thewinmu</h4>
+          <p class="text-[10px] text-slate-300 mt-1">ชมคลิปพุทธคุณ & บทสวด</p>
         </div>
-        <span class="text-[9px] text-emerald-400 mt-3 flex items-center gap-1 font-medium">ทักแชทคุยงาน →</span>
+        <span class="text-[9px] text-emerald-400 mt-3 font-medium">กดติดตาม →</span>
       </a>
     </div>
   </div>
 
-  <!-- ประวัติความเคลื่อนไหว -->
-  <div class="glossy-panel rounded-2xl p-4 mb-4">
-    <div class="flex justify-between items-center mb-3 pb-2 border-b border-amber-300/20">
-      <div class="text-xs font-bold text-amber-200 flex items-center gap-1.5">
-        <span>📜</span> บันทึกความเคลื่อนไหวล่าสุด
-      </div>
-      <button onclick="loadMemberData()" class="text-[10px] text-emerald-300 hover:text-white">🔄 รีเฟรช</button>
-    </div>
-    
-    <div id="tx-history-list" class="space-y-2 text-xs">
-      <div class="py-4 text-center text-slate-400 text-[11px]">กำลังเรียกข้อมูลประวัติ...</div>
-    </div>
-  </div>
-
-  <!-- Modal เติมทรัพย์ค่าครู -->
+  <!-- Modal เติมเงิน -->
   <div id="topup-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="glossy-panel border-2 border-amber-300/80 rounded-3xl p-6 text-center max-w-xs w-full shadow-2xl relative">
+    <div class="glossy-panel border-2 border-amber-300/80 rounded-3xl p-6 text-center max-w-xs w-full shadow-2xl">
       <div class="text-3xl mb-2">💎</div>
       <h3 class="text-base font-bold bright-white-gold-text mb-1">เติมทรัพย์ค่าครู</h3>
-      <p class="text-[11px] text-slate-200 mb-4 font-light">ร่วมหนุนบุญบารมี โอนเติมเครดิตสำหรับเปิดไพ่ครั้งละ 9 บาท หรือชำระค่าบริการ</p>
-      
-      <div class="bg-black/50 p-3.5 rounded-xl text-left text-xs mb-4 border border-amber-300/30 space-y-1">
-        <div class="text-slate-300 text-[11px]">ธนาคาร: <span class="text-white font-medium">กสิกรไทย (KBANK)</span></div>
-        <div class="text-slate-300 text-[11px]">เลขบัญชี: <span id="bank-acc" class="text-amber-300 font-bold text-sm">2251495656</span></div>
-        <div class="text-slate-300 text-[11px]">ชื่อบัญชี: <span class="text-white font-medium">พีรดิษฐ์ กิตติเขมานนท์</span></div>
+      <div class="bg-black/50 p-3.5 rounded-xl text-left text-xs my-4 border border-amber-300/30">
+        <div>ธนาคาร: กสิกรไทย (KBANK)</div>
+        <div class="text-amber-300 font-bold my-1">เลขบัญชี: 2251495656</div>
+        <div>ชื่อ: พีรดิษฐ์ กิตติเขมานนท์</div>
       </div>
-
-      <div class="space-y-2">
-        <button onclick="copyBankAcc()" class="btn-gold-action w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
-          <span>📋</span> คัดลอกเลขบัญชี
-        </button>
-        <a href="https://line.me/R/ti/p/@thewinmu" target="_blank" class="block w-full py-2.5 rounded-xl text-xs font-bold bg-emerald-900/80 border border-emerald-400/40 text-emerald-200 hover:bg-emerald-800 transition">
-          💬 ส่งสลิปยืนยันทาง LINE OA
-        </a>
-        <button onclick="closeTopupModal()" class="w-full py-2 text-[11px] text-slate-400 hover:text-white">
-          ปิดหน้าต่าง
-        </button>
-      </div>
+      <button onclick="copyBankAcc()" class="btn-gold-action w-full py-2.5 rounded-xl text-xs font-bold mb-2">
+        📋 คัดลอกเลขบัญชี
+      </button>
+      <button onclick="document.getElementById('topup-modal').classList.add('hidden')" class="w-full py-2 text-xs text-slate-400">
+        ปิดหน้าต่าง
+      </button>
     </div>
   </div>
 
   <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
-    let currentUserId = "guest_user";
-    let currentUserName = "ผู้มีจิตศรัทธา";
 
     window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("userId")) currentUserId = urlParams.get("userId");
-      if (urlParams.get("name")) currentUserName = decodeURIComponent(urlParams.get("name"));
-      
-      loadMemberData();
-    };
-
-    function loadMemberData() {
-      fetch(`${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(currentUserName)}`)
+      fetch(`${WEB_URL}?action=login_or_register&userId=guest_user`)
         .then(r => r.json())
         .then(res => {
           if (res.status === "success") {
-            document.getElementById("disp-member-code").innerText = res.memberCode || "M-001";
-            document.getElementById("disp-user-name").innerText = res.name || currentUserName;
-            document.getElementById("disp-balance").innerText = (res.balance || 0).toLocaleString();
-            
-            const privilegeTag = document.getElementById("disp-privilege-tag");
-            const trialStatus = document.getElementById("disp-trial-status");
-
-            if (res.freeTrialDaysLeft > 0) {
-              privilegeTag.innerText = "สิทธิ์ฟรี 30 วัน";
-              trialStatus.innerText = `ใช้งานฟรีเหลืออีก ${res.freeTrialDaysLeft} วัน`;
-            } else {
-              privilegeTag.innerText = res.specialPrivilege || "สมาชิกมาตรฐาน";
-              trialStatus.innerText = "หมดช่วงทดลอง (9 บ./ครั้ง)";
-            }
-
-            renderHistory(res.memberCode);
+            document.getElementById("disp-member-code").innerText = res.memberCode;
+            document.getElementById("disp-user-name").innerText = res.name;
+            document.getElementById("disp-balance").innerText = res.balance.toLocaleString();
+            document.getElementById("disp-trial-status").innerText = res.freeTrialDaysLeft > 0 ? `ฟรีอีก ${res.freeTrialDaysLeft} วัน` : "หมดช่วงฟรี (9 บ./ครั้ง)";
           }
-        })
-        .catch(() => {
-          document.getElementById("disp-member-code").innerText = "M-GUEST";
-          document.getElementById("disp-user-name").innerText = currentUserName;
-          document.getElementById("disp-balance").innerText = "99";
-          document.getElementById("disp-privilege-tag").innerText = "สิทธิ์ทดลองใช้";
-          document.getElementById("disp-trial-status").innerText = "ใช้งานฟรีเหลืออีก 30 วัน";
-          renderFallbackHistory();
         });
-    }
+    };
 
-    function renderHistory(mCode) {
-      const list = document.getElementById("tx-history-list");
-      list.innerHTML = `
-        <div class="flex justify-between items-center p-2 rounded-lg bg-black/40 border border-white/5">
-          <div>
-            <div class="text-white font-medium">ลงทะเบียนสมาชิกมงคล</div>
-            <div class="text-[9px] text-slate-400">เริ่มต้นรับสิทธิ์ทดลองใช้ระบบฟรี 30 วัน</div>
-          </div>
-          <span class="text-emerald-400 font-bold">+ฟรี 30 วัน</span>
-        </div>
-      `;
-    }
-
-    function renderFallbackHistory() {
-      renderHistory("M-GUEST");
-    }
-
-    function openTopupModal() {
-      document.getElementById("topup-modal").classList.remove("hidden");
-    }
-
-    function closeTopupModal() {
-      document.getElementById("topup-modal").classList.add("hidden");
-    }
-
+    function openTopupModal() { document.getElementById("topup-modal").classList.remove("hidden"); }
     function copyBankAcc() {
       navigator.clipboard.writeText("2251495656");
       alert("📋 คัดลอกเลขบัญชี 2251495656 สำเร็จแล้วครับ");

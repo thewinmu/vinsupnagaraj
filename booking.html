@@ -30,9 +30,9 @@
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
     .slot-disabled {
-      background: rgba(100, 100, 100, 0.2) !important;
-      border-color: rgba(255, 255, 255, 0.05) !important;
-      color: #64748b !important;
+      background: rgba(153, 27, 27, 0.3) !important; /* พื้นหลังแดงอ่อนๆ */
+      border-color: rgba(239, 68, 68, 0.3) !important; /* กรอบสีแดง */
+      color: #fca5a5 !important; /* ตัวหนังสือแดงอ่อน */
       cursor: not-allowed;
       text-decoration: line-through;
     }
@@ -71,7 +71,7 @@
       <input type="date" id="booking-date" onchange="loadAvailableSlots()" class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-400">
     </div>
 
-    <!-- เลือกรอบเวลา (ดึงจากชีต settings อัตโนมัติ) -->
+    <!-- เลือกรอบเวลา -->
     <div class="card-emerald-glossy p-5 space-y-3">
       <label class="block text-xs font-bold text-amber-200">⏰ เลือกรอบเวลาว่าง</label>
       <div id="slots-container" class="grid grid-cols-2 gap-2">
@@ -92,6 +92,7 @@
     const WEB_URL = "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec";
     const LIFF_ID = "2007499712-B0uid9G3";
     let currentUserId = "guest_user";
+    let currentDisplayName = "แขก";
     let selectedSlotTime = "";
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -105,6 +106,7 @@
             if (liff.isLoggedIn()) {
               liff.getProfile().then(p => {
                 currentUserId = p.userId;
+                currentDisplayName = p.displayName;
               }).catch(() => {});
             }
           })
@@ -112,32 +114,40 @@
       }
     });
 
-    // ดึงรอบเวลาจากชีต settings และเช็กสถานะที่ถูกจองแล้ว
+    // ดึงรอบเวลาจาก API (ส่งวันที่ไปเช็กด้วย)
     function loadAvailableSlots() {
       const rawDate = document.getElementById('booking-date').value;
       if (!rawDate) return;
 
+      // แปลง YYYY-MM-DD เป็น DD/MM/YYYY
       const parts = rawDate.split('-');
       const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      
       const container = document.getElementById('slots-container');
       container.innerHTML = `<div class="text-xs text-slate-400 col-span-2 text-center py-4">กำลังโหลดรอบเวลา...</div>`;
       selectedSlotTime = "";
 
-      fetch(`${WEB_URL}?action=get_settings_slots&date=${encodeURIComponent(formattedDate)}`)
+      // เรียก get_time_slots พร้อมส่ง date ไปเช็ก
+      fetch(`${WEB_URL}?action=get_time_slots&date=${encodeURIComponent(formattedDate)}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.status === "success" && res.slots) {
             container.innerHTML = "";
+            if (res.slots.length === 0) {
+                container.innerHTML = `<div class="text-xs text-red-400 col-span-2 text-center py-2">ไม่มีรอบเวลาว่าง</div>`;
+                return;
+            }
             res.slots.forEach(slot => {
               const btn = document.createElement('button');
               btn.type = "button";
               btn.innerText = slot.time;
               btn.className = "slot-btn p-2.5 rounded-xl text-xs font-semibold transition text-center ";
               
-              if (slot.status === "CLOSE" || slot.isBooked) {
+              // เช็กถ้าเต็ม (รวมสถานะ Pending จะเป็น full หรือ CLOSE)
+              if (slot.status === "full" || slot.status === "closed") {
                 btn.disabled = true;
-                btn.className += " slot-disabled bg-black/20 border border-white/5 text-slate-500 line-through";
-                btn.innerText += (slot.isBooked ? " (เต็ม)" : " (ปิด)");
+                btn.className += " slot-disabled";
+                btn.innerText += " (เต็ม)";
               } else {
                 btn.className += " bg-black/40 border border-white/20 text-slate-200 hover:border-amber-400";
                 btn.onclick = () => selectSlot(btn, slot.time);
@@ -145,12 +155,12 @@
               container.appendChild(btn);
             });
           } else {
-            container.innerHTML = `<div class="text-xs text-red-400 col-span-2 text-center py-2">ไม่พบข้อมูลรอบเวลาในระบบ</div>`;
+            container.innerHTML = `<div class="text-xs text-red-400 col-span-2 text-center py-2">ไม่พบข้อมูลรอบเวลา</div>`;
           }
         })
         .catch(err => {
           console.error("Error loading slots:", err);
-          container.innerHTML = `<div class="text-xs text-red-400 col-span-2 text-center py-2">เกิดข้อผิดพลาดในการโหลดรอบเวลา</div>`;
+          container.innerHTML = `<div class="text-xs text-red-400 col-span-2 text-center py-2">เกิดข้อผิดพลาดในการโหลด</div>`;
         });
     }
 
@@ -183,6 +193,7 @@
         return;
       }
 
+      // แปลง YYYY-MM-DD เป็น DD/MM/YYYY อีกครั้งเพื่อส่งบันทึก
       const parts = rawDate.split('-');
       const bookingDateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
@@ -192,7 +203,8 @@
 
       alert("⏳ กำลังบันทึกการจองคิว...");
 
-      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}`)
+      // ส่งข้อมูลครบถ้วน: userId, name, serviceName, bookingDate, slotTime
+      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(currentDisplayName)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}`)
         .then(r => r.text())
         .then(text => {
           alert("✨ บันทึกการจองคิวสำเร็จ! ระบบได้ส่งรายละเอียดการชำระเงินไปยังแชท LINE ของท่านแล้ว");

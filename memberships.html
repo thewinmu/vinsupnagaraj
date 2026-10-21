@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>เรือนมงคลสมาชิก • วินทร์ทรัพย์นาคราช</title>
   
+  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -63,9 +64,11 @@
 <body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-28">
 
   <div class="flex items-center justify-between py-3 mb-2">
-    <div class="flex items-center gap-2">
-      <div class="w-9 h-9 rounded-full bg-emerald-950/90 border border-amber-300/40 flex items-center justify-center">
-        <span class="text-xl">🐍</span>
+    <div class="flex items-center gap-3">
+      <div class="relative w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_15px_rgba(254,240,138,0.55)] flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+        </div>
       </div>
       <div>
         <h2 class="text-xs font-bold tracking-widest uppercase text-amber-200">วินทร์ทรัพย์นาคราช</h2>
@@ -77,7 +80,6 @@
     </button>
   </div>
 
-  <!-- บัตรสมาชิกดิจิทัล -->
   <div class="glossy-panel rounded-3xl p-5 mb-5 relative overflow-hidden">
     <div class="flex justify-between items-start mb-4">
       <div>
@@ -112,7 +114,6 @@
     </button>
   </div>
 
-  <!-- เมนูระบบมงคลทั้งหมด (ตัดระบบดูดวงแบบแชทออกแล้ว) -->
   <div class="mb-5">
     <div class="flex items-center gap-1.5 mb-3 px-1">
       <span class="text-sm">🧭</span>
@@ -120,7 +121,6 @@
     </div>
 
     <div class="grid grid-cols-2 gap-3">
-      <!-- 1. Pick a Card -->
       <a href="./pickacard_hub.html" class="menu-card p-4 flex flex-col justify-between">
         <div>
           <div class="text-2xl mb-1.5">🔮</div>
@@ -130,7 +130,6 @@
         <span class="text-[9px] text-emerald-400 mt-3 font-medium">เข้าสู่เรือนไพ่ →</span>
       </a>
 
-      <!-- 2. จองคิวดูดวง 15 นาที (เฉพาะรอบเวลา ไม่มีการแชท) -->
       <a href="./booking.html" class="menu-card p-4 flex flex-col justify-between">
         <div>
           <div class="text-2xl mb-1.5">📅</div>
@@ -140,7 +139,6 @@
         <span class="text-[9px] text-emerald-400 mt-3 font-medium">เลือกวัน & เวลา →</span>
       </a>
 
-      <!-- 3. ร้านค้า LINE MyShop -->
       <a href="https://liff.line.me/1572442362-jGxDDGRp/@thewinmu" target="_blank" class="menu-card p-4 flex flex-col justify-between">
         <div>
           <div class="text-2xl mb-1.5">🛍️</div>
@@ -150,7 +148,6 @@
         <span class="text-[9px] text-emerald-400 mt-3 font-medium">เปิดร้าน MyShop →</span>
       </a>
 
-      <!-- 4. TikTok ชุมชนนาคราช -->
       <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="menu-card p-4 flex flex-col justify-between">
         <div>
           <div class="text-2xl mb-1.5">🎵</div>
@@ -162,7 +159,6 @@
     </div>
   </div>
 
-  <!-- Modal เติมเงิน -->
   <div id="topup-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="glossy-panel border-2 border-amber-300/80 rounded-3xl p-6 text-center max-w-xs w-full shadow-2xl">
       <div class="text-3xl mb-2">💎</div>
@@ -182,7 +178,7 @@
   </div>
 
   <script>
-    const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
 
     window.onload = function() {
       fetch(`${WEB_URL}?action=login_or_register&userId=guest_user`)

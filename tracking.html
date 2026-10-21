@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ติดตามสถานะพัสดุ • วินทร์ทรัพย์นาคราช</title>
+  
+  <script src="./config.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ฟอนต์สไตล์ Apple iOS / SF Pro Display & Prompt */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Prompt", sans-serif;
+      background: radial-gradient(circle at 50% -10%, #064032 0%, #032018 45%, #010a08 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* กล่อง Header & Container โปร่งแสงมรกตลึก ขอบทองอร่าม */
+    .pearl-header {
+      background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .lux-glass-box {
+      background: linear-gradient(145deg, rgba(6, 64, 50, 0.88) 0%, rgba(2, 28, 21, 0.96) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+    }
+
+    /* กล่องผลลัพธ์: การ์ดสีขาวนวล สะอาดตา ขอบทองอร่าม */
+    .lux-white-card {
+      background: #ffffff;
+      border: 1.5px solid #eab308;
+      border-radius: 24px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    /* ช่องค้นหา สีขาวนวลสะอาดตา */
+    .search-light-box {
+      background: #fbfbf7;
+      border: 1.2px solid rgba(234, 179, 8, 0.45);
+      border-radius: 9999px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-pearl-action {
+      background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
+      color: #fef08a;
+      border: 1px solid rgba(254, 240, 138, 0.45);
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+    .btn-pearl-action:hover {
+      background: #047857;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(4, 120, 87, 0.4);
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-32">
+
+  <!-- 1. Header หัวร้านค้า -->
+  <header class="pearl-header rounded-3xl p-3 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain p-0.5" onerror="this.src='https://placehold.co/60x60/064032/fef08a?text=🐍'">
+        </div>
+      </div>
+      <div>
+        <h1 class="text-xs font-bold text-amber-200 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
+        <p class="text-[9px] text-emerald-300/80 font-light">ระบบติดตามสถานะคำสั่งซื้อ & พัสดุ</p>
+      </div>
+    </div>
+    
+    <a href="./index.html" class="text-[10px] bg-black/50 border border-amber-300/30 text-pearl-cream px-3 py-1.5 rounded-full font-medium">
+      หน้าร้านค้า ⟨
+    </a>
+  </header>
+
+  <!-- 2. หัวข้อหน้าเว็บ -->
+  <div class="text-center mb-4">
+    <h2 class="text-xl font-extrabold text-amber-200 mb-1">📦 ติดตามพัสดุและคำสั่งซื้อ</h2>
+    <p class="text-xs text-emerald-200/80 font-light">
+      ค้นหาด้วยรหัสคำสั่งซื้อ (เช่น ORD-...) หรือเบอร์โทรศัพท์ที่ใช้สั่งซื้อ
+    </p>
+  </div>
+
+  <!-- 3. กล่องค้นหา สว่าง สะอาดตา คมชัด -->
+  <div class="search-light-box p-1.5 pl-4 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-2 flex-1">
+      <span class="text-xs text-amber-600">🔍</span>
+      <input type="text" id="search-query" placeholder="ระบุเลขออเดอร์ หรือเบอร์โทรศัพท์..." class="bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none w-full font-medium">
+    </div>
+    <button onclick="searchTracking()" id="btn-search" class="btn-pearl-action px-5 py-2.5 text-xs font-bold shadow">
+      ค้นหา
+    </button>
+  </div>
+
+  <!-- ข้อความกำลังโหลด -->
+  <div id="loading-box" class="hidden text-center py-10 text-xs text-amber-200 animate-pulse font-light">
+    กำลังค้นหาข้อมูลและเชื่อมต่อสถานะขนส่ง...
+  </div>
+
+  <!-- 4. กล่องผลลัพธ์คำสั่งซื้อและการจัดส่ง -->
+  <div id="result-box" class="hidden space-y-4">
+    
+    <!-- กล่องไทม์ไลน์สถานะ (การ์ดขาวนวล ขอบทอง) -->
+    <div class="lux-white-card p-5">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
+        <div>
+          <span class="text-[10px] text-slate-400 font-light block">รหัสคำสั่งซื้อ:</span>
+          <div id="res-order-id" class="text-xs font-mono font-black text-emerald-950">-</div>
+        </div>
+        <span id="res-badge" class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">-</span>
+      </div>
+
+      <!-- เส้น Timeline ลำดับสถานะ 4 ขั้น -->
+      <div class="relative pl-6 space-y-6 border-l-2 border-emerald-800/20 ml-2 text-xs">
+        
+        <!-- ขั้นที่ 1 -->
+        <div class="relative">
+          <div id="dot-1" class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-emerald-600 border-2 border-white shadow"></div>
+          <div class="font-bold text-slate-800">1. ได้รับคำสั่งซื้อแล้ว</div>
+          <div id="res-time" class="text-[10px] text-slate-400 font-light">-</div>
+        </div>
+
+        <!-- ขั้นที่ 2 -->
+        <div class="relative">
+          <div id="dot-2" class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow"></div>
+          <div id="label-pay" class="font-bold text-slate-400">2. ยืนยันการชำระเงิน</div>
+          <div id="res-pay-status" class="text-[10px] text-slate-400 font-light">รอตรวจสอบยอดโอน</div>
+        </div>
+
+        <!-- ขั้นที่ 3 -->
+        <div class="relative">
+          <div id="dot-3" class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow"></div>
+          <div id="label-ship" class="font-bold text-slate-400">3. กำลังจัดเตรียมและแพ็กพัสดุ</div>
+        </div>
+
+        <!-- ขั้นที่ 4 -->
+        <div class="relative">
+          <div id="dot-4" class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow"></div>
+          <div id="label-done" class="font-bold text-slate-400">4. ส่งมอบให้บริษัทขนส่งเรียบร้อย</div>
+          
+          <!-- กล่องเลขพัสดุติดตาม -->
+          <div id="res-tracking-container" class="hidden mt-3 p-3 bg-emerald-50 rounded-2xl border border-emerald-200">
+            <div class="text-[10px] text-emerald-800 font-semibold mb-1">เลขพัสดุติดตาม (Tracking No.):</div>
+            <div class="flex items-center justify-between">
+              <span id="res-tracking-no" class="text-sm font-mono font-black text-emerald-950">-</span>
+              <button onclick="copyTracking()" class="px-3 py-1 bg-amber-400 hover:bg-amber-500 text-slate-950 text-[10px] font-bold rounded-lg shadow">
+                คัดลอก
+              </button>
+            </div>
+
+            <!-- กล่องแสดงสถานะสดจาก API ขนส่ง (ถ้าเชื่อมต่อไว้) -->
+            <div id="live-carrier-box" class="hidden mt-2.5 pt-2.5 border-t border-emerald-200/60 text-[11px]">
+              <div class="flex items-center gap-1 font-bold text-emerald-900 mb-0.5">
+                <span>🚚</span> <span id="carrier-name">สถานะจากขนส่ง</span>:
+              </div>
+              <div id="carrier-status-text" class="text-slate-700 font-medium">-</div>
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span id="carrier-location">-</span>
+                <span id="carrier-time">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- กล่องข้อมูลผู้รับ & ยอดสุทธิ -->
+    <div class="lux-white-card p-4 text-xs space-y-2">
+      <div class="font-bold text-slate-900 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+        <span>📍</span> ข้อมูลการจัดส่งพัสดุ
+      </div>
+      <div class="flex justify-between"><span class="text-slate-400 font-light">ชื่อผู้รับ:</span><span id="res-name" class="font-bold text-slate-800">-</span></div>
+      <div class="flex justify-between"><span class="text-slate-400 font-light">เบอร์โทรศัพท์:</span><span id="res-phone" class="font-mono text-slate-700">-</span></div>
+      <div>
+        <div class="text-slate-400 font-light mb-0.5">ที่อยู่จัดส่ง:</div>
+        <div id="res-address" class="text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 leading-relaxed font-light">-</div>
+      </div>
+      <div class="border-t border-slate-100 pt-2 flex justify-between items-center">
+        <span class="text-slate-500">ยอดชำระสุทธิ:</span>
+        <span id="res-amount" class="text-base font-black text-emerald-900 font-mono">0 บาท</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 5. แถบนำทางด้านล่างสไตล์ iOS (อัปเดตลิงก์ไปยัง pickacard_hub.html เรียบร้อย) -->
+  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-black/85 border border-amber-300/30 backdrop-blur-2xl rounded-full py-2.5 px-6 flex justify-around items-center z-40 shadow-2xl">
+    <a href="./index.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">🛍️</span>
+      <span class="text-[9px]">ร้านค้า</span>
+    </a>
+    <a href="./booking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">📅</span>
+      <span class="text-[9px]">จองคิว</span>
+    </a>
+    <a href="./pickacard_hub.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">🔮</span>
+      <span class="text-[9px]">เสี่ยงทาย</span>
+    </a>
+    <a href="./tracking.html" class="flex flex-col items-center gap-0.5 text-amber-300">
+      <span class="text-sm">📦</span>
+      <span class="text-[9px] font-bold">พัสดุ</span>
+    </a>
+    <a href="./memberships.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">👤</span>
+      <span class="text-[9px]">สมาชิก</span>
+    </a>
+  </nav>
+
+  <script>
+    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+
+    function searchTracking() {
+      const q = document.getElementById("search-query").value.trim();
+      if (!q) return alert("กรุณาระบุรหัสคำสั่งซื้อ หรือเบอร์โทรศัพท์ครับ");
+
+      const btn = document.getElementById("btn-search");
+      btn.disabled = true;
+      btn.innerText = "กำลังค้นหา...";
+      document.getElementById("loading-box").classList.remove("hidden");
+      document.getElementById("result-box").classList.add("hidden");
+
+      fetch(`${WEB_URL}?action=track_order&query=${encodeURIComponent(q)}`)
+        .then(r => r.json())
+        .then(res => {
+          btn.disabled = false;
+          btn.innerText = "ค้นหา";
+          document.getElementById("loading-box").classList.add("hidden");
+
+          if (res.status === "success" && res.order) {
+            renderTrackingOrder(res.order, res.liveTracking);
+          } else {
+            alert(res.message || "ไม่พบข้อมูลคำสั่งซื้อในระบบ");
+          }
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btn.innerText = "ค้นหา";
+          document.getElementById("loading-box").classList.add("hidden");
+          alert("การเชื่อมต่อระบบขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        });
+    }
+
+    function renderTrackingOrder(o, live) {
+      document.getElementById("res-order-id").innerText = o.orderId;
+      document.getElementById("res-time").innerText = o.timestamp;
+      document.getElementById("res-name").innerText = o.customerName;
+      document.getElementById("res-phone").innerText = o.phone;
+      document.getElementById("res-address").innerText = o.address;
+      document.getElementById("res-amount").innerText = `${Number(o.totalAmount).toLocaleString()} บาท`;
+
+      const dot2 = document.getElementById("dot-2");
+      const dot3 = document.getElementById("dot-3");
+      const dot4 = document.getElementById("dot-4");
+      const labelPay = document.getElementById("label-pay");
+      const labelShip = document.getElementById("label-ship");
+      const labelDone = document.getElementById("label-done");
+      const trackContainer = document.getElementById("res-tracking-container");
+      const badge = document.getElementById("res-badge");
+
+      const isPaid = (o.paymentStatus === "ชำระเงินเรียบร้อยแล้ว" || o.paymentStatus === "ชำระเงินแล้ว");
+      const isShipped = (o.shippingStatus === "จัดส่งแล้ว" || o.shippingStatus === "ส่งแล้ว" || o.shippingStatus === "จัดส่งสำเร็จ");
+
+      // รีเซ็ตคลาส
+      dot2.className = "absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow";
+      dot3.className = "absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow";
+      dot4.className = "absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow";
+      labelPay.className = "font-bold text-slate-400";
+      labelShip.className = "font-bold text-slate-400";
+      labelDone.className = "font-bold text-slate-400";
+
+      // ขั้นที่ 2: ชำระเงิน
+      if (isPaid) {
+        dot2.className = "absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-emerald-600 border-2 border-white shadow";
+        labelPay.className = "font-bold text-slate-800";
+        document.getElementById("res-pay-status").innerText = "ชำระเงินเรียบร้อยแล้ว";
+      }
+
+      // ขั้นที่ 3: กำลังแพ็ก
+      if (isPaid || isShipped) {
+        dot3.className = "absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-emerald-600 border-2 border-white shadow";
+        labelShip.className = "font-bold text-slate-800";
+      }
+
+      // ขั้นที่ 4: จัดส่งแล้ว
+      if (isShipped && o.trackingNo) {
+        dot4.className = "absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-emerald-600 border-2 border-white shadow";
+        labelDone.className = "font-bold text-slate-800";
+        trackContainer.classList.remove("hidden");
+        document.getElementById("res-tracking-no").innerText = o.trackingNo;
+        badge.innerText = "จัดส่งพัสดุแล้ว";
+        badge.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+
+        // แสดงผล Live API ขนส่ง (ถ้ามี)
+        const liveBox = document.getElementById("live-carrier-box");
+        if (live && live.statusText) {
+          liveBox.classList.remove("hidden");
+          document.getElementById("carrier-name").innerText = live.carrier || "สถานะขนส่ง";
+          document.getElementById("carrier-status-text").innerText = live.statusText;
+          document.getElementById("carrier-location").innerText = live.location || "";
+          document.getElementById("carrier-time").innerText = live.dateTime || "";
+        } else {
+          liveBox.classList.add("hidden");
+        }
+      } else {
+        trackContainer.classList.add("hidden");
+        badge.innerText = isPaid ? "กำลังเตรียมจัดส่ง" : "รอชำระเงิน";
+        badge.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300";
+      }
+
+      document.getElementById("result-box").classList.remove("hidden");
+    }
+
+    function copyTracking() {
+      const trk = document.getElementById("res-tracking-no").innerText;
+      navigator.clipboard.writeText(trk);
+      alert(`คัดลอกเลขพัสดุ ${trk} เรียบร้อยแล้ว`);
+    }
+  </script>
+</body>
+</html>

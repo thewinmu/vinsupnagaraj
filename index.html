@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>วินทร์ทรัพย์นาคราช • วัตถุมงคล & บริการญาณพยากรณ์</title>
   
+  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -40,7 +41,6 @@
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
     }
 
-    /* การ์ดสินค้าแบบ 2 คอลัมน์ */
     .product-mini-card {
       background: linear-gradient(145deg, rgba(4, 41, 31, 0.9) 0%, rgba(1, 15, 11, 0.95) 100%);
       border: 1.2px solid rgba(254, 240, 138, 0.25);
@@ -60,11 +60,12 @@
 </head>
 <body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-28">
 
-  <!-- Header ด้านบน -->
   <div class="flex items-center justify-between py-3 mb-3">
-    <div class="flex items-center gap-2">
-      <div class="w-9 h-9 rounded-full bg-emerald-950/80 border border-amber-300/40 flex items-center justify-center">
-        <span class="text-xl">🐍</span>
+    <div class="flex items-center gap-3">
+      <div class="relative w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_15px_rgba(254,240,138,0.55)] flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+        </div>
       </div>
       <div>
         <h2 class="text-xs font-bold tracking-widest uppercase text-amber-200">วินทร์ทรัพย์นาคราช</h2>
@@ -76,7 +77,6 @@
     </a>
   </div>
 
-  <!-- แบนเนอร์หลัก & ทางลัด LINE MyShop -->
   <div class="glossy-panel rounded-3xl p-5 mb-5 relative overflow-hidden">
     <span class="px-2.5 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-950/90 border border-emerald-400/40 text-emerald-300">
       ✨ ร้านค้าทางการ LINE MyShop
@@ -89,13 +89,11 @@
     </p>
 
     <div class="grid grid-cols-2 gap-2.5">
-      <!-- ปุ่มเชื่อม LINE MyShop LIFF -->
       <a href="https://liff.line.me/1572442362-jGxDDGRp/@thewinmu" target="_blank" class="p-2.5 rounded-xl bg-black/50 border border-emerald-400/50 text-center flex flex-col items-center justify-center">
         <span class="text-lg mb-0.5">🛍️</span>
         <span class="text-xs font-bold text-emerald-200">LINE MyShop</span>
         <span class="text-[9px] text-emerald-400">ช้อปผ่านไลน์</span>
       </a>
-      <!-- ปุ่มทางลัด TikTok -->
       <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="p-2.5 rounded-xl bg-black/50 border border-amber-300/30 text-center flex flex-col items-center justify-center">
         <span class="text-lg mb-0.5">🎵</span>
         <span class="text-xs font-bold text-amber-200">TikTok ชุมชน</span>
@@ -104,14 +102,12 @@
     </div>
   </div>
 
-  <!-- หมวดหมู่สินค้า -->
   <div class="flex items-center gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
     <button onclick="filterCategory('all')" id="tab-all" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-amber-400/20 text-white font-bold">ทั้งหมด</button>
     <button onclick="filterCategory('amulet')" id="tab-amulet" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream">📿 วัตถุมงคล</button>
     <button onclick="filterCategory('service')" id="tab-service" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream">🔮 ดูดวง/พิธี</button>
   </div>
 
-  <!-- รายการสินค้าแบบ 2 คอลัมน์ รูปขนาดเล็กตามโจทย์ -->
   <div id="product-grid" class="grid grid-cols-2 gap-3">
     <div class="col-span-full py-10 text-center text-xs text-amber-200 animate-pulse">
       กำลังดึงข้อมูลวัตถุมงคลและบริการ...
@@ -119,7 +115,7 @@
   </div>
 
   <script>
-    const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
     const MYSHOP_LIFF = "https://liff.line.me/1572442362-jGxDDGRp/@thewinmu";
 
     let allItems = [];
@@ -170,7 +166,6 @@
         const actionUrl = isService ? `./booking.html?service=${encodeURIComponent(p.name)}` : MYSHOP_LIFF;
         const btnLabel = isService ? "📅 จองคิว" : "🛒 บูชา";
 
-        // แสดงรูปประกอบขนาดเล็ก หากมี Drive ID
         const imgTag = (p.imageId && p.imageId.length > 10) 
           ? `<img src="https://drive.google.com/uc?id=${p.imageId}" class="w-12 h-12 object-cover rounded-lg border border-amber-300/30 mr-2 flex-shrink-0">`
           : `<div class="w-12 h-12 rounded-lg bg-emerald-950 border border-amber-300/30 flex items-center justify-center text-lg mr-2 flex-shrink-0">🐍</div>`;

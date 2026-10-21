@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>วินทร์ทรัพย์นาคราช • วัตถุมงคล & บริการญาณพยากรณ์</title>
+  <title>วินทร์ทรัพย์นาคราช • คลังวัตถุมงคลไอเท็มสายมู</title>
   
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -60,16 +60,17 @@
 </head>
 <body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-28">
 
+  <!-- Header โลโก้จริง[cite: 3] -->
   <div class="flex items-center justify-between py-3 mb-3">
     <div class="flex items-center gap-3">
       <div class="relative w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_15px_rgba(254,240,138,0.55)] flex-shrink-0">
         <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
-          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1"> <!--[cite: 3] -->
         </div>
       </div>
       <div>
         <h2 class="text-xs font-bold tracking-widest uppercase text-amber-200">วินทร์ทรัพย์นาคราช</h2>
-        <p class="text-[9px] text-emerald-300">@thewinmu • LINE MyShop Official</p>
+        <p class="text-[9px] text-emerald-300">คลังวัตถุมงคลไอเท็มสายมูแท้</p>
       </div>
     </div>
     <a href="./memberships.html" class="p-2 rounded-xl bg-black/60 border border-amber-300/35 text-xs text-amber-200 flex items-center gap-1">
@@ -77,22 +78,23 @@
     </a>
   </div>
 
+  <!-- แบนเนอร์หลัก -->
   <div class="glossy-panel rounded-3xl p-5 mb-5 relative overflow-hidden">
     <span class="px-2.5 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-950/90 border border-emerald-400/40 text-emerald-300">
-      ✨ ร้านค้าทางการ LINE MyShop
+      ✨ บูชาวัตถุมงคลเบิกเนตร
     </span>
     <h1 class="text-xl font-extrabold bright-white-gold-text mt-2 mb-1">
-      วัตถุมงคล & บริการญาณ
+      ไอเท็มสายมูนาคราช
     </h1>
     <p class="text-[11px] text-slate-200/90 mb-4">
-      เบิกเนตรเสริมสิริมงคล เมตตา มหาเสน่ห์ และโชคลาภ
+      มวลสารมงคล น้ำปรุงทิพย์มนต์ แร่ดูดทรัพย์ เสริมเสน่ห์และโชคลาภ
     </p>
 
     <div class="grid grid-cols-2 gap-2.5">
       <a href="https://liff.line.me/1572442362-jGxDDGRp/@thewinmu" target="_blank" class="p-2.5 rounded-xl bg-black/50 border border-emerald-400/50 text-center flex flex-col items-center justify-center">
         <span class="text-lg mb-0.5">🛍️</span>
         <span class="text-xs font-bold text-emerald-200">LINE MyShop</span>
-        <span class="text-[9px] text-emerald-400">ช้อปผ่านไลน์</span>
+        <span class="text-[9px] text-emerald-400">สั่งบูชาด่วน</span>
       </a>
       <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="p-2.5 rounded-xl bg-black/50 border border-amber-300/30 text-center flex flex-col items-center justify-center">
         <span class="text-lg mb-0.5">🎵</span>
@@ -102,15 +104,15 @@
     </div>
   </div>
 
-  <div class="flex items-center gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
+  <!-- แท็บหมวดหมู่ (ดึงไดนามิกจาก categories ของ products) -->
+  <div id="category-tabs" class="flex items-center gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
     <button onclick="filterCategory('all')" id="tab-all" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-amber-400/20 text-white font-bold">ทั้งหมด</button>
-    <button onclick="filterCategory('amulet')" id="tab-amulet" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream">📿 วัตถุมงคล</button>
-    <button onclick="filterCategory('service')" id="tab-service" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream">🔮 ดูดวง/พิธี</button>
   </div>
 
+  <!-- ตารางสินค้า 2 คอลัมน์ (แสดงเฉพาะสต็อก > 0) -->
   <div id="product-grid" class="grid grid-cols-2 gap-3">
     <div class="col-span-full py-10 text-center text-xs text-amber-200 animate-pulse">
-      กำลังดึงข้อมูลวัตถุมงคลและบริการ...
+      กำลังดึงรายการวัตถุมงคลสายมู...
     </div>
   </div>
 
@@ -122,31 +124,41 @@
     let currentCategory = 'all';
 
     window.onload = function() {
-      fetch(`${WEB_URL}?action=get_services`)
+      fetch(`${WEB_URL}?action=get_shop_products`)
         .then(r => r.json())
         .then(res => {
-          if (res.status === "success") {
-            allItems = [...(res.products || []), ...(res.services || [])];
+          if (res.status === "success" && res.products) {
+            allItems = res.products;
+            buildCategoryTabs();
+            renderProducts();
+          } else {
+            document.getElementById("product-grid").innerHTML = `<div class="col-span-full py-10 text-center text-xs text-slate-400">ไม่มีรายการสินค้าที่พร้อมบูชาในขณะนี้</div>`;
           }
-          if (allItems.length === 0) {
-            allItems = [
-              { name: "จี้พญานาคราชมณีรัตนะ", price: 999, category: "amulet", description: "แร่ดูดทรัพย์ เบิกเนตรเสริมโชคลาภ", imageId: "" },
-              { name: "น้ำปรุงทิพย์มนต์นาคราช", price: 499, category: "amulet", description: "สูตรลับโบราณ เมตตามหานิยม", imageId: "" },
-              { name: "ดูดวงญาณนาคราช 15 นาที", price: 108, category: "service", description: "ตรวจดวงชะตารอบเวลาเฉพาะบุคคล", imageId: "" }
-            ];
-          }
-          renderProducts();
         }).catch(() => {
-          renderProducts();
+          document.getElementById("product-grid").innerHTML = `<div class="col-span-full py-10 text-center text-xs text-slate-400">การเชื่อมต่อขัดข้อง</div>`;
         });
     };
 
+    function buildCategoryTabs() {
+      const tabContainer = document.getElementById("category-tabs");
+      const cats = Array.from(new Set(allItems.map(i => i.category))).filter(Boolean);
+      cats.forEach(c => {
+        const btn = document.createElement("button");
+        btn.id = `tab-${c}`;
+        btn.className = "px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream whitespace-nowrap";
+        btn.innerText = c;
+        btn.onclick = () => filterCategory(c);
+        tabContainer.appendChild(btn);
+      });
+    }
+
     function filterCategory(cat) {
       currentCategory = cat;
-      document.querySelectorAll("button[id^='tab-']").forEach(b => {
-        b.className = "px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream";
+      document.querySelectorAll("#category-tabs button").forEach(b => {
+        b.className = "px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream whitespace-nowrap";
       });
-      document.getElementById(`tab-${cat}`).className = "px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-amber-400/20 text-white font-bold";
+      const activeBtn = document.getElementById(`tab-${cat}`);
+      if (activeBtn) activeBtn.className = "px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-amber-400/20 text-white font-bold whitespace-nowrap";
       renderProducts();
     }
 
@@ -156,19 +168,18 @@
 
       const filtered = allItems.filter(item => {
         if (currentCategory === 'all') return true;
-        if (currentCategory === 'amulet') return !item.category.includes("บริการ") && !item.name.includes("ดูดวง");
-        if (currentCategory === 'service') return item.category.includes("บริการ") || item.name.includes("ดูดวง");
-        return true;
+        return item.category === currentCategory;
       });
 
-      filtered.forEach(p => {
-        const isService = p.category.includes("บริการ") || p.name.includes("ดูดวง");
-        const actionUrl = isService ? `./booking.html?service=${encodeURIComponent(p.name)}` : MYSHOP_LIFF;
-        const btnLabel = isService ? "📅 จองคิว" : "🛒 บูชา";
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-10 text-center text-xs text-slate-400">ไม่มีสินค้าในหมวดหมู่นี้</div>`;
+        return;
+      }
 
+      filtered.forEach(p => {
         const imgTag = (p.imageId && p.imageId.length > 10) 
           ? `<img src="https://drive.google.com/uc?id=${p.imageId}" class="w-12 h-12 object-cover rounded-lg border border-amber-300/30 mr-2 flex-shrink-0">`
-          : `<div class="w-12 h-12 rounded-lg bg-emerald-950 border border-amber-300/30 flex items-center justify-center text-lg mr-2 flex-shrink-0">🐍</div>`;
+          : `<div class="w-12 h-12 rounded-lg bg-emerald-950 border border-amber-300/30 flex items-center justify-center text-lg mr-2 flex-shrink-0">📿</div>`;
 
         const card = document.createElement("div");
         card.className = "product-mini-card p-3 flex flex-col justify-between";
@@ -177,7 +188,7 @@
             <div class="flex items-center mb-2">
               ${imgTag}
               <div class="overflow-hidden">
-                <span class="text-[9px] text-emerald-300 font-bold uppercase">${isService ? 'บริการ' : 'วัตถุมงคล'}</span>
+                <span class="text-[9px] text-emerald-300 font-bold uppercase">${p.category}</span>
                 <h3 class="text-xs font-bold text-white leading-tight line-clamp-1">${p.name}</h3>
               </div>
             </div>
@@ -185,8 +196,8 @@
           </div>
           <div class="pt-2 border-t border-white/5 flex items-center justify-between">
             <span class="text-xs font-bold bright-white-gold-text">฿${Number(p.price).toLocaleString()}</span>
-            <a href="${actionUrl}" target="${isService ? '_self' : '_blank'}" class="btn-gold-action px-2.5 py-1 rounded-lg text-[10px] font-bold">
-              ${btnLabel}
+            <a href="${MYSHOP_LIFF}" target="_blank" class="btn-gold-action px-2.5 py-1 rounded-lg text-[10px] font-bold">
+              🛒 บูชา
             </a>
           </div>
         `;

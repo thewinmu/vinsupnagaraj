@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>สมาชิคมงคล • วินทร์ทรัพย์นาคราช</title>
-  
+  <title>ข้อมูลสมาชิก • วินทร์ทรัพย์นาคราช</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Prompt', sans-serif;
@@ -22,12 +20,11 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .card-emerald-glossy {
+    .card-glossy {
       background: linear-gradient(135deg, rgba(6, 78, 59, 0.45) 0%, rgba(2, 44, 34, 0.75) 100%);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 24px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
@@ -35,81 +32,84 @@
 
   <!-- Header -->
   <div class="flex items-center justify-between py-4 mb-2">
-    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-white px-4 py-2 rounded-full border border-white/20 bg-black/40 hover:bg-emerald-950/60 transition shadow">⟨ กลับหน้าร้าน</button>
+    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-white px-4 py-2 rounded-full border border-white/20 bg-black/40 shadow">⟨ กลับหน้าร้าน</button>
     <div class="text-sm text-amber-200 font-bold tracking-wider">🐍 วินทร์ทรัพย์นาคราช</div>
   </div>
 
   <div class="text-center mb-6">
-    <h1 class="text-2xl font-extrabold gold-text tracking-wide">บัญชีผู้ศรัทธา</h1>
-    <p class="text-xs text-slate-400 mt-1">MEMBER PROFILE & PRIVILEGES</p>
+    <h1 class="text-2xl font-extrabold gold-text">ข้อมูลสมาชิกมงคล</h1>
+    <p id="loading-txt" class="text-xs text-slate-400 mt-1">กำลังโหลดข้อมูล...</p>
   </div>
 
-  <!-- หน้าโปรไฟล์แสดงผลทันทีอัตโนมัติ -->
-  <div id="profile-container" class="space-y-4">
+  <!-- การ์ดแสดงข้อมูล / ฟอร์มแก้ไข -->
+  <div class="card-glossy p-6 space-y-4 shadow-xl">
     
-    <!-- การ์ดโปรไฟล์สมาชิก -->
-    <div class="card-emerald-glossy p-6 text-center shadow-xl">
-      <div class="w-20 h-20 mx-auto rounded-full p-1 border-2 border-amber-400 mb-3 shadow-md bg-emerald-950 overflow-hidden flex items-center justify-center">
-        <img id="line-avatar" src="" alt="Avatar" class="w-full h-full object-cover rounded-full hidden">
-        <span id="default-avatar" class="text-3xl">👑</span>
+    <!-- โหมดแสดงผล (เริ่มแรกจะแสดงโหมดนี้) -->
+    <div id="display-mode" class="space-y-4 block">
+      <div class="space-y-3">
+        <div class="flex justify-between border-b border-white/10 pb-2">
+          <span class="text-xs text-slate-400">ชื่อ-นามสกุล</span>
+          <span id="lbl-name" class="text-sm font-bold text-amber-200">-</span>
+        </div>
+        <div class="flex justify-between border-b border-white/10 pb-2">
+          <span class="text-xs text-slate-400">รหัสสมาชิก</span>
+          <span id="lbl-code" class="text-sm font-semibold text-white">-</span>
+        </div>
+        <div class="flex justify-between border-b border-white/10 pb-2">
+          <span class="text-xs text-slate-400">เบอร์โทรศัพท์</span>
+          <span id="lbl-phone" class="text-sm text-white">-</span>
+        </div>
+        <div class="flex justify-between border-b border-white/10 pb-2">
+          <span class="text-xs text-slate-400">ที่อยู่</span>
+          <span id="lbl-address" class="text-sm text-white text-right max-w-[200px] truncate">-</span>
+        </div>
+        <div class="flex justify-between border-b border-white/10 pb-2">
+          <span class="text-xs text-slate-400">สิทธิ์ดูดวงฟรี</span>
+          <span id="lbl-quota" class="text-sm font-bold text-emerald-400">- ครั้ง</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-xs text-slate-400">สถานะสมาชิก</span>
+          <span id="lbl-privilege" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300">-</span>
+        </div>
       </div>
-      <div class="text-xs text-slate-400 font-medium">นามผู้ศรัทธา</div>
-      <div class="text-xl font-extrabold gold-text mt-1" id="member-name">กำลังโหลดข้อมูล...</div>
-      <div class="text-xs text-amber-300 font-bold mt-1" id="member-code">รหัส: -</div>
-    </div>
-
-    <!-- กล่องแสดงยอดทรัพย์และสิทธิ์ -->
-    <div class="grid grid-cols-2 gap-3">
-      <div class="card-emerald-glossy p-4 text-center">
-        <div class="text-xs text-slate-300 font-medium">ยอดทรัพย์คงเหลือ</div>
-        <div class="text-xl font-extrabold text-amber-300 mt-1" id="member-balance">0 ฿</div>
-      </div>
-      <div class="card-emerald-glossy p-4 text-center">
-        <div class="text-xs text-slate-300 font-medium">สิทธิ์เสี่ยงทายฟรี</div>
-        <div class="text-xl font-extrabold text-amber-300 mt-1" id="member-quota">10 ครั้ง</div>
-      </div>
-    </div>
-
-    <!-- กล่องข้อมูลส่วนตัว -->
-    <div class="card-emerald-glossy p-6 shadow-lg space-y-3">
-      <div class="flex justify-between items-center border-b border-white/10 pb-2">
-        <h3 class="text-sm font-bold text-amber-200">📋 ข้อมูลส่วนตัวและที่อยู่</h3>
-      </div>
-      <div class="space-y-2 text-xs text-slate-200">
-        <p><b>ชื่อ - นามสกุล:</b> <span id="info-name">-</span></p>
-        <p><b>เบอร์โทรศัพท์:</b> <span id="info-phone">-</span></p>
-        <p><b>ที่อยู่จัดส่งวัตถุมงคล:</b> <span id="info-address">-</span></p>
-      </div>
-    </div>
-
-    <!-- ✏️ ปุ่มแก้ไขข้อมูลส่วนตัว -->
-    <div>
-      <button onclick="window.location.href='./edit-profile.html'" class="w-full py-3 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-md transition bg-black/40 border border-white/20 text-xs font-semibold text-white hover:bg-emerald-950/60">
-        <span>✏️ แก้ไขข้อมูลส่วนตัว</span>
+      <button onclick="toggleEditMode(true)" class="w-full mt-4 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow transition">
+        ✏️ แก้ไขข้อมูลส่วนตัว
       </button>
     </div>
 
-    <!-- 🎴 ปุ่มเข้าสู่ระบบเสี่ยงทาย Pick a Card -->
-    <div>
-      <button onclick="window.location.href='./pickacard.html'" class="w-full py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all duration-200" style="background: linear-gradient(135deg, #78350f 0%, #451a03 100%); border: 1px solid rgba(252, 211, 77, 0.4);">
-        <span class="text-lg">🎴</span>
-        <span class="text-sm font-bold text-amber-200 tracking-wide">เข้าสู่ระบบเสี่ยงทาย (Pick a Card)</span>
-      </button>
+    <!-- ฟอร์มสำหรับแก้ไขข้อมูล (ซ่อนไว้ตอนแรก) -->
+    <div id="edit-mode" class="space-y-4 hidden">
+      <h2 class="text-sm font-bold text-amber-200 mb-2">แก้ไขข้อมูลสมาชิก</h2>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">ชื่อ-นามสกุล</label>
+          <input type="text" id="input-name" class="w-full bg-black/50 border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">เบอร์โทรศัพท์</label>
+          <input type="text" id="input-phone" class="w-full bg-black/50 border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">ที่อยู่</label>
+          <textarea id="input-address" rows="3" class="w-full bg-black/50 border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"></textarea>
+        </div>
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="saveProfile()" class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow transition">
+          💾 บันทึก
+        </button>
+        <button onclick="toggleEditMode(false)" class="flex-1 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-sm shadow transition">
+          ❌ ยกเลิก
+        </button>
+      </div>
     </div>
-
-    <!-- 📅 ปุ่มจองคิวดูดวง (แสดงทุกแพ็กเกจ) -->
-    <div class="mt-2 mb-2">
-      <button onclick="window.location.href='./booking.html'" class="w-full py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all duration-200" style="background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); border: 1px solid rgba(202, 138, 4, 0.4);">
-        <span class="text-lg">📅</span>
-        <span class="text-sm font-bold text-amber-200 tracking-wide">จองคิวดูดวง (แสดงทุกแพ็กเกจ)</span>
-      </button>
-    </div>
-
   </div>
 
   <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec";
     const LIFF_ID = "2007499712-B0uid9G3";
+    let currentUserId = "guest_user";
+    let currentDisplayName = "แขก";
 
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof liff !== 'undefined' && LIFF_ID) {
@@ -117,48 +117,84 @@
           .then(() => {
             if (liff.isLoggedIn()) {
               liff.getProfile().then(p => {
-                autoLoginAndFetch(p.userId, p.displayName, p.pictureUrl);
-              }).catch(() => {
-                autoLoginAndFetch("admin_user_001", "ผู้ศรัทธา", "");
-              });
+                currentUserId = p.userId;
+                currentDisplayName = p.displayName;
+                fetchMemberData(currentUserId, currentDisplayName);
+              }).catch(() => fetchMemberData("guest_user", "แขก"));
             } else {
-              liff.login();
+              fetchMemberData("guest_user", "แขก");
             }
           })
-          .catch(() => {
-            autoLoginAndFetch("admin_user_001", "ผู้ศรัทธา", "");
-          });
+          .catch(() => fetchMemberData("guest_user", "แขก"));
       } else {
-        autoLoginAndFetch("admin_user_001", "ผู้ศรัทธา", "");
+        fetchMemberData("admin_test_user_001", "ผู้ดูแลระบบ");
       }
     });
 
-    function autoLoginAndFetch(userId, displayName, pictureUrl) {
-      if (pictureUrl) {
-        const avatarImg = document.getElementById('line-avatar');
-        avatarImg.src = pictureUrl;
-        avatarImg.classList.remove('hidden');
-        document.getElementById('default-avatar').classList.add('hidden');
-      }
-
-      document.getElementById('member-name').innerText = displayName;
-
-      // ดึงข้อมูลสมาชิกอัตโนมัติทันที
-      fetch(`${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(userId)}&name=${encodeURIComponent(displayName)}`)
+    function fetchMemberData(userId, name) {
+      document.getElementById('loading-txt').innerText = "กำลังดึงข้อมูลสมาชิก...";
+      fetch(`${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(userId)}&name=${encodeURIComponent(name)}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.status === "success") {
-            document.getElementById('member-name').innerText = res.name || displayName;
-            document.getElementById('member-code').innerText = "รหัส: " + (res.memberCode || "B001");
-            document.getElementById('member-balance').innerText = (res.balance || 0) + " ฿";
-            document.getElementById('member-quota').innerText = (res.freeQuota || 10) + " ครั้ง";
-            
-            document.getElementById('info-name').innerText = res.name || displayName;
-            document.getElementById('info-phone').innerText = res.phone || "-";
-            document.getElementById('info-address').innerText = res.address || "-";
+            document.getElementById('lbl-name').innerText = res.name || "-";
+            document.getElementById('lbl-code').innerText = res.memberCode || "-";
+            document.getElementById('lbl-phone').innerText = res.phone || "-";
+            document.getElementById('lbl-address').innerText = res.address || "-";
+            document.getElementById('lbl-quota').innerText = res.freeQuota || "0";
+            document.getElementById('lbl-privilege').innerText = res.specialPrivilege || "ทั่วไป";
+
+            // เซ็ตค่าลง input รอไว้
+            document.getElementById('input-name').value = res.name !== "แขก" ? res.name : "";
+            document.getElementById('input-phone').value = res.phone !== "-" ? res.phone : "";
+            document.getElementById('input-address').value = res.address !== "-" ? res.address : "";
+
+            document.getElementById('loading-txt').innerText = "โหลดข้อมูลสำเร็จ";
+          } else {
+            document.getElementById('loading-txt').innerText = "ไม่พบข้อมูลสมาชิก";
           }
         })
-        .catch(err => console.error("Error auto login:", err));
+        .catch(err => {
+          console.error(err);
+          document.getElementById('loading-txt').innerText = "เกิดข้อผิดพลาดในการโหลด";
+        });
+    }
+
+    function toggleEditMode(isEdit) {
+      const displayMode = document.getElementById('display-mode');
+      const editMode = document.getElementById('edit-mode');
+      
+      if (isEdit) {
+        displayMode.style.display = 'none';
+        editMode.style.display = 'block';
+      } else {
+        editMode.style.display = 'none';
+        displayMode.style.display = 'block';
+      }
+    }
+
+    function saveProfile() {
+      const name = document.getElementById('input-name').value.trim();
+      const phone = document.getElementById('input-phone').value.trim();
+      const address = document.getElementById('input-address').value.trim();
+
+      alert("⏳ กำลังบันทึกข้อมูล...");
+
+      fetch(`${WEB_URL}?action=update_profile&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&address=${encodeURIComponent(address)}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res && res.status === "success") {
+            alert("✨ บันทึกข้อมูลสำเร็จ!");
+            toggleEditMode(false);
+            fetchMemberData(currentUserId, name);
+          } else {
+            alert("❌ บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ");
+        });
     }
   </script>
 </body>

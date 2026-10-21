@@ -59,7 +59,12 @@
       font-weight: 700;
     }
 
-    /* สวิตช์เปิด-ปิด iOS Style */
+    .sheet-btn.active {
+      background: #ca8a04;
+      color: #000;
+      font-weight: bold;
+    }
+
     .switch {
       position: relative;
       display: inline-block;
@@ -80,9 +85,9 @@
     input:checked + .slider:before { transform: translateX(20px); }
   </style>
 </head>
-<body class="p-3 sm:p-6 max-w-4xl mx-auto pb-32">
+<body class="p-3 sm:p-6 max-w-5xl mx-auto pb-32">
 
-  <!-- ส่วนหัวแผงควบคุม -->
+  <!-- Header -->
   <div class="flex flex-wrap items-center justify-between gap-3 py-3 mb-4 border-b border-amber-300/20">
     <div class="flex items-center gap-2.5">
       <div class="w-10 h-10 rounded-full bg-emerald-950/90 border border-amber-300/40 flex items-center justify-center shadow-lg">
@@ -90,7 +95,7 @@
       </div>
       <div>
         <h1 class="text-sm font-extrabold bright-white-gold-text tracking-wider uppercase">Master Console • @thewinmu</h1>
-        <p class="text-[10px] text-emerald-300">ระบบควบคุมกลาง CRM & สถิติวิเคราะห์มงคล</p>
+        <p class="text-[10px] text-emerald-300">ระบบควบคุมกลาง CRM & ตัวจัดการ Google Sheets ครบวงจร</p>
       </div>
     </div>
     
@@ -104,173 +109,104 @@
     </div>
   </div>
 
-  <!-- แถบเลือกโหมดการทำงาน -->
+  <!-- แถบเมนูหลัก -->
   <div class="flex gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
-    <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-admin active px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📊 สถิติ & เปอร์เซ็นต์</button>
+    <button onclick="switchTab('crud')" id="btn-crud" class="tab-admin active px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📝 ตัวจัดการชีต (CRUD)</button>
+    <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📊 สถิติ & เปอร์เซ็นต์</button>
     <button onclick="switchTab('switches')" id="btn-switches" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">🎚️ เปิด/ปิด ระบบ</button>
-    <button onclick="switchTab('crm')" id="btn-crm" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">👥 ตรวจสอบ CRM</button>
     <button onclick="switchTab('broadcast')" id="btn-broadcast" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📢 ประกาศ Broadcast</button>
   </div>
 
-  <!-- TAB 1: วิเคราะห์สถิติ เปอร์เซ็นต์ (รายวัน / รายเดือน / รายปี) -->
-  <div id="tab-pane-analytics" class="space-y-4">
-    <!-- ภาพรวม Conversion Rate -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-emerald-300">👥 สมาชิกทั้งหมด</div>
-        <div id="stat-total-members" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
-        <div class="text-[9px] text-slate-400 mt-1">ลงทะเบียนในระบบ</div>
+  <!-- TAB: ตัวจัดการชีต (CRUD - Member, Product, Booking/Order, Setting) -->
+  <div id="tab-pane-crud" class="space-y-4">
+    <!-- แถบเลือกชีต -->
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <button onclick="loadSheetData('memberships')" id="sheet-btn-memberships" class="sheet-btn active px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">👤 สมาชิก (members)</button>
+        <button onclick="loadSheetData('products')" id="sheet-btn-products" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">🛍️ สินค้า/ร้าน (products)</button>
+        <button onclick="loadSheetData('bookings')" id="sheet-btn-bookings" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">📅 จองคิว/ออเดอร์ (bookings)</button>
+        <button onclick="loadSheetData('settings')" id="sheet-btn-settings" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">⚙️ ตั้งค่ารอบเวลา (settings)</button>
       </div>
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-amber-300">📈 Conversion วันนี้</div>
-        <div id="stat-daily-cr" class="text-2xl font-extrabold text-amber-200 mt-1">0%</div>
-        <div class="text-[9px] text-slate-400 mt-1">ผู้เข้าชม ➔ จองคิว</div>
-      </div>
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-emerald-300">🔮 เปิดไพ่วันนี้</div>
-        <div id="stat-daily-picks" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
-        <div class="text-[9px] text-slate-400 mt-1">สถิติ Pick a Card</div>
-      </div>
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-amber-300">📅 การจองเดือนนี้</div>
-        <div id="stat-monthly-bookings" class="text-2xl font-extrabold text-amber-200 mt-1">0</div>
-        <div class="text-[9px] text-slate-400 mt-1">รอบเวลา 15 นาที</div>
-      </div>
+      <button onclick="openCreateModal()" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg">
+        <span>➕</span> เพิ่มแถวใหม่
+      </button>
     </div>
 
-    <!-- ตารางเปรียบเทียบสถิติรอบเวลา -->
-    <div class="glossy-panel rounded-2xl p-5">
-      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-3">สรุปผลการวัดกิจกรรมในระบบ</h3>
-      <div class="overflow-x-auto text-xs">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="border-b border-white/10 text-slate-400 text-[11px]">
-              <th class="py-2">ช่วงเวลา</th>
-              <th>ผู้เข้าชม (คน)</th>
-              <th>เปิดไพ่ (ครั้ง)</th>
-              <th>จองคิวสำเร็จ</th>
-              <th>อัตราผลสัมฤทธิ์</th>
-            </tr>
-          </thead>
-          <tbody id="analytics-table-body" class="divide-y divide-white/5">
-            <tr>
-              <td class="py-3 font-bold text-emerald-300">รายวัน (Today)</td>
-              <td id="tr-day-vis">-</td>
-              <td id="tr-day-pick">-</td>
-              <td id="tr-day-book">-</td>
-              <td id="tr-day-pct" class="text-amber-300 font-bold">-</td>
-            </tr>
-            <tr>
-              <td class="py-3 font-bold text-emerald-300">รายเดือน (This Month)</td>
-              <td id="tr-mon-vis">-</td>
-              <td id="tr-mon-pick">-</td>
-              <td id="tr-mon-book">-</td>
-              <td id="tr-mon-pct" class="text-amber-300 font-bold">-</td>
-            </tr>
-            <tr>
-              <td class="py-3 font-bold text-emerald-300">รายปี (This Year)</td>
-              <td id="tr-yr-vis">-</td>
-              <td id="tr-yr-pick">-</td>
-              <td id="tr-yr-book">-</td>
-              <td id="tr-yr-pct" class="text-amber-300 font-bold">-</td>
-            </tr>
+    <!-- ตารางแสดงข้อมูลชีต -->
+    <div class="glossy-panel rounded-2xl p-4 overflow-hidden">
+      <div class="flex justify-between items-center mb-3">
+        <h3 id="current-sheet-title" class="text-xs font-bold text-amber-200 uppercase tracking-widest">ตาราง: memberships</h3>
+        <span id="row-count-label" class="text-[10px] text-emerald-300">0 รายการ</span>
+      </div>
+      <div class="overflow-x-auto max-h-[55vh] text-xs">
+        <table class="w-full text-left border-collapse whitespace-nowrap">
+          <thead id="crud-table-head" class="bg-black/50 border-b border-amber-300/20 text-slate-300 sticky top-0"></thead>
+          <tbody id="crud-table-body" class="divide-y divide-white/5">
+            <tr><td class="py-8 text-center text-slate-400" colspan="10">กำลังโหลดข้อมูล...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- TAB 2: สวิตช์ เปิด/ปิด โมดูลระบบทั้งหมด -->
+  <!-- TAB: สถิติ Analytics -->
+  <div id="tab-pane-analytics" class="hidden space-y-4">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-emerald-300">👥 สมาชิกทั้งหมด</div>
+        <div id="stat-total-members" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
+      </div>
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-amber-300">📈 Conversion วันนี้</div>
+        <div id="stat-daily-cr" class="text-2xl font-extrabold text-amber-200 mt-1">0%</div>
+      </div>
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-emerald-300">🔮 เปิดไพ่วันนี้</div>
+        <div id="stat-daily-picks" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
+      </div>
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-amber-300">📅 การจองเดือนนี้</div>
+        <div id="stat-monthly-bookings" class="text-2xl font-extrabold text-amber-200 mt-1">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: สวิตช์ เปิด/ปิด -->
   <div id="tab-pane-switches" class="hidden space-y-4">
-    <div class="glossy-panel rounded-2xl p-5">
-      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-4">ควบคุมการเปิดให้บริการของแต่ละโมดูล</h3>
-      
-      <div class="space-y-4 text-xs">
-        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
-          <div>
-            <div class="font-bold text-white">ระบบจองคิวรอบเวลา (15 นาที)</div>
-            <div class="text-[10px] text-slate-400">ปิดเพื่อระงับการจองคิวใหม่ชั่วคราว</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="sw-booking" onchange="toggleModule('booking_system', this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
-          <div>
-            <div class="font-bold text-white">ระบบ Pick a Card (ไพ่นาคราช)</div>
-            <div class="text-[10px] text-slate-400">สวิตช์ควบคุมหน้าเสี่ยงทายไพ่ 6 หมวด</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="sw-oracle" onchange="toggleModule('oracle_system', this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
-          <div>
-            <div class="font-bold text-white">ระบบเชื่อมต่อร้านค้า MyShop</div>
-            <div class="text-[10px] text-slate-400">ควบคุมการแสดงปุ่มและตะกร้าสั่งซื้อ</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="sw-myshop" onchange="toggleModule('myshop_system', this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
-          <div>
-            <div class="font-bold text-white">ระบบรับลงทะเบียนสมาชิกใหม่</div>
-            <div class="text-[10px] text-slate-400">เปิดสิทธิ์ Free Trial 30 วันอัตโนมัติ</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="sw-reg" onchange="toggleModule('registration_system', this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
+    <div class="glossy-panel rounded-2xl p-5 space-y-4 text-xs">
+      <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
+        <div><div class="font-bold text-white">ระบบจองคิวรอบเวลา (15 นาที)</div></div>
+        <label class="switch"><input type="checkbox" id="sw-booking" onchange="toggleModule('booking_system', this.checked)"><span class="slider"></span></label>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
+        <div><div class="font-bold text-white">ระบบ Pick a Card (ไพ่นาคราช)</div></div>
+        <label class="switch"><input type="checkbox" id="sw-oracle" onchange="toggleModule('oracle_system', this.checked)"><span class="slider"></span></label>
       </div>
     </div>
   </div>
 
-  <!-- TAB 3: ตรวจสอบ ค้นหา CRM และแก้ไขชีต -->
-  <div id="tab-pane-crm" class="hidden space-y-4">
-    <div class="glossy-panel rounded-2xl p-5">
-      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-3">ค้นหาข้อมูลลูกค้า สมาชิก และคิวจอง</h3>
-      <div class="flex gap-2 mb-4">
-        <input type="text" id="crm-search-box" placeholder="ค้นหาด้วย ชื่อ, รหัสสมาชิก M-XXX, หรือเบอร์โทร..." class="custom-input w-full p-3 rounded-xl text-xs">
-        <button onclick="performCRMSearch()" class="px-5 py-2 rounded-xl bg-amber-400 text-black font-bold text-xs flex-shrink-0">ค้นหา</button>
-      </div>
-
-      <div id="crm-results" class="space-y-3">
-        <div class="text-center py-8 text-xs text-slate-400">พิมพ์คำค้นหาเพื่อดึงข้อมูลจากระบบ Google Sheets</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB 4: ข้อความประกาศ Broadcast ส่งถึงลูกค้า -->
+  <!-- TAB: Broadcast -->
   <div id="tab-pane-broadcast" class="hidden space-y-4">
-    <div class="glossy-panel rounded-2xl p-5">
-      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-2">ส่งสาส์นประกาศ Broadcast ผ่าน LINE Official Account</h3>
-      <p class="text-[11px] text-slate-300 mb-4 font-light">ระบบจะส่งข้อความประกาศแจ้งเตือนเข้าแชท LINE ของสมาชิกลูกค้าทุกคนโดยตรง</p>
+    <div class="glossy-panel rounded-2xl p-5 text-xs space-y-3">
+      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest">ประกาศทาง LINE OA</h3>
+      <textarea id="bc-message" rows="4" placeholder="พิมพ์ข้อความที่ต้องการประกาศ..." class="custom-input w-full p-3 rounded-xl text-xs resize-none"></textarea>
+      <button onclick="dispatchBroadcast()" class="w-full py-3 rounded-xl bg-amber-400 text-black font-bold">🚀 ยืนยันการส่ง Broadcast</button>
+    </div>
+  </div>
 
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block text-slate-300 mb-1">กลุ่มเป้าหมายผู้รับสาร</label>
-          <select id="bc-target" class="custom-input w-full p-2.5 rounded-xl text-xs">
-            <option value="all">สมาชิกทั้งหมดในระบบ</option>
-            <option value="trial_users">ผู้ที่อยู่ในช่วงทดลองใช้ฟรี 30 วัน</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-slate-300 mb-1">ข้อความสาส์นประกาศมงคล</label>
-          <textarea id="bc-message" rows="4" placeholder="พิมพ์ข้อความที่ต้องการประกาศ เช่น แจ้งรอบวันทำนายพิเศษ หรือเปิดรับวัตถุมงคลรุ่นใหม่..." class="custom-input w-full p-3 rounded-xl text-xs resize-none"></textarea>
-        </div>
-
-        <button onclick="dispatchBroadcast()" id="btn-send-bc" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-black font-bold text-xs shadow-lg hover:brightness-110 transition">
-          🚀 ยืนยันการส่งข้อความ Broadcast ทันที
-        </button>
+  <!-- MODAL: จัดการ เพิ่ม / แก้ไข ข้อมูลในชีต (CRUD Modal) -->
+  <div id="crud-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glossy-panel border-2 border-amber-300/60 rounded-3xl p-5 max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl">
+      <div class="flex justify-between items-center pb-3 border-b border-white/10 mb-3">
+        <h3 id="modal-crud-title" class="text-sm font-bold bright-white-gold-text">แก้ไขข้อมูลแถว</h3>
+        <button onclick="closeCrudModal()" class="text-xs text-slate-400 hover:text-white">✕ ปิด</button>
+      </div>
+      <div id="modal-crud-fields" class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs">
+        <!-- Field input จะถูกสร้างขึ้นมาตามคอลัมน์ของชีตนั้นๆ โดยอัตโนมัติ -->
+      </div>
+      <div class="pt-3 border-t border-white/10 mt-3 flex gap-2">
+        <button onclick="closeCrudModal()" class="flex-1 py-2.5 rounded-xl bg-black/60 border border-white/20 text-xs text-slate-300">ยกเลิก</button>
+        <button onclick="saveCrudData()" id="btn-save-crud" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-black font-bold text-xs">บันทึกข้อมูล</button>
       </div>
     </div>
   </div>
@@ -278,11 +214,19 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
 
+    let currentSheet = "memberships";
+    let currentHeaders = [];
+    let currentRows = [];
+    let editRowIndex = null; // null = โหมดเพิ่มใหม่, number = โหมดแก้ไขแถวเดิม
+
     window.onload = function() {
-      refreshAll();
+      loadSheetData("memberships");
+      loadAnalytics();
+      loadSwitches();
     };
 
     function refreshAll() {
+      loadSheetData(currentSheet);
       loadAnalytics();
       loadSwitches();
     }
@@ -291,12 +235,188 @@
       document.querySelectorAll(".tab-admin").forEach(b => b.classList.remove("active"));
       document.getElementById(`btn-${tabId}`).classList.add("active");
 
+      document.getElementById("tab-pane-crud").classList.add("hidden");
       document.getElementById("tab-pane-analytics").classList.add("hidden");
       document.getElementById("tab-pane-switches").classList.add("hidden");
-      document.getElementById("tab-pane-crm").classList.add("hidden");
       document.getElementById("tab-pane-broadcast").classList.add("hidden");
 
       document.getElementById(`tab-pane-${tabId}`).classList.remove("hidden");
+    }
+
+    // โหลดข้อมูลจากชีตที่เลือก
+    function loadSheetData(sheetName) {
+      currentSheet = sheetName;
+      document.querySelectorAll(".sheet-btn").forEach(b => b.classList.remove("active"));
+      const activeBtn = document.getElementById(`sheet-btn-${sheetName}`);
+      if (activeBtn) activeBtn.classList.add("active");
+
+      document.getElementById("current-sheet-title").innerText = `ตาราง: ${sheetName}`;
+      const tbody = document.getElementById("crud-table-body");
+      tbody.innerHTML = `<tr><td class="py-8 text-center text-amber-200 animate-pulse" colspan="10">กำลังดึงข้อมูลชีต ${sheetName}...</td></tr>`;
+
+      fetch(`${API_URL}?action=get_table_data&sheetName=${encodeURIComponent(sheetName)}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            currentHeaders = res.headers || [];
+            currentRows = res.rows || [];
+            renderCrudTable();
+          } else {
+            tbody.innerHTML = `<tr><td class="py-8 text-center text-red-400" colspan="10">${res.message || "โหลดข้อมูลล้มเหลว"}</td></tr>`;
+          }
+        })
+        .catch(() => {
+          tbody.innerHTML = `<tr><td class="py-8 text-center text-slate-400" colspan="10">เชื่อมต่อขัดข้อง กรุณาลองใหม่</td></tr>`;
+        });
+    }
+
+    function renderCrudTable() {
+      const thead = document.getElementById("crud-table-head");
+      const tbody = document.getElementById("crud-table-body");
+      const countLabel = document.getElementById("row-count-label");
+
+      countLabel.innerText = `${currentRows.length} รายการ`;
+
+      // วาด Header
+      let headHtml = `<tr><th class="py-2.5 px-3">แถว</th>`;
+      currentHeaders.forEach(h => {
+        headHtml += `<th class="py-2.5 px-3">${h}</th>`;
+      });
+      headHtml += `<th class="py-2.5 px-3 text-center">จัดการ</th></tr>`;
+      thead.innerHTML = headHtml;
+
+      // วาด Rows
+      if (currentRows.length === 0) {
+        tbody.innerHTML = `<tr><td class="py-8 text-center text-slate-400" colspan="${currentHeaders.length + 2}">ไม่มีข้อมูลในตารางนี้</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = "";
+      currentRows.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-white/5 transition";
+        let rowHtml = `<td class="py-2.5 px-3 text-slate-400 font-bold">${r.rowIndex}</td>`;
+        
+        r.data.forEach(cell => {
+          rowHtml += `<td class="py-2.5 px-3 text-slate-200 max-w-xs truncate">${cell || '-'}</td>`;
+        });
+
+        rowHtml += `
+          <td class="py-2.5 px-3 text-center flex items-center justify-center gap-1.5">
+            <button onclick="openEditModal(${r.rowIndex})" class="px-2.5 py-1 rounded bg-amber-400/20 text-amber-300 hover:bg-amber-400/40 font-semibold text-[11px]">แก้ไข</button>
+            <button onclick="deleteRow(${r.rowIndex})" class="px-2.5 py-1 rounded bg-red-500/20 text-red-300 hover:bg-red-500/40 font-semibold text-[11px]">ลบ</button>
+          </td>
+        `;
+        tr.innerHTML = rowHtml;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // เปิดหน้าต่างเพิ่มแถวใหม่
+    function openCreateModal() {
+      editRowIndex = null;
+      document.getElementById("modal-crud-title").innerText = `➕ เพิ่มข้อมูลใหม่ลงใน [${currentSheet}]`;
+      buildModalFields([]);
+      document.getElementById("crud-modal").classList.remove("hidden");
+    }
+
+    // เปิดหน้าต่างแก้ไขแถวเดิม
+    function openEditModal(rowIndex) {
+      editRowIndex = rowIndex;
+      const targetRow = currentRows.find(r => r.rowIndex === rowIndex);
+      if (!targetRow) return;
+
+      document.getElementById("modal-crud-title").innerText = `✏️ แก้ไขข้อมูลแถวที่ ${rowIndex} [${currentSheet}]`;
+      buildModalFields(targetRow.data);
+      document.getElementById("crud-modal").classList.remove("hidden");
+    }
+
+    function buildModalFields(values) {
+      const container = document.getElementById("modal-crud-fields");
+      container.innerHTML = "";
+
+      currentHeaders.forEach((h, idx) => {
+        const val = values[idx] !== undefined ? values[idx] : "";
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <label class="block text-slate-300 text-[11px] mb-1 font-medium">${h}</label>
+          <input type="text" id="crud-field-${idx}" value="${escapeHtml(val)}" class="custom-input w-full p-2.5 rounded-xl text-xs">
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function closeCrudModal() {
+      document.getElementById("crud-modal").classList.add("hidden");
+    }
+
+    // บันทึกข้อมูล (รองรับทั้ง Add และ Update)
+    function saveCrudData() {
+      const rowData = [];
+      for (let i = 0; i < currentHeaders.length; i++) {
+        const input = document.getElementById(`crud-field-${i}`);
+        rowData.push(input ? input.value.trim() : "");
+      }
+
+      const saveBtn = document.getElementById("btn-save-crud");
+      saveBtn.disabled = true;
+      saveBtn.innerText = "กำลังบันทึก...";
+
+      const action = editRowIndex ? "crud_update" : "crud_create";
+      const payload = {
+        action: action,
+        sheetName: currentSheet,
+        rowIndex: editRowIndex,
+        rowData: rowData
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(res => {
+        saveBtn.disabled = false;
+        saveBtn.innerText = "บันทึกข้อมูล";
+        if (res.status === "success") {
+          closeCrudModal();
+          loadSheetData(currentSheet);
+        } else {
+          alert("เกิดข้อผิดพลาด: " + res.message);
+        }
+      })
+      .catch(() => {
+        saveBtn.disabled = false;
+        saveBtn.innerText = "บันทึกข้อมูล";
+        alert("การเชื่อมต่อขัดข้อง");
+      });
+    }
+
+    // ลบแถว
+    function deleteRow(rowIndex) {
+      if (!confirm(`ยืนยันการลบข้อมูลแถวที่ ${rowIndex} ในตาราง ${currentSheet} หรือไม่?`)) return;
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "crud_delete",
+          sheetName: currentSheet,
+          rowIndex: rowIndex
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          loadSheetData(currentSheet);
+        } else {
+          alert("ไม่สามารถลบได้: " + res.message);
+        }
+      });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      return String(text).replace(/"/g, '&quot;');
     }
 
     function loadAnalytics() {
@@ -309,22 +429,6 @@
             document.getElementById("stat-daily-cr").innerText = `${d.daily.conversionPct}%`;
             document.getElementById("stat-daily-picks").innerText = d.daily.picks;
             document.getElementById("stat-monthly-bookings").innerText = d.monthly.bookings;
-
-            // ตารางสรุป
-            document.getElementById("tr-day-vis").innerText = d.daily.visitors;
-            document.getElementById("tr-day-pick").innerText = d.daily.picks;
-            document.getElementById("tr-day-book").innerText = d.daily.bookings;
-            document.getElementById("tr-day-pct").innerText = `${d.daily.conversionPct}%`;
-
-            document.getElementById("tr-mon-vis").innerText = d.monthly.visitors;
-            document.getElementById("tr-mon-pick").innerText = d.monthly.picks;
-            document.getElementById("tr-mon-book").innerText = d.monthly.bookings;
-            document.getElementById("tr-mon-pct").innerText = `${d.monthly.conversionPct}%`;
-
-            document.getElementById("tr-yr-vis").innerText = d.yearly.visitors;
-            document.getElementById("tr-yr-pick").innerText = d.yearly.picks;
-            document.getElementById("tr-yr-book").innerText = d.yearly.bookings;
-            document.getElementById("tr-yr-pct").innerText = "-";
           }
         });
     }
@@ -334,101 +438,26 @@
         .then(r => r.json())
         .then(res => {
           if (res.status === "success") {
-            const sw = res.switches;
-            document.getElementById("sw-booking").checked = sw.booking_system;
-            document.getElementById("sw-oracle").checked = sw.oracle_system;
-            document.getElementById("sw-myshop").checked = sw.myshop_system;
-            document.getElementById("sw-reg").checked = sw.registration_system;
+            document.getElementById("sw-booking").checked = res.switches.booking_system;
+            document.getElementById("sw-oracle").checked = res.switches.oracle_system;
           }
         });
     }
 
     function toggleModule(key, status) {
-      fetch(`${API_URL}?action=toggle_system_switch&key=${key}&status=${status}`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status !== "success") alert("ปรับเปลี่ยนสถานะล้มเหลว");
-        });
-    }
-
-    function performCRMSearch() {
-      const q = document.getElementById("crm-search-box").value.trim();
-      const resContainer = document.getElementById("crm-results");
-      if (!q) return;
-
-      resContainer.innerHTML = `<div class="py-4 text-center text-xs text-amber-200 animate-pulse">กำลังสแกนฐานข้อมูล...</div>`;
-
-      fetch(`${API_URL}?action=search_crm&query=${encodeURIComponent(q)}`)
-        .then(r => r.json())
-        .then(res => {
-          resContainer.innerHTML = "";
-          if (res.status === "success") {
-            const members = res.results.members || [];
-            const bookings = res.results.bookings || [];
-
-            if (members.length === 0 && bookings.length === 0) {
-              resContainer.innerHTML = `<div class="py-6 text-center text-xs text-slate-400">ไม่พบข้อมูลที่ตรงกับคำค้นหา</div>`;
-              return;
-            }
-
-            // แสดงรายการสมาชิก
-            members.forEach(m => {
-              const div = document.createElement("div");
-              div.className = "p-3 rounded-xl bg-black/40 border border-white/5 text-xs flex justify-between items-center";
-              div.innerHTML = `
-                <div>
-                  <div class="font-bold text-amber-200">${m.name} (${m.code})</div>
-                  <div class="text-[10px] text-slate-400">เบอร์: ${m.phone} | ทรัพย์: ฿${m.balance} | สถานะ: ${m.status}</div>
-                </div>
-                <div class="text-[10px] text-emerald-400 font-bold">แถวที่ ${m.rowIdx}</div>
-              `;
-              resContainer.appendChild(div);
-            });
-
-            // แสดงรายการจองคิว
-            bookings.forEach(b => {
-              const div = document.createElement("div");
-              div.className = "p-3 rounded-xl bg-emerald-950/40 border border-emerald-400/20 text-xs flex justify-between items-center";
-              div.innerHTML = `
-                <div>
-                  <div class="font-bold text-white">📅 คิว: ${b.name}</div>
-                  <div class="text-[10px] text-emerald-300">วัน: ${b.date} เวลา ${b.slot} (${b.service})</div>
-                </div>
-                <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-900 border border-emerald-400/30 text-emerald-300">${b.status}</span>
-              `;
-              resContainer.appendChild(div);
-            });
-          }
-        });
+      fetch(`${API_URL}?action=toggle_system_switch&key=${key}&status=${status}`);
     }
 
     function dispatchBroadcast() {
       const msg = document.getElementById("bc-message").value.trim();
-      const target = document.getElementById("bc-target").value;
-      if (!msg) {
-        alert("กรุณากรอกข้อความก่อนส่งประกาศ");
-        return;
-      }
-
-      if (!confirm("ยืนยันการส่งข้อความ Broadcast ไปยังสมาชิกทุกคน?")) return;
-
-      const btn = document.getElementById("btn-send-bc");
-      btn.disabled = true;
-      btn.innerText = "⏳ กำลังกระจายข้อความผ่านระบบ LINE...";
-
+      if (!msg) return alert("กรุณาพิมพ์ข้อความ");
       fetch(API_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "send_broadcast", message: msg, targetGroup: target })
-      })
-      .then(r => r.json())
-      .then(res => {
-        btn.disabled = false;
-        btn.innerText = "🚀 ยืนยันการส่งข้อความ Broadcast ทันที";
+        body: JSON.stringify({ action: "send_broadcast", message: msg, targetGroup: "all" })
+      }).then(r => r.json()).then(res => {
         if (res.status === "success") {
-          alert(`ส่งประกาศสำเร็จเรียบร้อย ถึงสมาชิก ${res.count} ท่าน`);
+          alert("ส่งประกาศสำเร็จ");
           document.getElementById("bc-message").value = "";
-        } else {
-          alert("เกิดข้อผิดพลาด: " + res.message);
         }
       });
     }

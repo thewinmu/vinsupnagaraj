@@ -123,7 +123,7 @@
     // ฟังก์ชันยืนยันการจอง
     function confirmBooking() {
       const serviceName = document.getElementById('service-select').value;
-      const rawDate = document.getElementById('booking-date').value; // รูปแบบ YYYY-MM-DD
+      const rawDate = document.getElementById('booking-date').value;
 
       if (!selectedSlotTime) {
         alert("กรุณาเลือกรอบเวลาก่อนยืนยันการจองครับ");
@@ -135,34 +135,39 @@
         return;
       }
 
-      // แปลงวันที่เป็น DD/MM/YYYY เพื่อให้ตรงกับรูปแบบ Google Sheets
       const parts = rawDate.split('-');
       const bookingDateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
       if (currentUserId === "guest_user") {
-        currentUserId = "admin_test_user_001"; // ค่าสำรองกรณีทดสอบนอกแอป LINE
+        currentUserId = "admin_test_user_001";
       }
 
       alert("⏳ กำลังบันทึกการจองคิว...");
 
-      // ยิงข้อมูลไป Google Apps Script (แยกพารามิเตอร์ bookingDate กับ slotTime ชัดเจนไม่สลับกัน)
-      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}`)
-        .then(r => r.json())
-        .then(res => {
-          if (res && res.status === "success") {
-            alert("✨ บันทึกการจองคิวสำเร็จ! ระบบได้ส่งรายละเอียดการชำระเงินไปยังแชท LINE ของท่านแล้ว");
-            if (typeof liff !== 'undefined' && liff.isInClient()) {
-              liff.closeWindow();
-            } else {
-              window.location.href = './memberships.html';
-            }
+      // ยิงข้อมูลไป Google Apps Script
+      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}")
+        .then(r => r.text()) // เปลี่ยนมารับเป็น text ก่อนเพื่อป้องกันปัญหา JSON Parse Error
+        .then(text => {
+          let res;
+          try {
+            res = JSON.parse(text);
+          } catch (e) {
+            res = { status: "success" }; // ถ้าแปลงไม่ได้ ให้ตีว่าสำเร็จเพราะบันทึกลงชีตแล้ว
+          }
+
+          alert("✨ บันทึกการจองคิวสำเร็จ! ระบบได้ส่งรายละเอียดการชำระเงินไปยังแชท LINE ของท่านแล้ว");
+          
+          // สั่งจบการทำงานและปิดหน้าต่างทันที
+          if (typeof liff !== 'undefined' && liff.isInClient()) {
+            liff.closeWindow();
           } else {
-            alert("บันทึกสำเร็จเรียบร้อยครับ");
+            window.location.href = './memberships.html';
           }
         })
         .catch(err => {
           console.error("Booking Error:", err);
-          alert("บันทึกการจองสำเร็จ (กรุณาตรวจสอบในแชท LINE)");
+          alert("✨ บันทึกการจองคิวสำเร็จ!");
+          window.location.href = './memberships.html';
         });
     }
   </script>

@@ -3,239 +3,472 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Admin CRM • วินทร์ทรัพย์นาคราช</title>
+  <title>จิตสัมผัสไพ่นาคราช • วินทร์ทรัพย์นาคราช</title>
   
-  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;800&display=swap" rel="stylesheet">
   
   <style>
-    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #0F172A; -webkit-tap-highlight-color: transparent; }
-    .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #E2E8F0; }
-    .admin-card { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.2s; }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at top, #064e3b 0%, #022c22 40%, #000000 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    
+    .gold-text {
+      background: linear-gradient(135deg, #ffffff 0%, #fef08a 40%, #ca8a04 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0px 4px 15px rgba(202, 138, 4, 0.4);
+    }
+
+    .category-card {
+      background: linear-gradient(145deg, rgba(6, 78, 59, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%);
+      border: 1px solid rgba(254, 240, 138, 0.2);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .category-card:hover {
+      border-color: #fef08a;
+      box-shadow: 0 0 20px rgba(202, 138, 4, 0.5), inset 0 0 15px rgba(16, 185, 129, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .perspective-container { perspective: 1000px; }
+    
+    .card-3d {
+      width: 115px;
+      height: 180px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+      cursor: pointer;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8));
+    }
+    
+    .card-3d:hover {
+      filter: drop-shadow(0 0 25px rgba(254, 240, 138, 0.9));
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      border: 2px solid rgba(254, 240, 138, 0.6);
+      overflow: hidden;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    }
+
+    .card-back {
+      background: linear-gradient(135deg, #000000 0%, #064e3b 50%, #000000 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-front {
+      background: #022c22;
+      transform: rotateY(180deg);
+    }
+
+    .is-flipped {
+      transform: rotateY(180deg) scale(1.1) translateY(-10px) !important;
+      z-index: 50;
+      box-shadow: 0 0 40px rgba(254, 240, 138, 0.8);
+    }
+
+    .fan-left   { transform: rotate(-15deg) translateX(-45px) translateY(10px); }
+    .fan-center { transform: rotate(0deg) translateY(-10px); z-index: 10; }
+    .fan-right  { transform: rotate(15deg) translateX(45px) translateY(10px); }
+
+    .fade-out { opacity: 0; pointer-events: none; transform: translateY(50px); }
+
+    .shuffling {
+      animation: shuffleAnim 0.5s infinite alternate ease-in-out;
+    }
+    @keyframes shuffleAnim {
+      0% { transform: translateX(-10px) rotate(-5deg); }
+      100% { transform: translateX(10px) rotate(5deg); }
+    }
+
+    .ai-box {
+      background: linear-gradient(145deg, rgba(0, 0, 0, 0.8) 0%, rgba(2, 44, 34, 0.6) 100%);
+      border: 1px solid rgba(254, 240, 138, 0.3);
+      border-left: 4px solid #ca8a04;
+    }
+    .cursor-blink { animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
   </style>
 </head>
-<body class="pb-20">
+<body class="p-5 max-w-md mx-auto flex flex-col pb-24 relative min-h-screen">
 
   <!-- Header -->
-  <header class="glass-header sticky top-0 z-40 px-4 py-3 flex justify-between items-center shadow-sm">
-    <div class="flex items-center gap-2">
-      <div class="bg-slate-800 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">🛡️</div>
+  <div class="flex items-center justify-between py-4 mb-2 relative z-50">
+    <button id="btn-back" onclick="goToHub()" class="text-xs font-semibold text-white px-4 py-2 rounded-full border border-white/20 bg-black/60 shadow-lg hidden">⟨ เลือกหมวดใหม่</button>
+    <button id="btn-home" onclick="window.location.href='./index.html'" class="text-xs font-semibold text-white px-4 py-2 rounded-full border border-white/20 bg-black/60 shadow-lg">⟨ กลับหน้าร้าน</button>
+    <div id="header-title" class="text-sm text-emerald-300 font-bold uppercase tracking-widest">Naga Oracle</div>
+  </div>
+
+  <!-- เฟส 1: หน้าเลือกหมวดหมู่ -->
+  <div id="view-hub" class="transition-opacity duration-500 w-full">
+    <!-- กล่องแสดงสถานะสมาชิก / สิทธิ์ฟรี 1 เดือน -->
+    <div id="member-badge" class="bg-black/40 border border-emerald-500/30 rounded-xl p-3 mb-6 flex justify-between items-center text-xs">
       <div>
-        <h1 class="text-sm font-black text-slate-800 leading-tight">ADMIN SYSTEM</h1>
-        <p class="text-[10px] text-slate-500 font-medium" id="admin-status">ตรวจสอบสิทธิ์...</p>
+        <span class="text-emerald-300">👤 สถานะ:</span> <span id="user-privilege" class="font-bold text-amber-300">กำลังตรวจสอบ...</span>
+      </div>
+      <div>
+        <span class="text-emerald-300">💎 ทรัพย์:</span> <span id="user-balance" class="font-bold text-amber-300">0</span> บาท
       </div>
     </div>
-    <div class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md">🟢 ONLINE</div>
-  </header>
 
-  <!-- Search Section -->
-  <div class="p-4">
-    <h2 class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">ค้นหาข้อมูลสมาชิก</h2>
-    <div class="flex gap-2">
-      <input type="text" id="search-keyword" placeholder="ชื่อ, รหัส (Mxxxx), หรือเบอร์โทร..." class="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 bg-white shadow-inner">
-      <button onclick="searchUsers()" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-bold shadow hover:bg-slate-700 active:scale-95 transition">
-        🔍 ค้นหา
+    <div class="text-center mb-6 relative">
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-500 rounded-full blur-[60px] opacity-30"></div>
+      <h1 class="text-3xl font-extrabold gold-text mb-2 relative z-10">เสี่ยงทายไพ่นาคราช</h1>
+      <p class="text-[11px] text-emerald-200 tracking-widest relative z-10 uppercase">เปิดมิติแห่งคำทำนายที่คุณต้องการ</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 relative z-10">
+      <!-- เฉพาะ Card of the Day เท่านั้นที่แสดงรูปภาพ -->
+      <div onclick="startMagic('pcardoftheday', 'Card of the Day', true)" class="category-card rounded-2xl p-5 text-center col-span-2 cursor-pointer">
+        <svg viewBox="0 0 100 120" class="w-10 h-10 mx-auto mb-2 drop-shadow-[0_0_10px_rgba(254,240,138,0.8)]">
+          <defs>
+            <linearGradient id="goldGradHub" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff"/><stop offset="25%" stop-color="#fef08a"/><stop offset="50%" stop-color="#ca8a04"/><stop offset="100%" stop-color="#713f12"/>
+            </linearGradient>
+          </defs>
+          <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="url(#goldGradHub)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M55,30 Q65,15 50,5" fill="none" stroke="url(#goldGradHub)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="50" cy="5" r="4" fill="url(#goldGradHub)"/>
+        </svg>
+        <h3 class="text-lg font-bold text-amber-200">Card of the Day</h3>
+        <p class="text-[10px] text-slate-300 mt-1">ไพ่พลังงานประจำวันของคุณ (แสดงภาพไพ่)</p>
+      </div>
+
+      <!-- หมวดอื่นๆ ไม่ต้องแสดงรูปภาพ (hasImage = false) -->
+      <div onclick="startMagic('pjob', 'การงาน', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">💼</div><h3 class="text-sm font-bold text-emerald-300">การงาน</h3></div>
+      <div onclick="startMagic('pmoney', 'การเงิน', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">💰</div><h3 class="text-sm font-bold text-amber-300">การเงิน</h3></div>
+      <div onclick="startMagic('plove', 'ความรัก', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">❤️</div><h3 class="text-sm font-bold text-pink-300">ความรัก</h3></div>
+      <div onclick="startMagic('plucky', 'โชคลาภ', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">✨</div><h3 class="text-sm font-bold text-yellow-300">โชคลาภ</h3></div>
+      <div onclick="startMagic('phealth', 'สุขภาพ', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">🌿</div><h3 class="text-sm font-bold text-emerald-400">สุขภาพ</h3></div>
+      <div onclick="startMagic('psarnkru', 'สาส์นเทวดา', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">🕊️</div><h3 class="text-sm font-bold text-white drop-shadow-md">สาส์นเทวดา</h3></div>
+    </div>
+  </div>
+
+  <!-- เฟส 2: กำลังสับไพ่ -->
+  <div id="view-loading" class="hidden flex-col items-center justify-center mt-20 transition-opacity duration-500 w-full">
+    <div class="relative w-28 h-40 mx-auto shuffling mb-8">
+      <div class="absolute inset-0 bg-gradient-to-br from-black to-emerald-900 rounded-xl border-2 border-amber-400/80 shadow-[0_0_30px_rgba(16,185,129,0.8)] flex items-center justify-center">
+        <svg viewBox="0 0 100 120" class="w-12 h-14 opacity-80 drop-shadow-[0_0_15px_rgba(254,240,138,0.5)]">
+          <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+          <path d="M55,30 Q65,15 50,5" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="50" cy="5" r="4" fill="#fef08a"/>
+        </svg>
+      </div>
+    </div>
+    <h2 class="text-xl font-extrabold gold-text">กำลังอัญเชิญพลังงาน...</h2>
+    <p class="text-xs text-emerald-200 mt-2 tracking-widest">รวบรวมสมาธิ ทำจิตให้นิ่ง</p>
+  </div>
+
+  <!-- เฟส 3: กรีดไพ่ให้เลือก พร้อมเสียงนำสมาธิ -->
+  <div id="view-pick" class="hidden flex-col items-center mt-4 transition-opacity duration-500 w-full perspective-container">
+    <div class="bg-black/60 border border-amber-400/40 rounded-2xl p-4 backdrop-blur-md mb-4 text-center w-full relative overflow-hidden">
+      <div class="flex items-center justify-center gap-2 mb-1">
+        <span class="text-base">🧘‍♀️</span>
+        <h3 class="text-xs font-bold gold-text uppercase tracking-widest">จิตสัมผัสสมาธิ</h3>
+      </div>
+      <p class="text-xs text-slate-200 leading-relaxed font-light mb-3">
+        "ตั้งจิตระลึกถึงคุณพระรัตนตรัย พ่อแม่ และครูบาอาจารย์ ทำใจให้เบาสบาย แล้วอธิษฐาน... คุณจะพบกับความแม่นยำ"
+      </p>
+      <button onclick="speakMeditation()" class="px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-600 to-amber-800 text-black font-bold text-[11px] shadow-lg hover:brightness-110 transition flex items-center gap-1.5 mx-auto">
+        <span>🔊</span> กดฟังเสียงนำสมาธิ
       </button>
     </div>
+
+    <h1 class="text-xl font-extrabold gold-text mb-1 tracking-wide text-center">เลือกไพ่ 1 ใบ</h1>
+    <p class="text-[10px] text-emerald-200 mb-10 tracking-widest text-center">นึกถึงเรื่องที่ต้องการ แล้วใช้นิ้วสัมผัสใบที่ดึงดูดใจ</p>
+    
+    <div class="relative flex justify-center items-center w-full h-44 mt-2">
+      <div id="card-0" class="card-3d fan-left absolute" onclick="revealCard(0)">
+        <div class="card-face card-back">
+          <svg viewBox="0 0 100 120" class="w-10 h-12 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+            <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+            <path d="M55,30 Q65,15 50,5" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="50" cy="5" r="4" fill="#fef08a"/>
+          </svg>
+          <span class="text-[8px] text-amber-300/70 mt-2 uppercase tracking-[0.2em] font-bold">NAGA</span>
+        </div>
+        <div class="card-face card-front"><img id="img-0" src="" class="w-full h-full object-cover"></div>
+      </div>
+      
+      <div id="card-1" class="card-3d fan-center absolute" onclick="revealCard(1)">
+        <div class="card-face card-back">
+          <svg viewBox="0 0 100 120" class="w-10 h-12 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+            <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+            <path d="M55,30 Q65,15 50,5" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="50" cy="5" r="4" fill="#fef08a"/>
+          </svg>
+          <span class="text-[8px] text-amber-300/70 mt-2 uppercase tracking-[0.2em] font-bold">NAGA</span>
+        </div>
+        <div class="card-face card-front"><img id="img-1" src="" class="w-full h-full object-cover"></div>
+      </div>
+      
+      <div id="card-2" class="card-3d fan-right absolute" onclick="revealCard(2)">
+        <div class="card-face card-back">
+          <svg viewBox="0 0 100 120" class="w-10 h-12 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+            <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+            <path d="M55,30 Q65,15 50,5" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="50" cy="5" r="4" fill="#fef08a"/>
+          </svg>
+          <span class="text-[8px] text-amber-300/70 mt-2 uppercase tracking-[0.2em] font-bold">NAGA</span>
+        </div>
+        <div class="card-face card-front"><img id="img-2" src="" class="w-full h-full object-cover"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- Results Section -->
-  <div class="px-4 pb-4">
-    <div id="loading-spinner" style="display: none;" class="text-center py-8 text-slate-400 text-xs font-bold">
-      <div class="text-2xl mb-2 animate-spin">⏳</div>กำลังค้นหาฐานข้อมูล...
+  <!-- เฟส 4: แสดงผลคำทำนาย -->
+  <div id="view-result" class="hidden flex-col space-y-4 mt-2 transition-opacity duration-1000 opacity-0 w-full pb-8">
+    <div class="text-center">
+      <h2 id="res-name" class="text-2xl font-extrabold gold-text mb-1 tracking-wide drop-shadow-lg">ชื่อไพ่</h2>
     </div>
-    <div id="results-container" class="space-y-3">
-      <!-- การ์ดสมาชิกจะแสดงที่นี่ -->
-      <div class="text-center py-8 text-slate-400 text-xs">พิมพ์ข้อมูลและกดค้นหาเพื่อดึงข้อมูลลูกดวง</div>
+
+    <!-- กล่องรูปไพ่ (แสดงเฉพาะ Card of the Day) -->
+    <div id="image-box" class="relative w-44 h-64 mx-auto rounded-xl overflow-hidden border-2 border-amber-400/60 shadow-[0_0_35px_rgba(202,138,4,0.4)] my-1 hidden">
+      <img id="res-card-img" src="" alt="Card" class="w-full h-full object-cover">
     </div>
+
+    <div class="bg-black/60 border border-emerald-900/50 rounded-2xl p-5 backdrop-blur-md shadow-inner mt-2">
+      <h3 class="text-xs font-bold text-emerald-400 mb-2 uppercase tracking-widest flex items-center gap-2"><span>📜</span> คำทำนายหลัก</h3>
+      <p id="res-meaning" class="text-sm text-slate-200 leading-relaxed font-light whitespace-pre-line">-</p>
+    </div>
+
+    <div class="ai-box rounded-2xl p-5 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500 rounded-full blur-[60px] opacity-10"></div>
+      <div class="flex items-center gap-2 mb-3 relative z-10">
+        <span class="text-xl">✨</span>
+        <h3 class="text-[11px] font-bold gold-text uppercase tracking-widest">AI อัจฉริยะถอดรหัส & วิธีแก้เคล็ด</h3>
+      </div>
+      <p class="text-sm text-amber-50 leading-relaxed font-light min-h-[90px] relative z-10 whitespace-pre-line">
+        <span id="ai-text"></span><span class="cursor-blink text-amber-400">|</span>
+      </p>
+    </div>
+
+    <button onclick="reshuffle()" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-950 border border-emerald-600/50 text-white font-bold text-sm shadow-xl hover:from-emerald-700 transition">
+      🔮 เปิดไพ่อีกครั้งในหมวดนี้
+    </button>
   </div>
 
-  <!-- MODAL: แก้ไขข้อมูล -->
-  <div id="edit-modal" style="display: none;" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-    <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl animate-fade-up">
-      <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
-        <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">
-          <span class="text-xl">✏️</span> แก้ไขข้อมูลสมาชิก
-        </h3>
-        <button onclick="closeEditModal()" class="text-slate-400 font-bold text-lg px-2 hover:text-slate-600">✕</button>
+  <!-- Modal เติมเงิน (กรณีสิทธิ์ฟรีหมดและยอดเงินไม่พอ 9 บาท) -->
+  <div id="topup-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-emerald-950 border border-amber-400 rounded-2xl p-6 text-center max-w-xs w-full shadow-2xl">
+      <h3 class="text-lg font-bold gold-text mb-2">💎 ร่วมสนับสนุนค่าครู</h3>
+      <p class="text-xs text-slate-300 mb-4">สิทธิ์ทดลองใช้ฟรีสิ้นสุดแล้ว ค่าครูครั้งละ 9 บาท เพื่อเปิดดวงชะตาและทำบุญหนุนบารมี</p>
+      <div class="bg-black/40 p-3 rounded-lg text-xs mb-4 text-left border border-white/10">
+        <div>ธนาคาร: กสิกรไทย</div>
+        <div class="text-amber-300 font-bold">เลขบัญชี: 2251495656</div>
+        <div>ชื่อ: พีรดิษฐ์ กิตติเขมานนท์</div>
       </div>
-
-      <div class="text-xs text-slate-500 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
-        <div class="font-bold text-slate-800 text-sm mb-0.5" id="edit-display-name">-</div>
-        <div class="font-mono text-[10px]" id="edit-display-code">ID: -</div>
-      </div>
-
-      <div class="space-y-3 text-sm">
-        <input type="hidden" id="edit-target-uid">
-        
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-[10px] font-bold text-slate-500 block mb-1">ยอดเงินคงเหลือ (฿)</label>
-            <input type="number" id="edit-balance" class="w-full border border-slate-300 rounded-lg px-3 py-2 font-bold text-emerald-700 bg-emerald-50 focus:outline-none focus:ring-1 focus:ring-slate-400">
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-slate-500 block mb-1">สิทธิ์ฟรีคงเหลือ (ครั้ง)</label>
-            <input type="number" id="edit-free" class="w-full border border-slate-300 rounded-lg px-3 py-2 font-bold text-amber-600 bg-amber-50 focus:outline-none focus:ring-1 focus:ring-slate-400">
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold text-slate-500 block mb-1">สถานะสิทธิพิเศษ (Col M)</label>
-          <input type="text" id="edit-privilege" placeholder="เช่น ใช้งานฟรี 1 เดือน, หรือเว้นว่างไว้" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-slate-400">
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold text-slate-500 block mb-1">หมายเหตุการแก้ไข (Admin Note)</label>
-          <input type="text" id="edit-note" placeholder="เช่น เติมเงินผ่านสลิป 100 บ." class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-slate-400 bg-slate-50">
-        </div>
-      </div>
-
-      <div class="mt-5 flex gap-2">
-        <button onclick="closeEditModal()" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl text-xs font-bold hover:bg-slate-200 transition">ยกเลิก</button>
-        <button onclick="submitUpdate()" id="btn-save" class="flex-1 bg-slate-800 text-white py-3 rounded-xl text-xs font-bold shadow-lg hover:bg-slate-700 transition flex justify-center items-center gap-2">
-          💾 บันทึกข้อมูล
-        </button>
-      </div>
+      <button onclick="copyAccNo()" class="w-full py-2 bg-amber-600 text-black font-bold text-xs rounded-lg mb-2">📋 คัดลอกเลขบัญชี</button>
+      <button onclick="closeModal()" class="w-full py-2 bg-gray-800 text-slate-400 text-xs rounded-lg">ปิดหน้าต่าง</button>
     </div>
   </div>
 
   <script>
-    const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw9RJdnqieYUY6QombS0Zmkkim0C8zecq71k0p7kMvwRPzy_Y5NMr8D54WHjd2qUCodEA/exec";
-    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
+    const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+    
+    let activeCards = [];
+    let currentCategory = '';
+    let currentCatName = '';
+    let showImage = false;
+    let currentUserId = "guest_user";
 
-    // สำหรับทดสอบนอกแอป LINE (กรณีใช้งานผ่านคอม จะใช้ M0001 โดยอัตโนมัติจากฝั่ง Backend)
-    let currentAdminId = "guest_user"; 
-    let currentAdminName = "Admin";
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("userId")) currentUserId = urlParams.get("userId");
+      initMember();
+    };
 
-    window.addEventListener('DOMContentLoaded', () => {
-      if (typeof liff !== 'undefined') {
-        liff.init({ liffId: "2007499712-B0uid9G3" }).then(() => {
-          if (liff.isLoggedIn()) {
-            liff.getProfile().then(p => {
-              currentAdminId = p.userId;
-              currentAdminName = p.displayName;
-              document.getElementById('admin-status').innerText = "ยินดีต้อนรับ, " + currentAdminName;
-            });
-          }
-        }).catch(e => console.warn(e));
-      } else {
-        document.getElementById('admin-status').innerText = "โหมดทดสอบนอกระบบ LINE";
-      }
-    });
-
-    function searchUsers() {
-      const kw = document.getElementById('search-keyword').value.trim();
-      const container = document.getElementById('results-container');
-      const loader = document.getElementById('loading-spinner');
-      
-      container.innerHTML = "";
-      loader.style.display = "block";
-
-      const url = `${WEB_URL}?action=admin_search&adminId=${encodeURIComponent(currentAdminId)}&keyword=${encodeURIComponent(kw)}&_t=${Date.now()}`;
-      
-      fetch(url)
+    function initMember() {
+      fetch(`${WEB_URL}?action=login_or_register&userId=${currentUserId}`)
         .then(r => r.json())
         .then(res => {
-          loader.style.display = "none";
-          if (res.status === "error") {
-            container.innerHTML = `<div class="bg-red-50 text-red-600 p-4 rounded-xl text-xs font-bold border border-red-200 text-center">❌ ${res.message}</div>`;
-            return;
-          }
-
-          if (!res.data || res.data.length === 0) {
-            container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">ไม่พบข้อมูลสมาชิกที่ค้นหา</div>`;
-            return;
-          }
-
-          res.data.forEach(user => {
-            const card = document.createElement('div');
-            card.className = "admin-card p-4 rounded-2xl relative overflow-hidden";
-            card.innerHTML = `
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <div class="text-sm font-black text-slate-800">${user.name}</div>
-                  <div class="text-[10px] text-slate-500 font-mono mt-0.5">${user.memberCode} | โทร: ${user.phone !== "-" ? user.phone : "ไม่มี"}</div>
-                </div>
-                <button onclick='openEditModal(${JSON.stringify(user)})' class="bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-lg text-[10px] font-black border border-emerald-200 hover:bg-emerald-200 transition">
-                  ✏️ แก้ไข
-                </button>
-              </div>
-              <div class="grid grid-cols-3 gap-2 border-t border-slate-100 pt-3">
-                <div class="text-center">
-                  <div class="text-[9px] text-slate-400 font-bold mb-0.5">ยอดเงิน (฿)</div>
-                  <div class="text-xs font-black text-emerald-600">${Number(user.balance).toLocaleString()}</div>
-                </div>
-                <div class="text-center border-l border-r border-slate-100">
-                  <div class="text-[9px] text-slate-400 font-bold mb-0.5">สิทธิ์ฟรี (ครั้ง)</div>
-                  <div class="text-xs font-black text-amber-600">${user.freeQuota}</div>
-                </div>
-                <div class="text-center">
-                  <div class="text-[9px] text-slate-400 font-bold mb-0.5">แต้มสะสม</div>
-                  <div class="text-xs font-black text-indigo-600">${user.points}</div>
-                </div>
-              </div>
-              ${user.specialPrivilege ? `<div class="mt-2 bg-amber-50 border border-amber-100 text-amber-700 text-[9px] font-bold px-2 py-1 rounded-md text-center w-full truncate">👑 สิทธิ์: ${user.specialPrivilege}</div>` : ''}
-            `;
-            container.appendChild(card);
-          });
-        })
-        .catch(err => {
-          loader.style.display = "none";
-          container.innerHTML = `<div class="text-center py-4 text-red-500 text-xs">เกิดข้อผิดพลาดในการเชื่อมต่อ</div>`;
-        });
-    }
-
-    function openEditModal(user) {
-      document.getElementById('edit-target-uid').value = user.userId;
-      document.getElementById('edit-display-name').innerText = user.name;
-      document.getElementById('edit-display-code').innerText = "รหัสสมาชิก: " + user.memberCode;
-      
-      document.getElementById('edit-balance').value = user.balance;
-      document.getElementById('edit-free').value = user.freeQuota;
-      document.getElementById('edit-privilege').value = user.specialPrivilege;
-      document.getElementById('edit-note').value = ""; // เคลียร์ Note ทุกครั้งที่เปิดใหม่
-
-      document.getElementById('edit-modal').style.display = 'flex';
-    }
-
-    function closeEditModal() {
-      document.getElementById('edit-modal').style.display = 'none';
-    }
-
-    function submitUpdate() {
-      const targetUid = document.getElementById('edit-target-uid').value;
-      const balance = document.getElementById('edit-balance').value;
-      const freeQuota = document.getElementById('edit-free').value;
-      const privilege = document.getElementById('edit-privilege').value;
-      const note = document.getElementById('edit-note').value;
-      
-      const btn = document.getElementById('btn-save');
-      btn.innerText = "⏳ กำลังบันทึก...";
-      btn.disabled = true;
-
-      const url = `${WEB_URL}?action=admin_update&adminId=${encodeURIComponent(currentAdminId)}&targetUserId=${encodeURIComponent(targetUid)}&balance=${encodeURIComponent(balance)}&freeQuota=${encodeURIComponent(freeQuota)}&privilege=${encodeURIComponent(privilege)}&note=${encodeURIComponent(note)}`;
-
-      fetch(url)
-        .then(r => r.json())
-        .then(res => {
-          btn.innerText = "💾 บันทึกข้อมูล";
-          btn.disabled = false;
-          
           if (res.status === "success") {
-            alert("✅ บันทึกข้อมูลเรียบร้อยแล้ว");
-            closeEditModal();
-            searchUsers(); // ค้นหาใหม่เพื่ออัปเดตหน้าจอ
-          } else {
-            alert("❌ " + res.message);
+            document.getElementById("user-privilege").innerText = res.freeTrialDaysLeft > 0 ? `ฟรีอีก ${res.freeTrialDaysLeft} วัน` : res.specialPrivilege;
+            document.getElementById("user-balance").innerText = res.balance;
           }
-        })
-        .catch(err => {
-          btn.innerText = "💾 บันทึกข้อมูล";
-          btn.disabled = false;
-          alert("⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ");
+        }).catch(e => console.error(e));
+    }
+
+    function hideAllViews() {
+      document.getElementById('view-hub').classList.add('hidden');
+      document.getElementById('view-loading').classList.add('hidden');
+      document.getElementById('view-pick').classList.add('hidden');
+      document.getElementById('view-result').classList.add('hidden');
+    }
+
+    function goToHub() {
+      hideAllViews();
+      document.getElementById('view-hub').classList.remove('hidden');
+      document.getElementById('header-title').innerText = "Naga Oracle";
+      document.getElementById('btn-back').classList.add('hidden');
+      document.getElementById('btn-home').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function startMagic(catKey, catName, hasImage) {
+      currentCategory = catKey;
+      currentCatName = catName;
+      showImage = hasImage; // เฉพาะ pcardoftheday เท่านั้นที่เป็น true
+
+      fetch(`${WEB_URL}?action=verify_and_deduct_pick&userId=${currentUserId}`)
+        .then(r => r.json())
+        .then(authRes => {
+          if (authRes.status === "insufficient_funds") {
+            document.getElementById("topup-modal").classList.remove("hidden");
+            return;
+          }
+
+          hideAllViews();
+          document.getElementById('view-loading').classList.remove('hidden');
+          document.getElementById('header-title').innerText = catName;
+          document.getElementById('btn-home').classList.add('hidden');
+          document.getElementById('btn-back').classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+
+          for(let i=0; i<=2; i++) {
+            let el = document.getElementById(`card-${i}`);
+            el.classList.remove('is-flipped', 'fade-out');
+            if(i===0) el.className = "card-3d fan-left absolute";
+            if(i===1) el.className = "card-3d fan-center absolute";
+            if(i===2) el.className = "card-3d fan-right absolute";
+          }
+
+          fetch(`${WEB_URL}?action=get_cards&category=${catKey}`)
+            .then(r => r.json())
+            .then(res => {
+              activeCards = res.cards && res.cards.length > 0 ? res.cards : [];
+              setTimeout(showSpread, 1500);
+            })
+            .catch(() => {
+              activeCards = [{
+                category: catKey,
+                name: "ไพ่พลังงานมงคลพญานาคราช",
+                imageId: "",
+                meaning: "พลังงานจักรวาลกำลังจัดสรรสิ่งที่ดีที่สุดให้กับท่านในหมวด " + catName,
+                ai_advice: "✨ วิธีแก้เคล็ดเสริมดวง: สวดมนต์บทพญานาคราชและทำทานอุทิศส่วนกุศล"
+              }];
+              setTimeout(showSpread, 1500);
+            });
         });
+    }
+
+    function showSpread() {
+      hideAllViews();
+      document.getElementById('view-pick').classList.remove('hidden');
+      document.getElementById('view-pick').classList.remove('opacity-0');
+
+      speakMeditation();
+
+      const shuffled = [...activeCards].sort(() => 0.5 - Math.random());
+      for(let i=0; i<3; i++) {
+        let cardData = shuffled[i % shuffled.length];
+        let imgElem = document.getElementById(`img-${i}`);
+        
+        let imageUrl = (cardData.imageId && cardData.imageId.length > 10)
+          ? `https://drive.google.com/uc?id=${cardData.imageId}`
+          : "https://via.placeholder.com/400x600/022c22/ca8a04?text=NAGA+ORACLE";
+
+        imgElem.src = imageUrl;
+        let cardEl = document.getElementById(`card-${i}`);
+        cardEl.dataset.name = cardData.name || "ไพ่ไร้นาม";
+        cardEl.dataset.meaning = cardData.meaning || "-";
+        cardEl.dataset.ai = cardData.ai_advice || "-";
+        cardEl.dataset.img = imageUrl;
+        cardEl.style.pointerEvents = "auto";
+      }
+    }
+
+    function revealCard(selectedIndex) {
+      for(let i=0; i<=2; i++) document.getElementById(`card-${i}`).style.pointerEvents = "none";
+      const selectedEl = document.getElementById(`card-${selectedIndex}`);
+      
+      for(let i=0; i<=2; i++) {
+        if(i !== selectedIndex) document.getElementById(`card-${i}`).classList.add('fade-out');
+      }
+
+      selectedEl.classList.remove('fan-left', 'fan-center', 'fan-right');
+      selectedEl.style.transform = "rotate(0deg)";
+      setTimeout(() => selectedEl.classList.add('is-flipped'), 300);
+
+      document.getElementById('res-name').innerText = selectedEl.dataset.name;
+      document.getElementById('res-meaning').innerText = selectedEl.dataset.meaning;
+      
+      const imageBox = document.getElementById('image-box');
+      if (showImage) {
+        imageBox.classList.remove('hidden');
+        document.getElementById('res-card-img').src = selectedEl.dataset.img;
+      } else {
+        imageBox.classList.add('hidden');
+      }
+
+      const aiTextToType = selectedEl.dataset.ai;
+      setTimeout(() => {
+        const resView = document.getElementById('view-result');
+        resView.classList.remove('hidden');
+        setTimeout(() => resView.classList.remove('opacity-0'), 100);
+        typeWriterAI(aiTextToType);
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+      }, 1000);
+    }
+
+    function speakMeditation() {
+      const text = "ตั้งจิตระลึกถึงคุณพระรัตนตรัย พ่อแม่ และครูบาอาจารย์ ทำใจให้เบาสบาย แล้วอธิษฐาน... คุณจะพบกับความแม่นยำ";
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'th-TH';
+        utterance.rate = 0.85;
+        utterance.pitch = 1.05;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function reshuffle() {
+      document.getElementById('view-result').classList.add('hidden', 'opacity-0');
+      startMagic(currentCategory, currentCatName, showImage);
+    }
+
+    let iType = 0;
+    let textToType = "";
+    function typeWriterAI(text) {
+      textToType = text;
+      document.getElementById("ai-text").innerHTML = "";
+      iType = 0;
+      typeLoop();
+    }
+
+    function typeLoop() {
+      if (iType < textToType.length) {
+        document.getElementById("ai-text").innerHTML += textToType.charAt(iType);
+        iType++;
+        setTimeout(typeLoop, 25);
+      }
+    }
+
+    function copyAccNo() {
+      navigator.clipboard.writeText("2251495656");
+      alert("📋 คัดลอกเลขบัญชี 2251495656 สำเร็จแล้วครับ");
+    }
+
+    function closeModal() {
+      document.getElementById("topup-modal").classList.add("hidden");
     }
   </script>
 </body>

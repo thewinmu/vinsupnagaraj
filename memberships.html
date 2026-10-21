@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>บัญชีผู้ศรัทธา • วินทร์ทรัพย์นาคราช</title>
+  <title>สมาชิคมงคล • วินทร์ทรัพย์นาคราช</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -29,15 +29,6 @@
       border-radius: 24px;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
-    .btn-gold-glow {
-      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022c22;
-      font-weight: 700;
-      border-radius: 9999px;
-      box-shadow: 0 4px 20px rgba(202, 138, 4, 0.4);
-      transition: all 0.2s ease;
-    }
-    .btn-gold-glow:active { transform: scale(0.96); }
   </style>
 </head>
 <body class="p-5 max-w-md mx-auto flex flex-col pb-12">
@@ -53,7 +44,7 @@
     <p class="text-xs text-slate-400 mt-1">MEMBER PROFILE & PRIVILEGES</p>
   </div>
 
-  <!-- หน้าจอโปรไฟล์หลัก (แสดง LINE Profile ทันทีอัตโนมัติ) -->
+  <!-- หน้าโปรไฟล์แสดงผลทันทีอัตโนมัติ -->
   <div id="profile-container" class="space-y-4">
     
     <!-- การ์ดโปรไฟล์สมาชิก -->
@@ -63,8 +54,8 @@
         <span id="default-avatar" class="text-3xl">👑</span>
       </div>
       <div class="text-xs text-slate-400 font-medium">นามผู้ศรัทธา</div>
-      <div class="text-xl font-extrabold gold-text mt-1" id="member-name">กำลังเชื่อมต่อ LINE...</div>
-      <div class="text-xs text-amber-300 font-bold mt-1" id="member-code">รหัส: กำลังโหลด...</div>
+      <div class="text-xl font-extrabold gold-text mt-1" id="member-name">กำลังโหลดข้อมูล...</div>
+      <div class="text-xs text-amber-300 font-bold mt-1" id="member-code">รหัส: -</div>
     </div>
 
     <!-- กล่องแสดงยอดทรัพย์และสิทธิ์ -->
@@ -100,7 +91,7 @@
 
     <!-- 🎴 ปุ่มเข้าสู่ระบบเสี่ยงทาย Pick a Card -->
     <div>
-      <button onclick="accessPickACard()" class="w-full py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all duration-200" style="background: linear-gradient(135deg, #78350f 0%, #451a03 100%); border: 1px solid rgba(252, 211, 77, 0.4);">
+      <button onclick="window.location.href='./pickacard.html'" class="w-full py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all duration-200" style="background: linear-gradient(135deg, #78350f 0%, #451a03 100%); border: 1px solid rgba(252, 211, 77, 0.4);">
         <span class="text-lg">🎴</span>
         <span class="text-sm font-bold text-amber-200 tracking-wide">เข้าสู่ระบบเสี่ยงทาย (Pick a Card)</span>
       </button>
@@ -119,7 +110,6 @@
   <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec";
     const LIFF_ID = "2007499712-B0uid9G3";
-    let isRegisteredMember = false;
 
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof liff !== 'undefined' && LIFF_ID) {
@@ -127,24 +117,23 @@
           .then(() => {
             if (liff.isLoggedIn()) {
               liff.getProfile().then(p => {
-                loadProfileAndCheckRegistration(p.userId, p.displayName, p.pictureUrl);
+                autoLoginAndFetch(p.userId, p.displayName, p.pictureUrl);
               }).catch(() => {
-                loadProfileAndCheckRegistration("admin_user_001", "ผู้ศรัทธา", "");
+                autoLoginAndFetch("admin_user_001", "ผู้ศรัทธา", "");
               });
             } else {
               liff.login();
             }
           })
           .catch(() => {
-            loadProfileAndCheckRegistration("admin_user_001", "ผู้ศรัทธา", "");
+            autoLoginAndFetch("admin_user_001", "ผู้ศรัทธา", "");
           });
       } else {
-        loadProfileAndCheckRegistration("admin_user_001", "ผู้ศรัทธา", "");
+        autoLoginAndFetch("admin_user_001", "ผู้ศรัทธา", "");
       }
     });
 
-    // โหลดแสดง LINE Profile และตรวจสอบข้อมูลกับ Google Sheets
-    function loadProfileAndCheckRegistration(userId, displayName, pictureUrl) {
+    function autoLoginAndFetch(userId, displayName, pictureUrl) {
       if (pictureUrl) {
         const avatarImg = document.getElementById('line-avatar');
         avatarImg.src = pictureUrl;
@@ -152,16 +141,13 @@
         document.getElementById('default-avatar').classList.add('hidden');
       }
 
-      // แสดงชื่อจาก LINE ให้เห็นทันที
       document.getElementById('member-name').innerText = displayName;
 
-      // ดึงข้อมูลสมาชิกจากระบบหลังบ้าน
+      // ดึงข้อมูลสมาชิกอัตโนมัติทันที
       fetch(`${WEB_URL}?action=login_or_register&userId=${encodeURIComponent(userId)}&name=${encodeURIComponent(displayName)}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.status === "success") {
-            isRegisteredMember = true;
-
             document.getElementById('member-name').innerText = res.name || displayName;
             document.getElementById('member-code').innerText = "รหัส: " + (res.memberCode || "B001");
             document.getElementById('member-balance').innerText = (res.balance || 0) + " ฿";
@@ -172,16 +158,7 @@
             document.getElementById('info-address').innerText = res.address || "-";
           }
         })
-        .catch(err => console.error("Error loading data:", err));
-    }
-
-    // ฟังก์ชันเข้าใช้งาน Pick a Card
-    function accessPickACard() {
-      if (isRegisteredMember) {
-        window.location.href = './pickacard.html';
-      } else {
-        window.location.href = './pickacard.html';
-      }
+        .catch(err => console.error("Error auto login:", err));
     }
   </script>
 </body>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>เสี่ยงทายไพ่นำทางชีวิต • วินทร์ทรัพย์นาคราช</title>
+  
+  <script src="./config.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 50% -10%, #064032 0%, #032018 45%, #010a08 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .pearl-header {
+      background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .lux-glass-box {
+      background: linear-gradient(145deg, rgba(6, 64, 50, 0.88) 0%, rgba(2, 28, 21, 0.96) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+    }
+
+    /* 3D Flip Card Animation */
+    .card-perspective {
+      perspective: 1200px;
+    }
+    .card-flipper {
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .card-flipper.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: 20px;
+    }
+    .card-back-face {
+      background: radial-gradient(circle at 50% 50%, #031c15 0%, #010a08 100%);
+      border: 2px solid #facc15;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(250, 204, 21, 0.25);
+      cursor: pointer;
+    }
+    .card-front-face {
+      transform: rotateY(180deg);
+      background: #ffffff;
+      border: 2px solid #ca8a04;
+      box-shadow: 0 10px 30px rgba(202, 138, 4, 0.4);
+    }
+
+    /* แท็บหมวดหมู่ */
+    .cat-btn {
+      background: rgba(2, 44, 34, 0.7);
+      border: 1px solid rgba(254, 240, 138, 0.2);
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+    }
+    .cat-btn.active {
+      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
+      color: #022018;
+      font-weight: 700;
+      border-color: #fef08a;
+      box-shadow: 0 3px 10px rgba(202, 138, 4, 0.35);
+    }
+
+    .btn-pearl-action {
+      background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
+      color: #fef08a;
+      border: 1px solid rgba(254, 240, 138, 0.45);
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+    .btn-pearl-action:hover {
+      background: #047857;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-36">
+
+  <!-- Header -->
+  <header class="pearl-header rounded-3xl p-3 mb-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain p-0.5" onerror="this.src='https://placehold.co/60x60/064032/fef08a?text=🐍'">
+        </div>
+      </div>
+      <div>
+        <h1 class="text-xs font-bold text-amber-200 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
+        <p class="text-[9px] text-emerald-300/80 font-light" id="header-category-label">เสี่ยงทายไพ่นำทางชีวิต</p>
+      </div>
+    </div>
+    
+    <a href="./pickacard_hub.html" class="text-[10px] bg-black/50 border border-amber-300/30 text-pearl-cream px-3 py-1.5 rounded-full font-medium">
+      ⟨ กลับหน้า Hub
+    </a>
+  </header>
+
+  <!-- แท็บหมวดหมู่ไพ่ -->
+  <div class="flex items-center gap-1.5 mb-3.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+    <button onclick="changeCategory('pcardoftheday')" id="tab-pcardoftheday" class="cat-btn active px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">🌟 ประจำวัน</button>
+    <button onclick="changeCategory('plove')" id="tab-plove" class="cat-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">💖 ความรัก</button>
+    <button onclick="changeCategory('pjob')" id="tab-pjob" class="cat-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">💼 การงาน</button>
+    <button onclick="changeCategory('pmoney')" id="tab-pmoney" class="cat-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">💰 โชคลาภ</button>
+    <button onclick="changeCategory('phealth')" id="tab-phealth" class="cat-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">🌿 สุขภาพ</button>
+  </div>
+
+  <!-- กล่องตั้งจิตระลึก -->
+  <div class="lux-glass-box rounded-2xl p-3.5 text-center mb-3">
+    <div class="text-amber-300 text-xs font-bold flex items-center justify-center gap-1 mb-1">
+      <span>🧘</span> ตั้งสมาธิและอธิษฐานจิต
+    </div>
+    <p class="text-[11px] text-emerald-100/90 leading-relaxed font-light" id="instruction-text">
+      "ทำจิตใจให้สงบ นึกถึงคำถามหรือเรื่องที่ต้องการแนวทาง แล้วแตะสัมผัสที่ใบไพ่เพื่อเปิดรับสาส์น"
+    </p>
+  </div>
+
+  <!-- พื้นที่ใบไพ่ 3D -->
+  <div class="flex flex-col items-center justify-center my-2 card-perspective">
+    <div id="card-box" onclick="flipCard()" class="card-flipper w-52 h-80 cursor-pointer">
+      
+      <!-- หลังไพ่พญานาคสีทอง -->
+      <div class="card-face card-back-face flex flex-col items-center justify-between p-4">
+        <span class="text-[8px] font-mono tracking-widest text-amber-300/60 uppercase">NAGA BLESSING</span>
+        
+        <div class="w-28 h-28 rounded-full border-2 border-amber-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(250,204,21,0.25)] p-2">
+          <img src="./card_back_kru.png" class="w-full h-full object-contain" onerror="this.outerHTML='<span class=\'text-4xl text-amber-300\'>🐍</span>'">
+        </div>
+
+        <div class="text-center">
+          <span class="text-[11px] font-bold text-amber-200 block">แตะเพื่อเปิดคำทำนาย</span>
+          <span class="text-[8px] text-emerald-300/70 font-light">วินทร์ทรัพย์นาคราช</span>
+        </div>
+      </div>
+
+      <!-- หน้าไพ่เมื่อพลิกแล้ว -->
+      <div class="card-face card-front-face p-3.5 flex flex-col justify-between text-slate-800">
+        <div>
+          <div class="flex items-center justify-between pb-1 border-b border-amber-200">
+            <span id="front-category" class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">สาส์นนำทาง</span>
+            <span class="text-amber-500 text-xs">✨</span>
+          </div>
+
+          <div class="w-full h-44 bg-slate-50 rounded-xl overflow-hidden my-2 flex items-center justify-center p-1 border border-slate-100 shadow-inner">
+            <img id="front-img" src="" alt="หน้าไพ่" class="w-full h-full object-contain">
+          </div>
+
+          <h3 id="front-name" class="text-xs font-extrabold text-slate-900 text-center line-clamp-1">ชื่อไพ่</h3>
+        </div>
+        <div class="text-[9px] text-center text-slate-400 font-light pb-1">
+          วินทร์ทรัพย์นาคราช • สำรับนำทาง
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- กล่องผลลัพธ์คำทำนาย (ดึงตรงจาก Sheets ไม่ใช้ AI) -->
+  <div id="result-container" class="hidden space-y-3 mt-4">
+    <div class="lux-glass-box rounded-2xl p-4">
+      <div class="text-xs font-bold text-amber-300 mb-1.5 flex items-center gap-1.5">
+        <span>📖</span> คำทำนาย & แนวโน้ม
+      </div>
+      <p id="res-meaning" class="text-xs text-slate-100 leading-relaxed font-light whitespace-pre-line"></p>
+    </div>
+
+    <div class="lux-glass-box rounded-2xl p-4 border border-amber-300/40">
+      <div class="text-xs font-bold text-emerald-300 mb-1.5 flex items-center gap-1.5">
+        <span>🪷</span> ข้อคิดและแนวทางปฏิบัติ
+      </div>
+      <p id="res-advice" class="text-xs text-slate-200 leading-relaxed font-light whitespace-pre-line"></p>
+    </div>
+
+    <button onclick="resetAndShuffle()" class="btn-pearl-action w-full py-3 text-xs font-bold shadow-lg">
+      🔮 เสี่ยงทายใหม่อีกครั้งในหมวดนี้
+    </button>
+  </div>
+
+  <!-- แถบนำทางด้านล่างสไตล์ iOS 2 แถวแบบคงที่ -->
+  <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
+    <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
+      <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">🛍️</span>
+        <span class="text-[10px]">ร้านค้า</span>
+      </a>
+      <a href="./booking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">📅</span>
+        <span class="text-[10px]">จองคิว</span>
+      </a>
+      <a href="./pickacard_hub.html" class="flex items-center justify-center gap-1 text-amber-300 font-bold py-1 bg-amber-400/10 rounded-xl border border-amber-300/30">
+        <span class="text-xs">🔮</span>
+        <span class="text-[10px]">เสี่ยงทาย</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-3 gap-1 pt-1.5 text-center">
+      <a href="./tracking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">📦</span>
+        <span class="text-[10px]">ติดตามพัสดุ</span>
+      </a>
+      <a href="./memberships.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">👤</span>
+        <span class="text-[10px]">ระบบสมาชิก</span>
+      </a>
+      <a href="./admin.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">⚙️</span>
+        <span class="text-[10px]">แอดมิน</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+
+    const catLabels = {
+      "pcardoftheday": "ดวงชะตาประจำวัน",
+      "plove": "ความรัก & คู่ครอง",
+      "pjob": "การงาน & ธุรกิจ",
+      "pmoney": "โชคลาภ & การเงิน",
+      "phealth": "สุขภาพ & สมดุล"
+    };
+
+    let currentCat = "pcardoftheday";
+    let cardsData = [];
+    let isFlipped = false;
+
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('cat');
+      if (catParam && catLabels[catParam]) {
+        currentCat = catParam;
+      }
+      setActiveTab(currentCat);
+      loadCards(currentCat);
+    };
+
+    function changeCategory(cat) {
+      if (isFlipped) resetCardVisual();
+      currentCat = cat;
+      setActiveTab(cat);
+      loadCards(cat);
+    }
+
+    function setActiveTab(cat) {
+      document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+      const btn = document.getElementById(`tab-${cat}`);
+      if (btn) btn.classList.add("active");
+      document.getElementById("header-category-label").innerText = `หมวด: ${catLabels[cat] || cat}`;
+    }
+
+    function loadCards(cat) {
+      cardsData = [];
+      fetch(`${WEB_URL}?action=get_cards&category=${encodeURIComponent(cat)}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success" && res.cards && res.cards.length > 0) {
+            cardsData = res.cards;
+          } else {
+            // ดึงจากชีต psarnkru หรือแสดงข้อความสำรอง
+            cardsData = [
+              {
+                name: "ไพ่พลังแห่งความตั้งมั่น",
+                meaning: "ช่วงนี้ให้ใช้ความรอบคอบและตั้งมั่นในเป้าหมาย อย่าเพิ่งหวั่นไหวกับสิ่งรอบข้าง ทุกอย่างกำลังคลี่คลายไปในทางที่ดี",
+                advice: "ลงมือทำสิ่งสำคัญทีละเรื่อง มีสติในการสื่อสาร แล้วผลลัพธ์จะสำเร็จราบรื่น"
+              }
+            ];
+          }
+        })
+        .catch(() => {
+          cardsData = [
+            {
+              name: "ไพ่ความสงบทางใจ",
+              meaning: "พักผ่อนให้เพียงพอและจัดระเบียบความคิด สิ่งที่กังวลอยู่จะค่อยๆ คลี่คลาย",
+              advice: "เน้นการปล่อยวางสิ่งที่ควบคุมไม่ได้ และโฟกัสกับหน้าที่ในปัจจุบัน"
+            }
+          ];
+        });
+    }
+
+    function flipCard() {
+      if (isFlipped) return;
+      if (cardsData.length === 0) return alert("กำลังจัดเตรียมสำรับไพ่ กรุณาลองใหม่อีกครั้ง");
+
+      isFlipped = true;
+      const picked = cardsData[Math.floor(Math.random() * cardsData.length)];
+
+      document.getElementById("front-name").innerText = picked.name || "สาส์นนำทาง";
+      document.getElementById("front-category").innerText = catLabels[currentCat] || "สาส์นนำทาง";
+
+      let imgUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=350&q=80";
+      if (picked.imageId && picked.imageId.trim() !== "") {
+        const raw = picked.imageId.trim();
+        imgUrl = (raw.startsWith("http://") || raw.startsWith("https://")) ? raw : `https://drive.google.com/uc?id=${raw}`;
+      }
+      document.getElementById("front-img").src = imgUrl;
+
+      document.getElementById("card-box").classList.add("flipped");
+
+      setTimeout(() => {
+        document.getElementById("res-meaning").innerText = picked.meaning || "ตั้งมั่นอยู่ในความดี มีสติในการตัดสินใจ แล้วจะผ่านพ้นทุกเรื่องราวไปได้อย่างราบรื่น";
+        document.getElementById("res-advice").innerText = picked.advice || "หมั่นทำบุญ สร้างกุศล และมีเมตตาต่อคนรอบข้าง";
+        document.getElementById("result-container").classList.remove("hidden");
+        document.getElementById("result-container").scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+
+    function resetAndShuffle() {
+      resetCardVisual();
+      const cardBox = document.getElementById("card-box");
+      cardBox.classList.add("animate-pulse");
+      setTimeout(() => cardBox.classList.remove("animate-pulse"), 400);
+    }
+
+    function resetCardVisual() {
+      isFlipped = false;
+      document.getElementById("card-box").classList.remove("flipped");
+      document.getElementById("result-container").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

@@ -168,13 +168,13 @@
       </div>
 
       <button id="btn-submit-booking" onclick="submitBooking()" class="btn-pearl-action w-full py-3.5 text-xs shadow-xl flex items-center justify-center gap-2">
-        <span>✨ ยืนยันการนัดหมาย</span>
+        <span>✨ ยืนยันการนัดหมายและส่งเข้าแชท LINE</span>
       </button>
     </div>
 
   </div>
 
-  <!-- 2. กล่องใบแจ้งยอด / นัดหมายสำเร็จ (ซ่อนอยู่ตอนแรก) -->
+  <!-- 2. กล่องใบแจ้งยอดสำรอง (กรณีเปิดนอก LINE) -->
   <div id="invoice-box" class="lux-glass-box rounded-3xl p-5 space-y-4 hidden">
     <div class="text-center">
       <div class="text-3xl mb-1">🙏</div>
@@ -201,14 +201,14 @@
       </div>
     </div>
 
-    <!-- ช่องทางโอนเงิน (ฝังเลข 2251495656 แก้ไขปัญหา undefined ถาวร) -->
+    <!-- ช่องทางโอนเงิน: เลขบัญชี 2251495656 คงที่แน่นอน ไม่ขึ้น undefined -->
     <div class="bg-emerald-950/70 p-3.5 rounded-2xl border border-amber-300/30 text-xs space-y-2">
       <div class="text-[11px] text-slate-300">ช่องทางการโอนเงิน:</div>
       <div class="flex justify-between items-center">
         <div>
           <div class="text-slate-300 font-light">ธ.กสิกรไทย (KBANK)</div>
           <div id="bank-acc-display" class="text-base font-bold text-amber-300 font-mono tracking-wider">2251495656</div>
-          <div class="text-[10px] text-slate-300">ชื่อ: พีรดิษฐ์ กิตติเขมานนท์</div>
+          <div class="text-[10px] text-slate-300">ชื่อ: นายพีรดิษฐ์ กิตติเขมานนท์</div>
         </div>
         <button type="button" onclick="copyBankAccount()" class="px-3 py-1.5 bg-amber-400 hover:bg-amber-500 text-black font-bold text-[11px] rounded-lg shadow">
           📋 คัดลอกเลขบัญชี
@@ -272,7 +272,6 @@
     let currentUserId = "GUEST_USER";
 
     window.onload = function() {
-      // ตั้งค่าวันเริ่มต้นเป็นวันนี้
       const today = new Date().toISOString().split('T')[0];
       const dateInput = document.getElementById("booking-date");
       dateInput.min = today;
@@ -350,7 +349,7 @@
           document.getElementById("slot-loading").classList.add("hidden");
 
           if (res.status === "success" && res.slots && res.slots.length > 0) {
-            // กรองคำว่า BOOKING_STATUS ออก 100% จากฝั่ง Client เพื่อความปลอดภัยสูงสุด
+            // กรองคำว่า BOOKING_STATUS ออก
             const cleanSlots = res.slots.filter(s => {
               const t = String(s.time || "").trim();
               return t && !t.includes("BOOKING") && !t.includes("STATUS");
@@ -391,6 +390,7 @@
       buttonElement.classList.add("selected");
     }
 
+    // ฟังก์ชันกดยืนยันการนัดหมายและพิมพ์ส่งเข้าแชท LINE ทันที
     function submitBooking() {
       const select = document.getElementById("service-select");
       const service = availableServices.find(s => s.id === select.value);
@@ -417,41 +417,41 @@
         .then(r => r.json())
         .then(res => {
           btn.disabled = false;
-          btn.innerText = "✨ ยืนยันการนัดหมาย";
+          btn.innerText = "✨ ยืนยันการนัดหมายและส่งเข้าแชท LINE";
 
           if (res.status === "success") {
             const bookingId = res.bookingId;
 
-            // สลับหน้าจอ
-            document.getElementById("booking-box").classList.add("hidden");
-            document.getElementById("invoice-box").classList.remove("hidden");
+            // ข้อความที่จะพิมพ์ส่งตอบรับในห้องแชท LINE เป็นหลัก
+            const bookingChatMessages = [
+              {
+                type: "text",
+                text: `🔮 ใบนัดหมายตรวจดวงชะตา [${bookingId}]\n` +
+                      `━━━━━━━━━━━━━━━━\n` +
+                      `• บริการ: ${res.serviceName}\n` +
+                      `• วันที่นัดหมาย: ${res.bookingDate}\n` +
+                      `• รอบเวลาสนทนา: ${res.slotTime}\n` +
+                      `• ค่าครู/ยอดชำระ: ฿${Number(res.price).toLocaleString()} บาท\n` +
+                      `━━━━━━━━━━━━━━━━\n` +
+                      `🏦 ช่องทางโอนเงิน:\n` +
+                      `ธ.กสิกรไทย (KBANK)\n` +
+                      `เลขบัญชี: 2251495656\n` +
+                      `ชื่อบัญชี: นายพีรดิษฐ์ กิตติเขมานนท์\n\n` +
+                      `⚠️ กรุณาโอนเงินและแนบรูปสลิปในแชทนี้ภายใน 15 นาที ระบบจะตรวจสอบและยืนยันคิวอัตโนมัติครับ 🙏`
+              }
+            ];
 
-            // แสดงข้อมูลในใบแจ้งยอด
-            document.getElementById("inv-id").innerText = bookingId;
-            document.getElementById("inv-service").innerText = res.serviceName;
-            document.getElementById("inv-date").innerText = res.bookingDate;
-            document.getElementById("inv-slot").innerText = res.slotTime;
-            document.getElementById("inv-price").innerText = `฿${Number(res.price).toLocaleString()} บาท`;
-
-            // กำหนดเลขบัญชีคงที่ 2251495656 แก้ไขปัญหา undefined ถาวร
-            const bankDisplay = document.getElementById("bank-acc-display");
-            if (bankDisplay) bankDisplay.innerText = "2251495656";
-
-            // ส่งข้อความยืนยันใน LINE ถ้าเปิดผ่านแอป LINE
+            // ส่งเข้าห้องแชทและปิดหน้าต่าง LIFF กลับสู่ห้องแชททันที
             if (typeof liff !== "undefined" && liff.isInClient()) {
-              liff.sendMessages([
-                {
-                  type: "text",
-                  text: `🔮 ใบนัดหมายตรวจดวงชะตา [${bookingId}]\n` +
-                        `รายการ: ${res.serviceName}\n` +
-                        `วันที่: ${res.bookingDate}\n` +
-                        `รอบเวลา: ${res.slotTime}\n` +
-                        `ยอดชำระ: ฿${Number(res.price).toLocaleString()} บาท\n\n` +
-                        `🏦 ธ.กสิกรไทย 2251495656\n` +
-                        `ชื่อบัญชี: พีรดิษฐ์ กิตติเขมานนท์\n\n` +
-                        `⚠️ กรุณาโอนเงินและแนบสลิปในแชทนี้ภายใน 15 นาที ระบบจะยืนยันคิวอัตโนมัติครับ 🙏`
-                }
-              ]).catch(() => {});
+              liff.sendMessages(bookingChatMessages)
+                .then(() => {
+                  liff.closeWindow(); // ปิดกลับเข้าห้องแชท LINE ทันที
+                })
+                .catch(() => {
+                  showInvoiceFallback(res);
+                });
+            } else {
+              showInvoiceFallback(res);
             }
 
           } else {
@@ -460,9 +460,23 @@
         })
         .catch(() => {
           btn.disabled = false;
-          btn.innerText = "✨ ยืนยันการนัดหมาย";
+          btn.innerText = "✨ ยืนยันการนัดหมายและส่งเข้าแชท LINE";
           alert("การเชื่อมต่อระบบขัดข้อง กรุณาลองใหม่อีกครั้ง");
         });
+    }
+
+    function showInvoiceFallback(res) {
+      document.getElementById("booking-box").classList.add("hidden");
+      document.getElementById("invoice-box").classList.remove("hidden");
+
+      document.getElementById("inv-id").innerText = res.bookingId;
+      document.getElementById("inv-service").innerText = res.serviceName;
+      document.getElementById("inv-date").innerText = res.bookingDate;
+      document.getElementById("inv-slot").innerText = res.slotTime;
+      document.getElementById("inv-price").innerText = `฿${Number(res.price).toLocaleString()} บาท`;
+
+      const bankDisplay = document.getElementById("bank-acc-display");
+      if (bankDisplay) bankDisplay.innerText = "2251495656";
     }
 
     function copyBankAccount() {

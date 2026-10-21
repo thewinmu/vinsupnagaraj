@@ -47,13 +47,15 @@
   <!-- ส่วนเลือกบริการและเวลา -->
   <div class="space-y-4">
     
-    <!-- เลือกแพ็กเกจ -->
+    <!-- เลือกแพ็กเกจ (อัปเดตรายการครบถ้วนตามต้องการ) -->
     <div class="card-emerald-glossy p-5 space-y-3">
       <label class="block text-xs font-bold text-amber-200">📌 เลือกแพ็กเกจบริการ</label>
       <select id="service-select" class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-400">
         <option value="ดูดวง 15 นาที 108 บาท">ดูดวง 15 นาที (108 บาท)</option>
-        <option value="ดูดวง 30 นาที 300 บาท">ดูดวง 30 นาที (300 บาท)</option>
-        <option value="ดูดวงแบบจัดเต็ม 1 ชั่วโมง">ดูดวงแบบจัดเต็ม 1 ชั่วโมง</option>
+        <option value="ดูดวง 20 นาที 129 บาท">ดูดวง 20 นาที (129 บาท)</option>
+        <option value="ดูดวง 45 นาที 365 บาท">ดูดวง 45 นาที (365 บาท)</option>
+        <option value="ดูดวง 1ชม 399 บาท">ดูดวง 1 ชม. (399 บาท)</option>
+        <option value="ดูดวง unlimite ไม่เกิน 1.30 ชม">ดูดวง Unlimited ไม่เกิน 1.30 ชม.</option>
       </select>
     </div>
 
@@ -90,12 +92,9 @@
     let selectedSlotTime = "";
 
     window.addEventListener('DOMContentLoaded', () => {
-      // ตั้งค่าวันที่เริ่มต้นเป็นวันปัจจุบัน
       const today = new Date().toISOString().split('T')[0];
-      const dateInput = document.getElementById('booking-date');
-      dateInput.value = today;
+      document.getElementById('booking-date').value = today;
 
-      // ตรวจสอบ LIFF
       if (typeof liff !== 'undefined' && LIFF_ID) {
         liff.init({ liffId: LIFF_ID })
           .then(() => {
@@ -109,7 +108,6 @@
       }
     });
 
-    // ฟังก์ชันเลือกปุ่มรอบเวลา
     function selectSlot(btn, timeStr) {
       document.querySelectorAll('.slot-btn').forEach(b => {
         b.classList.remove('bg-amber-600', 'border-amber-400', 'text-white');
@@ -120,7 +118,6 @@
       selectedSlotTime = timeStr;
     }
 
-    // ฟังก์ชันยืนยันการจอง
     function confirmBooking() {
       const serviceName = document.getElementById('service-select').value;
       const rawDate = document.getElementById('booking-date').value;
@@ -136,7 +133,7 @@
       }
 
       const parts = rawDate.split('-');
-      const bookingDateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      const bookingDateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`; // วันที่ DD/MM/YYYY
 
       if (currentUserId === "guest_user") {
         currentUserId = "admin_test_user_001";
@@ -144,20 +141,13 @@
 
       alert("⏳ กำลังบันทึกการจองคิว...");
 
-      // ยิงข้อมูลไป Google Apps Script
-      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}")
-        .then(r => r.text()) // เปลี่ยนมารับเป็น text ก่อนเพื่อป้องกันปัญหา JSON Parse Error
+      // ส่งพารามิเตอร์เรียงลำดับ: bookingDate (วันที่) ตามด้วย slotTime (รอบเวลา)
+      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}`)
+        .then(r => r.text())
         .then(text => {
-          let res;
-          try {
-            res = JSON.parse(text);
-          } catch (e) {
-            res = { status: "success" }; // ถ้าแปลงไม่ได้ ให้ตีว่าสำเร็จเพราะบันทึกลงชีตแล้ว
-          }
-
           alert("✨ บันทึกการจองคิวสำเร็จ! ระบบได้ส่งรายละเอียดการชำระเงินไปยังแชท LINE ของท่านแล้ว");
           
-          // สั่งจบการทำงานและปิดหน้าต่างทันที
+          // ปิดหน้าต่างทันทีเมื่อจองสำเร็จ
           if (typeof liff !== 'undefined' && liff.isInClient()) {
             liff.closeWindow();
           } else {

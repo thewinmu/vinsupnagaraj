@@ -3,61 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>เรือนมงคลสมาชิก • วินทร์ทรัพย์นาคราช</title>
+  <title>ระบบสมาชิก • วินทร์ทรัพย์นาคราช</title>
   
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
-    :root {
-      --bg-deep: #021a14;
-      --pearl-cream: #fbfbee;
-      --gold-bright: #fef9c3;
-      --gold-mid: #fef08a;
-      --gold-dark: #ca8a04;
-      --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.88) 0%, rgba(2, 16, 12, 0.96) 100%);
-    }
-
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at 50% 0%, #064e3b 0%, var(--bg-deep) 42%, #010c09 100%);
-      color: var(--pearl-cream);
+      background: radial-gradient(circle at 50% 0%, #064e3b 0%, #021a14 42%, #010c09 100%);
+      color: #fbfbee;
       min-height: 100vh;
       margin: 0;
     }
-
-    .bright-white-gold-text {
-      background: linear-gradient(135deg, #ffffff 0%, var(--gold-bright) 30%, var(--gold-mid) 65%, var(--gold-dark) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 25px rgba(254, 249, 195, 0.45);
-    }
-
     .glossy-panel {
-      background: var(--glossy-card);
+      background: linear-gradient(145deg, rgba(4, 41, 31, 0.88) 0%, rgba(2, 16, 12, 0.96) 100%);
       border: 1px solid rgba(254, 240, 138, 0.28);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
     }
-
     .menu-card {
       background: linear-gradient(145deg, rgba(3, 33, 25, 0.85) 0%, rgba(1, 15, 11, 0.95) 100%);
       border: 1.2px solid rgba(254, 240, 138, 0.25);
       border-radius: 20px;
-      transition: all 0.25s ease;
-    }
-    .menu-card:hover {
-      border-color: #fef08a;
-      transform: translateY(-2px);
-    }
-
-    .btn-gold-action {
-      background: linear-gradient(135deg, #ffffff 0%, #fef08a 35%, #eab308 70%, #a16207 100%);
-      color: #032018;
-      box-shadow: 0 8px 25px rgba(234, 179, 8, 0.45);
-      transition: all 0.25s ease;
     }
   </style>
 </head>
@@ -65,26 +33,27 @@
 
   <div class="flex items-center justify-between py-3 mb-2">
     <div class="flex items-center gap-3">
-      <div class="relative w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_15px_rgba(254,240,138,0.55)] flex-shrink-0">
+      <div class="relative w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_12px_rgba(254,240,138,0.55)] flex-shrink-0">
         <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
           <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
         </div>
       </div>
       <div>
         <h2 class="text-xs font-bold tracking-widest uppercase text-amber-200">วินทร์ทรัพย์นาคราช</h2>
-        <p class="text-[9px] text-emerald-300">ระบบสมาชิกมงคลบารมี</p>
+        <p class="text-[9px] text-emerald-300">ระบบจัดการบัญชีสมาชิก</p>
       </div>
     </div>
     <button onclick="window.location.href='./index.html'" class="text-[11px] text-slate-200 bg-black/60 border border-amber-300/30 px-3.5 py-1.5 rounded-full">
-      หน้าร้านค้า ⟨
+      Shop@หน้าร้าน ⟨
     </button>
   </div>
 
+  <!-- บัตรสมาชิกดิจิทัล (ปรับเป็น ผู้ถือบัญชี / สมาชิกใหม่) -->
   <div class="glossy-panel rounded-3xl p-5 mb-5 relative overflow-hidden">
     <div class="flex justify-between items-start mb-4">
       <div>
-        <span class="text-[10px] text-emerald-300 uppercase font-medium">รหัสประจำตัวมงคล</span>
-        <div id="disp-member-code" class="text-lg font-extrabold bright-white-gold-text">M-XXXX</div>
+        <span class="text-[10px] text-emerald-300 uppercase font-medium">รหัสประจำตัวสมาชิก</span>
+        <div id="disp-member-code" class="text-lg font-extrabold text-amber-200">M-XXXX</div>
       </div>
       <span id="disp-privilege-tag" class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 border border-amber-400/50 text-amber-200">
         สิทธิ์ฟรี 30 วัน
@@ -92,89 +61,43 @@
     </div>
 
     <div class="mb-4">
-      <span class="text-[10px] text-slate-300 font-light">ผู้ถือครองญาณ</span>
-      <h1 id="disp-user-name" class="text-xl font-bold text-white">ผู้มีจิตศรัทธา</h1>
+      <span class="text-[10px] text-slate-300 font-light">ผู้ถือบัญชี:</span>
+      <h1 id="disp-user-name" class="text-xl font-bold text-white">สมาชิกใหม่</h1>
     </div>
 
     <div class="grid grid-cols-2 gap-3 pt-3 border-t border-amber-300/20">
       <div class="bg-black/40 rounded-xl p-2.5">
-        <div class="text-[10px] text-emerald-300">💎 ทรัพย์คงเหลือ</div>
-        <div class="text-base font-extrabold bright-white-gold-text mt-0.5">
+        <div class="text-[10px] text-emerald-300">ยอดเงินคงเหลือ</div>
+        <div class="text-base font-extrabold text-amber-300 mt-0.5">
           <span id="disp-balance">0</span> บาท
         </div>
       </div>
       <div class="bg-black/40 rounded-xl p-2.5">
-        <div class="text-[10px] text-amber-200">⏳ สิทธิ์เปิดไพ่ฟรี</div>
+        <div class="text-[10px] text-amber-200">สิทธิ์เปิดไพ่ประจำวัน</div>
         <div id="disp-trial-status" class="text-xs font-bold text-emerald-300 mt-1">ฟรีอีก 30 วัน</div>
       </div>
     </div>
-
-    <button onclick="openTopupModal()" class="btn-gold-action w-full py-2.5 rounded-xl text-xs font-bold mt-4">
-      🪙 เติมทรัพย์ค่าครู (เปิดไพ่ 9 บาท / ชำระบูชา)
-    </button>
   </div>
 
-  <div class="mb-5">
-    <div class="flex items-center gap-1.5 mb-3 px-1">
-      <span class="text-sm">🧭</span>
-      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest">เมนูมงคลรอบด้าน</h3>
-    </div>
-
-    <div class="grid grid-cols-2 gap-3">
-      <a href="./pickacard_hub.html" class="menu-card p-4 flex flex-col justify-between">
-        <div>
-          <div class="text-2xl mb-1.5">🔮</div>
-          <h4 class="text-xs font-bold text-amber-200">เปิดไพ่นาคราช</h4>
-          <p class="text-[10px] text-slate-300 mt-1">Pick a Card เสี่ยงทายญาณ 6 หมวด</p>
-        </div>
-        <span class="text-[9px] text-emerald-400 mt-3 font-medium">เข้าสู่เรือนไพ่ →</span>
-      </a>
-
-      <a href="./booking.html" class="menu-card p-4 flex flex-col justify-between">
-        <div>
-          <div class="text-2xl mb-1.5">📅</div>
-          <h4 class="text-xs font-bold text-emerald-300">จองคิวตรวจดวง</h4>
-          <p class="text-[10px] text-slate-300 mt-1">จัดสรรเวลา 15 นาทีตามรอบว่าง</p>
-        </div>
-        <span class="text-[9px] text-emerald-400 mt-3 font-medium">เลือกวัน & เวลา →</span>
-      </a>
-
-      <a href="https://liff.line.me/1572442362-jGxDDGRp/@thewinmu" target="_blank" class="menu-card p-4 flex flex-col justify-between">
-        <div>
-          <div class="text-2xl mb-1.5">🛍️</div>
-          <h4 class="text-xs font-bold text-amber-200">LINE MyShop</h4>
-          <p class="text-[10px] text-slate-300 mt-1">ร้านค้าวัตถุมงคลทางการ</p>
-        </div>
-        <span class="text-[9px] text-emerald-400 mt-3 font-medium">เปิดร้าน MyShop →</span>
-      </a>
-
-      <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="menu-card p-4 flex flex-col justify-between">
-        <div>
-          <div class="text-2xl mb-1.5">🎵</div>
-          <h4 class="text-xs font-bold text-emerald-300">TikTok @thewinmu</h4>
-          <p class="text-[10px] text-slate-300 mt-1">ชมคลิปพุทธคุณ & บทสวด</p>
-        </div>
-        <span class="text-[9px] text-emerald-400 mt-3 font-medium">กดติดตาม →</span>
-      </a>
-    </div>
-  </div>
-
-  <div id="topup-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="glossy-panel border-2 border-amber-300/80 rounded-3xl p-6 text-center max-w-xs w-full shadow-2xl">
-      <div class="text-3xl mb-2">💎</div>
-      <h3 class="text-base font-bold bright-white-gold-text mb-1">เติมทรัพย์ค่าครู</h3>
-      <div class="bg-black/50 p-3.5 rounded-xl text-left text-xs my-4 border border-amber-300/30">
-        <div>ธนาคาร: กสิกรไทย (KBANK)</div>
-        <div class="text-amber-300 font-bold my-1">เลขบัญชี: 2251495656</div>
-        <div>ชื่อ: พีรดิษฐ์ กิตติเขมานนท์</div>
+  <!-- เมนูบริการต่างๆ -->
+  <div class="grid grid-cols-2 gap-3 mb-5">
+    <a href="./pickacard.html" class="menu-card p-4 flex flex-col justify-between">
+      <div>
+        <div class="text-2xl mb-1">🔮</div>
+        <h4 class="text-xs font-bold text-amber-200">เปิดไพ่นำทาง</h4>
+        <p class="text-[10px] text-slate-300 mt-1">รับข้อคิดและกำลังใจประจำวัน</p>
       </div>
-      <button onclick="copyBankAcc()" class="btn-gold-action w-full py-2.5 rounded-xl text-xs font-bold mb-2">
-        📋 คัดลอกเลขบัญชี
-      </button>
-      <button onclick="document.getElementById('topup-modal').classList.add('hidden')" class="w-full py-2 text-xs text-slate-400">
-        ปิดหน้าต่าง
-      </button>
-    </div>
+      <span class="text-[9px] text-emerald-400 mt-2 font-medium">เข้าสู่เรือนไพ่ →</span>
+    </a>
+
+    <a href="./booking.html" class="menu-card p-4 flex flex-col justify-between">
+      <div>
+        <div class="text-2xl mb-1">📅</div>
+        <h4 class="text-xs font-bold text-emerald-300">นัดหมายพูดคุย</h4>
+        <p class="text-[10px] text-slate-300 mt-1">ปรึกษาและพูดคุยแบบเป็นกันเอง</p>
+      </div>
+      <span class="text-[9px] text-emerald-400 mt-2 font-medium">จองรอบเวลา →</span>
+    </a>
   </div>
 
   <script>
@@ -188,16 +111,10 @@
             document.getElementById("disp-member-code").innerText = res.memberCode;
             document.getElementById("disp-user-name").innerText = res.name;
             document.getElementById("disp-balance").innerText = res.balance.toLocaleString();
-            document.getElementById("disp-trial-status").innerText = res.freeTrialDaysLeft > 0 ? `ฟรีอีก ${res.freeTrialDaysLeft} วัน` : "หมดช่วงฟรี (9 บ./ครั้ง)";
+            document.getElementById("disp-trial-status").innerText = res.freeTrialDaysLeft > 0 ? `ฟรีอีก ${res.freeTrialDaysLeft} วัน` : "หมดช่วงทดลองใช้ฟรี";
           }
         });
     };
-
-    function openTopupModal() { document.getElementById("topup-modal").classList.remove("hidden"); }
-    function copyBankAcc() {
-      navigator.clipboard.writeText("2251495656");
-      alert("📋 คัดลอกเลขบัญชี 2251495656 สำเร็จแล้วครับ");
-    }
   </script>
 </body>
 </html>

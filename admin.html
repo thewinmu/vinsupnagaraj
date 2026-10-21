@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ระบบบริหารจัดการหลังบ้าน • วินทร์ทรัพย์นาคราช</title>
   
+  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -65,7 +66,6 @@
       font-weight: bold;
     }
 
-    /* สวิตช์สไตล์ iOS ปรับสัดส่วนให้เลื่อนง่าย */
     .switch {
       position: relative;
       display: inline-block;
@@ -91,13 +91,14 @@
   <!-- Header พร้อมโลโก้จริงประจำแบรนด์ -->
   <div class="flex flex-wrap items-center justify-between gap-3 py-3 mb-4 border-b border-amber-300/20">
     <div class="flex items-center gap-3">
-      <!-- โลโก้จริงพญานาคราชมงคล ขอบทองคำเปล่งประกาย -->
-      <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-300/70 shadow-[0_0_15px_rgba(254,240,138,0.5)] bg-black/60 flex items-center justify-center p-0.5">
-        <img id="brand-logo" src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-cover rounded-full">
+      <div class="relative w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_18px_rgba(254,240,138,0.55)] flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+        </div>
       </div>
       <div>
         <h1 class="text-sm font-extrabold bright-white-gold-text tracking-wider uppercase">Master Console • @thewinmu</h1>
-        <p class="text-[10px] text-emerald-300">ระบบควบคุมกลาง CRM & ตัวจัดการ Google Sheets ครบวงจร</p>
+        <p class="text-[10px] text-emerald-300">ระบบควบคุมกลาง CRM, สวิตช์รอบเวลา & จัดการชีตครบวงจร</p>
       </div>
     </div>
     
@@ -111,17 +112,60 @@
     </div>
   </div>
 
+  <!-- กล่องอัปเดต Web App URL อัตโนมัติไปยังทุกไฟล์บน GitHub -->
+  <div class="glossy-panel rounded-2xl p-4 sm:p-5 mb-5 border-2 border-amber-300/40">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-xl">⚡</span>
+      <h3 class="text-xs font-bold bright-white-gold-text uppercase tracking-wider">ตัวจัดการ Web App URL กลาง (อัปเดตทุกไฟล์บน GitHub)</h3>
+    </div>
+    <p class="text-[10px] text-emerald-300/90 mb-3 font-light">เมื่อได้ Web App URL ใหม่จากการ Deploy นำมาวางที่นี่เพื่อซิงค์ไปยัง config.js, index, booking, memberships บน GitHub ทันที</p>
+
+    <div class="space-y-3 text-xs">
+      <div>
+        <input type="url" id="input-webapp-url" placeholder="https://script.google.com/macros/s/.../exec" class="custom-input w-full p-3 rounded-xl text-xs font-mono text-amber-200">
+      </div>
+
+      <details class="bg-black/40 rounded-xl p-3 border border-white/5">
+        <summary class="cursor-pointer text-[11px] text-amber-300 font-medium">⚙️ ตั้งค่าสิทธิ์ GitHub API Token (คลิกเพื่อแก้ไข)</summary>
+        <div class="space-y-2 mt-2 pt-2 border-t border-white/5">
+          <div>
+            <label class="block text-slate-400 text-[10px]">GitHub Personal Access Token (PAT ที่มีสิทธิ์ repo)</label>
+            <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="custom-input w-full p-2 rounded-lg text-xs font-mono">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-400 text-[10px]">GitHub Username / Owner</label>
+              <input type="text" id="gh-owner" placeholder="Username" class="custom-input w-full p-2 rounded-lg text-xs font-mono">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px]">Repository Name</label>
+              <input type="text" id="gh-repo" placeholder="Repository name" class="custom-input w-full p-2 rounded-lg text-xs font-mono">
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="flex gap-2">
+        <button onclick="updateAllFilesOnGithub()" id="btn-sync-url" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-extrabold text-xs shadow-lg flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+          <span>🚀</span> บันทึก URL & อัปเดตทุกไฟล์ใน GitHub ทันที
+        </button>
+        <button onclick="testWebUrlConnection()" class="px-4 py-3 rounded-xl bg-black/60 border border-emerald-400/40 text-emerald-300 font-bold text-xs hover:bg-emerald-950/60 transition">
+          🔍 ทดสอบ
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- แถบเมนูหลัก -->
   <div class="flex gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
     <button onclick="switchTab('crud')" id="btn-crud" class="tab-admin active px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📝 ตัวจัดการชีต (CRUD)</button>
     <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📊 สถิติ & เปอร์เซ็นต์</button>
-    <button onclick="switchTab('switches')" id="btn-switches" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">🎚️ เปิด/ปิด โมดูลรวม</button>
+    <button onclick="switchTab('switches')" id="btn-switches" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">🎚️ สวิตช์ระบบหลัก</button>
     <button onclick="switchTab('broadcast')" id="btn-broadcast" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📢 ประกาศ Broadcast</button>
   </div>
 
-  <!-- TAB: ตัวจัดการชีต (ตรงตามแท็บจริงของชีต 100%) -->
+  <!-- TAB: ตัวจัดการชีต -->
   <div id="tab-pane-crud" class="space-y-4">
-    <!-- รายการแท็บตรงตามภาพของคุณ -->
     <div class="flex items-center justify-between flex-wrap gap-2">
       <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
         <button onclick="loadSheetData('settings')" id="sheet-btn-settings" class="sheet-btn active px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">⚙️ settings (สวิตช์รอบเวลา)</button>
@@ -136,7 +180,6 @@
       </button>
     </div>
 
-    <!-- ตารางแสดงผลข้อมูล -->
     <div class="glossy-panel rounded-2xl p-4 overflow-hidden">
       <div class="flex justify-between items-center mb-3">
         <h3 id="current-sheet-title" class="text-xs font-bold text-amber-200 uppercase tracking-widest">ตาราง: settings</h3>
@@ -214,7 +257,14 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+    const TARGET_FILES = [
+      "config.js",
+      "index.html",
+      "booking.html",
+      "memberships.html"
+    ];
+
+    let API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
 
     let currentSheet = "settings";
     let currentHeaders = [];
@@ -222,12 +272,21 @@
     let editRowIndex = null;
 
     window.onload = function() {
+      initWebUrlFields();
       loadSheetData("settings");
       loadAnalytics();
       loadSwitches();
     };
 
+    function initWebUrlFields() {
+      document.getElementById("input-webapp-url").value = API_URL;
+      if (localStorage.getItem("GH_PAT")) document.getElementById("gh-token").value = localStorage.getItem("GH_PAT");
+      if (localStorage.getItem("GH_OWNER")) document.getElementById("gh-owner").value = localStorage.getItem("GH_OWNER");
+      if (localStorage.getItem("GH_REPO")) document.getElementById("gh-repo").value = localStorage.getItem("GH_REPO");
+    }
+
     function refreshAll() {
+      API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : API_URL;
       loadSheetData(currentSheet);
       loadAnalytics();
       loadSwitches();
@@ -245,6 +304,118 @@
       document.getElementById(`tab-pane-${tabId}`).classList.remove("hidden");
     }
 
+    // ----------------------------------------------------
+    // Auto-Sync GitHub Multi-Files Engine
+    // ----------------------------------------------------
+    async function updateAllFilesOnGithub() {
+      const newUrl = document.getElementById("input-webapp-url").value.trim();
+      const token = document.getElementById("gh-token").value.trim();
+      const owner = document.getElementById("gh-owner").value.trim();
+      const repo = document.getElementById("gh-repo").value.trim();
+
+      if (!newUrl || !newUrl.startsWith("https://script.google.com/macros/s/")) {
+        alert("กรุณากรอก Google Apps Script Web App URL ให้ถูกต้อง");
+        return;
+      }
+      if (!token || !owner || !repo) {
+        alert("กรุณาระบุ GitHub Token, Owner และ Repo Name ให้ครบถ้วน");
+        return;
+      }
+
+      localStorage.setItem("NAGA_MASTER_API_URL", newUrl);
+      localStorage.setItem("GH_PAT", token);
+      localStorage.setItem("GH_OWNER", owner);
+      localStorage.setItem("GH_REPO", repo);
+      API_URL = newUrl;
+
+      const syncBtn = document.getElementById("btn-sync-url");
+      syncBtn.disabled = true;
+
+      let successCount = 0;
+      let failList = [];
+
+      for (let fileName of TARGET_FILES) {
+        try {
+          syncBtn.innerText = `⏳ กำลังอัปเดตไฟล์ ${fileName}...`;
+          await updateSingleGithubFile(owner, repo, token, fileName, newUrl);
+          successCount++;
+        } catch (err) {
+          failList.push(`${fileName} (${err.message})`);
+        }
+      }
+
+      syncBtn.disabled = false;
+      syncBtn.innerText = "🚀 บันทึก URL & อัปเดตทุกไฟล์ใน GitHub ทันที";
+
+      if (failList.length === 0) {
+        alert(`🎉 สำเร็จสมบูรณ์!\nอัปเดต Web App URL ใหม่ลงใน ${successCount} ไฟล์เรียบร้อยแล้ว:\n- ` + TARGET_FILES.join("\n- "));
+        refreshAll();
+      } else {
+        alert(`⚠️ อัปเดตสำเร็จ ${successCount} ไฟล์\nพบปัญหาในไฟล์ต่อไปนี้:\n` + failList.join("\n"));
+      }
+    }
+
+    async function updateSingleGithubFile(owner, repo, token, fileName, newUrl) {
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`;
+
+      const getRes = await fetch(apiUrl, {
+        headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
+      });
+      if (!getRes.ok) throw new Error(`ไม่พบไฟล์หรือเข้าถึงไม่ได้ (Status ${getRes.status})`);
+
+      const fileData = await getRes.json();
+      const fileSha = fileData.sha;
+      let content = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
+
+      const scriptUrlRegex = /https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec/g;
+
+      if (scriptUrlRegex.test(content)) {
+        content = content.replace(scriptUrlRegex, newUrl);
+      } else if (fileName === "config.js") {
+        content = `const SYSTEM_CONFIG = {\n  API_URL: "${newUrl}",\n  LAST_UPDATED: "${new Date().toISOString().split("T")[0]}"\n};\nfunction getMasterApiUrl() { return SYSTEM_CONFIG.API_URL; }`;
+      }
+
+      const updatedBase64 = btoa(unescape(encodeURIComponent(content)));
+
+      const putRes = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${token}`,
+          "Content-Type": "application/json",
+          "Accept": "application/vnd.github.v3+json"
+        },
+        body: JSON.stringify({
+          message: `auto-sync: update apps script web url in ${fileName}`,
+          content: updatedBase64,
+          sha: fileSha
+        })
+      });
+
+      if (!putRes.ok) {
+        const errorJson = await putRes.json();
+        throw new Error(errorJson.message || "Commit failed");
+      }
+    }
+
+    function testWebUrlConnection() {
+      const url = document.getElementById("input-webapp-url").value.trim();
+      if (!url) return alert("กรุณาระบุ URL ก่อนทดสอบ");
+
+      fetch(`${url}?action=get_system_switches`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            alert("🎉 เชื่อมต่อ Web App URL สำเร็จ! ระบบ Apps Script พร้อมทำงาน");
+          } else {
+            alert("⚠️ ผลการทดสอบ: " + JSON.stringify(res));
+          }
+        })
+        .catch(err => alert("❌ การเชื่อมต่อล้มเหลว: " + err.message));
+    }
+
+    // ----------------------------------------------------
+    // CRUD Sheet Data Engine
+    // ----------------------------------------------------
     function loadSheetData(sheetName) {
       currentSheet = sheetName;
       document.querySelectorAll(".sheet-btn").forEach(b => b.classList.remove("active"));
@@ -279,7 +450,7 @@
       countLabel.innerText = `${currentRows.length} รายการ`;
 
       let headHtml = `<tr><th class="py-2.5 px-3">แถว</th>`;
-      currentHeaders.forEach((h, idx) => {
+      currentHeaders.forEach((h) => {
         headHtml += `<th class="py-2.5 px-3">${h}</th>`;
       });
       headHtml += `<th class="py-2.5 px-3 text-center">จัดการ</th></tr>`;
@@ -297,7 +468,6 @@
         let rowHtml = `<td class="py-2.5 px-3 text-slate-400 font-bold">${r.rowIndex}</td>`;
         
         r.data.forEach((cell, cIdx) => {
-          // ถ้าเป็นชีต settings และเป็นคอลัมน์สถานะ (Col B): แสดงสวิตช์ Toggle ทันที
           if (currentSheet === "settings" && cIdx === 1) {
             const isChecked = (cell === "เปิด" || cell === "open" || cell === "ON" || cell === "");
             rowHtml += `
@@ -329,7 +499,6 @@
       });
     }
 
-    // ฟังก์ชันเลื่อนเปิด-ปิดรอบเวลา Real-time
     function toggleSlot(rowIndex, isChecked) {
       const label = document.getElementById(`slot-status-${rowIndex}`);
       if (label) {

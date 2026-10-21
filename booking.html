@@ -89,6 +89,7 @@
   </div>
 
   <script>
+    // 📌 อัปเดตลิงก์ WEB_URL เป็นตัวใหม่ล่าสุดแล้ว
     const WEB_URL = "https://script.google.com/macros/s/AKfycbwb0ZKg3fkudFRh5aTY-Oetsx-gou-aRMd5Hq1mFKudAMyrsNlPEcLzVvx30CIV8Jag/exec";
     const LIFF_ID = "2007499712-B0uid9G3";
     let currentUserId = "guest_user";
@@ -143,7 +144,7 @@
               btn.innerText = slot.time;
               btn.className = "slot-btn p-2.5 rounded-xl text-xs font-semibold transition text-center ";
               
-              // เช็กถ้าเต็ม (รวมสถานะ Pending จะเป็น full หรือ CLOSE)
+              // เช็กถ้าเต็ม (รวมสถานะ Pending ที่ยังไม่หมดเวลา จะเป็น full)
               if (slot.status === "full" || slot.status === "closed") {
                 btn.disabled = true;
                 btn.className += " slot-disabled";
@@ -198,27 +199,32 @@
       const bookingDateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
       if (currentUserId === "guest_user") {
-        currentUserId = "admin_test_user_001";
+        currentUserId = "admin_test_user_001"; // สำหรับเทสต์บนเบราว์เซอร์
       }
 
       alert("⏳ กำลังบันทึกการจองคิว...");
 
-      // ส่งข้อมูลครบถ้วน: userId, name, serviceName, bookingDate, slotTime
+      // 📌 ส่งข้อมูลครบถ้วน และรับค่าแบบ JSON เพื่อเช็กสถานะการจองซ้ำ
       fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&name=${encodeURIComponent(currentDisplayName)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}`)
-        .then(r => r.text())
-        .then(text => {
-          alert("✨ บันทึกการจองคิวสำเร็จ! ระบบได้ส่งรายละเอียดการชำระเงินไปยังแชท LINE ของท่านแล้ว");
-          
-          if (typeof liff !== 'undefined' && liff.isInClient()) {
-            liff.closeWindow();
+        .then(r => r.json()) 
+        .then(res => {
+          if (res && res.status === "error") {
+            // 🛑 กรณีโดนคนอื่นตัดหน้าจองไปก่อน (ด่านบล็อกทำงาน)
+            alert("❌ " + res.message);
+            loadAvailableSlots(); // รีเฟรชรอบเวลาใหม่ทันที
           } else {
-            window.location.href = './memberships.html';
+            // ✅ จองสำเร็จ
+            alert("✨ บันทึกการจองคิวสำเร็จ! ระบบได้ส่งรายละเอียดการชำระเงินไปยังแชท LINE ของท่านแล้ว");
+            if (typeof liff !== 'undefined' && liff.isInClient()) {
+              liff.closeWindow();
+            } else {
+              window.location.href = './memberships.html';
+            }
           }
         })
         .catch(err => {
           console.error("Booking Error:", err);
-          alert("✨ บันทึกการจองคิวสำเร็จ!");
-          window.location.href = './memberships.html';
+          alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
         });
     }
   </script>

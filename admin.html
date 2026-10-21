@@ -33,24 +33,82 @@
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
     }
 
+    /* สไตล์ปุ่มแท็บเมนูด้านบน */
     .tab-btn {
       background: rgba(2, 44, 34, 0.7);
       border: 1px solid rgba(254, 240, 138, 0.2);
       color: #cbd5e1;
       transition: all 0.2s ease;
+      text-align: center;
     }
     .tab-btn.active {
       background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
       color: #022018;
       font-weight: 700;
       box-shadow: 0 3px 10px rgba(202, 138, 4, 0.35);
+      border-color: #fef08a;
+    }
+
+    /* ========================================================
+       iOS Slider Toggle Switch (เขียวมรกต ON / แดงทับทิม OFF)
+       ======================================================== */
+    .switch-toggle {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+      vertical-align: middle;
+    }
+    .switch-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider-round {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ef4444; /* แดงเมื่อปิด (OFF) */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 9999px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .slider-round:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #ffffff;
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    /* เมื่อเปิดใช้งาน (ON) */
+    .switch-toggle input:checked + .slider-round {
+      background-color: #10b981; /* เขียวมรกต */
+      border-color: #34d399;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+    .switch-toggle input:checked + .slider-round:before {
+      transform: translateX(22px);
+    }
+
+    /* แถบนำทางด้านล่างแบบ 2 แถว ไม่ต้องเลื่อน */
+    .bottom-nav-grid {
+      background: rgba(2, 20, 16, 0.95);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      backdrop-filter: blur(25px);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.85);
     }
   </style>
 </head>
-<body class="p-3 sm:p-5 max-w-4xl mx-auto flex flex-col pb-20">
+<body class="p-3 sm:p-5 max-w-4xl mx-auto flex flex-col pb-36">
 
   <!-- Header -->
-  <header class="pearl-header rounded-3xl p-3 mb-4 flex items-center justify-between">
+  <header class="pearl-header rounded-3xl p-3 mb-3.5 flex items-center justify-between">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
         <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
@@ -70,19 +128,46 @@
     </div>
   </header>
 
-  <!-- แท็บเลือกตารางฐานข้อมูล (รวม member) -->
-  <div class="flex items-center gap-1.5 mb-3.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-    <button onclick="switchTab('member')" id="tab-member" class="tab-btn active px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">👤 ข้อมูลสมาชิก (member)</button>
-    <button onclick="switchTab('products')" id="tab-products" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">🛍️ สินค้า & บริการ (products)</button>
-    <button onclick="switchTab('orders')" id="tab-orders" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">📦 คำสั่งซื้อ (orders)</button>
-    <button onclick="switchTab('bookings')" id="tab-bookings" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">📅 คิวตรวจดวง (bookings)</button>
-    <button onclick="switchTab('psarnkru')" id="tab-psarnkru" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">🪷 สาส์นบรมครู (psarnkru)</button>
-    <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">⚙️ ตั้งค่า (settings)</button>
+  <!-- แท็บเลือกตารางแบบ 2 แถว กว้างพอดีหน้าจอ ไม่ต้องสไลด์เลื่อน -->
+  <div class="grid grid-cols-3 gap-2 mb-3.5 text-xs">
+    <!-- แถวที่ 1 -->
+    <button onclick="switchTab('products')" id="tab-products" class="tab-btn active p-2.5 rounded-2xl flex flex-col items-center justify-center">
+      <span class="text-sm">🛍️</span>
+      <span class="text-[10px] font-bold mt-0.5">สินค้า & บริการ</span>
+      <span class="text-[8px] opacity-75">(products)</span>
+    </button>
+    <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn p-2.5 rounded-2xl flex flex-col items-center justify-center">
+      <span class="text-sm">⚙️</span>
+      <span class="text-[10px] font-bold mt-0.5">ตั้งค่ารอบเวลา</span>
+      <span class="text-[8px] opacity-75">(settings)</span>
+    </button>
+    <button onclick="switchTab('orders')" id="tab-orders" class="tab-btn p-2.5 rounded-2xl flex flex-col items-center justify-center">
+      <span class="text-sm">📦</span>
+      <span class="text-[10px] font-bold mt-0.5">คำสั่งซื้อ</span>
+      <span class="text-[8px] opacity-75">(orders)</span>
+    </button>
+
+    <!-- แถวที่ 2 -->
+    <button onclick="switchTab('bookings')" id="tab-bookings" class="tab-btn p-2.5 rounded-2xl flex flex-col items-center justify-center">
+      <span class="text-sm">📅</span>
+      <span class="text-[10px] font-bold mt-0.5">คิวตรวจดวง</span>
+      <span class="text-[8px] opacity-75">(bookings)</span>
+    </button>
+    <button onclick="switchTab('member')" id="tab-member" class="tab-btn p-2.5 rounded-2xl flex flex-col items-center justify-center">
+      <span class="text-sm">👤</span>
+      <span class="text-[10px] font-bold mt-0.5">ข้อมูลสมาชิก</span>
+      <span class="text-[8px] opacity-75">(member)</span>
+    </button>
+    <button onclick="switchTab('psarnkru')" id="tab-psarnkru" class="tab-btn p-2.5 rounded-2xl flex flex-col items-center justify-center">
+      <span class="text-sm">🪷</span>
+      <span class="text-[10px] font-bold mt-0.5">สาส์นบรมครู</span>
+      <span class="text-[8px] opacity-75">(psarnkru)</span>
+    </button>
   </div>
 
   <!-- แถบควบคุม: ค้นหา, รีเฟรช, เพิ่มข้อมูล และตั้งค่า API ขนส่ง -->
   <div class="lux-glass-box rounded-2xl p-3 mb-4 flex flex-wrap items-center justify-between gap-2.5">
-    <div class="flex items-center gap-2 flex-1 min-w-[200px]">
+    <div class="flex items-center gap-2 flex-1 min-w-[180px]">
       <span class="text-xs text-amber-400">🔍</span>
       <input type="text" id="admin-search" oninput="filterAdminTable()" placeholder="ค้นหาในตารางปัจจุบัน..." class="bg-black/40 border border-amber-300/20 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none w-full">
     </div>
@@ -95,7 +180,7 @@
         + เพิ่มข้อมูล
       </button>
       <button onclick="openShippingModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-xl shadow transition">
-        🚚 ตั้งค่า API ขนส่ง
+        🚚 API ขนส่ง
       </button>
     </div>
   </div>
@@ -156,10 +241,45 @@
     </div>
   </div>
 
+  <!-- แถบนำทางด้านล่างแบบ 2 แถวกระชับตายตัว (ไม่ต้องเลื่อน ไม่ตาลาย) -->
+  <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bottom-nav-grid rounded-3xl p-2.5 z-40">
+    <!-- แถวที่ 1: เมนูบริการลูกค้า -->
+    <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
+      <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">🛍️</span>
+        <span class="text-[10px]">ร้านค้า</span>
+      </a>
+      <a href="./booking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">📅</span>
+        <span class="text-[10px]">จองคิว</span>
+      </a>
+      <a href="./pickacard_hub.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">🔮</span>
+        <span class="text-[10px]">เสี่ยงทาย</span>
+      </a>
+    </div>
+
+    <!-- แถวที่ 2: เมนูระบบและบัญชี -->
+    <div class="grid grid-cols-3 gap-1 pt-1.5 text-center">
+      <a href="./tracking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">📦</span>
+        <span class="text-[10px]">ติดตามพัสดุ</span>
+      </a>
+      <a href="./memberships.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">👤</span>
+        <span class="text-[10px]">ระบบสมาชิก</span>
+      </a>
+      <a href="./admin.html" class="flex items-center justify-center gap-1 text-amber-300 font-bold py-1 bg-amber-400/10 rounded-xl border border-amber-300/30">
+        <span class="text-xs">⚙️</span>
+        <span class="text-[10px]">แอดมิน</span>
+      </a>
+    </div>
+  </nav>
+
   <script>
     const API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
 
-    let currentSheet = "member";
+    let currentSheet = "products";
     let rawTableData = null;
     let editingRowIndex = null;
 
@@ -210,30 +330,51 @@
       }
 
       const isProductTab = (currentSheet === "products");
+      const isSettingsTab = (currentSheet === "settings");
+
       let tableHtml = `<div class="overflow-x-auto"><table class="w-full text-left text-xs border-collapse">`;
       
-      // Header
+      // ส่วน Header ตาราง
       tableHtml += `<thead><tr class="bg-black/60 text-amber-200 border-b border-amber-300/30">`;
       data.headers.forEach(h => { tableHtml += `<th class="p-3 whitespace-nowrap">${h}</th>`; });
-      if (isProductTab) tableHtml += `<th class="p-3 text-center whitespace-nowrap">เปิด/ปิดขาย</th>`;
+      
+      // แสดงหัวคอลัมน์สวิตช์เลื่อน
+      if (isProductTab) tableHtml += `<th class="p-3 text-center whitespace-nowrap">สถานะขาย (เปิด/ปิด)</th>`;
+      if (isSettingsTab) tableHtml += `<th class="p-3 text-center whitespace-nowrap">เปิด/ปิดรอบเวลา</th>`;
+      
       tableHtml += `<th class="p-3 text-center whitespace-nowrap">จัดการ</th></tr></thead><tbody>`;
 
-      // Rows
+      // ส่วน Rows
       data.rows.forEach(r => {
         tableHtml += `<tr class="border-b border-white/5 hover:bg-white/5 transition">`;
         r.data.forEach(cell => {
           tableHtml += `<td class="p-3 text-slate-200 max-w-[200px] truncate">${cell || '-'}</td>`;
         });
 
-        // สวิตช์เปิด/ปิดขายสำหรับชีต products
+        // 1. สวิตช์สไลด์เลื่อน เขียว/แดง สำหรับชีต products (คอลัมน์ 9: status)
         if (isProductTab) {
           const currentStatus = String(r.data[8] || "ACTIVE").trim().toUpperCase();
           const isOpen = (currentStatus === "ACTIVE" || currentStatus === "เปิด" || currentStatus === "TRUE");
           tableHtml += `
             <td class="p-3 text-center">
-              <button onclick="toggleProductSwitch(${r.rowIndex}, ${!isOpen})" class="px-3 py-1 rounded-full text-[10px] font-bold ${isOpen ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/50' : 'bg-red-500/20 text-red-300 border border-red-400/50'}">
-                ${isOpen ? '🟢 เปิดขาย' : '🔴 ปิดขาย'}
-              </button>
+              <label class="switch-toggle">
+                <input type="checkbox" ${isOpen ? 'checked' : ''} onchange="toggleProductSwitch(${r.rowIndex}, this.checked)">
+                <span class="slider-round"></span>
+              </label>
+            </td>
+          `;
+        }
+
+        // 2. สวิตช์สไลด์เลื่อน เขียว/แดง สำหรับชีต settings (คอลัมน์ 2: สถานะรอบเวลา)
+        if (isSettingsTab) {
+          const slotStatus = String(r.data[1] || "OPEN").trim().toUpperCase();
+          const isOpenSlot = (slotStatus === "OPEN" || slotStatus === "TRUE" || slotStatus === "เปิด");
+          tableHtml += `
+            <td class="p-3 text-center">
+              <label class="switch-toggle">
+                <input type="checkbox" ${isOpenSlot ? 'checked' : ''} onchange="toggleSettingSlotSwitch(${r.rowIndex}, this.checked)">
+                <span class="slider-round"></span>
+              </label>
             </td>
           `;
         }
@@ -250,16 +391,44 @@
       container.innerHTML = tableHtml;
     }
 
-    function toggleProductSwitch(rowIndex, newStatus) {
+    // ฟังก์ชันเลื่อนสวิตช์สินค้า (products)
+    function toggleProductSwitch(rowIndex, isChecked) {
+      const newStatus = isChecked ? "ACTIVE" : "INACTIVE";
       fetch(`${API_URL}?action=toggle_product_status&rowIndex=${rowIndex}&status=${newStatus}`)
         .then(r => r.json())
         .then(res => {
-          if (res.status === "success") {
-            loadCurrentTable();
-          } else {
+          if (res.status !== "success") {
             alert("ไม่สามารถเปลี่ยนสถานะได้: " + res.message);
+            loadCurrentTable();
           }
         });
+    }
+
+    // ฟังก์ชันเลื่อนสวิตช์รอบเวลา (settings)
+    function toggleSettingSlotSwitch(rowIndex, isChecked) {
+      const newSlotStatus = isChecked ? "OPEN" : "CLOSED";
+      const targetRow = rawTableData.rows.find(r => r.rowIndex === rowIndex);
+      if (!targetRow) return;
+
+      let updatedData = [...targetRow.data];
+      updatedData[1] = newSlotStatus; // แก้ไขคอลัมน์ B (สถานะ)
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "crud_update",
+          sheetName: "settings",
+          rowIndex: rowIndex,
+          rowData: updatedData
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status !== "success") {
+          alert("ไม่สามารถบันทึกสถานะรอบเวลาได้");
+          loadCurrentTable();
+        }
+      });
     }
 
     function filterAdminTable() {
@@ -293,7 +462,7 @@
     function openEditModal(rowIndex, rowData) {
       if (!rawTableData) return;
       editingRowIndex = rowIndex;
-      document.getElementById("crud-modal-title").innerText = `แก้ไขข้อมูลแถวที่ ${rowIndex} ใน ${currentSheet}`;
+      document.getElementById("crud-modal-title").innerText = `แก้ไขแถวที่ ${rowIndex} ใน ${currentSheet}`;
       buildFormFields(rawTableData.headers, rowData);
       document.getElementById("crud-modal").classList.remove("hidden");
     }

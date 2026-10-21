@@ -27,7 +27,6 @@
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }
 
-    /* กรอบสินค้าแบบ memberships.html */
     .membership-style-card {
       background: linear-gradient(160deg, rgba(6, 44, 34, 0.9) 0%, rgba(2, 24, 18, 0.95) 100%);
       border: 1.4px solid rgba(250, 204, 21, 0.45);
@@ -44,7 +43,6 @@
       border-color: #facc15;
     }
 
-    /* ปุ่มตะกร้า พร้อมเครื่องหมาย + สีแดง */
     .btn-cart-add {
       background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
       border: 1px solid rgba(250, 204, 21, 0.4);
@@ -67,7 +65,6 @@
       text-shadow: 0 0 4px rgba(239, 68, 68, 0.6);
     }
 
-    /* ตะกร้าสินค้า Luxury Dark Glass */
     .cart-glossy-panel {
       background: linear-gradient(160deg, rgba(6, 40, 32, 0.98) 0%, rgba(2, 18, 14, 0.99) 60%, rgba(0, 8, 6, 1) 100%);
       border: 1.5px solid rgba(250, 204, 21, 0.4);
@@ -100,7 +97,7 @@
 </head>
 <body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-36">
 
-  <!-- 1. Header หัวร้านค้า -->
+  <!-- Header -->
   <header class="pearl-header rounded-3xl p-3 mb-3.5 flex items-center justify-between">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
@@ -129,7 +126,7 @@
     </div>
   </header>
 
-  <!-- 2. เมนูลัด 3 ช่องด้านบน -->
+  <!-- เมนูลัด 3 ช่องด้านบน -->
   <div class="grid grid-cols-3 gap-2 mb-3.5">
     <a href="./booking.html" class="bg-black/40 border border-amber-400/30 rounded-2xl p-2.5 text-center flex flex-col items-center hover:bg-black/60 transition">
       <span class="text-base mb-0.5">📅</span>
@@ -148,7 +145,7 @@
     </a>
   </div>
 
-  <!-- 3. ช่องค้นหาสินค้า -->
+  <!-- ช่องค้นหาสินค้า -->
   <div class="bg-white/95 rounded-full px-3.5 py-2 mb-3 shadow-md flex items-center justify-between border border-amber-300/40">
     <div class="flex items-center gap-2 flex-1">
       <span class="text-xs text-amber-600">🔍</span>
@@ -157,14 +154,14 @@
     <span id="search-count" class="text-[10px] text-emerald-800 font-semibold font-mono"></span>
   </div>
 
-  <!-- 4. แถบหมวดหมู่สินค้า -->
+  <!-- แถบหมวดหมู่สินค้า -->
   <div id="category-bar" class="flex items-center gap-1.5 mb-3.5 overflow-x-auto pb-1 no-scrollbar text-xs">
     <button onclick="filterCategory('all')" id="tab-all" class="cat-btn active px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">
       ทั้งหมด
     </button>
   </div>
 
-  <!-- 5. รายการสินค้า 2 คอลัมน์ -->
+  <!-- รายการสินค้า 2 คอลัมน์ -->
   <div id="product-container" class="grid grid-cols-2 gap-3">
     <div class="col-span-full py-16 text-center text-xs text-amber-200/80 animate-pulse font-light">
       กำลังเปิดคลังวัตถุมงคล...
@@ -279,7 +276,6 @@
 
   <script>
     const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
-    const DEFAULT_MYSHOP_URL = "https://shop.line.me/@thewinmu";
     const MY_LIFF_ID = "2007499712-B0uid9G3";
 
     let allProducts = [];
@@ -306,7 +302,6 @@
       }
     }
 
-    // แปลง imageId จากชีตเป็น URL ภาพจริง (รองรับ Drive File ID และ Direct URL)
     function resolveProductImage(imgId) {
       if (imgId && typeof imgId === "string" && imgId.trim() !== "") {
         const raw = imgId.trim();
@@ -395,7 +390,6 @@
 
         const productImgUrl = resolveProductImage(p.imageId);
 
-        // กล่องรูปสินค้า: ถ้ามีรูปให้แสดงรูปจริง ถ้าไม่มีรูปให้แสดงตราพญานาคทองพร้อมรหัสสินค้า
         let imgBlockHtml = "";
         if (productImgUrl) {
           imgBlockHtml = `
@@ -567,6 +561,7 @@
       openCartModal();
     }
 
+    // ฟังก์ชันสั่งซื้อและพิมพ์ส่งข้อความยืนยันเข้าห้องแชท LINE เป็นหลัก
     async function submitOrderViaLiff() {
       if (localCart.length === 0) return alert("ไม่มีสินค้าในตะกร้า");
 
@@ -613,12 +608,13 @@
 
         if (res.status === "success" && res.orderId) {
           const orderId = res.orderId;
-          const itemsListText = localCart.map(i => `• ${i.name} (x${i.qty}) ฿${(i.price * i.qty).toLocaleString()}`).join("\n");
+          const itemsListText = localCart.map(i => `• ${i.name} (x${i.qty}) = ฿${(i.price * i.qty).toLocaleString()}`).join("\n");
 
+          // ข้อความสรุปรายการสั่งซื้อที่พิมพ์ส่งเข้าห้องแชท LINE เป็นหลัก
           const chatMessage = [
             {
               type: "text",
-              text: `🛍️ สรุปคำสั่งซื้อ [${orderId}]\n` +
+              text: `🛍️ ใบสั่งซื้อวัตถุมงคล [${orderId}]\n` +
                     `━━━━━━━━━━━━━━━━\n` +
                     `${itemsListText}\n` +
                     `━━━━━━━━━━━━━━━━\n` +
@@ -629,11 +625,12 @@
                     `🏦 ช่องทางโอนเงิน:\n` +
                     `ธ.กสิกรไทย (KBANK)\n` +
                     `เลขบัญชี: 2251495656\n` +
-                    `ชื่อบัญชี: พีรดิษฐ์ กิตติเขมานนท์\n\n` +
+                    `ชื่อบัญชี: นายพีรดิษฐ์ กิตติเขมานนท์\n\n` +
                     `⚠️ กรุณาโอนเงินและแนบรูปสลิปในแชทนี้ภายใน 15 นาที ระบบจะตรวจสอบยอดให้อัตโนมัติครับ 🙏`
             }
           ];
 
+          // พิมพ์ส่งเข้าห้องแชทและปิดหน้าต่าง LIFF ทันที
           if (typeof liff !== "undefined" && liff.isInClient()) {
             liff.sendMessages(chatMessage)
               .then(() => {
@@ -641,14 +638,14 @@
                 localCart = [];
                 updateCartBadge();
                 closeCartModal();
-                liff.closeWindow();
+                liff.closeWindow(); // ปิดกลับสู่ห้องแชท LINE ทันที
               })
               .catch(() => {
                 alert(`บันทึกคำสั่งซื้อเรียบร้อย! รหัสออเดอร์: ${orderId}\nกรุณาส่งรูปสลิปในแชท LINE`);
                 closeCartModal();
               });
           } else {
-            alert(`บันทึกคำสั่งซื้อสำเร็จ!\nรหัสคำสั่งซื้อ: ${orderId}\nยอดชำระ: ฿${totalAmount.toLocaleString()}`);
+            alert(`บันทึกคำสั่งซื้อสำเร็จ!\nรหัสคำสั่งซื้อ: ${orderId}\nยอดชำระ: ฿${totalAmount.toLocaleString()} บาท`);
             localStorage.removeItem("naga_cart");
             localCart = [];
             updateCartBadge();

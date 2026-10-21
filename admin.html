@@ -88,12 +88,12 @@
 </head>
 <body class="p-3 sm:p-6 max-w-5xl mx-auto pb-32">
 
-  <!-- Header พร้อมโลโก้จริงประจำแบรนด์ -->
+  <!-- Header โลโก้จริง[cite: 3] -->
   <div class="flex flex-wrap items-center justify-between gap-3 py-3 mb-4 border-b border-amber-300/20">
     <div class="flex items-center gap-3">
       <div class="relative w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_18px_rgba(254,240,138,0.55)] flex-shrink-0">
         <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
-          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">[cite: 3]
         </div>
       </div>
       <div>
@@ -112,7 +112,7 @@
     </div>
   </div>
 
-  <!-- กล่องอัปเดต Web App URL อัตโนมัติไปยังทุกไฟล์บน GitHub -->
+  <!-- กล่องอัปเดต Web App URL กลาง -->
   <div class="glossy-panel rounded-2xl p-4 sm:p-5 mb-5 border-2 border-amber-300/40">
     <div class="flex items-center gap-2 mb-2">
       <span class="text-xl">⚡</span>
@@ -274,8 +274,6 @@
     window.onload = function() {
       initWebUrlFields();
       loadSheetData("settings");
-      loadAnalytics();
-      loadSwitches();
     };
 
     function initWebUrlFields() {
@@ -288,8 +286,6 @@
     function refreshAll() {
       API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : API_URL;
       loadSheetData(currentSheet);
-      loadAnalytics();
-      loadSwitches();
     }
 
     function switchTab(tabId) {
@@ -305,7 +301,7 @@
     }
 
     // ----------------------------------------------------
-    // Auto-Sync GitHub Multi-Files Engine
+    // Auto-Sync GitHub Multi-Files
     // ----------------------------------------------------
     async function updateAllFilesOnGithub() {
       const newUrl = document.getElementById("input-webapp-url").value.trim();
@@ -468,8 +464,10 @@
         let rowHtml = `<td class="py-2.5 px-3 text-slate-400 font-bold">${r.rowIndex}</td>`;
         
         r.data.forEach((cell, cIdx) => {
+          // ตรวจสอบคอลัมน์ status ของ settings รองรับ OPEN / CLOSE[cite: 6]
           if (currentSheet === "settings" && cIdx === 1) {
-            const isChecked = (cell === "เปิด" || cell === "open" || cell === "ON" || cell === "");
+            const valUpper = String(cell || "").trim().toUpperCase();
+            const isChecked = (valUpper === "OPEN" || valUpper === "เปิด" || valUpper === "ON" || valUpper === "TRUE");
             rowHtml += `
               <td class="py-2.5 px-3">
                 <div class="flex items-center gap-2">
@@ -478,7 +476,7 @@
                     <span class="slider"></span>
                   </label>
                   <span id="slot-status-${r.rowIndex}" class="text-xs font-semibold ${isChecked ? 'text-emerald-400' : 'text-red-400'}">
-                    ${isChecked ? 'เปิดรอบ' : 'ปิดรอบ'}
+                    ${isChecked ? 'เปิดรอบ (OPEN)' : 'ปิดรอบ (CLOSE)'}
                   </span>
                 </div>
               </td>
@@ -499,6 +497,7 @@
       });
     }
 
+    // ฟังก์ชันเลื่อนเปิด-ปิดรอบเวลา (ส่งค่า OPEN / CLOSE)[cite: 6]
     function toggleSlot(rowIndex, isChecked) {
       const label = document.getElementById(`slot-status-${rowIndex}`);
       if (label) {
@@ -506,12 +505,12 @@
         label.className = "text-xs font-semibold text-amber-300";
       }
 
-      fetch(`${API_URL}?action=toggle_slot_switch&rowIndex=${rowIndex}&status=${isChecked}`)
+      fetch(`${API_URL}?action=toggle_slot_switch&rowIndex=${rowIndex}&status=${isChecked ? 'OPEN' : 'CLOSE'}`)
         .then(r => r.json())
         .then(res => {
           if (res.status === "success") {
             if (label) {
-              label.innerText = isChecked ? "เปิดรอบ" : "ปิดรอบ";
+              label.innerText = isChecked ? "เปิดรอบ (OPEN)" : "ปิดรอบ (CLOSE)";
               label.className = `text-xs font-semibold ${isChecked ? 'text-emerald-400' : 'text-red-400'}`;
             }
           } else {
@@ -626,49 +625,6 @@
     function escapeHtml(text) {
       if (!text) return "";
       return String(text).replace(/"/g, '&quot;');
-    }
-
-    function loadAnalytics() {
-      fetch(`${API_URL}?action=get_dashboard_analytics`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success") {
-            const d = res.data;
-            document.getElementById("stat-total-members").innerText = d.totalMembers;
-            document.getElementById("stat-daily-cr").innerText = `${d.daily.conversionPct}%`;
-            document.getElementById("stat-daily-picks").innerText = d.daily.picks;
-            document.getElementById("stat-monthly-bookings").innerText = d.monthly.bookings;
-          }
-        });
-    }
-
-    function loadSwitches() {
-      fetch(`${API_URL}?action=get_system_switches`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success") {
-            document.getElementById("sw-booking").checked = res.switches.booking_system;
-            document.getElementById("sw-oracle").checked = res.switches.oracle_system;
-          }
-        });
-    }
-
-    function toggleModule(key, status) {
-      fetch(`${API_URL}?action=toggle_system_switch&key=${key}&status=${status}`);
-    }
-
-    function dispatchBroadcast() {
-      const msg = document.getElementById("bc-message").value.trim();
-      if (!msg) return alert("กรุณาพิมพ์ข้อความ");
-      fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "send_broadcast", message: msg, targetGroup: "all" })
-      }).then(r => r.json()).then(res => {
-        if (res.status === "success") {
-          alert("ส่งประกาศสำเร็จ");
-          document.getElementById("bc-message").value = "";
-        }
-      });
     }
   </script>
 </body>

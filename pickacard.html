@@ -137,14 +137,14 @@
 
   <!-- พื้นที่ใบไพ่ 3D -->
   <div class="flex flex-col items-center justify-center my-2 card-perspective">
-    <div id="card-box" onclick="flipCard()" class="card-flipper w-52 h-80 cursor-pointer">
+    <div id="card-box" onclick="flipCard()" class="card-flipper w-56 h-84 cursor-pointer">
       
       <!-- หลังไพ่พญานาคสีทอง -->
       <div class="card-face card-back-face flex flex-col items-center justify-between p-4">
         <span class="text-[8px] font-mono tracking-widest text-amber-300/60 uppercase">NAGA BLESSING</span>
         
-        <div class="w-28 h-28 rounded-full border-2 border-amber-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(250,204,21,0.25)] p-2">
-          <img src="./card_back_kru.png" class="w-full h-full object-contain" onerror="this.outerHTML='<span class=\'text-4xl text-amber-300\'>🐍</span>'">
+        <div class="w-32 h-32 rounded-full border-2 border-amber-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(250,204,21,0.25)] p-2">
+          <img src="./card_back_kru.png" class="w-full h-full object-contain" onerror="this.outerHTML='<span class=\'text-5xl text-amber-300\'>🐍</span>'">
         </div>
 
         <div class="text-center">
@@ -161,7 +161,8 @@
             <span class="text-amber-500 text-xs">✨</span>
           </div>
 
-          <div class="w-full h-44 bg-slate-50 rounded-xl overflow-hidden my-2 flex items-center justify-center p-1 border border-slate-100 shadow-inner">
+          <!-- ช่องแสดงรูปภาพจาก LinkImage -->
+          <div id="front-img-container" class="w-full h-48 bg-slate-50 rounded-xl overflow-hidden my-2 flex items-center justify-center p-1 border border-slate-200 shadow-inner">
             <img id="front-img" src="" alt="หน้าไพ่" class="w-full h-full object-contain">
           </div>
 
@@ -175,7 +176,7 @@
     </div>
   </div>
 
-  <!-- กล่องผลลัพธ์คำทำนาย (ดึงตรงจาก Sheets ไม่ใช้ AI) -->
+  <!-- กล่องผลลัพธ์คำทำนาย -->
   <div id="result-container" class="hidden space-y-3 mt-4">
     <div class="lux-glass-box rounded-2xl p-4">
       <div class="text-xs font-bold text-amber-300 mb-1.5 flex items-center gap-1.5">
@@ -196,7 +197,7 @@
     </button>
   </div>
 
-  <!-- แถบนำทางด้านล่างสไตล์ iOS 2 แถวแบบคงที่ -->
+  <!-- Bottom Navigation 2 แถวแบบคงที่ -->
   <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
     <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
       <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
@@ -274,26 +275,32 @@
         .then(res => {
           if (res.status === "success" && res.cards && res.cards.length > 0) {
             cardsData = res.cards;
-          } else {
-            // ดึงจากชีต psarnkru หรือแสดงข้อความสำรอง
-            cardsData = [
-              {
-                name: "ไพ่พลังแห่งความตั้งมั่น",
-                meaning: "ช่วงนี้ให้ใช้ความรอบคอบและตั้งมั่นในเป้าหมาย อย่าเพิ่งหวั่นไหวกับสิ่งรอบข้าง ทุกอย่างกำลังคลี่คลายไปในทางที่ดี",
-                advice: "ลงมือทำสิ่งสำคัญทีละเรื่อง มีสติในการสื่อสาร แล้วผลลัพธ์จะสำเร็จราบรื่น"
-              }
-            ];
           }
         })
-        .catch(() => {
-          cardsData = [
-            {
-              name: "ไพ่ความสงบทางใจ",
-              meaning: "พักผ่อนให้เพียงพอและจัดระเบียบความคิด สิ่งที่กังวลอยู่จะค่อยๆ คลี่คลาย",
-              advice: "เน้นการปล่อยวางสิ่งที่ควบคุมไม่ได้ และโฟกัสกับหน้าที่ในปัจจุบัน"
-            }
-          ];
-        });
+        .catch(() => {});
+    }
+
+    // ฟังก์ชันแปลง URL ในคอลัมน์ LinkImage เป็นภาพที่แสดงผลได้ทันที
+    function formatDriveImageUrl(rawUrl) {
+      if (!rawUrl || typeof rawUrl !== "string") return "";
+      const trimmed = rawUrl.trim();
+
+      // สกัด File ID จากลิงก์ Google Drive
+      if (trimmed.includes("drive.google.com")) {
+        let fileId = "";
+        const idParamMatch = trimmed.match(/[?&]id=([-\w]{25,})/);
+        if (idParamMatch) {
+          fileId = idParamMatch[1];
+        } else {
+          const pathMatch = trimmed.match(/\/d\/([-\w]{25,})/);
+          if (pathMatch) fileId = pathMatch[1];
+        }
+
+        if (fileId) {
+          return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+        }
+      }
+      return trimmed;
     }
 
     function flipCard() {
@@ -304,20 +311,30 @@
       const picked = cardsData[Math.floor(Math.random() * cardsData.length)];
 
       document.getElementById("front-name").innerText = picked.name || "สาส์นนำทาง";
-      document.getElementById("front-category").innerText = catLabels[currentCat] || "สาส์นนำทาง";
+      document.getElementById("front-category").innerText = picked.category || (catLabels[currentCat] || "สาส์นนำทาง");
 
-      let imgUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=350&q=80";
-      if (picked.imageId && picked.imageId.trim() !== "") {
-        const raw = picked.imageId.trim();
-        imgUrl = (raw.startsWith("http://") || raw.startsWith("https://")) ? raw : `https://drive.google.com/uc?id=${raw}`;
+      // แปลง URL จาก LinkImage
+      const directImgUrl = formatDriveImageUrl(picked.imageUrl);
+      const imgContainer = document.getElementById("front-img-container");
+
+      if (directImgUrl) {
+        imgContainer.innerHTML = `
+          <img id="front-img" src="${directImgUrl}" alt="${picked.name}" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-amber-500\\'><span class=\\'text-4xl\\'>🐍</span><span class=\\'text-[10px] mt-1 text-slate-400 font-light\\'>${picked.name}</span></div>'">
+        `;
+      } else {
+        imgContainer.innerHTML = `
+          <div class="flex flex-col items-center justify-center h-full text-center text-amber-500">
+            <span class="text-4xl drop-shadow">🐍</span>
+            <span class="text-[11px] font-bold text-slate-800 mt-1">${picked.name}</span>
+          </div>
+        `;
       }
-      document.getElementById("front-img").src = imgUrl;
 
       document.getElementById("card-box").classList.add("flipped");
 
       setTimeout(() => {
-        document.getElementById("res-meaning").innerText = picked.meaning || "ตั้งมั่นอยู่ในความดี มีสติในการตัดสินใจ แล้วจะผ่านพ้นทุกเรื่องราวไปได้อย่างราบรื่น";
-        document.getElementById("res-advice").innerText = picked.advice || "หมั่นทำบุญ สร้างกุศล และมีเมตตาต่อคนรอบข้าง";
+        document.getElementById("res-meaning").innerText = picked.meaning;
+        document.getElementById("res-advice").innerText = picked.advice;
         document.getElementById("result-container").classList.remove("hidden");
         document.getElementById("result-container").scrollIntoView({ behavior: 'smooth' });
       }, 500);

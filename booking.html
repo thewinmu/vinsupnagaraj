@@ -288,7 +288,11 @@
 
       closeModal();
 
-      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&bookingDate=${encodeURIComponent(selectedDate)}&slotTime=${encodeURIComponent(slotTime)}`)
+     // ❌ แบบเดิมที่อาจจะสลับกันอยู่
+// fetch(`${WEB_URL}?action=submit_booking&userId=${userId}&serviceName=${service}&bookingDate=${slotTime}&slotTime=${bookingDate}`)
+
+// ✅ แบบที่ถูกต้อง (เรียงชื่อตัวแปรให้ตรงกัน)
+fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&bookingDate=${encodeURIComponent(selectedDate)}&slotTime=${encodeURIComponent(selectedSlot)}`)
         .then(r => r.json())
         .then(res => {
           alert("✨ บันทึกการจองคิวสำเร็จ!");

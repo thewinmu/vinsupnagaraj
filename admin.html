@@ -3,559 +3,313 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ระบบบริหารจัดการหลังบ้าน • วินทร์ทรัพย์นาคราช</title>
+  <title>Admin Console • วินทร์ทรัพย์นาคราช</title>
   
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+  
   <style>
-    :root {
-      --bg-deep: #01140f;
-      --pearl-cream: #fbfbee;
-      --gold-bright: #fef9c3;
-      --gold-mid: #fef08a;
-      --gold-dark: #ca8a04;
-      --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.88) 0%, rgba(2, 16, 12, 0.96) 100%);
-    }
-
     body {
-      font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at 50% 0%, #064e3b 0%, var(--bg-deep) 45%, #000806 100%);
-      color: var(--pearl-cream);
+      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #064032 0%, #022018 45%, #010a08 100%);
+      color: #f8fafc;
       min-height: 100vh;
       margin: 0;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .bright-white-gold-text {
-      background: linear-gradient(135deg, #ffffff 0%, var(--gold-bright) 30%, var(--gold-mid) 65%, var(--gold-dark) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 25px rgba(254, 249, 195, 0.4);
+    .pearl-header {
+      background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }
 
-    .glossy-panel {
-      background: var(--glossy-card);
-      border: 1px solid rgba(254, 240, 138, 0.28);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    .lux-glass-box {
+      background: linear-gradient(145deg, rgba(6, 64, 50, 0.88) 0%, rgba(2, 28, 21, 0.96) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
     }
 
-    .custom-input {
-      background: rgba(2, 22, 17, 0.85);
-      border: 1px solid rgba(254, 240, 138, 0.35);
-      color: var(--pearl-cream);
+    .tab-btn {
+      background: rgba(2, 44, 34, 0.7);
+      border: 1px solid rgba(254, 240, 138, 0.2);
+      color: #cbd5e1;
       transition: all 0.2s ease;
     }
-    .custom-input:focus {
-      outline: none;
-      border-color: #fef08a;
-      box-shadow: 0 0 14px rgba(254, 240, 138, 0.4);
-    }
-
-    .tab-admin.active {
+    .tab-btn.active {
       background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022c22;
+      color: #022018;
       font-weight: 700;
+      box-shadow: 0 3px 10px rgba(202, 138, 4, 0.35);
     }
-
-    .sheet-btn.active {
-      background: #ca8a04;
-      color: #000;
-      font-weight: bold;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #374151; transition: .3s; border-radius: 24px;
-      border: 1px solid rgba(254, 240, 138, 0.2);
-    }
-    .slider:before {
-      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 2px;
-      background-color: white; transition: .3s; border-radius: 50%;
-    }
-    input:checked + .slider { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
-    input:checked + .slider:before { transform: translateX(20px); }
   </style>
 </head>
-<body class="p-3 sm:p-6 max-w-5xl mx-auto pb-32">
+<body class="p-3 sm:p-5 max-w-4xl mx-auto flex flex-col pb-20">
 
-  <!-- Header โลโก้จริง[cite: 3] -->
-  <div class="flex flex-wrap items-center justify-between gap-3 py-3 mb-4 border-b border-amber-300/20">
-    <div class="flex items-center gap-3">
-      <div class="relative w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_18px_rgba(254,240,138,0.55)] flex-shrink-0">
-        <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
-          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">[cite: 3]
+  <!-- Header -->
+  <header class="pearl-header rounded-3xl p-3 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain p-0.5" onerror="this.src='https://placehold.co/60x60/064032/fef08a?text=🐍'">
         </div>
       </div>
       <div>
-        <h1 class="text-sm font-extrabold bright-white-gold-text tracking-wider uppercase">Master Console • @thewinmu</h1>
-        <p class="text-[10px] text-emerald-300">ระบบควบคุมกลาง CRM, สวิตช์รอบเวลา & จัดการชีตครบวงจร</p>
+        <h1 class="text-xs font-bold text-amber-200 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
+        <p class="text-[9px] text-emerald-300/80 font-light">ระบบศูนย์กลางผู้ดูแลระบบ (Admin Console)</p>
       </div>
     </div>
     
-    <div class="flex gap-2">
-      <a href="https://shop.line.me/@thewinmu" target="_blank" class="text-xs bg-emerald-900/60 border border-emerald-400/40 px-3 py-1.5 rounded-xl hover:bg-emerald-800 transition">
-        🛍️ MyShop
+    <div class="flex items-center gap-2">
+      <a href="./index.html" class="text-[10px] bg-black/50 border border-amber-300/30 text-pearl-cream px-3 py-1.5 rounded-full font-medium">
+        หน้าร้านค้า ⟨
       </a>
-      <button onclick="refreshAll()" class="text-xs bg-black/60 border border-amber-300/40 px-3 py-1.5 rounded-xl text-amber-200 hover:border-amber-300 transition">
-        🔄 อัปเดต
+    </div>
+  </header>
+
+  <!-- แท็บเลือกตารางฐานข้อมูล (รวม member) -->
+  <div class="flex items-center gap-1.5 mb-3.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+    <button onclick="switchTab('member')" id="tab-member" class="tab-btn active px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">👤 ข้อมูลสมาชิก (member)</button>
+    <button onclick="switchTab('products')" id="tab-products" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">🛍️ สินค้า & บริการ (products)</button>
+    <button onclick="switchTab('orders')" id="tab-orders" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">📦 คำสั่งซื้อ (orders)</button>
+    <button onclick="switchTab('bookings')" id="tab-bookings" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">📅 คิวตรวจดวง (bookings)</button>
+    <button onclick="switchTab('psarnkru')" id="tab-psarnkru" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">🪷 สาส์นบรมครู (psarnkru)</button>
+    <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">⚙️ ตั้งค่า (settings)</button>
+  </div>
+
+  <!-- แถบควบคุม: ค้นหา, รีเฟรช, เพิ่มข้อมูล และตั้งค่า API ขนส่ง -->
+  <div class="lux-glass-box rounded-2xl p-3 mb-4 flex flex-wrap items-center justify-between gap-2.5">
+    <div class="flex items-center gap-2 flex-1 min-w-[200px]">
+      <span class="text-xs text-amber-400">🔍</span>
+      <input type="text" id="admin-search" oninput="filterAdminTable()" placeholder="ค้นหาในตารางปัจจุบัน..." class="bg-black/40 border border-amber-300/20 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none w-full">
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button onclick="loadCurrentTable()" class="px-3 py-1.5 bg-black/50 border border-emerald-400/30 text-emerald-300 text-xs rounded-xl hover:bg-black/80 transition">
+        🔄 รีเฟรช
+      </button>
+      <button onclick="openCreateModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition">
+        + เพิ่มข้อมูล
+      </button>
+      <button onclick="openShippingModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-xl shadow transition">
+        🚚 ตั้งค่า API ขนส่ง
       </button>
     </div>
   </div>
 
-  <!-- กล่องอัปเดต Web App URL กลาง -->
-  <div class="glossy-panel rounded-2xl p-4 sm:p-5 mb-5 border-2 border-amber-300/40">
-    <div class="flex items-center gap-2 mb-2">
-      <span class="text-xl">⚡</span>
-      <h3 class="text-xs font-bold bright-white-gold-text uppercase tracking-wider">ตัวจัดการ Web App URL กลาง (อัปเดตทุกไฟล์บน GitHub)</h3>
+  <!-- พื้นที่แสดงผลตารางข้อมูล -->
+  <div class="lux-glass-box rounded-3xl p-4 overflow-hidden">
+    <div id="table-loading" class="py-16 text-center text-xs text-amber-200 animate-pulse font-light">
+      กำลังเชื่อมต่อฐานข้อมูล...
     </div>
-    <p class="text-[10px] text-emerald-300/90 mb-3 font-light">เมื่อได้ Web App URL ใหม่จากการ Deploy นำมาวางที่นี่เพื่อซิงค์ไปยัง config.js, index, booking, memberships บน GitHub ทันที</p>
+    <div id="table-data-container"></div>
+  </div>
 
-    <div class="space-y-3 text-xs">
-      <div>
-        <input type="url" id="input-webapp-url" placeholder="https://script.google.com/macros/s/.../exec" class="custom-input w-full p-3 rounded-xl text-xs font-mono text-amber-200">
+  <!-- MODAL: จัดการ API ขนส่งสด -->
+  <div id="shipping-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="lux-glass-box rounded-3xl p-5 w-full max-w-md text-white space-y-4 border border-amber-400/40 shadow-2xl">
+      <div class="flex justify-between items-center pb-2 border-b border-white/10">
+        <h3 class="text-xs font-bold text-amber-200">🚚 ตั้งค่าเชื่อมต่อ API ขนส่งพัสดุสด</h3>
+        <button onclick="closeShippingModal()" class="text-slate-400 hover:text-white">✕</button>
       </div>
 
-      <details class="bg-black/40 rounded-xl p-3 border border-white/5">
-        <summary class="cursor-pointer text-[11px] text-amber-300 font-medium">⚙️ ตั้งค่าสิทธิ์ GitHub API Token (คลิกเพื่อแก้ไข)</summary>
-        <div class="space-y-2 mt-2 pt-2 border-t border-white/5">
-          <div>
-            <label class="block text-slate-400 text-[10px]">GitHub Personal Access Token (PAT ที่มีสิทธิ์ repo)</label>
-            <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="custom-input w-full p-2 rounded-lg text-xs font-mono">
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-slate-400 text-[10px]">GitHub Username / Owner</label>
-              <input type="text" id="gh-owner" placeholder="Username" class="custom-input w-full p-2 rounded-lg text-xs font-mono">
-            </div>
-            <div>
-              <label class="block text-slate-400 text-[10px]">Repository Name</label>
-              <input type="text" id="gh-repo" placeholder="Repository name" class="custom-input w-full p-2 rounded-lg text-xs font-mono">
-            </div>
-          </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">ผู้ให้บริการขนส่ง:</label>
+          <select id="ship-provider" class="w-full p-2.5 rounded-xl bg-black/60 border border-amber-300/30 text-white focus:outline-none">
+            <option value="THAILAND_POST">ไปรษณีย์ไทย (Thailand Post Track & Trace)</option>
+            <option value="FLASH_EXPRESS">Flash Express (API)</option>
+          </select>
         </div>
-      </details>
+        <div>
+          <label class="block text-slate-300 mb-1">API Token / Secret Key:</label>
+          <input type="password" id="ship-api-key" placeholder="วาง API Key ขนส่งที่นี่..." class="w-full p-2.5 rounded-xl bg-black/60 border border-amber-300/30 text-white focus:outline-none">
+          <span id="ship-key-status" class="text-[10px] text-emerald-400 mt-1 block"></span>
+        </div>
+      </div>
 
-      <div class="flex gap-2">
-        <button onclick="updateAllFilesOnGithub()" id="btn-sync-url" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-extrabold text-xs shadow-lg flex items-center justify-center gap-1.5 hover:brightness-110 transition">
-          <span>🚀</span> บันทึก URL & อัปเดตทุกไฟล์ใน GitHub ทันที
-        </button>
-        <button onclick="testWebUrlConnection()" class="px-4 py-3 rounded-xl bg-black/60 border border-emerald-400/40 text-emerald-300 font-bold text-xs hover:bg-emerald-950/60 transition">
-          🔍 ทดสอบ
-        </button>
+      <div class="pt-2 border-t border-white/10 flex justify-end gap-2">
+        <button onclick="closeShippingModal()" class="px-4 py-2 bg-white/10 text-slate-300 rounded-xl text-xs">ยกเลิก</button>
+        <button onclick="saveShippingConfig()" class="px-4 py-2 bg-amber-400 text-black font-bold rounded-xl text-xs shadow">บันทึกคีย์ขนส่ง</button>
       </div>
     </div>
   </div>
 
-  <!-- แถบเมนูหลัก -->
-  <div class="flex gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
-    <button onclick="switchTab('crud')" id="btn-crud" class="tab-admin active px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📝 ตัวจัดการชีต (CRUD)</button>
-    <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📊 สถิติ & เปอร์เซ็นต์</button>
-    <button onclick="switchTab('switches')" id="btn-switches" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">🎚️ สวิตช์ระบบหลัก</button>
-    <button onclick="switchTab('broadcast')" id="btn-broadcast" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📢 ประกาศ Broadcast</button>
-  </div>
+  <!-- MODAL: เพิ่ม/แก้ไข ข้อมูล (CRUD Dynamic Form) -->
+  <div id="crud-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="lux-glass-box rounded-3xl p-5 w-full max-w-lg text-white max-h-[85vh] flex flex-col justify-between border border-amber-400/40 shadow-2xl overflow-y-auto">
+      <div>
+        <div class="flex justify-between items-center pb-2 border-b border-white/10 mb-3">
+          <h3 id="crud-modal-title" class="text-xs font-bold text-amber-200">จัดการข้อมูล</h3>
+          <button onclick="closeCrudModal()" class="text-slate-400 hover:text-white">✕</button>
+        </div>
+        <div id="crud-form-fields" class="space-y-3 text-xs max-h-[60vh] overflow-y-auto pr-1"></div>
+      </div>
 
-  <!-- TAB: ตัวจัดการชีต -->
-  <div id="tab-pane-crud" class="space-y-4">
-    <div class="flex items-center justify-between flex-wrap gap-2">
-      <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-        <button onclick="loadSheetData('settings')" id="sheet-btn-settings" class="sheet-btn active px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">⚙️ settings (สวิตช์รอบเวลา)</button>
-       <!-- ตรวจสอบว่าส่ง 'member' ไม่ใช่ 'memberships' -->
-<button onclick="loadSheetData('member')" id="sheet-btn-member" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">
-  👤 member
-</button>
-        <button onclick="loadSheetData('products')" id="sheet-btn-products" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">🛍️ products</button>
-        <button onclick="loadSheetData('orders')" id="sheet-btn-orders" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">📦 orders</button>
-        <button onclick="loadSheetData('shop')" id="sheet-btn-shop" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">🛒 shop</button>
-        <button onclick="loadSheetData('bookings')" id="sheet-btn-bookings" class="sheet-btn px-3 py-1.5 rounded-xl text-xs bg-black/50 border border-amber-300/30">📅 bookings</button>
-      </div>
-      <button onclick="openCreateModal()" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg">
-        <span>➕</span> เพิ่มแถวใหม่
-      </button>
-    </div>
-
-    <div class="glossy-panel rounded-2xl p-4 overflow-hidden">
-      <div class="flex justify-between items-center mb-3">
-        <h3 id="current-sheet-title" class="text-xs font-bold text-amber-200 uppercase tracking-widest">ตาราง: settings</h3>
-        <span id="row-count-label" class="text-[10px] text-emerald-300">0 รายการ</span>
-      </div>
-      <div class="overflow-x-auto max-h-[55vh] text-xs">
-        <table class="w-full text-left border-collapse whitespace-nowrap">
-          <thead id="crud-table-head" class="bg-black/50 border-b border-amber-300/20 text-slate-300 sticky top-0"></thead>
-          <tbody id="crud-table-body" class="divide-y divide-white/5">
-            <tr><td class="py-8 text-center text-slate-400" colspan="10">กำลังโหลดข้อมูล...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB: Analytics -->
-  <div id="tab-pane-analytics" class="hidden space-y-4">
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-emerald-300">👥 สมาชิกทั้งหมด</div>
-        <div id="stat-total-members" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
-      </div>
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-amber-300">📈 Conversion วันนี้</div>
-        <div id="stat-daily-cr" class="text-2xl font-extrabold text-amber-200 mt-1">0%</div>
-      </div>
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-emerald-300">🔮 เปิดไพ่วันนี้</div>
-        <div id="stat-daily-picks" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
-      </div>
-      <div class="glossy-panel p-4 rounded-2xl">
-        <div class="text-[10px] text-amber-300">📅 การจองเดือนนี้</div>
-        <div id="stat-monthly-bookings" class="text-2xl font-extrabold text-amber-200 mt-1">0</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB: Switches -->
-  <div id="tab-pane-switches" class="hidden space-y-4">
-    <div class="glossy-panel rounded-2xl p-5 space-y-4 text-xs">
-      <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
-        <div><div class="font-bold text-white">ระบบจองคิวรอบเวลา (15 นาที)</div></div>
-        <label class="switch"><input type="checkbox" id="sw-booking" onchange="toggleModule('booking_system', this.checked)"><span class="slider"></span></label>
-      </div>
-      <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
-        <div><div class="font-bold text-white">ระบบ Pick a Card (ไพ่นาคราช)</div></div>
-        <label class="switch"><input type="checkbox" id="sw-oracle" onchange="toggleModule('oracle_system', this.checked)"><span class="slider"></span></label>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB: Broadcast -->
-  <div id="tab-pane-broadcast" class="hidden space-y-4">
-    <div class="glossy-panel rounded-2xl p-5 text-xs space-y-3">
-      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest">ประกาศทาง LINE OA</h3>
-      <textarea id="bc-message" rows="4" placeholder="พิมพ์ข้อความที่ต้องการประกาศ..." class="custom-input w-full p-3 rounded-xl text-xs resize-none"></textarea>
-      <button onclick="dispatchBroadcast()" class="w-full py-3 rounded-xl bg-amber-400 text-black font-bold">🚀 ยืนยันการส่ง Broadcast</button>
-    </div>
-  </div>
-
-  <!-- MODAL: จัดการ เพิ่ม / แก้ไข ข้อมูลในชีต -->
-  <div id="crud-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="glossy-panel border-2 border-amber-300/60 rounded-3xl p-5 max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl">
-      <div class="flex justify-between items-center pb-3 border-b border-white/10 mb-3">
-        <h3 id="modal-crud-title" class="text-sm font-bold bright-white-gold-text">แก้ไขข้อมูล</h3>
-        <button onclick="closeCrudModal()" class="text-xs text-slate-400 hover:text-white">✕ ปิด</button>
-      </div>
-      <div id="modal-crud-fields" class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs"></div>
-      <div class="pt-3 border-t border-white/10 mt-3 flex gap-2">
-        <button onclick="closeCrudModal()" class="flex-1 py-2.5 rounded-xl bg-black/60 border border-white/20 text-xs text-slate-300">ยกเลิก</button>
-        <button onclick="saveCrudData()" id="btn-save-crud" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-black font-bold text-xs">บันทึกข้อมูล</button>
+      <div class="pt-3 border-t border-white/10 flex justify-end gap-2 mt-4">
+        <button onclick="closeCrudModal()" class="px-4 py-2 bg-white/10 text-slate-300 rounded-xl text-xs">ยกเลิก</button>
+        <button id="crud-submit-btn" onclick="submitCrudForm()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow">บันทึก</button>
       </div>
     </div>
   </div>
 
   <script>
-    const TARGET_FILES = [
-      "config.js",
-      "index.html",
-      "booking.html",
-      "memberships.html"
-    ];
+    const API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
 
-    let API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
-
-    let currentSheet = "settings";
-    let currentHeaders = [];
-    let currentRows = [];
-    let editRowIndex = null;
+    let currentSheet = "member";
+    let rawTableData = null;
+    let editingRowIndex = null;
 
     window.onload = function() {
-      initWebUrlFields();
-      loadSheetData("settings");
+      loadCurrentTable();
     };
 
-    function initWebUrlFields() {
-      document.getElementById("input-webapp-url").value = API_URL;
-      if (localStorage.getItem("GH_PAT")) document.getElementById("gh-token").value = localStorage.getItem("GH_PAT");
-      if (localStorage.getItem("GH_OWNER")) document.getElementById("gh-owner").value = localStorage.getItem("GH_OWNER");
-      if (localStorage.getItem("GH_REPO")) document.getElementById("gh-repo").value = localStorage.getItem("GH_REPO");
-    }
-
-    function refreshAll() {
-      API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : API_URL;
-      loadSheetData(currentSheet);
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll(".tab-admin").forEach(b => b.classList.remove("active"));
-      document.getElementById(`btn-${tabId}`).classList.add("active");
-
-      document.getElementById("tab-pane-crud").classList.add("hidden");
-      document.getElementById("tab-pane-analytics").classList.add("hidden");
-      document.getElementById("tab-pane-switches").classList.add("hidden");
-      document.getElementById("tab-pane-broadcast").classList.add("hidden");
-
-      document.getElementById(`tab-pane-${tabId}`).classList.remove("hidden");
-    }
-
-    // ----------------------------------------------------
-    // Auto-Sync GitHub Multi-Files
-    // ----------------------------------------------------
-    async function updateAllFilesOnGithub() {
-      const newUrl = document.getElementById("input-webapp-url").value.trim();
-      const token = document.getElementById("gh-token").value.trim();
-      const owner = document.getElementById("gh-owner").value.trim();
-      const repo = document.getElementById("gh-repo").value.trim();
-
-      if (!newUrl || !newUrl.startsWith("https://script.google.com/macros/s/")) {
-        alert("กรุณากรอก Google Apps Script Web App URL ให้ถูกต้อง");
-        return;
-      }
-      if (!token || !owner || !repo) {
-        alert("กรุณาระบุ GitHub Token, Owner และ Repo Name ให้ครบถ้วน");
-        return;
-      }
-
-      localStorage.setItem("NAGA_MASTER_API_URL", newUrl);
-      localStorage.setItem("GH_PAT", token);
-      localStorage.setItem("GH_OWNER", owner);
-      localStorage.setItem("GH_REPO", repo);
-      API_URL = newUrl;
-
-      const syncBtn = document.getElementById("btn-sync-url");
-      syncBtn.disabled = true;
-
-      let successCount = 0;
-      let failList = [];
-
-      for (let fileName of TARGET_FILES) {
-        try {
-          syncBtn.innerText = `⏳ กำลังอัปเดตไฟล์ ${fileName}...`;
-          await updateSingleGithubFile(owner, repo, token, fileName, newUrl);
-          successCount++;
-        } catch (err) {
-          failList.push(`${fileName} (${err.message})`);
-        }
-      }
-
-      syncBtn.disabled = false;
-      syncBtn.innerText = "🚀 บันทึก URL & อัปเดตทุกไฟล์ใน GitHub ทันที";
-
-      if (failList.length === 0) {
-        alert(`🎉 สำเร็จสมบูรณ์!\nอัปเดต Web App URL ใหม่ลงใน ${successCount} ไฟล์เรียบร้อยแล้ว:\n- ` + TARGET_FILES.join("\n- "));
-        refreshAll();
-      } else {
-        alert(`⚠️ อัปเดตสำเร็จ ${successCount} ไฟล์\nพบปัญหาในไฟล์ต่อไปนี้:\n` + failList.join("\n"));
-      }
-    }
-
-    async function updateSingleGithubFile(owner, repo, token, fileName, newUrl) {
-      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`;
-
-      const getRes = await fetch(apiUrl, {
-        headers: { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" }
-      });
-      if (!getRes.ok) throw new Error(`ไม่พบไฟล์หรือเข้าถึงไม่ได้ (Status ${getRes.status})`);
-
-      const fileData = await getRes.json();
-      const fileSha = fileData.sha;
-      let content = decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, ''))));
-
-      const scriptUrlRegex = /https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec/g;
-
-      if (scriptUrlRegex.test(content)) {
-        content = content.replace(scriptUrlRegex, newUrl);
-      } else if (fileName === "config.js") {
-        content = `const SYSTEM_CONFIG = {\n  API_URL: "${newUrl}",\n  LAST_UPDATED: "${new Date().toISOString().split("T")[0]}"\n};\nfunction getMasterApiUrl() { return SYSTEM_CONFIG.API_URL; }`;
-      }
-
-      const updatedBase64 = btoa(unescape(encodeURIComponent(content)));
-
-      const putRes = await fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${token}`,
-          "Content-Type": "application/json",
-          "Accept": "application/vnd.github.v3+json"
-        },
-        body: JSON.stringify({
-          message: `auto-sync: update apps script web url in ${fileName}`,
-          content: updatedBase64,
-          sha: fileSha
-        })
-      });
-
-      if (!putRes.ok) {
-        const errorJson = await putRes.json();
-        throw new Error(errorJson.message || "Commit failed");
-      }
-    }
-
-    function testWebUrlConnection() {
-      const url = document.getElementById("input-webapp-url").value.trim();
-      if (!url) return alert("กรุณาระบุ URL ก่อนทดสอบ");
-
-      fetch(`${url}?action=get_system_switches`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success") {
-            alert("🎉 เชื่อมต่อ Web App URL สำเร็จ! ระบบ Apps Script พร้อมทำงาน");
-          } else {
-            alert("⚠️ ผลการทดสอบ: " + JSON.stringify(res));
-          }
-        })
-        .catch(err => alert("❌ การเชื่อมต่อล้มเหลว: " + err.message));
-    }
-
-    // ----------------------------------------------------
-    // CRUD Sheet Data Engine
-    // ----------------------------------------------------
-    function loadSheetData(sheetName) {
+    function switchTab(sheetName) {
       currentSheet = sheetName;
-      document.querySelectorAll(".sheet-btn").forEach(b => b.classList.remove("active"));
-      const activeBtn = document.getElementById(`sheet-btn-${sheetName}`);
-      if (activeBtn) activeBtn.classList.add("active");
-
-      document.getElementById("current-sheet-title").innerText = `ตาราง: ${sheetName}`;
-      const tbody = document.getElementById("crud-table-body");
-      tbody.innerHTML = `<tr><td class="py-8 text-center text-amber-200 animate-pulse" colspan="10">กำลังดึงข้อมูลชีต ${sheetName}...</td></tr>`;
-
-      fetch(`${API_URL}?action=get_table_data&sheetName=${encodeURIComponent(sheetName)}`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success") {
-            currentHeaders = res.headers || [];
-            currentRows = res.rows || [];
-            renderCrudTable();
-          } else {
-            tbody.innerHTML = `<tr><td class="py-8 text-center text-red-400" colspan="10">${res.message || "โหลดข้อมูลล้มเหลว"}</td></tr>`;
-          }
-        })
-        .catch(() => {
-          tbody.innerHTML = `<tr><td class="py-8 text-center text-slate-400" colspan="10">เชื่อมต่อขัดข้อง กรุณาลองใหม่</td></tr>`;
-        });
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      const btn = document.getElementById(`tab-${sheetName}`);
+      if (btn) btn.classList.add("active");
+      loadCurrentTable();
     }
 
-    function renderCrudTable() {
-      const thead = document.getElementById("crud-table-head");
-      const tbody = document.getElementById("crud-table-body");
-      const countLabel = document.getElementById("row-count-label");
+    function loadCurrentTable() {
+      document.getElementById("table-loading").classList.remove("hidden");
+      document.getElementById("table-data-container").innerHTML = "";
 
-      countLabel.innerText = `${currentRows.length} รายการ`;
-
-      let headHtml = `<tr><th class="py-2.5 px-3">แถว</th>`;
-      currentHeaders.forEach((h) => {
-        headHtml += `<th class="py-2.5 px-3">${h}</th>`;
-      });
-      headHtml += `<th class="py-2.5 px-3 text-center">จัดการ</th></tr>`;
-      thead.innerHTML = headHtml;
-
-      if (currentRows.length === 0) {
-        tbody.innerHTML = `<tr><td class="py-8 text-center text-slate-400" colspan="${currentHeaders.length + 2}">ไม่มีข้อมูลในตารางนี้</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = "";
-      currentRows.forEach(r => {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-white/5 transition";
-        let rowHtml = `<td class="py-2.5 px-3 text-slate-400 font-bold">${r.rowIndex}</td>`;
-        
-        r.data.forEach((cell, cIdx) => {
-          // ตรวจสอบคอลัมน์ status ของ settings รองรับ OPEN / CLOSE[cite: 6]
-          if (currentSheet === "settings" && cIdx === 1) {
-            const valUpper = String(cell || "").trim().toUpperCase();
-            const isChecked = (valUpper === "OPEN" || valUpper === "เปิด" || valUpper === "ON" || valUpper === "TRUE");
-            rowHtml += `
-              <td class="py-2.5 px-3">
-                <div class="flex items-center gap-2">
-                  <label class="switch">
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleSlot(${r.rowIndex}, this.checked)">
-                    <span class="slider"></span>
-                  </label>
-                  <span id="slot-status-${r.rowIndex}" class="text-xs font-semibold ${isChecked ? 'text-emerald-400' : 'text-red-400'}">
-                    ${isChecked ? 'เปิดรอบ (OPEN)' : 'ปิดรอบ (CLOSE)'}
-                  </span>
-                </div>
-              </td>
+      fetch(`${API_URL}?action=get_table_data&sheetName=${currentSheet}`)
+        .then(r => r.json())
+        .then(res => {
+          document.getElementById("table-loading").classList.add("hidden");
+          if (res.status === "success") {
+            rawTableData = res;
+            renderTableData(res);
+          } else {
+            document.getElementById("table-data-container").innerHTML = `
+              <div class="py-12 text-center text-xs text-red-300">${res.message || "ไม่สามารถโหลดข้อมูลได้"}</div>
             `;
-          } else {
-            rowHtml += `<td class="py-2.5 px-3 text-slate-200 max-w-xs truncate">${cell || '-'}</td>`;
-          }
-        });
-
-        rowHtml += `
-          <td class="py-2.5 px-3 text-center flex items-center justify-center gap-1.5">
-            <button onclick="openEditModal(${r.rowIndex})" class="px-2.5 py-1 rounded bg-amber-400/20 text-amber-300 hover:bg-amber-400/40 font-semibold text-[11px]">แก้ไข</button>
-            <button onclick="deleteRow(${r.rowIndex})" class="px-2.5 py-1 rounded bg-red-500/20 text-red-300 hover:bg-red-500/40 font-semibold text-[11px]">ลบ</button>
-          </td>
-        `;
-        tr.innerHTML = rowHtml;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ฟังก์ชันเลื่อนเปิด-ปิดรอบเวลา (ส่งค่า OPEN / CLOSE)[cite: 6]
-    function toggleSlot(rowIndex, isChecked) {
-      const label = document.getElementById(`slot-status-${rowIndex}`);
-      if (label) {
-        label.innerText = isChecked ? "กำลังเปิด..." : "กำลังปิด...";
-        label.className = "text-xs font-semibold text-amber-300";
-      }
-
-      fetch(`${API_URL}?action=toggle_slot_switch&rowIndex=${rowIndex}&status=${isChecked ? 'OPEN' : 'CLOSE'}`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success") {
-            if (label) {
-              label.innerText = isChecked ? "เปิดรอบ (OPEN)" : "ปิดรอบ (CLOSE)";
-              label.className = `text-xs font-semibold ${isChecked ? 'text-emerald-400' : 'text-red-400'}`;
-            }
-          } else {
-            alert("อัปเดตสวิตช์ล้มเหลว: " + res.message);
-            loadSheetData("settings");
           }
         })
         .catch(() => {
-          alert("เชื่อมต่อขัดข้อง");
-          loadSheetData("settings");
+          document.getElementById("table-loading").classList.add("hidden");
+          document.getElementById("table-data-container").innerHTML = `
+            <div class="py-12 text-center text-xs text-red-300">การเชื่อมต่อขัดข้อง</div>
+          `;
         });
     }
 
-    function openCreateModal() {
-      editRowIndex = null;
-      document.getElementById("modal-crud-title").innerText = `➕ เพิ่มข้อมูลใหม่ลงใน [${currentSheet}]`;
-      buildModalFields([]);
-      document.getElementById("crud-modal").classList.remove("hidden");
-    }
-
-    function openEditModal(rowIndex) {
-      editRowIndex = rowIndex;
-      const targetRow = currentRows.find(r => r.rowIndex === rowIndex);
-      if (!targetRow) return;
-
-      document.getElementById("modal-crud-title").innerText = `✏️ แก้ไขข้อมูลแถวที่ ${rowIndex} [${currentSheet}]`;
-      buildModalFields(targetRow.data);
-      document.getElementById("crud-modal").classList.remove("hidden");
-    }
-
-    function buildModalFields(values) {
-      const container = document.getElementById("modal-crud-fields");
+    function renderTableData(data) {
+      const container = document.getElementById("table-data-container");
       container.innerHTML = "";
 
-      currentHeaders.forEach((h, idx) => {
+      if (!data.rows || data.rows.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-xs text-slate-400">ยังไม่มีข้อมูลในตารางนี้</div>`;
+        return;
+      }
+
+      const isProductTab = (currentSheet === "products");
+      let tableHtml = `<div class="overflow-x-auto"><table class="w-full text-left text-xs border-collapse">`;
+      
+      // Header
+      tableHtml += `<thead><tr class="bg-black/60 text-amber-200 border-b border-amber-300/30">`;
+      data.headers.forEach(h => { tableHtml += `<th class="p-3 whitespace-nowrap">${h}</th>`; });
+      if (isProductTab) tableHtml += `<th class="p-3 text-center whitespace-nowrap">เปิด/ปิดขาย</th>`;
+      tableHtml += `<th class="p-3 text-center whitespace-nowrap">จัดการ</th></tr></thead><tbody>`;
+
+      // Rows
+      data.rows.forEach(r => {
+        tableHtml += `<tr class="border-b border-white/5 hover:bg-white/5 transition">`;
+        r.data.forEach(cell => {
+          tableHtml += `<td class="p-3 text-slate-200 max-w-[200px] truncate">${cell || '-'}</td>`;
+        });
+
+        // สวิตช์เปิด/ปิดขายสำหรับชีต products
+        if (isProductTab) {
+          const currentStatus = String(r.data[8] || "ACTIVE").trim().toUpperCase();
+          const isOpen = (currentStatus === "ACTIVE" || currentStatus === "เปิด" || currentStatus === "TRUE");
+          tableHtml += `
+            <td class="p-3 text-center">
+              <button onclick="toggleProductSwitch(${r.rowIndex}, ${!isOpen})" class="px-3 py-1 rounded-full text-[10px] font-bold ${isOpen ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/50' : 'bg-red-500/20 text-red-300 border border-red-400/50'}">
+                ${isOpen ? '🟢 เปิดขาย' : '🔴 ปิดขาย'}
+              </button>
+            </td>
+          `;
+        }
+
+        tableHtml += `
+          <td class="p-3 text-center whitespace-nowrap">
+            <button onclick='openEditModal(${r.rowIndex}, ${JSON.stringify(r.data)})' class="px-2.5 py-1 bg-amber-400/20 text-amber-300 hover:bg-amber-400/30 rounded-lg mr-1 text-[11px]">แก้ไข</button>
+            <button onclick="deleteRow(${r.rowIndex})" class="px-2.5 py-1 bg-red-500/20 text-red-300 hover:bg-red-500/30 rounded-lg text-[11px]">ลบ</button>
+          </td>
+        </tr>`;
+      });
+
+      tableHtml += `</tbody></table></div>`;
+      container.innerHTML = tableHtml;
+    }
+
+    function toggleProductSwitch(rowIndex, newStatus) {
+      fetch(`${API_URL}?action=toggle_product_status&rowIndex=${rowIndex}&status=${newStatus}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            loadCurrentTable();
+          } else {
+            alert("ไม่สามารถเปลี่ยนสถานะได้: " + res.message);
+          }
+        });
+    }
+
+    function filterAdminTable() {
+      const q = document.getElementById("admin-search").value.trim().toLowerCase();
+      if (!rawTableData) return;
+
+      if (!q) {
+        renderTableData(rawTableData);
+        return;
+      }
+
+      const filteredRows = rawTableData.rows.filter(r => 
+        r.data.some(val => String(val).toLowerCase().includes(q))
+      );
+
+      renderTableData({
+        headers: rawTableData.headers,
+        rows: filteredRows
+      });
+    }
+
+    // --- CRUD MODAL ---
+    function openCreateModal() {
+      if (!rawTableData) return;
+      editingRowIndex = null;
+      document.getElementById("crud-modal-title").innerText = `เพิ่มข้อมูลใน ${currentSheet}`;
+      buildFormFields(rawTableData.headers, []);
+      document.getElementById("crud-modal").classList.remove("hidden");
+    }
+
+    function openEditModal(rowIndex, rowData) {
+      if (!rawTableData) return;
+      editingRowIndex = rowIndex;
+      document.getElementById("crud-modal-title").innerText = `แก้ไขข้อมูลแถวที่ ${rowIndex} ใน ${currentSheet}`;
+      buildFormFields(rawTableData.headers, rowData);
+      document.getElementById("crud-modal").classList.remove("hidden");
+    }
+
+    function buildFormFields(headers, values) {
+      const formContainer = document.getElementById("crud-form-fields");
+      formContainer.innerHTML = "";
+
+      headers.forEach((h, idx) => {
         const val = values[idx] !== undefined ? values[idx] : "";
         const div = document.createElement("div");
         div.innerHTML = `
-          <label class="block text-slate-300 text-[11px] mb-1 font-medium">${h}</label>
-          <input type="text" id="crud-field-${idx}" value="${escapeHtml(val)}" class="custom-input w-full p-2.5 rounded-xl text-xs">
+          <label class="block text-slate-300 mb-1 font-semibold">${h}:</label>
+          <input type="text" id="field-${idx}" value="${String(val).replace(/"/g, '&quot;')}" class="w-full p-2.5 rounded-xl bg-black/60 border border-amber-300/30 text-white focus:outline-none focus:border-amber-400">
         `;
-        container.appendChild(div);
+        formContainer.appendChild(div);
       });
     }
 
@@ -563,22 +317,20 @@
       document.getElementById("crud-modal").classList.add("hidden");
     }
 
-    function saveCrudData() {
-      const rowData = [];
-      for (let i = 0; i < currentHeaders.length; i++) {
-        const input = document.getElementById(`crud-field-${i}`);
-        rowData.push(input ? input.value.trim() : "");
-      }
+    function submitCrudForm() {
+      if (!rawTableData) return;
+      const inputs = document.querySelectorAll("#crud-form-fields input");
+      const rowData = Array.from(inputs).map(inp => inp.value);
 
-      const saveBtn = document.getElementById("btn-save-crud");
-      saveBtn.disabled = true;
-      saveBtn.innerText = "กำลังบันทึก...";
+      const btn = document.getElementById("crud-submit-btn");
+      btn.disabled = true;
+      btn.innerText = "กำลังบันทึก...";
 
-      const action = editRowIndex ? "crud_update" : "crud_create";
+      const action = editingRowIndex ? "crud_update" : "crud_create";
       const payload = {
         action: action,
         sheetName: currentSheet,
-        rowIndex: editRowIndex,
+        rowIndex: editingRowIndex,
         rowData: rowData
       };
 
@@ -588,24 +340,24 @@
       })
       .then(r => r.json())
       .then(res => {
-        saveBtn.disabled = false;
-        saveBtn.innerText = "บันทึกข้อมูล";
+        btn.disabled = false;
+        btn.innerText = "บันทึก";
         if (res.status === "success") {
           closeCrudModal();
-          loadSheetData(currentSheet);
+          loadCurrentTable();
         } else {
           alert("เกิดข้อผิดพลาด: " + res.message);
         }
       })
       .catch(() => {
-        saveBtn.disabled = false;
-        saveBtn.innerText = "บันทึกข้อมูล";
-        alert("การเชื่อมต่อขัดข้อง");
+        btn.disabled = false;
+        btn.innerText = "บันทึก";
+        alert("การเชื่อมต่อระบบขัดข้อง");
       });
     }
 
     function deleteRow(rowIndex) {
-      if (!confirm(`ยืนยันการลบข้อมูลแถวที่ ${rowIndex} ในตาราง ${currentSheet} หรือไม่?`)) return;
+      if (!confirm(`ยืนยันการลบแถวที่ ${rowIndex} หรือไม่?`)) return;
 
       fetch(API_URL, {
         method: "POST",
@@ -618,16 +370,52 @@
       .then(r => r.json())
       .then(res => {
         if (res.status === "success") {
-          loadSheetData(currentSheet);
+          loadCurrentTable();
         } else {
           alert("ไม่สามารถลบได้: " + res.message);
         }
       });
     }
 
-    function escapeHtml(text) {
-      if (!text) return "";
-      return String(text).replace(/"/g, '&quot;');
+    // --- SHIPPING MODAL ---
+    function openShippingModal() {
+      fetch(`${API_URL}?action=get_shipping_config`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            document.getElementById("ship-provider").value = res.provider || "THAILAND_POST";
+            document.getElementById("ship-api-key").value = res.apiKey || "";
+            document.getElementById("ship-key-status").innerText = res.hasKey ? "🟢 บันทึกคีย์แล้ว (พร้อมใช้งาน)" : "🔴 ยังไม่ได้ตั้งค่าคีย์";
+          }
+        });
+      document.getElementById("shipping-modal").classList.remove("hidden");
+    }
+
+    function closeShippingModal() {
+      document.getElementById("shipping-modal").classList.add("hidden");
+    }
+
+    function saveShippingConfig() {
+      const provider = document.getElementById("ship-provider").value;
+      const apiKey = document.getElementById("ship-api-key").value.trim();
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "save_shipping_config",
+          provider: provider,
+          apiKey: apiKey
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === "success") {
+          alert("บันทึกการตั้งค่า API ขนส่งเรียบร้อยแล้ว");
+          closeShippingModal();
+        } else {
+          alert("เกิดข้อผิดพลาด: " + res.message);
+        }
+      });
     }
   </script>
 </body>

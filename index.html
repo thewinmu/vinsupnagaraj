@@ -7,117 +7,182 @@
   
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
+    /* ฟอนต์สไตล์ iOS / iPhone (SF Pro Display & Text Look) */
     body {
-      font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at 50% 0%, #064e3b 0%, #022018 45%, #010d0a 100%);
-      color: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Prompt", sans-serif;
+      background: radial-gradient(circle at 50% 0%, #064032 0%, #031c15 45%, #010c09 100%);
+      color: #f7f7f0;
       min-height: 100vh;
       margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* สไตล์การ์ดสินค้าตามภาพที่ 2 (สีขาวนวล ขอบทอง)[cite: 10] */
-    .lux-product-card {
-      background: #fafaf5;
-      border: 1.5px solid #eab308;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
-      transition: all 0.25s ease;
-      display: flex;
-      flex-col;
-      justify-content: space-between;
-      overflow: hidden;
-      padding: 12px;
-    }
-    .lux-product-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 30px rgba(234, 179, 8, 0.3);
+    /* สไตล์สีเขียวมุกมรกต + ดำเงามันวาว + ขอบทองอร่าม */
+    .pearl-emerald-header {
+      background: linear-gradient(135deg, rgba(6, 64, 50, 0.95) 0%, rgba(1, 20, 15, 0.98) 100%);
+      border: 1px solid rgba(254, 240, 138, 0.25);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
     }
 
-    .btn-add-cart {
-      background: #14532d;
-      color: #ffffff;
+    .luxury-glossy-card {
+      background: linear-gradient(160deg, #fefefe 0%, #fbfbe8 100%);
+      border: 1.2px solid #ca8a04;
+      border-radius: 22px;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.55), 0 0 15px rgba(202, 138, 4, 0.15);
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .luxury-glossy-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 36px rgba(0, 0, 0, 0.7), 0 0 22px rgba(234, 179, 8, 0.35);
+      border-color: #facc15;
+    }
+
+    .btn-gold-emerald {
+      background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+      color: #fef08a;
+      border: 1px solid rgba(254, 240, 138, 0.4);
       border-radius: 9999px;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 6px 14px;
       transition: all 0.2s ease;
     }
-    .btn-add-cart:hover {
-      background: #166534;
-      color: #fef08a;
+    .btn-gold-emerald:hover {
+      background: linear-gradient(135deg, #047857 0%, #064e3b 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(4, 120, 87, 0.4);
     }
 
-    .search-input {
-      background: #ffffff;
+    .search-bar-luxury {
+      background: rgba(1, 24, 18, 0.85);
+      border: 1px solid rgba(254, 240, 138, 0.3);
+      backdrop-filter: blur(16px);
       border-radius: 9999px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .category-pill.active {
+      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
+      color: #022018;
+      font-weight: 700;
+      border-color: #fef08a;
+      box-shadow: 0 4px 12px rgba(202, 138, 4, 0.4);
     }
   </style>
 </head>
 <body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-28">
 
-  <!-- แถบด้านบน: โลโก้ + Search Bar ตามสไตล์ภาพที่ 2[cite: 10] -->
-  <div class="search-input flex items-center justify-between p-2 mb-4">
-    <div class="flex items-center gap-2 pl-2">
-      <div class="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center">
-        <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain">
+  <!-- แถบด้านบน: สไตล์ iPhone Header (เขียวมุกมรกต + ดำเงา + ทองอร่าม) -->
+  <header class="pearl-emerald-header rounded-3xl p-3 mb-4 shadow-xl flex items-center justify-between">
+    <div class="flex items-center gap-3 pl-1">
+      <div class="relative w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow-[0_0_12px_rgba(254,240,138,0.55)] flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black/90 flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="ตราอุณาโลมพญานาคคู่" class="w-full h-full object-contain p-0.5">
+        </div>
       </div>
-      <span class="text-xs font-bold text-emerald-950 tracking-wider">Shop@วินทรัพย์นาคราช</span>
+      <div>
+        <h1 class="text-xs font-bold tracking-wider text-amber-200">Shop@วินทรัพย์นาคราช</h1>
+        <p class="text-[9px] text-emerald-300/80 font-light">Official Store & Selected Items</p>
+      </div>
     </div>
-    <div class="flex items-center gap-2 pr-2">
-      <span class="text-slate-400 text-sm">🔍</span>
-      <a href="./memberships.html" class="text-emerald-900 text-base font-bold">☰</a>
+    <div class="flex items-center gap-2">
+      <a href="https://shop.line.me/@thewinmu" target="_blank" class="text-[10px] bg-amber-400/20 border border-amber-300/40 text-amber-200 px-3 py-1.5 rounded-full font-medium hover:bg-amber-400/30 transition">
+        🛍️ MyShop
+      </a>
+      <a href="./memberships.html" class="w-7 h-7 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-xs text-amber-200">
+        👤
+      </a>
     </div>
+  </header>
+
+  <!-- แถบค้นหา เรียบหรู Minimal -->
+  <div class="search-bar-luxury px-3.5 py-2.5 mb-4 flex items-center justify-between shadow-inner">
+    <div class="flex items-center gap-2 flex-1">
+      <span class="text-xs text-amber-300/70">🔍</span>
+      <input type="text" id="search-input" oninput="handleSearch()" placeholder="ค้นหาสินค้ามงคล, รายการพิเศษ..." class="bg-transparent text-xs text-white placeholder-slate-400 focus:outline-none w-full font-light">
+    </div>
+    <span id="search-count" class="text-[10px] text-emerald-400/80 font-mono"></span>
   </div>
 
-  <!-- แถบหมวดหมู่สินค้า -->
+  <!-- แถบหมวดหมู่ (Category Tabs) สไตล์ iOS Scrollable -->
   <div id="category-bar" class="flex items-center gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar text-xs">
-    <button onclick="filterCategory('all')" id="tab-all" class="px-4 py-1.5 rounded-full bg-amber-400 text-black font-bold whitespace-nowrap shadow">
+    <button onclick="filterCategory('all')" id="tab-all" class="category-pill active px-4 py-1.5 rounded-full border border-amber-300/20 text-white whitespace-nowrap transition">
       ทั้งหมด
     </button>
   </div>
 
-  <!-- ตารางแสดงสินค้าแบบการ์ด 2 คอลัมน์ตามภาพที่ 2[cite: 10] -->
+  <!-- สินค้า 2 คอลัมน์ (หรูหรา Minimal: ขาวครีม ขอบทอง ฐานมรกตเงา) -->
   <div id="product-container" class="grid grid-cols-2 gap-3.5">
-    <div class="col-span-full py-12 text-center text-xs text-amber-200 animate-pulse">
-      กำลังดึงรายการสินค้าจากระบบ...
+    <div class="col-span-full py-16 text-center text-xs text-amber-200/80 animate-pulse font-light">
+      กำลังเปิดคลังสินค้ามงคล...
     </div>
   </div>
 
+  <!-- Bottom Navigation สไตล์ iOS Glassmorphism -->
+  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-black/85 border border-amber-300/30 backdrop-blur-2xl rounded-full py-2 px-5 flex justify-around items-center z-40 shadow-[0_12px_30px_rgba(0,0,0,0.8)]">
+    <a href="./index.html" class="flex flex-col items-center gap-0.5 text-amber-300">
+      <span class="text-sm">🛍️</span>
+      <span class="text-[9px] font-semibold">ร้านค้า</span>
+    </a>
+    <a href="./booking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-white transition">
+      <span class="text-sm">📅</span>
+      <span class="text-[9px]">จองสนทนา</span>
+    </a>
+    <a href="./pickacard.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-white transition">
+      <span class="text-sm">🔮</span>
+      <span class="text-[9px]">เปิดไพ่</span>
+    </a>
+    <a href="./tracking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-white transition">
+      <span class="text-sm">📦</span>
+      <span class="text-[9px]">พัสดุ</span>
+    </a>
+  </nav>
+
   <script>
     const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
-    const MYSHOP_LIFF = "https://liff.line.me/1572442362-jGxDDGRp/@thewinmu";
+    const DEFAULT_MYSHOP_URL = "https://shop.line.me/@thewinmu";
 
-    let products = [];
+    let allProducts = [];
     let currentCategory = "all";
+    let searchKeyword = "";
 
     window.onload = function() {
+      fetchProducts();
+    };
+
+    function fetchProducts() {
       fetch(`${WEB_URL}?action=get_shop_products`)
         .then(r => r.json())
         .then(res => {
-          if (res.status === "success" && res.products) {
-            products = res.products;
+          if (res.status === "success" && res.products && res.products.length > 0) {
+            allProducts = res.products;
             buildCategoryTabs();
-            renderProductGrid();
+            renderProductCards();
           } else {
-            document.getElementById("product-container").innerHTML = `<div class="col-span-full py-10 text-center text-xs text-slate-300">ไม่มีรายการสินค้าที่พร้อมจำหน่ายในขณะนี้</div>`;
+            document.getElementById("product-container").innerHTML = `
+              <div class="col-span-full py-12 text-center text-xs text-slate-400 font-light">
+                ขณะนี้ยังไม่มีรายการสินค้าพร้อมจำหน่าย
+              </div>
+            `;
           }
         })
         .catch(() => {
-          document.getElementById("product-container").innerHTML = `<div class="col-span-full py-10 text-center text-xs text-slate-300">การเชื่อมต่อขัดข้อง</div>`;
+          document.getElementById("product-container").innerHTML = `
+            <div class="col-span-full py-12 text-center text-xs text-slate-400 font-light">
+              การเชื่อมต่อระบบขัดข้อง กรุณารีเฟรชอีกครั้ง
+            </div>
+          `;
         });
-    };
+    }
 
     function buildCategoryTabs() {
       const bar = document.getElementById("category-bar");
-      const cats = Array.from(new Set(products.map(p => p.category))).filter(Boolean);
+      const cats = Array.from(new Set(allProducts.map(p => p.category))).filter(Boolean);
+
       cats.forEach(c => {
         const btn = document.createElement("button");
         btn.id = `tab-${c}`;
-        btn.className = "px-4 py-1.5 rounded-full bg-emerald-950/80 border border-amber-300/30 text-white whitespace-nowrap";
+        btn.className = "category-pill px-4 py-1.5 rounded-full border border-amber-300/20 text-white whitespace-nowrap transition";
         btn.innerText = c;
         btn.onclick = () => filterCategory(c);
         bar.appendChild(btn);
@@ -126,63 +191,88 @@
 
     function filterCategory(cat) {
       currentCategory = cat;
-      document.querySelectorAll("#category-bar button").forEach(b => {
-        b.className = "px-4 py-1.5 rounded-full bg-emerald-950/80 border border-amber-300/30 text-white whitespace-nowrap";
-      });
+      document.querySelectorAll(".category-pill").forEach(b => b.classList.remove("active"));
       const activeBtn = document.getElementById(`tab-${cat}`);
-      if (activeBtn) activeBtn.className = "px-4 py-1.5 rounded-full bg-amber-400 text-black font-bold whitespace-nowrap shadow";
-      renderProductGrid();
+      if (activeBtn) activeBtn.classList.add("active");
+      renderProductCards();
     }
 
-    function renderProductGrid() {
+    function handleSearch() {
+      searchKeyword = document.getElementById("search-input").value.trim().toLowerCase();
+      renderProductCards();
+    }
+
+    function renderProductCards() {
       const container = document.getElementById("product-container");
       container.innerHTML = "";
 
-      const filtered = products.filter(p => {
-        if (currentCategory === "all") return true;
-        return p.category === currentCategory;
+      const filtered = allProducts.filter(p => {
+        const matchCat = (currentCategory === "all" || p.category === currentCategory);
+        const matchSearch = (!searchKeyword || 
+                             p.name.toLowerCase().includes(searchKeyword) || 
+                             p.id.toLowerCase().includes(searchKeyword) ||
+                             (p.description && p.description.toLowerCase().includes(searchKeyword)));
+        return matchCat && matchSearch;
       });
 
+      document.getElementById("search-count").innerText = `${filtered.length} รายการ`;
+
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-10 text-center text-xs text-slate-300">ไม่มีสินค้าในหมวดนี้</div>`;
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-xs text-slate-400 font-light">
+            ไม่พบสินค้าที่ตรงกับคำค้นหา
+          </div>
+        `;
         return;
       }
 
       filtered.forEach(p => {
         const card = document.createElement("div");
-        card.className = "lux-product-card flex flex-col justify-between";
+        card.className = "luxury-glossy-card p-3 flex flex-col justify-between";
 
-        const imgUrl = (p.imageId && p.imageId.length > 5)
-          ? `https://drive.google.com/uc?id=${p.imageId}`
-          : "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=300&q=80";
+        // ตรวจสอบ Image ID: ถ้าระบุเป็น Link ภายนอก หรือ Google Drive ID
+        let imgSrc = "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=350&q=80";
+        let targetLink = DEFAULT_MYSHOP_URL;
+
+        if (p.imageId && p.imageId.trim() !== "") {
+          const rawImg = p.imageId.trim();
+          if (rawImg.startsWith("http://") || rawImg.startsWith("https://")) {
+            // กรณีเป็น Link ภายนอกหรือลิงก์สินค้า MyShop
+            targetLink = rawImg;
+            imgSrc = rawImg;
+          } else {
+            // กรณีเป็น Google Drive File ID
+            imgSrc = `https://drive.google.com/uc?id=${rawImg}`;
+          }
+        }
 
         const originalPriceHtml = p.originalPrice 
           ? `<span class="text-[10px] text-slate-400 line-through">฿${Number(p.originalPrice).toLocaleString()}</span>` 
           : '';
 
-        // โครงสร้างการ์ดตรงตามรูปภาพที่ 2 (มีรหัสสินค้าไอคอนตะกร้าบนขวา)[cite: 10]
         card.innerHTML = `
           <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-xs font-extrabold text-slate-800 font-mono">${p.id || 'A001'}</span>
-              <span class="text-amber-500 text-xs">🛒</span>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[11px] font-extrabold text-slate-800 font-mono tracking-wider">${p.id || 'A001'}</span>
+              <span class="text-[11px] text-amber-600 font-medium">✨ ของแท้</span>
             </div>
-            
-            <div class="w-full h-32 bg-white rounded-xl overflow-hidden mb-2.5 flex items-center justify-center p-1 border border-slate-100">
-              <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-contain">
+
+            <div class="w-full h-32 bg-white rounded-xl overflow-hidden mb-2.5 flex items-center justify-center p-1.5 border border-slate-100 shadow-inner">
+              <img src="${imgSrc}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.src='https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=350&q=80'">
             </div>
 
             <h3 class="text-xs font-bold text-slate-800 leading-snug line-clamp-1 mb-0.5">${p.name}</h3>
-            <p class="text-[10px] text-slate-500 font-light line-clamp-1 mb-1">${p.description || '-'}</p>
+            <p class="text-[10px] text-slate-500 font-light line-clamp-1 mb-2">${p.description || '-'}</p>
           </div>
 
-          <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between mt-2">
+          <div class="pt-2 border-t border-slate-200/80 flex items-center justify-between mt-1">
             <div>
               ${originalPriceHtml}
-              <div class="text-xs font-extrabold text-emerald-900">฿${Number(p.price).toLocaleString()}</div>
+              <div class="text-xs font-black text-emerald-950 font-mono">฿${Number(p.price).toLocaleString()}</div>
             </div>
-            <a href="${MYSHOP_LIFF}" target="_blank" class="btn-add-cart">
-              Add to Cart
+            <a href="${targetLink}" target="_blank" class="btn-gold-emerald px-3 py-1.5 text-[10px] font-bold shadow-md flex items-center gap-1">
+              <span>สั่งซื้อ</span>
+              <span>↗</span>
             </a>
           </div>
         `;

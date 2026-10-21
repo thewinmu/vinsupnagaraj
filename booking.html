@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>จองคิวดูดวงญาณนาคราช • วินทร์ทรัพย์นาคราช</title>
   
+  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -98,8 +99,10 @@
   </div>
 
   <div class="text-center mb-6 relative">
-    <div class="inline-flex p-3 rounded-full bg-emerald-950/80 border border-amber-300/40 mb-2">
-      <span class="text-2xl">🐍</span>
+    <div class="relative w-16 h-16 mx-auto mb-2 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_20px_rgba(254,240,138,0.55)]">
+      <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
+        <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+      </div>
     </div>
     <h1 class="text-2xl sm:text-3xl font-extrabold bright-white-gold-text mb-1">จองคิวตรวจดวงชะตา</h1>
     <p class="text-xs text-emerald-200/90 tracking-wider">จัดสรรเวลา 15 นาที • ตรวจนับคิวแบบวันต่อวัน</p>
@@ -170,7 +173,8 @@
   </div>
 
   <script>
-    const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+
     let selectedSlot = "";
     let selectedPrice = 0;
 

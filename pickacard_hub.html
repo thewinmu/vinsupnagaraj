@@ -118,14 +118,24 @@
 
   <!-- เฟส 1: หน้าเลือกหมวดหมู่ -->
   <div id="view-hub" class="transition-opacity duration-500 w-full">
-    <div class="text-center mb-8 relative">
+    <!-- กล่องแสดงสิทธิ์สมาชิก -->
+    <div id="member-badge" class="bg-black/40 border border-emerald-500/30 rounded-xl p-3 mb-6 flex justify-between items-center text-xs">
+      <div>
+        <span class="text-emerald-300">👤 สถานะ:</span> <span id="user-privilege" class="font-bold text-amber-300">กำลังตรวจสอบ...</span>
+      </div>
+      <div>
+        <span class="text-emerald-300">💎 ทรัพย์:</span> <span id="user-balance" class="font-bold text-amber-300">0</span> บาท
+      </div>
+    </div>
+
+    <div class="text-center mb-6 relative">
       <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-500 rounded-full blur-[60px] opacity-30"></div>
       <h1 class="text-3xl font-extrabold gold-text mb-2 relative z-10">เสี่ยงทายไพ่นาคราช</h1>
       <p class="text-[11px] text-emerald-200 tracking-widest relative z-10 uppercase">เปิดมิติแห่งคำทำนายที่คุณต้องการ</p>
     </div>
 
     <div class="grid grid-cols-2 gap-4 relative z-10">
-      <div onclick="startMagic('pcardoftheday', 'Card of the Day')" class="category-card rounded-2xl p-5 text-center col-span-2 cursor-pointer">
+      <div onclick="startMagic('pcardoftheday', 'Card of the Day', true)" class="category-card rounded-2xl p-5 text-center col-span-2 cursor-pointer">
         <svg viewBox="0 0 100 120" class="w-10 h-10 mx-auto mb-2 drop-shadow-[0_0_10px_rgba(254,240,138,0.8)]">
           <defs>
             <linearGradient id="goldGradHub" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -137,14 +147,14 @@
           <circle cx="50" cy="5" r="4" fill="url(#goldGradHub)"/>
         </svg>
         <h3 class="text-lg font-bold text-amber-200">Card of the Day</h3>
-        <p class="text-[10px] text-slate-300 mt-1">ไพ่พลังงานประจำวันของคุณ</p>
+        <p class="text-[10px] text-slate-300 mt-1">ไพ่พลังงานประจำวันของคุณ (แสดงภาพไพ่)</p>
       </div>
-      <div onclick="startMagic('pjob', 'การงาน')" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">💼</div><h3 class="text-sm font-bold text-emerald-300">การงาน</h3></div>
-      <div onclick="startMagic('pmoney', 'การเงิน')" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">💰</div><h3 class="text-sm font-bold text-amber-300">การเงิน</h3></div>
-      <div onclick="startMagic('plove', 'ความรัก')" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">❤️</div><h3 class="text-sm font-bold text-pink-300">ความรัก</h3></div>
-      <div onclick="startMagic('plucky', 'โชคลาภ')" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">✨</div><h3 class="text-sm font-bold text-yellow-300">โชคลาภ</h3></div>
-      <div onclick="startMagic('phealth', 'สุขภาพ')" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">🌿</div><h3 class="text-sm font-bold text-emerald-400">สุขภาพ</h3></div>
-      <div onclick="startMagic('psarnkru', 'สาส์นเทวดา')" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">🕊️</div><h3 class="text-sm font-bold text-white drop-shadow-md">สาส์นเทวดา</h3></div>
+      <div onclick="startMagic('pjob', 'การงาน', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">💼</div><h3 class="text-sm font-bold text-emerald-300">การงาน</h3></div>
+      <div onclick="startMagic('pmoney', 'การเงิน', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">💰</div><h3 class="text-sm font-bold text-amber-300">การเงิน</h3></div>
+      <div onclick="startMagic('plove', 'ความรัก', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">❤️</div><h3 class="text-sm font-bold text-pink-300">ความรัก</h3></div>
+      <div onclick="startMagic('plucky', 'โชคลาภ', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">✨</div><h3 class="text-sm font-bold text-yellow-300">โชคลาภ</h3></div>
+      <div onclick="startMagic('phealth', 'สุขภาพ', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">🌿</div><h3 class="text-sm font-bold text-emerald-400">สุขภาพ</h3></div>
+      <div onclick="startMagic('psarnkru', 'สาส์นเทวดา', false)" class="category-card rounded-2xl p-4 text-center cursor-pointer"><div class="text-3xl mb-2">🕊️</div><h3 class="text-sm font-bold text-white drop-shadow-md">สาส์นเทวดา</h3></div>
     </div>
   </div>
 
@@ -163,44 +173,58 @@
     <p class="text-xs text-emerald-200 mt-2 tracking-widest">รวบรวมสมาธิ ทำจิตให้นิ่ง</p>
   </div>
 
-  <!-- เฟส 3: กรีดไพ่ให้เลือก -->
-  <div id="view-pick" class="hidden flex-col items-center mt-10 transition-opacity duration-500 w-full perspective-container">
-    <h1 class="text-2xl font-extrabold gold-text mb-1 tracking-wide text-center">ตั้งจิตอธิษฐาน</h1>
-    <p class="text-[11px] text-emerald-200 mb-14 tracking-widest text-center">นึกถึงเรื่องที่ต้องการถาม แล้วเลือกไพ่ 1 ใบ</p>
+  <!-- เฟส 3: กรีดไพ่ให้เลือก พร้อมเสียงนำสมาธิ -->
+  <div id="view-pick" class="hidden flex-col items-center mt-4 transition-opacity duration-500 w-full perspective-container">
+    <!-- กล่องเสียงสมาธิกระชับ -->
+    <div class="bg-black/60 border border-amber-400/40 rounded-2xl p-4 backdrop-blur-md mb-4 text-center w-full relative overflow-hidden">
+      <div class="flex items-center justify-center gap-2 mb-1">
+        <span class="text-base">🧘‍♀️</span>
+        <h3 class="text-xs font-bold gold-text uppercase tracking-widest">จิตสัมผัสสมาธิ</h3>
+      </div>
+      <p class="text-xs text-slate-200 leading-relaxed font-light mb-3">
+        "ตั้งจิตระลึกถึงคุณพระรัตนตรัย พ่อแม่ และครูบาอาจารย์ ทำใจให้เบาสบาย แล้วอธิษฐาน... คุณจะพบกับความแม่นยำ"
+      </p>
+      <button onclick="speakMeditation()" class="px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-600 to-amber-800 text-black font-bold text-[11px] shadow-lg hover:brightness-110 transition flex items-center gap-1.5 mx-auto">
+        <span>🔊</span> กดฟังเสียงนำสมาธิ
+      </button>
+    </div>
+
+    <h1 class="text-xl font-extrabold gold-text mb-1 tracking-wide text-center">เลือกไพ่ 1 ใบ</h1>
+    <p class="text-[10px] text-emerald-200 mb-10 tracking-widest text-center">นึกถึงเรื่องที่ต้องการ แล้วใช้นิ้วสัมผัสใบที่ดึงดูดใจ</p>
     
-    <div class="relative flex justify-center items-center w-full h-48 mt-4">
+    <div class="relative flex justify-center items-center w-full h-44 mt-2">
       <div id="card-0" class="card-3d fan-left absolute" onclick="revealCard(0)">
         <div class="card-face card-back">
-          <svg viewBox="0 0 100 120" class="w-12 h-14 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+          <svg viewBox="0 0 100 120" class="w-10 h-12 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
             <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
             <path d="M55,30 Q65,15 50,5" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
             <circle cx="50" cy="5" r="4" fill="#fef08a"/>
           </svg>
-          <span class="text-[9px] text-amber-300/70 mt-3 uppercase tracking-[0.2em] font-bold">Oracle</span>
+          <span class="text-[8px] text-amber-300/70 mt-2 uppercase tracking-[0.2em] font-bold">NAGA</span>
         </div>
         <div class="card-face card-front"><img id="img-0" src="" class="w-full h-full object-cover"></div>
       </div>
       
       <div id="card-1" class="card-3d fan-center absolute" onclick="revealCard(1)">
         <div class="card-face card-back">
-          <svg viewBox="0 0 100 120" class="w-12 h-14 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+          <svg viewBox="0 0 100 120" class="w-10 h-12 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
             <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
             <path d="M55,30 Q65,15 50,5" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
             <circle cx="50" cy="5" r="4" fill="#fef08a"/>
           </svg>
-          <span class="text-[9px] text-amber-300/70 mt-3 uppercase tracking-[0.2em] font-bold">Oracle</span>
+          <span class="text-[8px] text-amber-300/70 mt-2 uppercase tracking-[0.2em] font-bold">NAGA</span>
         </div>
         <div class="card-face card-front"><img id="img-1" src="" class="w-full h-full object-cover"></div>
       </div>
       
       <div id="card-2" class="card-3d fan-right absolute" onclick="revealCard(2)">
         <div class="card-face card-back">
-          <svg viewBox="0 0 100 120" class="w-12 h-14 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+          <svg viewBox="0 0 100 120" class="w-10 h-12 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
             <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
             <path d="M55,30 Q65,15 50,5" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round"/>
             <circle cx="50" cy="5" r="4" fill="#fef08a"/>
           </svg>
-          <span class="text-[9px] text-amber-300/70 mt-3 uppercase tracking-[0.2em] font-bold">Oracle</span>
+          <span class="text-[8px] text-amber-300/70 mt-2 uppercase tracking-[0.2em] font-bold">NAGA</span>
         </div>
         <div class="card-face card-front"><img id="img-2" src="" class="w-full h-full object-cover"></div>
       </div>
@@ -208,27 +232,28 @@
   </div>
 
   <!-- เฟส 4: แสดงผลคำทำนาย -->
-  <div id="view-result" class="hidden flex-col space-y-5 mt-4 transition-opacity duration-1000 opacity-0 w-full pb-8">
+  <div id="view-result" class="hidden flex-col space-y-4 mt-2 transition-opacity duration-1000 opacity-0 w-full pb-8">
     <div class="text-center">
       <h2 id="res-name" class="text-2xl font-extrabold gold-text mb-1 tracking-wide drop-shadow-lg">ชื่อไพ่</h2>
     </div>
 
-    <div class="relative w-48 h-72 mx-auto rounded-xl overflow-hidden border-2 border-amber-400/60 shadow-[0_0_35px_rgba(202,138,4,0.4)] my-2">
+    <!-- กล่องรูปไพ่ (จะถูกซ่อนหากเป็นหมวด การงาน การเงิน ความรัก สุขภาพ โชคลาภ) -->
+    <div id="image-box" class="relative w-44 h-64 mx-auto rounded-xl overflow-hidden border-2 border-amber-400/60 shadow-[0_0_35px_rgba(202,138,4,0.4)] my-1">
       <img id="res-card-img" src="" alt="Card" class="w-full h-full object-cover">
     </div>
 
     <div class="bg-black/60 border border-emerald-900/50 rounded-2xl p-5 backdrop-blur-md shadow-inner mt-2">
       <h3 class="text-xs font-bold text-emerald-400 mb-2 uppercase tracking-widest flex items-center gap-2"><span>📜</span> คำทำนายหลัก</h3>
-      <p id="res-meaning" class="text-sm text-slate-200 leading-relaxed font-light">-</p>
+      <p id="res-meaning" class="text-sm text-slate-200 leading-relaxed font-light whitespace-pre-line">-</p>
     </div>
 
-    <div class="ai-box rounded-2xl p-6 relative overflow-hidden">
+    <div class="ai-box rounded-2xl p-5 relative overflow-hidden">
       <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500 rounded-full blur-[60px] opacity-10"></div>
       <div class="flex items-center gap-2 mb-3 relative z-10">
         <span class="text-xl">✨</span>
-        <h3 class="text-[11px] font-bold gold-text uppercase tracking-widest">AI อัจฉริยะถอดรหัส (คำแนะนำ)</h3>
+        <h3 class="text-[11px] font-bold gold-text uppercase tracking-widest">AI อัจฉริยะถอดรหัส & วิธีแก้เคล็ด</h3>
       </div>
-      <p class="text-sm text-amber-50 leading-relaxed font-light min-h-[100px] relative z-10">
+      <p class="text-sm text-amber-50 leading-relaxed font-light min-h-[90px] relative z-10 whitespace-pre-line">
         <span id="ai-text"></span><span class="cursor-blink text-amber-400">|</span>
       </p>
     </div>
@@ -238,13 +263,47 @@
     </button>
   </div>
 
+  <!-- Modal เติมเงิน (กรณีสิทธิ์ฟรีหมดและยอดเงินไม่พอ 9 บาท) -->
+  <div id="topup-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-emerald-950 border border-amber-400 rounded-2xl p-6 text-center max-w-xs w-full shadow-2xl">
+      <h3 class="text-lg font-bold gold-text mb-2">💎 ร่วมสนับสนุนค่าครู</h3>
+      <p class="text-xs text-slate-300 mb-4">สิทธิ์ทดลองใช้ฟรีสิ้นสุดแล้ว ค่าครูครั้งละ 9 บาท เพื่อเปิดดวงชะตาและทำบุญหนุนบารมี</p>
+      <div class="bg-black/40 p-3 rounded-lg text-xs mb-4 text-left border border-white/10">
+        <div>ธนาคาร: กสิกรไทย</div>
+        <div class="text-amber-300 font-bold">เลขบัญชี: 2251495656</div>
+        <div>ชื่อ: พีรดิษฐ์ กิตติเขมานนท์</div>
+      </div>
+      <button onclick="copyAccNo()" class="w-full py-2 bg-amber-600 text-black font-bold text-xs rounded-lg mb-2">📋 คัดลอกเลขบัญชี</button>
+      <button onclick="closeModal()" class="w-full py-2 bg-gray-800 text-slate-400 text-xs rounded-lg">ปิดหน้าต่าง</button>
+    </div>
+  </div>
+
   <script>
-    // 📌 WEB_URL ของระบบ API ล่าสุด
     const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
     
     let activeCards = [];
     let currentCategory = '';
     let currentCatName = '';
+    let showImage = false;
+    let currentUserId = "guest_user";
+
+    window.onload = function() {
+      // ดึง UserId จากพารามิเตอร์ URL หรือ LIFF (ถ้ามี)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("userId")) currentUserId = urlParams.get("userId");
+      initMember();
+    };
+
+    function initMember() {
+      fetch(`${WEB_URL}?action=login_or_register&userId=${currentUserId}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            document.getElementById("user-privilege").innerText = res.freeTrialDaysLeft > 0 ? `ฟรีอีก ${res.freeTrialDaysLeft} วัน` : res.specialPrivilege;
+            document.getElementById("user-balance").innerText = res.balance;
+          }
+        }).catch(e => console.error(e));
+    }
 
     function hideAllViews() {
       document.getElementById('view-hub').classList.add('hidden');
@@ -262,58 +321,51 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function startMagic(catKey, catName) {
+    function startMagic(catKey, catName, hasImage) {
       currentCategory = catKey;
       currentCatName = catName;
-      
-      hideAllViews();
-      document.getElementById('view-loading').classList.remove('hidden');
-      document.getElementById('header-title').innerText = catName;
-      document.getElementById('btn-home').classList.add('hidden');
-      document.getElementById('btn-back').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showImage = hasImage;
 
-      for(let i=0; i<=2; i++) {
-        let el = document.getElementById(`card-${i}`);
-        el.classList.remove('is-flipped', 'fade-out');
-        if(i===0) el.className = "card-3d fan-left absolute";
-        if(i===1) el.className = "card-3d fan-center absolute";
-        if(i===2) el.className = "card-3d fan-right absolute";
-      }
-
-      // ดึงข้อมูลจาก API แบบยืดหยุ่น (ป้องกัน Error ทุกกรณี)
-      fetch(`${WEB_URL}?action=get_cards&category=${catKey}`)
+      // ตรวจสอบสิทธิ์ฟรี 1 เดือน หรือตัดค่าครู 9 บาท ก่อนเปิดไพ่
+      fetch(`${WEB_URL}?action=verify_and_deduct_pick&userId=${currentUserId}`)
         .then(r => r.json())
-        .then(res => {
-          // ตรวจสอบข้อมูลแบบยืดหยุ่น รองรับทั้งรูปแบบ res.cards และ res คืนค่าตรงๆ
-          let cardsArray = res.cards || (Array.isArray(res) ? res : []);
-          
-          if (cardsArray.length > 0) {
-            activeCards = cardsArray;
-            setTimeout(showSpread, 1500); 
-          } else {
-            // กรณีไม่มีข้อมูลจริงๆ ให้สร้างการ์ดสำรองอัตโนมัติ เพื่อไม่ให้หน้าเว็บติดลูปเตือน Error
-            activeCards = [{
-              category: catKey,
-              name: "ไพ่พลังงานมงคลพญานาคราช",
-              imageId: "",
-              meaning: "จักรวาลกำลังโอบอุ้มและจัดสรรพลังงานที่ดีที่สุดให้กับท่านในหมวด " + catName,
-              ai_advice: "ตั้งจิตให้มั่น ทำสมาธิ แล้วลองกดเปิดไพ่อีกครั้งด้วยความศรัทธา..."
-            }];
-            setTimeout(showSpread, 1500);
+        .then(authRes => {
+          if (authRes.status === "insufficient_funds") {
+            document.getElementById("topup-modal").classList.remove("hidden");
+            return;
           }
-        })
-        .catch(err => {
-          console.error(err);
-          // กรณีอินเทอร์เน็ตหลุดหรือยิง API ไม่ผ่าน ให้ใช้การ์ดสำรองฉุกเฉิน
-          activeCards = [{
-            category: catKey,
-            name: "ไพ่ทิพย์พญานาคราช",
-            imageId: "",
-            meaning: "ระบบกำลังเชื่อมต่อคลื่นพลังงานจักรวาล...",
-            ai_advice: "ความมุ่งมั่นและศรัทธาจะนำพาปาฏิหาริย์มาสู่ท่าน ขอให้ตั้งจิตอธิษฐานใหม่อีกครั้งครับ"
-          }];
-          setTimeout(showSpread, 1500);
+
+          hideAllViews();
+          document.getElementById('view-loading').classList.remove('hidden');
+          document.getElementById('header-title').innerText = catName;
+          document.getElementById('btn-home').classList.add('hidden');
+          document.getElementById('btn-back').classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+
+          for(let i=0; i<=2; i++) {
+            let el = document.getElementById(`card-${i}`);
+            el.classList.remove('is-flipped', 'fade-out');
+            if(i===0) el.className = "card-3d fan-left absolute";
+            if(i===1) el.className = "card-3d fan-center absolute";
+            if(i===2) el.className = "card-3d fan-right absolute";
+          }
+
+          fetch(`${WEB_URL}?action=get_cards&category=${catKey}`)
+            .then(r => r.json())
+            .then(res => {
+              activeCards = res.cards && res.cards.length > 0 ? res.cards : [];
+              setTimeout(showSpread, 1500);
+            })
+            .catch(() => {
+              activeCards = [{
+                category: catKey,
+                name: "ไพ่พลังงานมงคลพญานาคราช",
+                imageId: "",
+                meaning: "พลังงานจักรวาลกำลังจัดสรรสิ่งที่ดีที่สุดให้กับท่านในหมวด " + catName,
+                ai_advice: "✨ วิธีแก้เคล็ดเสริมดวง: สวดมนต์บทพญานาคราชและทำทานอุทิศส่วนกุศล"
+              }];
+              setTimeout(showSpread, 1500);
+            });
         });
     }
 
@@ -322,74 +374,81 @@
       document.getElementById('view-pick').classList.remove('hidden');
       document.getElementById('view-pick').classList.remove('opacity-0');
 
+      // เล่นเสียงนำสมาธิอัตโนมัติเมื่อเข้าสู่หน้ากรีดไพ่
+      speakMeditation();
+
       const shuffled = [...activeCards].sort(() => 0.5 - Math.random());
-      
       for(let i=0; i<3; i++) {
-        let cardData = shuffled[i % shuffled.length]; 
+        let cardData = shuffled[i % shuffled.length];
         let imgElem = document.getElementById(`img-${i}`);
         
-        let imageUrl = "";
-        if(cardData.imageId && cardData.imageId.length > 10) {
-          imageUrl = `https://drive.google.com/uc?id=${cardData.imageId}`;
-          imgElem.src = imageUrl;
-        } else {
-          imageUrl = "https://via.placeholder.com/400x600/022c22/ca8a04?text=NAGA+ORACLE";
-          imgElem.src = imageUrl;
-        }
-        
+        let imageUrl = (cardData.imageId && cardData.imageId.length > 10)
+          ? `https://drive.google.com/uc?id=${cardData.imageId}`
+          : "https://via.placeholder.com/400x600/022c22/ca8a04?text=NAGA+ORACLE";
+
+        imgElem.src = imageUrl;
         let cardEl = document.getElementById(`card-${i}`);
         cardEl.dataset.name = cardData.name || "ไพ่ไร้นาม";
-        cardEl.dataset.meaning = cardData.meaning || "ไม่มีคำทำนายหลักระบุไว้";
-        cardEl.dataset.ai = cardData.ai_advice || "จักรวาลกำลังจัดสรรพลังงานที่ดีที่สุดให้กับคุณ...";
+        cardEl.dataset.meaning = cardData.meaning || "-";
+        cardEl.dataset.ai = cardData.ai_advice || "-";
         cardEl.dataset.img = imageUrl;
-        
         cardEl.style.pointerEvents = "auto";
       }
     }
 
     function revealCard(selectedIndex) {
-      for(let i=0; i<=2; i++) {
-        document.getElementById(`card-${i}`).style.pointerEvents = "none";
-      }
-
+      for(let i=0; i<=2; i++) document.getElementById(`card-${i}`).style.pointerEvents = "none";
       const selectedEl = document.getElementById(`card-${selectedIndex}`);
       
       for(let i=0; i<=2; i++) {
-        if(i !== selectedIndex) {
-          document.getElementById(`card-${i}`).classList.add('fade-out');
-        }
+        if(i !== selectedIndex) document.getElementById(`card-${i}`).classList.add('fade-out');
       }
 
       selectedEl.classList.remove('fan-left', 'fan-center', 'fan-right');
-      selectedEl.style.transform = "rotate(0deg)"; 
-      setTimeout(() => {
-        selectedEl.classList.add('is-flipped');
-      }, 300);
+      selectedEl.style.transform = "rotate(0deg)";
+      setTimeout(() => selectedEl.classList.add('is-flipped'), 300);
 
       document.getElementById('res-name').innerText = selectedEl.dataset.name;
       document.getElementById('res-meaning').innerText = selectedEl.dataset.meaning;
-      document.getElementById('res-card-img').src = selectedEl.dataset.img;
-      const aiTextToType = selectedEl.dataset.ai;
+      
+      // ควบคุมการแสดงผลรูปภาพ: แสดงเฉพาะ Card of the Day
+      const imageBox = document.getElementById('image-box');
+      if (showImage) {
+        imageBox.classList.remove('hidden');
+        document.getElementById('res-card-img').src = selectedEl.dataset.img;
+      } else {
+        imageBox.classList.add('hidden');
+      }
 
+      const aiTextToType = selectedEl.dataset.ai;
       setTimeout(() => {
         const resView = document.getElementById('view-result');
-        resView.classList.minH ? '' : resView.classList.remove('hidden');
+        resView.classList.remove('hidden');
         setTimeout(() => resView.classList.remove('opacity-0'), 100);
-        
         typeWriterAI(aiTextToType);
         window.scrollTo({ top: 100, behavior: 'smooth' });
       }, 1000);
     }
 
+    function speakMeditation() {
+      const text = "ตั้งจิตระลึกถึงคุณพระรัตนตรัย พ่อแม่ และครูบาอาจารย์ ทำใจให้เบาสบาย แล้วอธิษฐาน... คุณจะพบกับความแม่นยำ";
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'th-TH';
+        utterance.rate = 0.85;
+        utterance.pitch = 1.05;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
     function reshuffle() {
       document.getElementById('view-result').classList.add('hidden', 'opacity-0');
-      startMagic(currentCategory, currentCatName);
+      startMagic(currentCategory, currentCatName, showImage);
     }
 
     let iType = 0;
     let textToType = "";
-    let aiSpeed = 30; 
-    
     function typeWriterAI(text) {
       textToType = text;
       document.getElementById("ai-text").innerHTML = "";
@@ -401,8 +460,17 @@
       if (iType < textToType.length) {
         document.getElementById("ai-text").innerHTML += textToType.charAt(iType);
         iType++;
-        setTimeout(typeLoop, aiSpeed);
+        setTimeout(typeLoop, 25);
       }
+    }
+
+    function copyAccNo() {
+      navigator.clipboard.writeText("2251495656");
+      alert("📋 คัดลอกเลขบัญชี 2251495656 สำเร็จแล้วครับ");
+    }
+
+    function closeModal() {
+      document.getElementById("topup-modal").classList.add("hidden");
     }
   </script>
 </body>

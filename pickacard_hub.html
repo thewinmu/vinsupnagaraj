@@ -3,195 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>เสี่ยงทายข้อคิดนำทาง • วินทร์ทรัพย์นาคราช</title>
+  <title>เรือนพยากรณ์ Pick a Card Hub • วินทร์ทรัพย์นาคราช</title>
   
   <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
+    /* ฟอนต์ SF Pro / Prompt สบายตา สไตล์ Apple iOS */
     body {
-      font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at 50% 0%, #064e3b 0%, #021a14 45%, #010c09 100%);
-      color: #fbfbee;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Prompt", sans-serif;
+      background: radial-gradient(circle at 50% 0%, #064032 0%, #022018 45%, #010a08 100%);
+      color: #0f172a;
       min-height: 100vh;
       margin: 0;
+      -webkit-font-smoothing: antialiased;
     }
-    .glossy-panel {
-      background: linear-gradient(145deg, rgba(4, 41, 31, 0.9) 0%, rgba(2, 16, 12, 0.98) 100%);
-      border: 1px solid rgba(254, 240, 138, 0.25);
-      backdrop-filter: blur(14px);
+
+    /* แถบหัวด้านบน: เขียวมุกมรกตลึก ขอบทอง โปร่งแสงหรูหรา */
+    .pearl-header {
+      background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }
-    .card-back {
-      background: linear-gradient(145deg, #022c22 0%, #064e3b 50%, #021a14 100%);
-      border: 2px solid rgba(254, 240, 138, 0.4);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      cursor: pointer;
-      transition: all 0.3s ease;
+
+    /* การ์ดหมวดหมู่: ขาวนวล สะอาดตา ขอบทองอร่ามมนโค้ง */
+    .hub-category-card {
+      background: #ffffff;
+      border: 1.5px solid #eab308;
+      border-radius: 24px;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .card-back:hover {
-      transform: translateY(-5px) scale(1.02);
-      border-color: #fef08a;
-      box-shadow: 0 0 20px rgba(254, 240, 138, 0.5);
+    .hub-category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(234, 179, 8, 0.25);
+      border-color: #facc15;
     }
-    .btn-gold-action {
-      background: linear-gradient(135deg, #ffffff 0%, #fef08a 35%, #eab308 70%, #a16207 100%);
-      color: #032018;
+
+    /* การ์ดแนะนำพิเศษ (สาส์นบรมครู): เขียวมรกตเหลือบประกายทอง */
+    .featured-kru-card {
+      background: linear-gradient(145deg, #064e3b 0%, #022c22 70%, #01140f 100%);
+      border: 2px solid #facc15;
+      border-radius: 26px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), 0 0 16px rgba(250, 204, 21, 0.25);
+      transition: all 0.25s ease;
+    }
+    .featured-kru-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(250, 204, 21, 0.35);
+    }
+
+    .btn-pearl-action {
+      background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
+      color: #fef08a;
+      border: 1px solid rgba(254, 240, 138, 0.45);
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+    .btn-pearl-action:hover {
+      background: #047857;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(4, 120, 87, 0.4);
     }
   </style>
 </head>
-<body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-24">
+<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-32">
 
-  <!-- Header โลโก้จริง -->
-  <div class="flex items-center justify-between py-3 mb-2">
-    <div class="flex items-center gap-3">
-      <div class="relative w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_12px_rgba(254,240,138,0.5)] flex-shrink-0">
-        <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
-          <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+  <!-- 1. Header หัวร้าน -->
+  <header class="pearl-header rounded-3xl p-3 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
+        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+          <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain p-0.5" onerror="this.src='https://placehold.co/60x60/064032/fef08a?text=🐍'">
         </div>
       </div>
       <div>
-        <h2 class="text-xs font-bold tracking-widest uppercase text-amber-200">วินทร์ทรัพย์นาคราช</h2>
-        <p class="text-[9px] text-emerald-300">ข้อคิดนำทาง & กำลังใจประจำวัน</p>
+        <h1 class="text-xs font-bold text-amber-200 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
+        <p class="text-[9px] text-emerald-300/80 font-light">เรือนพยากรณ์ Pick a Card Hub</p>
       </div>
     </div>
-    <a href="./index.html" class="text-xs text-pearl-cream bg-black/60 border border-amber-300/30 px-3.5 py-1.5 rounded-full">
+    
+    <a href="./index.html" class="text-[10px] bg-black/50 border border-amber-300/30 text-pearl-cream px-3 py-1.5 rounded-full font-medium">
       หน้าร้านค้า ⟨
     </a>
-  </div>
+  </header>
 
-  <!-- กล่องคำแนะนำก่อนเปิดไพ่ (ข้อความธรรมชาติ ไม่เกินจริง) -->
-  <div class="glossy-panel rounded-2xl p-4 text-center mb-5 border border-amber-300/30">
-    <div class="text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 mb-1">
-      <span>🧘</span> ทำใจให้สงบและผ่อนคลาย
-    </div>
-    <p class="text-[11px] text-slate-200 leading-relaxed font-light">
-      "สูดลมหายใจเข้าลึกๆ ผ่อนคลายร่างกาย นึกถึงเรื่องที่ต้องการแนวทาง แล้วใช้นิ้วสัมผัสเลือกไพ่ที่ดึงดูดใจคุณมากที่สุด"
+  <!-- 2. หัวข้อใหญ่และคำแนะนำ -->
+  <div class="text-center mb-4">
+    <h2 class="text-xl font-extrabold text-amber-200 mb-1">สำรับไพ่นำทางชีวิต</h2>
+    <p class="text-xs text-emerald-200/80 font-light leading-relaxed">
+      เลือกหมวดหมู่ที่ต้องการแนวทาง ทำใจให้สงบและเลือกสำรับไพ่
     </p>
   </div>
 
-  <div class="text-center mb-3">
-    <h1 class="text-lg font-bold text-amber-200">เลือกไพ่ 1 ใบ</h1>
-    <p class="text-[11px] text-emerald-300">สัมผัสไพ่เพื่อเปิดอ่านข้อคิดนำทาง</p>
-  </div>
+  <!-- 3. ไฮไลต์พิเศษ: สาส์นบรมครู (ลิงก์ตรงไปยัง pickacard_kru.html) -->
+  <div class="mb-4">
+    <a href="./pickacard_kru.html" class="featured-kru-card block p-4 text-white">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-[9px] font-bold tracking-widest text-amber-300 uppercase bg-amber-400/20 border border-amber-300/40 px-2.5 py-0.5 rounded-full">
+          สำรับหลักครูบาอาจารย์
+        </span>
+        <span class="text-amber-300 text-sm">🪷</span>
+      </div>
 
-  <!-- บริเวณแสดงไพ่ -->
-  <div class="flex flex-col items-center justify-center my-2">
-    <div id="card-element" onclick="flipCard()" class="card-back w-48 h-72 rounded-2xl flex flex-col items-center justify-center p-3 relative">
-      <div id="card-inner-placeholder" class="text-center">
-        <div class="w-14 h-14 mx-auto mb-3 rounded-full border border-amber-300/40 flex items-center justify-center bg-black/40">
-          <span class="text-2xl">🐍</span>
+      <div class="flex items-center gap-3.5 my-2">
+        <div class="w-14 h-14 rounded-2xl bg-black/40 border border-amber-400/50 flex items-center justify-center text-2xl flex-shrink-0 shadow-inner">
+          🐍
         </div>
-        <span class="text-xs font-bold text-amber-200 tracking-widest block">สัมผัสเพื่อเปิด</span>
+        <div>
+          <h3 class="text-sm font-extrabold text-amber-200">สาส์นบรมครูพญานาคาธิบดี</h3>
+          <p class="text-[10px] text-emerald-200/90 font-light mt-0.5 leading-snug">
+            น้อมจิตรับสาส์นเตือนสติ ข้อคิดมงคล และแนวทางแก้เคล็ดเสริมบารมี
+          </p>
+        </div>
       </div>
-      <img id="card-image" src="" alt="หน้าไพ่" class="hidden w-full h-full object-contain rounded-xl">
-    </div>
-    <div id="card-title-display" class="mt-3 text-sm font-bold text-amber-300 min-h-[24px]"></div>
+
+      <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-amber-300 font-semibold mt-1">
+        <span>เข้าสู่เรือนสาส์นบรมครู</span>
+        <span>เปิดสำรับไพ่ →</span>
+      </div>
+    </a>
   </div>
 
-  <!-- ผลคำทำนายหลัก (ไม่มี undefined อีกต่อไป)[cite: 9] -->
-  <div id="result-box" class="hidden space-y-3 mt-3">
-    <div class="glossy-panel rounded-2xl p-4">
-      <div class="text-xs font-bold text-emerald-300 mb-1 flex items-center gap-1.5">
-        <span>📖</span> คำทำนาย & ข้อคิดนำทาง
+  <!-- 4. รายการหมวดหมู่เสี่ยงทาย 2 คอลัมน์ (การ์ดขาวนวล ขอบทอง) -->
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    
+    <!-- หมวดที่ 1: ไพ่ประจำวัน -->
+    <a href="./pickacard.html?cat=pcardoftheday" class="hub-category-card p-3.5">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xl">🌟</span>
+          <span class="text-[9px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">รายวัน</span>
+        </div>
+        <h3 class="text-xs font-bold text-slate-900 mb-0.5">ดวงชะตาประจำวัน</h3>
+        <p class="text-[9px] text-slate-500 font-light leading-snug mb-3">
+          แนวโน้มพลังงาน ข้อคิด และกำลังใจเพื่อเริ่มต้นวันใหม่อย่างราบรื่น
+        </p>
       </div>
-      <p id="main-meaning" class="text-xs text-slate-100 leading-relaxed font-light whitespace-pre-line"></p>
-    </div>
-
-    <!-- ข้อคิดและแนวทางปฏิบัติ -->
-    <div class="glossy-panel rounded-2xl p-4 border border-amber-300/30">
-      <div class="text-xs font-bold text-amber-300 mb-1 flex items-center gap-1.5">
-        <span>✨</span> แนวทางและข้อแนะนำ
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[9px] font-mono font-bold text-emerald-900">DAILY CARD</span>
+        <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
       </div>
-      <p id="ai-advice" class="text-xs text-slate-200 leading-relaxed font-light whitespace-pre-line"></p>
-    </div>
+    </a>
 
-    <button onclick="resetCard()" class="w-full py-3 rounded-xl bg-emerald-900/80 border border-emerald-400/50 text-xs font-bold text-emerald-200 hover:bg-emerald-800 transition">
-      🔮 เปิดไพ่อีกครั้งในหมวดนี้
-    </button>
+    <!-- หมวดที่ 2: ความรัก & ความสัมพันธ์ -->
+    <a href="./pickacard.html?cat=plove" class="hub-category-card p-3.5">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xl">💖</span>
+          <span class="text-[9px] font-bold text-pink-700 bg-pink-100 px-2 py-0.5 rounded-full">ความรัก</span>
+        </div>
+        <h3 class="text-xs font-bold text-slate-900 mb-0.5">ความรัก & คู่ครอง</h3>
+        <p class="text-[9px] text-slate-500 font-light leading-snug mb-3">
+          สาส์นทำนายความรู้สึก คนโสด คนมีคู่ และทิศทางความสัมพันธ์
+        </p>
+      </div>
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[9px] font-mono font-bold text-emerald-900">LOVE & HEART</span>
+        <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
+      </div>
+    </a>
+
+    <!-- หมวดที่ 3: การงาน & ธุรกิจ -->
+    <a href="./pickacard.html?cat=pjob" class="hub-category-card p-3.5">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xl">💼</span>
+          <span class="text-[9px] font-bold text-blue-800 bg-blue-100 px-2 py-0.5 rounded-full">การงาน</span>
+        </div>
+        <h3 class="text-xs font-bold text-slate-900 mb-0.5">การงาน & ภาระหน้าที่</h3>
+        <p class="text-[9px] text-slate-500 font-light leading-snug mb-3">
+          การตัดสินใจ การเปลี่ยนงาน ความก้าวหน้า และเพื่อนร่วมงาน
+        </p>
+      </div>
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[9px] font-mono font-bold text-emerald-900">CAREER PATH</span>
+        <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
+      </div>
+    </a>
+
+    <!-- หมวดที่ 4: การเงิน & โชคลาภ -->
+    <a href="./pickacard.html?cat=pmoney" class="hub-category-card p-3.5">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xl">💰</span>
+          <span class="text-[9px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">โชคลาภ</span>
+        </div>
+        <h3 class="text-xs font-bold text-slate-900 mb-0.5">โชคลาภ & การเงิน</h3>
+        <p class="text-[9px] text-slate-500 font-light leading-snug mb-3">
+          การบริหารทรัพย์ โอกาสการลงทุน โชคลาภ และสิ่งมงคลหนุนดวง
+        </p>
+      </div>
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[9px] font-mono font-bold text-emerald-900">WEALTH & LUCK</span>
+        <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
+      </div>
+    </a>
+
+    <!-- หมวดที่ 5: สุขภาพ & จิตใจ -->
+    <a href="./pickacard.html?cat=phealth" class="hub-category-card p-3.5">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xl">🌿</span>
+          <span class="text-[9px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">สุขภาพ</span>
+        </div>
+        <h3 class="text-xs font-bold text-slate-900 mb-0.5">สุขภาพ & สมดุลกายใจ</h3>
+        <p class="text-[9px] text-slate-500 font-light leading-snug mb-3">
+          ข้อควรระวัง การผ่อนคลายความเครียด และการฟื้นฟูพลังงาน
+        </p>
+      </div>
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[9px] font-mono font-bold text-emerald-900">HEALTH & PEACE</span>
+        <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
+      </div>
+    </a>
+
+    <!-- หมวดที่ 6: เปิดคิวตรวจดวงเจาะลึก (ลิงก์ไป booking.html) -->
+    <a href="./booking.html" class="hub-category-card p-3.5 border-dashed border-2">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xl">📞</span>
+          <span class="text-[9px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">สนทนาสด</span>
+        </div>
+        <h3 class="text-xs font-bold text-slate-900 mb-0.5">จองคิวตรวจดวงชะตา</h3>
+        <p class="text-[9px] text-slate-500 font-light leading-snug mb-3">
+          ต้องการคำตอบชัดเจน พูดคุยปรึกษาแนวทางแบบเป็นกันเอง
+        </p>
+      </div>
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[9px] font-mono font-bold text-amber-700">LIVE CONSULT</span>
+        <span class="bg-amber-400 text-slate-950 px-2.5 py-1 text-[10px] font-bold rounded-full shadow">จองคิว</span>
+      </div>
+    </a>
+
   </div>
 
-  <script>
-    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+  <!-- 5. แถบนำทางด้านล่างสไตล์ iOS Minimal Glassmorphism -->
+  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-black/85 border border-amber-300/30 backdrop-blur-2xl rounded-full py-2.5 px-6 flex justify-around items-center z-40 shadow-2xl">
+    <a href="./index.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">🛍️</span>
+      <span class="text-[9px]">ร้านค้า</span>
+    </a>
+    <a href="./booking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">📅</span>
+      <span class="text-[9px]">จองคิว</span>
+    </a>
+    <a href="./pickacard_hub.html" class="flex flex-col items-center gap-0.5 text-amber-300">
+      <span class="text-sm">🔮</span>
+      <span class="text-[9px] font-bold">เสี่ยงทาย</span>
+    </a>
+    <a href="./tracking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">📦</span>
+      <span class="text-[9px]">พัสดุ</span>
+    </a>
+    <a href="./memberships.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
+      <span class="text-sm">👤</span>
+      <span class="text-[9px]">สมาชิก</span>
+    </a>
+  </nav>
 
-    let cardList = [];
-    let isFlipped = false;
-
-    // รับหมวดหมู่จาก URL เช่น ?cat=plove
-    const urlParams = new URLSearchParams(window.location.search);
-    const category = urlParams.get('cat') || 'pcardoftheday';
-
-    window.onload = function() {
-      loadCardData();
-    };
-
-    function loadCardData() {
-      fetch(`${WEB_URL}?action=get_cards&category=${encodeURIComponent(category)}`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success" && res.cards && res.cards.length > 0) {
-            cardList = res.cards;
-          } else {
-            cardList = [
-              {
-                name: "ไพ่พลังแห่งความตั้งมั่น",
-                meaning: "ช่วงนี้ให้ใช้ความรอบคอบและตั้งมั่นในเป้าหมาย อย่าเพิ่งหวั่นไหวกับสิ่งรอบข้าง ทุกอย่างกำลังคลี่คลายไปในทางที่ดี",
-                advice: "ลงมือทำสิ่งสำคัญทีละเรื่อง มีสติในการสื่อสาร แล้วผลลัพธ์จะสำเร็จราบรื่น"
-              }
-            ];
-          }
-        })
-        .catch(() => {
-          cardList = [
-            {
-              name: "ไพ่ความสงบทางใจ",
-              meaning: "พักผ่อนให้เพียงพอและจัดระเบียบความคิด สิ่งที่กังวลอยู่จะค่อยๆ คลี่คลาย",
-              advice: "เน้นการปล่อยวางสิ่งที่ควบคุมไม่ได้ และโฟกัสกับหน้าที่ในปัจจุบัน"
-            }
-          ];
-        });
-    }
-
-    function flipCard() {
-      if (isFlipped) return;
-      if (cardList.length === 0) return alert("กำลังจัดเตรียมข้อมูลไพ่ กรุณาลองอีกครั้ง");
-
-      isFlipped = true;
-      const cardEl = document.getElementById("card-element");
-      cardEl.classList.add("animate-pulse");
-
-      setTimeout(() => {
-        cardEl.classList.remove("animate-pulse");
-        // สุ่มไพ่ 1 ใบ
-        const picked = cardList[Math.floor(Math.random() * cardList.length)];
-
-        // แสดงผลข้อมูล (ป้องกันค่า undefined อย่างสมบูรณ์)[cite: 9]
-        const cardName = picked.name || "ข้อคิดมงคลนำทาง";
-        const meaning = picked.meaning || "ตั้งมั่นอยู่ในความดี มีสติในการตัดสินใจ แล้วจะผ่านพ้นทุกเรื่องราวไปได้อย่างราบรื่น";
-        const advice = picked.advice || "หมั่นดูแลสุขภาพจิตใจ ทำหน้าที่อย่างเต็มกำลัง และแบ่งปันน้ำใจให้คนรอบข้าง";
-
-        document.getElementById("card-title-display").innerText = cardName;
-        document.getElementById("main-meaning").innerText = meaning;
-        document.getElementById("ai-advice").innerText = advice;
-
-        if (picked.imageId && picked.imageId.length > 5) {
-          const img = document.getElementById("card-image");
-          img.src = `https://drive.google.com/uc?id=${picked.imageId}`;
-          img.classList.remove("hidden");
-          document.getElementById("card-inner-placeholder").classList.add("hidden");
-        }
-
-        document.getElementById("result-box").classList.remove("hidden");
-      }, 500);
-    }
-
-    function resetCard() {
-      isFlipped = false;
-      document.getElementById("card-title-display").innerText = "";
-      document.getElementById("result-box").classList.add("hidden");
-      document.getElementById("card-image").classList.add("hidden");
-      document.getElementById("card-inner-placeholder").classList.remove("hidden");
-    }
-  </script>
 </body>
 </html>

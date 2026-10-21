@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Shop@วินทรัพย์นาคราช • วัตถุมงคล & ของแท้</title>
+  <title>Shop@วินทร์ทรัพย์นาคราช • วัตถุมงคล & ของแท้</title>
   
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="./config.js"></script>
@@ -20,7 +20,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* กล่อง Header มรกตประกายทอง */
     .pearl-header {
       background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
       border: 1px solid rgba(250, 204, 21, 0.35);
@@ -28,7 +27,7 @@
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }
 
-    /* กรอบการ์ดสินค้าแบบเดียวกับหน้า memberships.html: หรูหรา ดำเงามรกต ขอบทองมนโค้ง */
+    /* กรอบสินค้าแบบ memberships.html */
     .membership-style-card {
       background: linear-gradient(160deg, rgba(6, 44, 34, 0.9) 0%, rgba(2, 24, 18, 0.95) 100%);
       border: 1.4px solid rgba(250, 204, 21, 0.45);
@@ -45,7 +44,7 @@
       border-color: #facc15;
     }
 
-    /* ปุ่มตะกร้าสินค้า พร้อมเครื่องหมาย + สีแดง */
+    /* ปุ่มตะกร้า พร้อมเครื่องหมาย + สีแดง */
     .btn-cart-add {
       background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
       border: 1px solid rgba(250, 204, 21, 0.4);
@@ -60,7 +59,7 @@
       box-shadow: 0 0 14px rgba(250, 204, 21, 0.4);
     }
     .plus-badge {
-      color: #ef4444; /* สีแดงสด */
+      color: #ef4444;
       font-weight: 900;
       font-size: 13px;
       line-height: 1;
@@ -68,7 +67,7 @@
       text-shadow: 0 0 4px rgba(239, 68, 68, 0.6);
     }
 
-    /* สไตล์ตะกร้าสินค้าแบบ Luxury Dark Glass */
+    /* ตะกร้าสินค้า Luxury Dark Glass */
     .cart-glossy-panel {
       background: linear-gradient(160deg, rgba(6, 40, 32, 0.98) 0%, rgba(2, 18, 14, 0.99) 60%, rgba(0, 8, 6, 1) 100%);
       border: 1.5px solid rgba(250, 204, 21, 0.4);
@@ -99,9 +98,9 @@
     }
   </style>
 </head>
-<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-32">
+<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-36">
 
-  <!-- Header หัวร้านค้า -->
+  <!-- 1. Header หัวร้านค้า -->
   <header class="pearl-header rounded-3xl p-3 mb-3.5 flex items-center justify-between">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
@@ -110,7 +109,7 @@
         </div>
       </div>
       <div>
-        <h1 class="text-xs font-bold text-amber-200 tracking-wide">Shop@วินทรัพย์นาคราช</h1>
+        <h1 class="text-xs font-bold text-amber-200 tracking-wide">Shop@วินทร์ทรัพย์นาคราช</h1>
         <p class="text-[9px] text-emerald-300/80 font-light">บูชาวัตถุมงคล & ของแท้บารมี</p>
       </div>
     </div>
@@ -120,13 +119,36 @@
         🛒
         <span id="cart-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
       </button>
-      <a href="https://shop.line.me/@thewinmu" target="_blank" class="text-[10px] bg-amber-400/20 border border-amber-300/40 text-amber-200 px-3 py-1.5 rounded-full font-medium">
+      <a href="https://www.facebook.com/thewinmu/" target="_blank" class="text-[10px] bg-blue-600/25 border border-blue-400/40 text-blue-100 px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
+        <span>📘</span>
+        <span>เพจ</span>
+      </a>
+      <a href="https://shop.line.me/@thewinmu" target="_blank" class="text-[10px] bg-amber-400/20 border border-amber-300/40 text-amber-200 px-2.5 py-1 rounded-full font-medium">
         MyShop ↗
       </a>
     </div>
   </header>
 
-  <!-- แถบค้นหา สว่าง สะอาด คมชัด -->
+  <!-- 2. เมนูลัด 3 ช่องด้านบน -->
+  <div class="grid grid-cols-3 gap-2 mb-3.5">
+    <a href="./booking.html" class="bg-black/40 border border-amber-400/30 rounded-2xl p-2.5 text-center flex flex-col items-center hover:bg-black/60 transition">
+      <span class="text-base mb-0.5">📅</span>
+      <span class="text-[10px] font-bold text-amber-200">จองคิวตรวจดวง</span>
+      <span class="text-[8px] text-emerald-300/80 font-light">โทรปรึกษาสด</span>
+    </a>
+    <a href="./pickacard_hub.html" class="bg-black/40 border border-amber-400/30 rounded-2xl p-2.5 text-center flex flex-col items-center hover:bg-black/60 transition">
+      <span class="text-base mb-0.5">🔮</span>
+      <span class="text-[10px] font-bold text-amber-200">เปิดไพ่นำทาง</span>
+      <span class="text-[8px] text-emerald-300/80 font-light">สาส์นบรมครู & ดวง</span>
+    </a>
+    <a href="./tracking.html" class="bg-black/40 border border-amber-400/30 rounded-2xl p-2.5 text-center flex flex-col items-center hover:bg-black/60 transition">
+      <span class="text-base mb-0.5">📦</span>
+      <span class="text-[10px] font-bold text-amber-200">เช็กสถานะพัสดุ</span>
+      <span class="text-[8px] text-emerald-300/80 font-light">ติดตามเรียลไทม์</span>
+    </a>
+  </div>
+
+  <!-- 3. ช่องค้นหาสินค้า -->
   <div class="bg-white/95 rounded-full px-3.5 py-2 mb-3 shadow-md flex items-center justify-between border border-amber-300/40">
     <div class="flex items-center gap-2 flex-1">
       <span class="text-xs text-amber-600">🔍</span>
@@ -135,21 +157,21 @@
     <span id="search-count" class="text-[10px] text-emerald-800 font-semibold font-mono"></span>
   </div>
 
-  <!-- หมวดหมู่สินค้าแบบแท็บเลื่อน -->
+  <!-- 4. แถบหมวดหมู่สินค้า -->
   <div id="category-bar" class="flex items-center gap-1.5 mb-3.5 overflow-x-auto pb-1 no-scrollbar text-xs">
     <button onclick="filterCategory('all')" id="tab-all" class="cat-btn active px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">
       ทั้งหมด
     </button>
   </div>
 
-  <!-- รายการสินค้า 2 คอลัมน์ (กรอบการ์ดสไตล์ memberships.html) -->
+  <!-- 5. รายการสินค้า 2 คอลัมน์ -->
   <div id="product-container" class="grid grid-cols-2 gap-3">
     <div class="col-span-full py-16 text-center text-xs text-amber-200/80 animate-pulse font-light">
       กำลังเปิดคลังวัตถุมงคล...
     </div>
   </div>
 
-  <!-- MODAL: หน้ารายละเอียดสินค้า -->
+  <!-- MODAL: รายละเอียดสินค้า -->
   <div id="detail-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="cart-glossy-panel rounded-t-3xl sm:rounded-3xl w-full max-w-md p-5 text-white max-h-[88vh] flex flex-col justify-between overflow-y-auto">
       <div>
@@ -161,7 +183,7 @@
           <button onclick="closeDetailModal()" class="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white text-sm">✕</button>
         </div>
 
-        <div class="w-full h-52 bg-black/40 rounded-2xl overflow-hidden mb-3.5 flex items-center justify-center p-2 border border-amber-400/30">
+        <div id="detail-img-box" class="w-full h-52 bg-black/40 rounded-2xl overflow-hidden mb-3.5 flex items-center justify-center p-2 border border-amber-400/30">
           <img id="detail-img" src="" alt="รูปสินค้า" class="w-full h-full object-contain">
         </div>
 
@@ -183,14 +205,11 @@
         <button id="detail-btn-cart" class="btn-cart-add flex-1 py-3 text-xs font-bold shadow flex items-center justify-center gap-1.5">
           <span>🛒 หยิบใส่ตะกร้า</span><span class="plus-badge">+</span>
         </button>
-        <a id="detail-btn-external" href="#" target="_blank" class="hidden flex-1 py-3 bg-gradient-to-r from-amber-400 to-amber-600 text-slate-950 text-center text-xs font-bold rounded-full shadow items-center justify-center gap-1">
-          <span>สั่งซื้อผ่านระบบร้านค้า</span><span>↗</span>
-        </a>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: ตะกร้าสินค้า & สั่งซื้อ (ไม่ใช้พื้นขาว หรูหรา ดำเงามรกตทอง) -->
+  <!-- MODAL: ตะกร้าสินค้า & สั่งซื้อ -->
   <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="cart-glossy-panel rounded-t-3xl sm:rounded-3xl w-full max-w-md p-5 text-white max-h-[90vh] flex flex-col justify-between overflow-y-auto">
       <div>
@@ -226,28 +245,36 @@
     </div>
   </div>
 
-  <!-- แถบนำทางด้านล่างสไตล์ iOS (ลิงก์ตรงไปยัง pickacard_hub.html) -->
-  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-black/85 border border-amber-300/30 backdrop-blur-2xl rounded-full py-2.5 px-6 flex justify-around items-center z-40 shadow-2xl">
-    <a href="./index.html" class="flex flex-col items-center gap-0.5 text-amber-300">
-      <span class="text-sm">🛍️</span>
-      <span class="text-[9px] font-bold">ร้านค้า</span>
-    </a>
-    <a href="./booking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">📅</span>
-      <span class="text-[9px]">จองคิว</span>
-    </a>
-    <a href="./pickacard_hub.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">🔮</span>
-      <span class="text-[9px]">เสี่ยงทาย</span>
-    </a>
-    <a href="./tracking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">📦</span>
-      <span class="text-[9px]">พัสดุ</span>
-    </a>
-    <a href="./memberships.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">👤</span>
-      <span class="text-[9px]">สมาชิก</span>
-    </a>
+  <!-- แถบนำทางด้านล่าง 2 แถวแบบคงที่ ไม่เลื่อน ไม่ตาลาย -->
+  <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
+    <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
+      <a href="./index.html" class="flex items-center justify-center gap-1 text-amber-300 font-bold py-1 bg-amber-400/10 rounded-xl border border-amber-300/30">
+        <span class="text-xs">🛍️</span>
+        <span class="text-[10px]">ร้านค้า</span>
+      </a>
+      <a href="./booking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">📅</span>
+        <span class="text-[10px]">จองคิว</span>
+      </a>
+      <a href="./pickacard_hub.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">🔮</span>
+        <span class="text-[10px]">เสี่ยงทาย</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-3 gap-1 pt-1.5 text-center">
+      <a href="./tracking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">📦</span>
+        <span class="text-[10px]">ติดตามพัสดุ</span>
+      </a>
+      <a href="./memberships.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">👤</span>
+        <span class="text-[10px]">ระบบสมาชิก</span>
+      </a>
+      <a href="./admin.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+        <span class="text-xs">⚙️</span>
+        <span class="text-[10px]">แอดมิน</span>
+      </a>
+    </div>
   </nav>
 
   <script>
@@ -277,6 +304,18 @@
           }
         }).catch(() => {});
       }
+    }
+
+    // แปลง imageId จากชีตเป็น URL ภาพจริง (รองรับ Drive File ID และ Direct URL)
+    function resolveProductImage(imgId) {
+      if (imgId && typeof imgId === "string" && imgId.trim() !== "") {
+        const raw = imgId.trim();
+        if (raw.startsWith("http://") || raw.startsWith("https://")) {
+          return raw;
+        }
+        return `https://drive.google.com/thumbnail?id=${raw}&sz=w1000`;
+      }
+      return null;
     }
 
     function fetchProducts() {
@@ -354,17 +393,30 @@
         const card = document.createElement("div");
         card.className = "membership-style-card p-3";
 
-        let imgSrc = "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=350&q=80";
-        if (p.imageId && p.imageId.trim() !== "") {
-          const raw = p.imageId.trim();
-          imgSrc = (raw.startsWith("http://") || raw.startsWith("https://")) ? raw : `https://drive.google.com/uc?id=${raw}`;
+        const productImgUrl = resolveProductImage(p.imageId);
+
+        // กล่องรูปสินค้า: ถ้ามีรูปให้แสดงรูปจริง ถ้าไม่มีรูปให้แสดงตราพญานาคทองพร้อมรหัสสินค้า
+        let imgBlockHtml = "";
+        if (productImgUrl) {
+          imgBlockHtml = `
+            <div class="w-full h-32 bg-black/40 rounded-xl overflow-hidden mb-2 flex items-center justify-center p-1.5 border border-amber-400/20">
+              <img src="${productImgUrl}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-amber-300\\'><span class=\\'text-2xl\\'>🐍</span><span class=\\'text-[9px] font-mono mt-1 text-slate-400\\'>${p.id}</span></div>'">
+            </div>
+          `;
+        } else {
+          imgBlockHtml = `
+            <div class="w-full h-32 bg-gradient-to-br from-black/60 to-emerald-950/40 rounded-xl overflow-hidden mb-2 flex flex-col items-center justify-center border border-amber-400/20 text-center p-2">
+              <span class="text-3xl text-amber-300 drop-shadow-[0_2px_8px_rgba(250,204,21,0.4)]">🐍</span>
+              <span class="text-[10px] font-mono font-bold text-amber-200 mt-1">${p.id}</span>
+              <span class="text-[8px] text-emerald-300/70">วินทร์ทรัพย์นาคราช</span>
+            </div>
+          `;
         }
 
         const origPriceHtml = p.originalPrice 
           ? `<span class="text-[9px] text-slate-400 line-through">฿${Number(p.originalPrice).toLocaleString()}</span>` 
           : '';
 
-        // กรอบสินค้าและปุ่มตะกร้าที่มีเครื่องหมาย + สีแดง
         card.innerHTML = `
           <div onclick="openDetailModal('${p.id}')" class="cursor-pointer">
             <div class="flex items-center justify-between mb-1.5">
@@ -372,9 +424,7 @@
               <span class="text-[9px] text-emerald-300 font-semibold bg-emerald-500/20 border border-emerald-400/30 px-1.5 py-0.5 rounded">ของแท้</span>
             </div>
 
-            <div class="w-full h-32 bg-black/40 rounded-xl overflow-hidden mb-2 flex items-center justify-center p-1.5 border border-amber-400/20">
-              <img src="${imgSrc}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.src='https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=350&q=80'">
-            </div>
+            ${imgBlockHtml}
 
             <h3 class="text-[11px] font-bold text-amber-100 leading-snug line-clamp-1 mb-0.5">${p.name}</h3>
             <p class="text-[9px] text-emerald-200/60 font-light line-clamp-1 mb-2">${p.description || '-'}</p>
@@ -386,8 +436,7 @@
               <div class="text-xs font-black text-amber-300 font-mono">฿${Number(p.price).toLocaleString()}</div>
             </div>
             
-            <!-- ปุ่มไอคอนตะกร้าสินค้า พร้อมเครื่องหมายบวก (+) สีแดง -->
-            <button onclick="addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${imgSrc}')" class="btn-cart-add px-2.5 py-1 text-[11px] font-bold shadow flex items-center gap-0.5">
+            <button onclick="addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${productImgUrl || ''}')" class="btn-cart-add px-2.5 py-1 text-[11px] font-bold shadow flex items-center gap-0.5">
               <span>🛒</span>
               <span class="plus-badge">+</span>
             </button>
@@ -415,39 +464,28 @@
         origEl.classList.add("hidden");
       }
 
-      let imgSrc = "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=450&q=80";
-      let isExternal = false;
-      let extUrl = DEFAULT_MYSHOP_URL;
+      const productImgUrl = resolveProductImage(p.imageId);
+      const imgBox = document.getElementById("detail-img-box");
 
-      if (p.imageId && p.imageId.trim() !== "") {
-        const raw = p.imageId.trim();
-        if (raw.startsWith("http://") || raw.startsWith("https://")) {
-          imgSrc = raw;
-          extUrl = raw;
-          isExternal = true;
-        } else {
-          imgSrc = `https://drive.google.com/uc?id=${raw}`;
-        }
+      if (productImgUrl) {
+        imgBox.innerHTML = `
+          <img id="detail-img" src="${productImgUrl}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-amber-300\\'><span class=\\'text-4xl\\'>🐍</span><span class=\\'text-xs font-mono mt-1 text-slate-300\\'>${p.id}</span></div>'">
+        `;
+      } else {
+        imgBox.innerHTML = `
+          <div class="flex flex-col items-center justify-center h-full text-center text-amber-300">
+            <span class="text-5xl drop-shadow-[0_2px_10px_rgba(250,204,21,0.5)]">🐍</span>
+            <span class="text-sm font-mono font-bold text-amber-200 mt-2">${p.id}</span>
+            <span class="text-[10px] text-emerald-300/80">วินทร์ทรัพย์นาคราช</span>
+          </div>
+        `;
       }
-
-      document.getElementById("detail-img").src = imgSrc;
 
       const btnCart = document.getElementById("detail-btn-cart");
-      const btnExt = document.getElementById("detail-btn-external");
-
       btnCart.onclick = () => {
-        addToCart(p.id, p.name, p.price, imgSrc);
+        addToCart(p.id, p.name, p.price, productImgUrl || '');
         closeDetailModal();
       };
-
-      if (isExternal) {
-        btnExt.href = extUrl;
-        btnExt.classList.remove("hidden");
-        btnExt.classList.add("flex");
-      } else {
-        btnExt.classList.add("hidden");
-        btnExt.classList.remove("flex");
-      }
 
       document.getElementById("detail-modal").classList.remove("hidden");
     }
@@ -492,9 +530,14 @@
           total += item.price * item.qty;
           const row = document.createElement("div");
           row.className = "p-2.5 rounded-xl bg-black/40 border border-amber-400/20 flex items-center justify-between";
+          
+          let imgHtml = item.img 
+            ? `<img src="${item.img}" class="w-9 h-9 rounded-lg object-contain bg-black/60 border border-amber-400/20 p-0.5">`
+            : `<div class="w-9 h-9 rounded-lg bg-black/60 border border-amber-400/20 flex items-center justify-center text-xs">🐍</div>`;
+
           row.innerHTML = `
             <div class="flex items-center gap-2.5">
-              <img src="${item.img}" class="w-9 h-9 rounded-lg object-contain bg-black/60 border border-amber-400/20 p-0.5">
+              ${imgHtml}
               <div>
                 <div class="font-bold text-amber-100 text-[11px] line-clamp-1">${item.name}</div>
                 <div class="text-emerald-300/80 text-[10px]">฿${item.price.toLocaleString()} x ${item.qty}</div>
@@ -524,7 +567,6 @@
       openCartModal();
     }
 
-    // ส่งคำสั่งซื้อผ่าน LIFF และสร้าง Flex สรุปออเดอร์เข้าห้องแชท
     async function submitOrderViaLiff() {
       if (localCart.length === 0) return alert("ไม่มีสินค้าในตะกร้า");
 
@@ -573,7 +615,6 @@
           const orderId = res.orderId;
           const itemsListText = localCart.map(i => `• ${i.name} (x${i.qty}) ฿${(i.price * i.qty).toLocaleString()}`).join("\n");
 
-          // ข้อความสรุปสำหรับส่งในแชท
           const chatMessage = [
             {
               type: "text",
@@ -600,7 +641,7 @@
                 localCart = [];
                 updateCartBadge();
                 closeCartModal();
-                liff.closeWindow(); // ปิดกลับเข้าแชท
+                liff.closeWindow();
               })
               .catch(() => {
                 alert(`บันทึกคำสั่งซื้อเรียบร้อย! รหัสออเดอร์: ${orderId}\nกรุณาส่งรูปสลิปในแชท LINE`);

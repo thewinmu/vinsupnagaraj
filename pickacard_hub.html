@@ -5,76 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>เรือนพยากรณ์ Pick a Card Hub • วินทร์ทรัพย์นาคราช</title>
   
-  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
-    /* ฟอนต์ SF Pro / Prompt สบายตา สไตล์ Apple iOS */
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Prompt", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Prompt", sans-serif;
       background: radial-gradient(circle at 50% 0%, #064032 0%, #022018 45%, #010a08 100%);
       color: #0f172a;
       min-height: 100vh;
       margin: 0;
       -webkit-font-smoothing: antialiased;
     }
-
-    /* แถบหัวด้านบน: เขียวมุกมรกตลึก ขอบทอง โปร่งแสงหรูหรา */
     .pearl-header {
       background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
       border: 1px solid rgba(250, 204, 21, 0.35);
       backdrop-filter: blur(20px);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }
-
-    /* การ์ดหมวดหมู่: ขาวนวล สะอาดตา ขอบทองอร่ามมนโค้ง */
     .hub-category-card {
       background: #ffffff;
       border: 1.5px solid #eab308;
-      border-radius: 24px;
+      border-radius: 22px;
       box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      user-select: none;
     }
-    .hub-category-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 32px rgba(234, 179, 8, 0.25);
-      border-color: #facc15;
+    .hub-category-card:active {
+      transform: scale(0.97);
     }
-
-    /* การ์ดแนะนำพิเศษ (สาส์นบรมครู): เขียวมรกตเหลือบประกายทอง */
     .featured-kru-card {
       background: linear-gradient(145deg, #064e3b 0%, #022c22 70%, #01140f 100%);
       border: 2px solid #facc15;
-      border-radius: 26px;
+      border-radius: 24px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), 0 0 16px rgba(250, 204, 21, 0.25);
-      transition: all 0.25s ease;
+      cursor: pointer;
+      user-select: none;
     }
-    .featured-kru-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(250, 204, 21, 0.35);
+    .featured-kru-card:active {
+      transform: scale(0.98);
     }
-
     .btn-pearl-action {
       background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
       color: #fef08a;
       border: 1px solid rgba(254, 240, 138, 0.45);
       border-radius: 9999px;
-      transition: all 0.2s ease;
-    }
-    .btn-pearl-action:hover {
-      background: #047857;
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(4, 120, 87, 0.4);
     }
   </style>
 </head>
 <body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-32">
 
-  <!-- 1. Header หัวร้าน -->
+  <!-- Header -->
   <header class="pearl-header rounded-3xl p-3 mb-4 flex items-center justify-between">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
@@ -88,23 +73,28 @@
       </div>
     </div>
     
-    <a href="./index.html" class="text-[10px] bg-black/50 border border-amber-300/30 text-pearl-cream px-3 py-1.5 rounded-full font-medium">
-      หน้าร้านค้า ⟨
-    </a>
+    <div class="flex items-center gap-1.5">
+      <a href="https://www.facebook.com/thewinmu/" target="_blank" class="text-[10px] bg-blue-600/30 border border-blue-400/40 text-blue-100 px-2.5 py-1 rounded-full font-medium">
+        เพจ Facebook
+      </a>
+      <a href="./index.html" class="text-[10px] bg-black/50 border border-amber-300/30 text-emerald-200 px-2.5 py-1 rounded-full font-medium">
+        หน้าร้าน ⟨
+      </a>
+    </div>
   </header>
 
-  <!-- 2. หัวข้อใหญ่และคำแนะนำ -->
+  <!-- หัวข้อ -->
   <div class="text-center mb-4">
     <h2 class="text-xl font-extrabold text-amber-200 mb-1">สำรับไพ่นำทางชีวิต</h2>
-    <p class="text-xs text-emerald-200/80 font-light leading-relaxed">
+    <p class="text-xs text-emerald-200/80 font-light">
       เลือกหมวดหมู่ที่ต้องการแนวทาง ทำใจให้สงบและเลือกสำรับไพ่
     </p>
   </div>
 
-  <!-- 3. ไฮไลต์พิเศษ: สาส์นบรมครู (ลิงก์ตรงไปยัง pickacard_kru.html) -->
+  <!-- ไฮไลต์: สาส์นบรมครู (คลิกตรงไปยัง pickacard_kru.html) -->
   <div class="mb-4">
-    <a href="./pickacard_kru.html" class="featured-kru-card block p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
+    <div onclick="navigateTo('pickacard_kru.html')" class="featured-kru-card p-4 text-white">
+      <div class="flex items-center justify-between mb-1.5">
         <span class="text-[9px] font-bold tracking-widest text-amber-300 uppercase bg-amber-400/20 border border-amber-300/40 px-2.5 py-0.5 rounded-full">
           สำรับหลักครูบาอาจารย์
         </span>
@@ -112,7 +102,7 @@
       </div>
 
       <div class="flex items-center gap-3.5 my-2">
-        <div class="w-14 h-14 rounded-2xl bg-black/40 border border-amber-400/50 flex items-center justify-center text-2xl flex-shrink-0 shadow-inner">
+        <div class="w-12 h-12 rounded-2xl bg-black/40 border border-amber-400/50 flex items-center justify-center text-2xl flex-shrink-0">
           🐍
         </div>
         <div>
@@ -127,14 +117,14 @@
         <span>เข้าสู่เรือนสาส์นบรมครู</span>
         <span>เปิดสำรับไพ่ →</span>
       </div>
-    </a>
+    </div>
   </div>
 
-  <!-- 4. รายการหมวดหมู่เสี่ยงทาย 2 คอลัมน์ (การ์ดขาวนวล ขอบทอง) -->
+  <!-- รายการหมวดหมู่เสี่ยงทาย 2 คอลัมน์ -->
   <div class="grid grid-cols-2 gap-3 mb-4">
     
-    <!-- หมวดที่ 1: ไพ่ประจำวัน -->
-    <a href="./pickacard_hub?cat=pcardoftheday" class="hub-category-card p-3.5">
+    <!-- 1. ดวงชะตาประจำวัน -->
+    <div onclick="navigateToCategory('pcardoftheday')" class="hub-category-card p-3.5">
       <div>
         <div class="flex items-center justify-between mb-2">
           <span class="text-xl">🌟</span>
@@ -149,10 +139,10 @@
         <span class="text-[9px] font-mono font-bold text-emerald-900">DAILY CARD</span>
         <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
       </div>
-    </a>
+    </div>
 
-    <!-- หมวดที่ 2: ความรัก & ความสัมพันธ์ -->
-    <a href="./pickacard_hub?cat=plove" class="hub-category-card p-3.5">
+    <!-- 2. ความรัก & คู่ครอง -->
+    <div onclick="navigateToCategory('plove')" class="hub-category-card p-3.5">
       <div>
         <div class="flex items-center justify-between mb-2">
           <span class="text-xl">💖</span>
@@ -167,10 +157,10 @@
         <span class="text-[9px] font-mono font-bold text-emerald-900">LOVE & HEART</span>
         <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
       </div>
-    </a>
+    </div>
 
-    <!-- หมวดที่ 3: การงาน & ธุรกิจ -->
-    <a href="./pickacard_hub?cat=pjob" class="hub-category-card p-3.5">
+    <!-- 3. การงาน & ธุรกิจ -->
+    <div onclick="navigateToCategory('pjob')" class="hub-category-card p-3.5">
       <div>
         <div class="flex items-center justify-between mb-2">
           <span class="text-xl">💼</span>
@@ -185,10 +175,10 @@
         <span class="text-[9px] font-mono font-bold text-emerald-900">CAREER PATH</span>
         <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
       </div>
-    </a>
+    </div>
 
-    <!-- หมวดที่ 4: การเงิน & โชคลาภ -->
-    <a href="./pickacard_hub?cat=pmoney" class="hub-category-card p-3.5">
+    <!-- 4. โชคลาภ & การเงิน -->
+    <div onclick="navigateToCategory('pmoney')" class="hub-category-card p-3.5">
       <div>
         <div class="flex items-center justify-between mb-2">
           <span class="text-xl">💰</span>
@@ -203,10 +193,10 @@
         <span class="text-[9px] font-mono font-bold text-emerald-900">WEALTH & LUCK</span>
         <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
       </div>
-    </a>
+    </div>
 
-    <!-- หมวดที่ 5: สุขภาพ & จิตใจ -->
-    <a href="./pickacard_hub?cat=phealth" class="hub-category-card p-3.5">
+    <!-- 5. สุขภาพ & สมดุล -->
+    <div onclick="navigateToCategory('phealth')" class="hub-category-card p-3.5">
       <div>
         <div class="flex items-center justify-between mb-2">
           <span class="text-xl">🌿</span>
@@ -221,10 +211,10 @@
         <span class="text-[9px] font-mono font-bold text-emerald-900">HEALTH & PEACE</span>
         <span class="btn-pearl-action px-2.5 py-1 text-[10px] font-bold">เปิดไพ่</span>
       </div>
-    </a>
+    </div>
 
-    <!-- หมวดที่ 6: เปิดคิวตรวจดวงเจาะลึก (ลิงก์ไป booking.html) -->
-    <a href="./booking.html" class="hub-category-card p-3.5 border-dashed border-2">
+    <!-- 6. จองคิวตรวจดวงชะตาสด -->
+    <div onclick="navigateTo('booking.html')" class="hub-category-card p-3.5 border-dashed border-2">
       <div>
         <div class="flex items-center justify-between mb-2">
           <span class="text-xl">📞</span>
@@ -239,11 +229,11 @@
         <span class="text-[9px] font-mono font-bold text-amber-700">LIVE CONSULT</span>
         <span class="bg-amber-400 text-slate-950 px-2.5 py-1 text-[10px] font-bold rounded-full shadow">จองคิว</span>
       </div>
-    </a>
+    </div>
 
   </div>
 
-  <!-- 5. แถบนำทางด้านล่างสไตล์ iOS Minimal Glassmorphism -->
+  <!-- Bottom Navigation -->
   <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-black/85 border border-amber-300/30 backdrop-blur-2xl rounded-full py-2.5 px-6 flex justify-around items-center z-40 shadow-2xl">
     <a href="./index.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
       <span class="text-sm">🛍️</span>
@@ -267,5 +257,17 @@
     </a>
   </nav>
 
+  <script>
+    // ฟังก์ชันนำทางโดยตรงผ่าน JavaScript (ป้องกันปัญหาแท็ก a ซ้อนทับกัน)
+    function navigateTo(url) {
+      window.location.href = url;
+    }
+
+    function navigateToCategory(cat) {
+      // ตรวจสอบว่าในโปรเจกต์มีไฟล์ pickacard.html หรือไม่
+      // หากไม่มีไฟล์ pickacard.html ให้ส่งไปที่ pickacard_kru.html แทน
+      window.location.href = `./pickacard.html?cat=${cat}`;
+    }
+  </script>
 </body>
 </html>

@@ -44,8 +44,8 @@
     .perspective-container { perspective: 1000px; }
     
     .card-3d {
-      width: 110px;
-      height: 170px;
+      width: 115px;
+      height: 180px;
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
@@ -54,7 +54,7 @@
     }
     
     .card-3d:hover {
-      filter: drop-shadow(0 0 20px rgba(254, 240, 138, 0.8));
+      filter: drop-shadow(0 0 25px rgba(254, 240, 138, 0.9));
     }
 
     .card-face {
@@ -63,11 +63,12 @@
       height: 100%;
       backface-visibility: hidden;
       border-radius: 12px;
-      border: 2px solid rgba(254, 240, 138, 0.5);
+      border: 2px solid rgba(254, 240, 138, 0.6);
       overflow: hidden;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
     }
 
-    /* หลังไพ่ */
+    /* หลังไพ่ (อัพเดตเป็นตราอุณาโลม) */
     .card-back {
       background: linear-gradient(135deg, #000000 0%, #064e3b 50%, #000000 100%);
       display: flex;
@@ -90,9 +91,9 @@
     }
 
     /* การกระจายไพ่ (Fan out) */
-    .fan-left   { transform: rotate(-15deg) translateX(-40px) translateY(10px); }
+    .fan-left   { transform: rotate(-15deg) translateX(-45px) translateY(10px); }
     .fan-center { transform: rotate(0deg) translateY(-10px); z-index: 10; }
-    .fan-right  { transform: rotate(15deg) translateX(40px) translateY(10px); }
+    .fan-right  { transform: rotate(15deg) translateX(45px) translateY(10px); }
 
     /* ซ่อนไพ่ที่ไม่ได้เลือก */
     .fade-out { opacity: 0; pointer-events: none; transform: translateY(50px); }
@@ -132,12 +133,22 @@
     <div class="text-center mb-8 relative">
       <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-500 rounded-full blur-[60px] opacity-30"></div>
       <h1 class="text-3xl font-extrabold gold-text mb-2 relative z-10">เสี่ยงทายไพ่นาคราช</h1>
-      <p class="text-xs text-emerald-200 tracking-wider relative z-10">เลือกมิติแห่งคำทำนายที่คุณต้องการเปิดรับ</p>
+      <p class="text-[11px] text-emerald-200 tracking-widest relative z-10 uppercase">เปิดมิติแห่งคำทำนายที่คุณต้องการ</p>
     </div>
 
     <div class="grid grid-cols-2 gap-4 relative z-10">
       <div onclick="startMagic('pcardoftheday', 'Card of the Day')" class="category-card rounded-2xl p-5 text-center col-span-2 cursor-pointer">
-        <div class="text-4xl mb-2 filter drop-shadow-[0_0_10px_#fef08a]">🔮</div>
+        <!-- ไอคอนอุณาโลมทองคำ (ย่อ) -->
+        <svg viewBox="0 0 100 120" class="w-10 h-10 mx-auto mb-2 drop-shadow-[0_0_10px_rgba(254,240,138,0.8)]">
+          <defs>
+            <linearGradient id="goldGradHub" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff"/><stop offset="25%" stop-color="#fef08a"/><stop offset="50%" stop-color="#ca8a04"/><stop offset="100%" stop-color="#713f12"/>
+            </linearGradient>
+          </defs>
+          <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="url(#goldGradHub)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M55,30 Q65,15 50,5" fill="none" stroke="url(#goldGradHub)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="50" cy="5" r="4" fill="url(#goldGradHub)"/>
+        </svg>
         <h3 class="text-lg font-bold text-amber-200">Card of the Day</h3>
         <p class="text-[10px] text-slate-300 mt-1">ไพ่พลังงานประจำวันของคุณ</p>
       </div>
@@ -163,12 +174,22 @@
   </div>
 
   <!-- ==========================================
-       เฟส 2: กำลังสับไพ่ / โหลดข้อมูล (Shuffle Mode)
+       เฟส 2: กำลังสับไพ่ / โหลดข้อมูล
        ========================================== -->
   <div id="view-loading" class="hidden flex-col items-center justify-center mt-20 transition-opacity duration-500 w-full">
-    <div class="relative w-24 h-36 mx-auto shuffling mb-8">
+    <div class="relative w-28 h-40 mx-auto shuffling mb-8">
       <div class="absolute inset-0 bg-gradient-to-br from-black to-emerald-900 rounded-xl border-2 border-amber-400/80 shadow-[0_0_30px_rgba(16,185,129,0.8)] flex items-center justify-center">
-        <span class="text-4xl">🐍</span>
+        <!-- อุณาโลม Loading -->
+        <svg viewBox="0 0 100 120" class="w-12 h-14 opacity-80 drop-shadow-[0_0_15px_rgba(254,240,138,0.5)]">
+          <defs>
+            <linearGradient id="goldGradLoad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff"/><stop offset="25%" stop-color="#fef08a"/><stop offset="50%" stop-color="#ca8a04"/><stop offset="100%" stop-color="#713f12"/>
+            </linearGradient>
+          </defs>
+          <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="url(#goldGradLoad)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M55,30 Q65,15 50,5" fill="none" stroke="url(#goldGradLoad)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="50" cy="5" r="4" fill="url(#goldGradLoad)"/>
+        </svg>
       </div>
       <!-- ไพ่ซ้อนด้านหลัง -->
       <div class="absolute inset-0 bg-emerald-950 rounded-xl border-2 border-amber-400/30 transform rotate-6 translate-x-2 translate-y-2 -z-10"></div>
@@ -183,24 +204,56 @@
        ========================================== -->
   <div id="view-pick" class="hidden flex-col items-center mt-10 transition-opacity duration-500 w-full perspective-container">
     <h1 class="text-2xl font-extrabold gold-text mb-1 tracking-wide text-center">ตั้งจิตอธิษฐาน</h1>
-    <p class="text-[11px] text-emerald-200 mb-12 tracking-widest text-center">นึกถึงเรื่องที่ต้องการถาม แล้วเลือกไพ่ 1 ใบ</p>
+    <p class="text-[11px] text-emerald-200 mb-14 tracking-widest text-center">นึกถึงเรื่องที่ต้องการถาม แล้วเลือกไพ่ 1 ใบ</p>
     
     <div class="relative flex justify-center items-center w-full h-48 mt-4">
-      <!-- ไพ่ใบที่ 1 -->
+      
+      <!-- Template การ์ดหลังไพ่ที่มีอุณาโลมทองคำ -->
+      <!-- ใบที่ 1 -->
       <div id="card-0" class="card-3d fan-left absolute" onclick="revealCard(0)">
-        <div class="card-face card-back"><span class="text-4xl opacity-80">🐍</span><span class="text-[8px] text-amber-200/50 mt-1 uppercase">Oracle</span></div>
+        <div class="card-face card-back">
+          <!-- ตราประทับอุณาโลม SVG -->
+          <svg viewBox="0 0 100 120" class="w-12 h-14 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+            <defs>
+              <linearGradient id="goldGradBack" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/><stop offset="25%" stop-color="#fef08a"/><stop offset="50%" stop-color="#ca8a04"/><stop offset="100%" stop-color="#713f12"/>
+              </linearGradient>
+            </defs>
+            <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="url(#goldGradBack)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M55,30 Q65,15 50,5" fill="none" stroke="url(#goldGradBack)" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="50" cy="5" r="4" fill="url(#goldGradBack)"/>
+          </svg>
+          <span class="text-[9px] text-amber-300/70 mt-3 uppercase tracking-[0.2em] font-bold">Oracle</span>
+        </div>
         <div class="card-face card-front"><img id="img-0" src="" class="w-full h-full object-cover"></div>
       </div>
-      <!-- ไพ่ใบที่ 2 -->
+      
+      <!-- ใบที่ 2 -->
       <div id="card-1" class="card-3d fan-center absolute" onclick="revealCard(1)">
-        <div class="card-face card-back"><span class="text-4xl opacity-80">🐍</span><span class="text-[8px] text-amber-200/50 mt-1 uppercase">Oracle</span></div>
+        <div class="card-face card-back">
+          <svg viewBox="0 0 100 120" class="w-12 h-14 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+            <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="url(#goldGradBack)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M55,30 Q65,15 50,5" fill="none" stroke="url(#goldGradBack)" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="50" cy="5" r="4" fill="url(#goldGradBack)"/>
+          </svg>
+          <span class="text-[9px] text-amber-300/70 mt-3 uppercase tracking-[0.2em] font-bold">Oracle</span>
+        </div>
         <div class="card-face card-front"><img id="img-1" src="" class="w-full h-full object-cover"></div>
       </div>
-      <!-- ไพ่ใบที่ 3 -->
+      
+      <!-- ใบที่ 3 -->
       <div id="card-2" class="card-3d fan-right absolute" onclick="revealCard(2)">
-        <div class="card-face card-back"><span class="text-4xl opacity-80">🐍</span><span class="text-[8px] text-amber-200/50 mt-1 uppercase">Oracle</span></div>
+        <div class="card-face card-back">
+          <svg viewBox="0 0 100 120" class="w-12 h-14 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
+            <path d="M50,90 C30,90 20,75 20,60 C20,40 40,30 55,30 C70,30 80,45 80,60 C80,75 70,85 55,85 C40,85 30,75 30,60 C30,45 45,40 55,40 C65,40 70,50 70,60 C70,70 60,75 55,75" fill="none" stroke="url(#goldGradBack)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M55,30 Q65,15 50,5" fill="none" stroke="url(#goldGradBack)" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="50" cy="5" r="4" fill="url(#goldGradBack)"/>
+          </svg>
+          <span class="text-[9px] text-amber-300/70 mt-3 uppercase tracking-[0.2em] font-bold">Oracle</span>
+        </div>
         <div class="card-face card-front"><img id="img-2" src="" class="w-full h-full object-cover"></div>
       </div>
+
     </div>
   </div>
 
@@ -212,7 +265,6 @@
       <h2 id="res-name" class="text-2xl font-extrabold gold-text mb-1 tracking-wide drop-shadow-lg">ชื่อไพ่</h2>
     </div>
 
-    <!-- ความหมายหลัก -->
     <div class="bg-black/60 border border-emerald-900/50 rounded-2xl p-5 backdrop-blur-md shadow-inner mt-4">
       <h3 class="text-xs font-bold text-emerald-400 mb-2 uppercase tracking-widest flex items-center gap-2"><span>📜</span> คำทำนายหลัก</h3>
       <p id="res-meaning" class="text-sm text-slate-200 leading-relaxed font-light">-</p>
@@ -246,7 +298,6 @@
     let currentCategory = '';
     let currentCatName = '';
 
-    // ซ่อนหน้าต่างทั้งหมด
     function hideAllViews() {
       document.getElementById('view-hub').classList.add('hidden');
       document.getElementById('view-loading').classList.add('hidden');
@@ -254,7 +305,6 @@
       document.getElementById('view-result').classList.add('hidden');
     }
 
-    // กลับหน้าแรก (Hub)
     function goToHub() {
       hideAllViews();
       document.getElementById('view-hub').classList.remove('hidden');
@@ -263,7 +313,6 @@
       document.getElementById('btn-home').classList.remove('hidden');
     }
 
-    // เริ่มระบบอัญเชิญไพ่ (ดึงข้อมูล API)
     function startMagic(catKey, catName) {
       currentCategory = catKey;
       currentCatName = catName;
@@ -274,25 +323,22 @@
       document.getElementById('btn-home').classList.add('hidden');
       document.getElementById('btn-back').classList.remove('hidden');
 
-      // รีเซ็ตการ์ด
       for(let i=0; i<=2; i++) {
         let el = document.getElementById(`card-${i}`);
         el.classList.remove('is-flipped', 'fade-out');
-        // คืนค่าตำแหน่งการกระจายไพ่
         if(i===0) el.className = "card-3d fan-left absolute";
         if(i===1) el.className = "card-3d fan-center absolute";
         if(i===2) el.className = "card-3d fan-right absolute";
       }
 
-      // ดึงข้อมูล API
       fetch(`${WEB_URL}?action=get_cards&category=${catKey}`)
         .then(r => r.json())
         .then(res => {
           if (res.status === "success" && res.cards && res.cards.length > 0) {
             activeCards = res.cards;
-            // หน่วงเวลาจำลองการสับไพ่เพิ่มความขลัง 1.5 วินาที
             setTimeout(showSpread, 1500); 
           } else {
+            // แจ้งเตือนกรณีไม่มีข้อมูลหรือไม่ได้ใส่คำว่า Active
             alert("⚠️ ยังไม่มีข้อมูลไพ่ในหมวดหมู่นี้ หรือกำลังปรับปรุงครับ");
             goToHub();
           }
@@ -303,17 +349,15 @@
         });
     }
 
-    // แสดงไพ่ 3 ใบให้เลือก (กรีดไพ่)
     function showSpread() {
       hideAllViews();
       document.getElementById('view-pick').classList.remove('hidden');
       document.getElementById('view-pick').classList.remove('opacity-0');
 
-      // สุ่มไพ่ 3 ใบไปซ่อนไว้หลังการ์ดแต่ละใบ
       const shuffled = [...activeCards].sort(() => 0.5 - Math.random());
       
       for(let i=0; i<3; i++) {
-        let cardData = shuffled[i % shuffled.length]; // เผื่อไพ่มีน้อยกว่า 3
+        let cardData = shuffled[i % shuffled.length]; 
         let imgElem = document.getElementById(`img-${i}`);
         
         if(cardData.imageId && cardData.imageId.length > 10) {
@@ -322,66 +366,55 @@
           imgElem.src = "https://via.placeholder.com/400x600/022c22/ca8a04?text=NAGA+ORACLE";
         }
         
-        // เก็บข้อมูลไว้ใน element เพื่อดึงมาแสดงตอนพลิก
         let cardEl = document.getElementById(`card-${i}`);
         cardEl.dataset.name = cardData.name || "ไพ่ไร้นาม";
-        cardEl.dataset.meaning = cardData.meaning || "-";
-        cardEl.dataset.ai = cardData.ai_advice || "จักรวาลกำลังจัดสรรพลังงานที่ดีที่สุดให้กับคุณ...";
+        cardEl.dataset.meaning = cardData.meaning || "ไม่มีคำทำนายหลักระบุไว้";
+        cardEl.dataset.ai = cardData.ai_advice || "จักรวาลกำลังจัดสรรพลังงานที่ดีที่สุดให้กับคุณ โปรดเปิดรับสิ่งดีๆ ที่กำลังเข้ามา...";
         
-        // ล็อกให้คลิกได้
         cardEl.style.pointerEvents = "auto";
       }
     }
 
-    // ลูกค้าจิ้มเลือกไพ่
     function revealCard(selectedIndex) {
-      // 1. ป้องกันการคลิกใบอื่นซ้ำ
       for(let i=0; i<=2; i++) {
         document.getElementById(`card-${i}`).style.pointerEvents = "none";
       }
 
       const selectedEl = document.getElementById(`card-${selectedIndex}`);
       
-      // 2. ซ่อนใบที่ไม่ได้เลือก
       for(let i=0; i<=2; i++) {
         if(i !== selectedIndex) {
           document.getElementById(`card-${i}`).classList.add('fade-out');
         }
       }
 
-      // 3. พลิกใบที่เลือก และขยายใหญ่
       selectedEl.classList.remove('fan-left', 'fan-center', 'fan-right');
-      selectedEl.style.transform = "rotate(0deg)"; // จัดให้อยู่ตรงกลาง
+      selectedEl.style.transform = "rotate(0deg)"; 
       setTimeout(() => {
         selectedEl.classList.add('is-flipped');
       }, 300);
 
-      // 4. เอาข้อมูลที่ฝังไว้มาใส่ใน Result View
       document.getElementById('res-name').innerText = selectedEl.dataset.name;
       document.getElementById('res-meaning').innerText = selectedEl.dataset.meaning;
       const aiTextToType = selectedEl.dataset.ai;
 
-      // 5. โชว์กรอบผลลัพธ์ (เลื่อนหน้าจอลงมานิดหน่อย)
       setTimeout(() => {
         const resView = document.getElementById('view-result');
         resView.classList.remove('hidden');
         setTimeout(() => resView.classList.remove('opacity-0'), 100);
         
-        // เริ่ม AI Typewriter
         typeWriterAI(aiTextToType);
       }, 1000);
     }
 
-    // รีเฟรชหมวดหมู่เดิม (สับไพ่ใหม่)
     function reshuffle() {
       document.getElementById('view-result').classList.add('hidden', 'opacity-0');
       startMagic(currentCategory, currentCatName);
     }
 
-    // AI Typewriter Effect
     let iType = 0;
     let textToType = "";
-    let aiSpeed = 30; // ความเร็ว 30ms ต่อตัวอักษร
+    let aiSpeed = 30; 
     
     function typeWriterAI(text) {
       textToType = text;

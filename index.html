@@ -10,483 +10,193 @@
   
   <style>
     :root {
-      --bg-emerald-deep: #021a14;
-      --bg-emerald-dark: #010d0a;
-      --white-gold-bright: #fef9c3;
-      --white-gold-mid: #fef08a;
-      --white-gold-dark: #ca8a04;
+      --bg-deep: #021a14;
       --pearl-cream: #fbfbee;
-      --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.82) 0%, rgba(2, 16, 12, 0.95) 100%);
+      --gold-bright: #fef9c3;
+      --gold-mid: #fef08a;
+      --gold-dark: #ca8a04;
+      --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.85) 0%, rgba(2, 16, 12, 0.95) 100%);
     }
 
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at 50% 0%, #064e3b 0%, var(--bg-emerald-deep) 40%, var(--bg-emerald-dark) 100%);
+      background: radial-gradient(circle at 50% 0%, #064e3b 0%, var(--bg-deep) 40%, #010d0a 100%);
       color: var(--pearl-cream);
       min-height: 100vh;
       margin: 0;
-      overflow-x: hidden;
-      overflow-y: auto;
     }
 
-    /* อักษรทองขาวสว่างเรืองแสง */
     .bright-white-gold-text {
-      background: linear-gradient(135deg, #ffffff 0%, var(--white-gold-bright) 30%, var(--white-gold-mid) 60%, var(--white-gold-dark) 100%);
+      background: linear-gradient(135deg, #ffffff 0%, var(--gold-bright) 30%, var(--gold-mid) 60%, var(--gold-dark) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 20px rgba(254, 249, 195, 0.4);
     }
 
-    /* พาเนลดำเงานวลประกายมรกต */
     .glossy-panel {
       background: var(--glossy-card);
       border: 1px solid rgba(254, 240, 138, 0.25);
       backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.12);
-      transition: all 0.3s ease;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
     }
 
-    /* ป้ายราคาสินค้าทรงมือถือ */
-    .product-card {
-      background: linear-gradient(145deg, rgba(4, 41, 31, 0.85) 0%, rgba(1, 15, 11, 0.95) 100%);
-      border: 1.2px solid rgba(254, 240, 138, 0.28);
-      border-radius: 22px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-      transition: all 0.25s ease;
+    /* การ์ดสินค้าแบบ 2 คอลัมน์ */
+    .product-mini-card {
+      background: linear-gradient(145deg, rgba(4, 41, 31, 0.9) 0%, rgba(1, 15, 11, 0.95) 100%);
+      border: 1.2px solid rgba(254, 240, 138, 0.25);
+      border-radius: 18px;
+      transition: all 0.2s ease;
     }
-    .product-card:hover {
+    .product-mini-card:hover {
       border-color: #fef08a;
-      box-shadow: 0 12px 35px rgba(254, 240, 138, 0.25), inset 0 0 15px rgba(5, 150, 105, 0.2);
-      transform: translateY(-3px);
+      transform: translateY(-2px);
     }
 
-    /* ปุ่มสีทองขาวสว่าง */
     .btn-gold-action {
       background: linear-gradient(135deg, #ffffff 0%, #fef08a 35%, #eab308 70%, #a16207 100%);
       color: #032018;
-      box-shadow: 0 6px 20px rgba(234, 179, 8, 0.45);
-      transition: all 0.25s ease;
-    }
-    .btn-gold-action:hover {
-      box-shadow: 0 8px 25px rgba(254, 240, 138, 0.7);
-      transform: translateY(-2px);
-      filter: brightness(1.06);
-    }
-
-    /* แท็บสลับหมวดหมู่สินค้า */
-    .tab-btn.active {
-      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022c22;
-      font-weight: 700;
-      border-color: #ffffff;
-      box-shadow: 0 0 15px rgba(254, 240, 138, 0.5);
     }
   </style>
 </head>
-<body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-28 relative min-h-screen">
+<body class="p-4 sm:p-6 max-w-md mx-auto flex flex-col pb-28">
 
-  <!-- แถบด้านบน: สัญลักษณ์แบรนด์ & ปุ่มตะกร้าสินค้า -->
-  <div class="flex items-center justify-between py-3 mb-3 relative z-30">
+  <!-- Header ด้านบน -->
+  <div class="flex items-center justify-between py-3 mb-3">
     <div class="flex items-center gap-2">
-      <div class="w-9 h-9 rounded-full bg-emerald-950/80 border border-amber-300/40 flex items-center justify-center shadow-md">
+      <div class="w-9 h-9 rounded-full bg-emerald-950/80 border border-amber-300/40 flex items-center justify-center">
         <span class="text-xl">🐍</span>
       </div>
       <div>
         <h2 class="text-xs font-bold tracking-widest uppercase text-amber-200">วินทร์ทรัพย์นาคราช</h2>
-        <p class="text-[9px] text-emerald-300 font-light tracking-wide">@thewinmu • มนต์บารมีเทวราชัย</p>
+        <p class="text-[9px] text-emerald-300">@thewinmu • LINE MyShop Official</p>
       </div>
     </div>
-
-    <!-- ปุ่มเปิดตะกร้าสินค้าแบบมีตัวเลขนับ (Cart Icon Badge) -->
-    <button onclick="toggleCartModal()" class="relative p-2.5 rounded-2xl bg-black/60 border border-amber-300/35 hover:border-amber-300 transition shadow-lg">
-      <svg class="w-5 h-5 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-      </svg>
-      <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-md border border-white/40 hidden">
-        0
-      </span>
-    </button>
+    <a href="./memberships.html" class="p-2 rounded-xl bg-black/60 border border-amber-300/35 text-xs text-amber-200 flex items-center gap-1">
+      <span>👤</span> สมาชิก
+    </a>
   </div>
 
-  <!-- แบนเนอร์หลัก & เมนูทางลัด Pick a Card / จองคิว -->
+  <!-- แบนเนอร์หลัก & ทางลัด LINE MyShop -->
   <div class="glossy-panel rounded-3xl p-5 mb-5 relative overflow-hidden">
-    <div class="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500 rounded-full blur-[60px] opacity-30"></div>
-    <div class="relative z-10">
-      <span class="px-2.5 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-950/90 border border-emerald-400/40 text-emerald-300">
-        ✨ ศาสตร์ญาณบารมีนาคราช
-      </span>
-      <h1 class="text-xl sm:text-2xl font-extrabold bright-white-gold-text mt-2 mb-1">
-        คลังวัตถุมงคล & บริการญาณ
-      </h1>
-      <p class="text-[11px] text-slate-200/90 font-light mb-4">
-        เบิกเนตรเสริมสิริมงคล เมตตา มหาเสน่ห์ โชคลาภ และความรุ่งเรือง
-      </p>
+    <span class="px-2.5 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-950/90 border border-emerald-400/40 text-emerald-300">
+      ✨ ร้านค้าทางการ LINE MyShop
+    </span>
+    <h1 class="text-xl font-extrabold bright-white-gold-text mt-2 mb-1">
+      วัตถุมงคล & บริการญาณ
+    </h1>
+    <p class="text-[11px] text-slate-200/90 mb-4">
+      เบิกเนตรเสริมสิริมงคล เมตตา มหาเสน่ห์ และโชคลาภ
+    </p>
 
-      <!-- ทางลัดด่วน 2 ปุ่ม -->
-      <div class="grid grid-cols-2 gap-2.5">
-        <a href="./pickacard_hub.html" class="p-2.5 rounded-xl bg-black/50 border border-amber-300/30 hover:border-amber-300 transition text-center flex flex-col items-center justify-center">
-          <span class="text-lg mb-0.5">🔮</span>
-          <span class="text-xs font-bold text-amber-200">Pick a Card</span>
-          <span class="text-[9px] text-emerald-300">เสี่ยงทายไพ่ญาณ</span>
-        </a>
-        <a href="./booking.html" class="p-2.5 rounded-xl bg-black/50 border border-emerald-400/30 hover:border-emerald-300 transition text-center flex flex-col items-center justify-center">
-          <span class="text-lg mb-0.5">📅</span>
-          <span class="text-xs font-bold text-emerald-200">จองคิวดูดวง</span>
-          <span class="text-[9px] text-emerald-300">รอบเวลา 15 นาที</span>
-        </a>
-      </div>
+    <div class="grid grid-cols-2 gap-2.5">
+      <!-- ปุ่มเชื่อม LINE MyShop LIFF -->
+      <a href="https://liff.line.me/1572442362-jGxDDGRp/@thewinmu" target="_blank" class="p-2.5 rounded-xl bg-black/50 border border-emerald-400/50 text-center flex flex-col items-center justify-center">
+        <span class="text-lg mb-0.5">🛍️</span>
+        <span class="text-xs font-bold text-emerald-200">LINE MyShop</span>
+        <span class="text-[9px] text-emerald-400">ช้อปผ่านไลน์</span>
+      </a>
+      <!-- ปุ่มทางลัด TikTok -->
+      <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="p-2.5 rounded-xl bg-black/50 border border-amber-300/30 text-center flex flex-col items-center justify-center">
+        <span class="text-lg mb-0.5">🎵</span>
+        <span class="text-xs font-bold text-amber-200">TikTok ชุมชน</span>
+        <span class="text-[9px] text-emerald-300">@thewinmu</span>
+      </a>
     </div>
   </div>
 
-  <!-- หมวดหมู่สินค้า (Filter Tabs) -->
+  <!-- หมวดหมู่สินค้า -->
   <div class="flex items-center gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
-    <button onclick="filterCategory('all')" id="tab-all" class="tab-btn active px-4 py-1.5 rounded-full text-xs font-medium border border-amber-300/30 bg-black/40 text-pearl-cream whitespace-nowrap">
-      ทั้งหมด
-    </button>
-    <button onclick="filterCategory('amulet')" id="tab-amulet" class="tab-btn px-4 py-1.5 rounded-full text-xs font-medium border border-amber-300/30 bg-black/40 text-pearl-cream whitespace-nowrap">
-      📿 วัตถุมงคล
-    </button>
-    <button onclick="filterCategory('service')" id="tab-service" class="tab-btn px-4 py-1.5 rounded-full text-xs font-medium border border-amber-300/30 bg-black/40 text-pearl-cream whitespace-nowrap">
-      🔮 ดูดวง/พิธีกรรม
-    </button>
+    <button onclick="filterCategory('all')" id="tab-all" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-amber-400/20 text-white font-bold">ทั้งหมด</button>
+    <button onclick="filterCategory('amulet')" id="tab-amulet" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream">📿 วัตถุมงคล</button>
+    <button onclick="filterCategory('service')" id="tab-service" class="px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream">🔮 ดูดวง/พิธี</button>
   </div>
 
-  <!-- รายการป้ายราคาสินค้า (Product Grid) -->
-  <div id="product-list" class="space-y-4">
-    <!-- กล่องแสดงสถานะกำลังโหลด -->
-    <div class="col-span-full py-12 text-center text-xs text-amber-200 animate-pulse">
-      กำลังอัญเชิญข้อมูลวัตถุมงคลและบริการ...
+  <!-- รายการสินค้าแบบ 2 คอลัมน์ รูปขนาดเล็กตามโจทย์ -->
+  <div id="product-grid" class="grid grid-cols-2 gap-3">
+    <div class="col-span-full py-10 text-center text-xs text-amber-200 animate-pulse">
+      กำลังดึงข้อมูลวัตถุมงคลและบริการ...
     </div>
-  </div>
-
-  <!-- Modal ตะกร้าสินค้า (Cart Drawer / Modal) -->
-  <div id="cart-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300">
-    <div class="glossy-panel w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-5 max-h-[85vh] flex flex-col relative border-t sm:border border-amber-300/40">
-      
-      <!-- ส่วนหัวตะกร้า -->
-      <div class="flex justify-between items-center pb-3 border-b border-amber-300/20 mb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🛒</span>
-          <h3 class="text-sm font-bold bright-white-gold-text">ตะกร้าวัตถุมงคลของคุณ</h3>
-        </div>
-        <button onclick="toggleCartModal()" class="text-xs text-slate-400 hover:text-white px-2 py-1">✕ ปิด</button>
-      </div>
-
-      <!-- รายการสินค้าในตะกร้า -->
-      <div id="cart-items" class="overflow-y-auto space-y-3 pr-1 flex-1 min-h-[140px] max-h-[40vh]">
-        <div class="py-10 text-center text-xs text-slate-400">ยังไม่มีรายการในตะกร้า</div>
-      </div>
-
-      <!-- สรุปยอดและสั่งซื้อ -->
-      <div class="pt-4 border-t border-amber-300/20 mt-3 space-y-3">
-        <div class="flex justify-between items-baseline">
-          <span class="text-xs text-emerald-200">ยอดรวมทั้งสิ้น:</span>
-          <div>
-            <span id="cart-total-price" class="text-2xl font-extrabold bright-white-gold-text">0</span>
-            <span class="text-xs text-pearl-cream ml-1">บาท</span>
-          </div>
-        </div>
-
-        <button onclick="checkoutViaLine()" class="btn-gold-action w-full py-3.5 rounded-2xl text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2">
-          <span>💬</span> ส่งคำสั่งซื้อผ่าน LINE OA ทันที
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Toast แจ้งเตือนเมื่อกดใส่ตะกร้า -->
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-950/95 border border-amber-300/70 text-amber-200 px-4 py-2.5 rounded-full text-xs shadow-2xl flex items-center gap-2 pointer-events-none opacity-0 transition-opacity duration-300 z-50">
-    <span>✨</span> <span id="toast-msg">เพิ่มลงในตะกร้าเรียบร้อยแล้ว</span>
   </div>
 
   <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+    const MYSHOP_LIFF = "https://liff.line.me/1572442362-jGxDDGRp/@thewinmu";
 
-    let allProducts = [];
-    let currentFilter = 'all';
-    let cart = JSON.parse(localStorage.getItem("naga_cart") || "[]");
+    let allItems = [];
+    let currentCategory = 'all';
 
     window.onload = function() {
-      updateCartBadge();
-      loadProducts();
-    };
-
-    // โหลดสินค้าจาก Google Apps Script
-    function loadProducts() {
       fetch(`${WEB_URL}?action=get_services`)
         .then(r => r.json())
         .then(res => {
-          if (res.status === "success" && res.services && res.services.length > 0) {
-            allProducts = res.services;
-          } else {
-            // ชุดข้อมูลสำรอง (Fallback Products) ตรงตามธีมร้าน
-            allProducts = [
-              {
-                id: "PRD-01",
-                name: "จี้พญานาคราชมณีรัตนะ",
-                price: 999,
-                originalPrice: 1590,
-                type: "amulet",
-                description: "มวลสารแร่ดูดทรัพย์ เบิกเนตรเสริมบารมี ค้าขายร่ำรวย ป้องกันภัยรอบด้าน",
-                badge: "พิธีเบิกเนตรแล้ว",
-                stock: 9,
-                imageUrl: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80"
-              },
-              {
-                id: "PRD-02",
-                name: "น้ำปรุงทิพย์มนต์นาคราช (สูตรโบราณ)",
-                price: 499,
-                originalPrice: 690,
-                type: "amulet",
-                description: "กลิ่นหอมละมุน เสริมสง่าราศี เจรจาค้าขาย เมตตามหานิยม ติดต่อการงานราบรื่น",
-                badge: "สูตรลับครูบา",
-                stock: 12,
-                imageUrl: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80"
-              },
-              {
-                id: "PRD-03",
-                name: "ตรวจดวงชะตาญาณนาคราช (15 นาที)",
-                price: 199,
-                originalPrice: 299,
-                type: "service",
-                description: "เจาะลึกการงาน การเงิน ความรัก และวิธีแก้เคล็ดเปิดดวงเฉพาะบุคคล",
-                badge: "ยอดนิยม ✨",
-                stock: 99,
-                imageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80"
-              }
+          if (res.status === "success") {
+            allItems = [...(res.products || []), ...(res.services || [])];
+          }
+          if (allItems.length === 0) {
+            allItems = [
+              { name: "จี้พญานาคราชมณีรัตนะ", price: 999, category: "amulet", description: "แร่ดูดทรัพย์ เบิกเนตรเสริมโชคลาภ", imageId: "" },
+              { name: "น้ำปรุงทิพย์มนต์นาคราช", price: 499, category: "amulet", description: "สูตรลับโบราณ เมตตามหานิยม", imageId: "" },
+              { name: "ดูดวงญาณนาคราช 15 นาที", price: 108, category: "service", description: "ตรวจดวงชะตารอบเวลาเฉพาะบุคคล", imageId: "" }
             ];
           }
           renderProducts();
-        })
-        .catch(() => {
-          // หากเชื่อมต่อ API สะดุด ให้แสดงสินค้าตัวอย่าง
-          allProducts = [
-            {
-              id: "PRD-01",
-              name: "จี้พญานาคราชมณีรัตนะ",
-              price: 999,
-              originalPrice: 1590,
-              type: "amulet",
-              description: "มวลสารแร่ดูดทรัพย์ เบิกเนตรเสริมบารมี ค้าขายร่ำรวย ป้องกันภัยรอบด้าน",
-              badge: "พิธีเบิกเนตรแล้ว",
-              stock: 9,
-              imageUrl: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-              id: "PRD-03",
-              name: "ตรวจดวงชะตาญาณนาคราช (15 นาที)",
-              price: 199,
-              originalPrice: 299,
-              type: "service",
-              description: "เจาะลึกการงาน การเงิน ความรัก และวิธีแก้เคล็ดเปิดดวงเฉพาะบุคคล",
-              badge: "ยอดนิยม ✨",
-              stock: 99,
-              imageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80"
-            }
-          ];
+        }).catch(() => {
           renderProducts();
         });
-    }
+    };
 
-    // สลับแท็บหมวดหมู่
     function filterCategory(cat) {
-      currentFilter = cat;
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      document.getElementById(`tab-${cat}`).classList.add("active");
+      currentCategory = cat;
+      document.querySelectorAll("button[id^='tab-']").forEach(b => {
+        b.className = "px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-black/40 text-pearl-cream";
+      });
+      document.getElementById(`tab-${cat}`).className = "px-4 py-1.5 rounded-full text-xs border border-amber-300/30 bg-amber-400/20 text-white font-bold";
       renderProducts();
     }
 
-    // วาดการ์ดสินค้าป้ายราคาแนวตั้ง
     function renderProducts() {
-      const list = document.getElementById("product-list");
-      list.innerHTML = "";
+      const container = document.getElementById("product-grid");
+      container.innerHTML = "";
 
-      const filtered = allProducts.filter(p => {
-        if (currentFilter === "all") return true;
-        if (currentFilter === "amulet") return p.type !== "service" && !p.name.includes("ดูดวง") && !p.name.includes("คิว");
-        if (currentFilter === "service") return p.type === "service" || p.name.includes("ดูดวง") || p.name.includes("คิว");
+      const filtered = allItems.filter(item => {
+        if (currentCategory === 'all') return true;
+        if (currentCategory === 'amulet') return !item.category.includes("บริการ") && !item.name.includes("ดูดวง");
+        if (currentCategory === 'service') return item.category.includes("บริการ") || item.name.includes("ดูดวง");
         return true;
       });
 
-      if (filtered.length === 0) {
-        list.innerHTML = `<div class="py-10 text-center text-xs text-slate-400">ไม่พบรายการในหมวดหมู่นี้</div>`;
-        return;
-      }
-
       filtered.forEach(p => {
+        const isService = p.category.includes("บริการ") || p.name.includes("ดูดวง");
+        const actionUrl = isService ? `./booking.html?service=${encodeURIComponent(p.name)}` : MYSHOP_LIFF;
+        const btnLabel = isService ? "📅 จองคิว" : "🛒 บูชา";
+
+        // แสดงรูปประกอบขนาดเล็ก หากมี Drive ID
+        const imgTag = (p.imageId && p.imageId.length > 10) 
+          ? `<img src="https://drive.google.com/uc?id=${p.imageId}" class="w-12 h-12 object-cover rounded-lg border border-amber-300/30 mr-2 flex-shrink-0">`
+          : `<div class="w-12 h-12 rounded-lg bg-emerald-950 border border-amber-300/30 flex items-center justify-center text-lg mr-2 flex-shrink-0">🐍</div>`;
+
         const card = document.createElement("div");
-        card.className = "product-card p-4 relative overflow-hidden flex flex-col justify-between";
-
-        const origPriceText = p.originalPrice ? `<span class="text-[10px] text-slate-400 line-through mr-1.5">฿${p.originalPrice.toLocaleString()}</span>` : '';
-        const badgeText = p.badge || (p.type === 'service' ? 'บริการญาณพยากรณ์' : 'พิธีเบิกเนตรแล้ว');
-        const imgUrl = p.imageUrl || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80";
-
+        card.className = "product-mini-card p-3 flex flex-col justify-between";
         card.innerHTML = `
-          <!-- ป้ายสถานะ & แบรนด์ -->
-          <div class="flex justify-between items-center mb-2.5">
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-950/90 border border-emerald-400/40 text-emerald-300">
-              ${badgeText}
-            </span>
-            <span class="text-[10px] text-slate-400 font-light">พร้อมบูชา</span>
-          </div>
-
-          <!-- รูปภาพสินค้า -->
-          <div class="w-full h-44 rounded-xl overflow-hidden border border-amber-300/30 mb-3 bg-black/40 relative">
-            <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-cover">
-          </div>
-
-          <!-- รายละเอียดสินค้า -->
-          <div class="space-y-1 mb-3">
-            <h3 class="text-sm font-bold bright-white-gold-text leading-snug">${p.name}</h3>
-            <p class="text-[11px] text-emerald-200/90 font-light line-clamp-2">${p.description || 'สิริมงคลหนุนดวงชะตา'}</p>
-          </div>
-
-          <!-- แถบราคาและปุ่มใส่ตะกร้า -->
-          <div class="glossy-panel rounded-xl p-2.5 flex justify-between items-center border border-amber-300/20">
-            <div>
-              <div class="text-[9px] text-emerald-300">ราคาบูชาพิเศษ</div>
-              <div>
-                ${origPriceText}
-                <span class="text-base font-extrabold bright-white-gold-text">฿${Number(p.price).toLocaleString()}</span>
+          <div>
+            <div class="flex items-center mb-2">
+              ${imgTag}
+              <div class="overflow-hidden">
+                <span class="text-[9px] text-emerald-300 font-bold uppercase">${isService ? 'บริการ' : 'วัตถุมงคล'}</span>
+                <h3 class="text-xs font-bold text-white leading-tight line-clamp-1">${p.name}</h3>
               </div>
             </div>
-
-            <!-- ปุ่มดำเนินการ -->
-            ${p.type === 'service' || p.name.includes("ดูดวง") ? 
-              `<a href="./booking.html?service=${encodeURIComponent(p.name)}" class="btn-gold-action px-3.5 py-2 rounded-xl text-[11px] font-bold flex items-center gap-1">
-                <span>📅</span> จองคิว
-              </a>` : 
-              `<button onclick="addToCart('${p.id}')" class="btn-gold-action px-3.5 py-2 rounded-xl text-[11px] font-bold flex items-center gap-1">
-                <span>🛒</span> บูชา
-              </button>`
-            }
+            <p class="text-[10px] text-slate-300 font-light line-clamp-2 mb-2">${p.description || '-'}</p>
+          </div>
+          <div class="pt-2 border-t border-white/5 flex items-center justify-between">
+            <span class="text-xs font-bold bright-white-gold-text">฿${Number(p.price).toLocaleString()}</span>
+            <a href="${actionUrl}" target="${isService ? '_self' : '_blank'}" class="btn-gold-action px-2.5 py-1 rounded-lg text-[10px] font-bold">
+              ${btnLabel}
+            </a>
           </div>
         `;
-        list.appendChild(card);
+        container.appendChild(card);
       });
-    }
-
-    // จัดการตะกร้าสินค้า
-    function addToCart(productId) {
-      const prod = allProducts.find(p => p.id === productId);
-      if (!prod) return;
-
-      const existing = cart.find(item => item.id === productId);
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({
-          id: prod.id,
-          name: prod.name,
-          price: prod.price,
-          qty: 1
-        });
-      }
-
-      saveCart();
-      showToast(`เพิ่ม "${prod.name}" ลงในตะกร้าแล้ว`);
-    }
-
-    function saveCart() {
-      localStorage.setItem("naga_cart", JSON.stringify(cart));
-      updateCartBadge();
-      renderCartItems();
-    }
-
-    function updateCartBadge() {
-      const countEl = document.getElementById("cart-count");
-      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-      if (totalQty > 0) {
-        countEl.innerText = totalQty;
-        countEl.classList.remove("hidden");
-      } else {
-        countEl.classList.add("hidden");
-      }
-    }
-
-    function toggleCartModal() {
-      const modal = document.getElementById("cart-modal");
-      modal.classList.toggle("hidden");
-      if (!modal.classList.contains("hidden")) {
-        renderCartItems();
-      }
-    }
-
-    function renderCartItems() {
-      const container = document.getElementById("cart-items");
-      const totalEl = document.getElementById("cart-total-price");
-      container.innerHTML = "";
-
-      if (cart.length === 0) {
-        container.innerHTML = `<div class="py-10 text-center text-xs text-slate-400">ยังไม่มีรายการในตะกร้า</div>`;
-        totalEl.innerText = "0";
-        return;
-      }
-
-      let total = 0;
-      cart.forEach((item, index) => {
-        total += item.price * item.qty;
-        const div = document.createElement("div");
-        div.className = "flex justify-between items-center p-2.5 rounded-xl bg-black/40 border border-white/10 text-xs";
-        div.innerHTML = `
-          <div class="flex-1 pr-2">
-            <div class="font-bold text-amber-200 line-clamp-1">${item.name}</div>
-            <div class="text-[10px] text-emerald-300">฿${Number(item.price).toLocaleString()} x ${item.qty}</div>
-          </div>
-          <div class="flex items-center gap-2">
-            <button onclick="changeQty(${index}, -1)" class="w-6 h-6 rounded bg-emerald-950 border border-amber-300/30 text-amber-200 flex items-center justify-center font-bold">-</button>
-            <span class="text-xs font-bold text-white">${item.qty}</span>
-            <button onclick="changeQty(${index}, 1)" class="w-6 h-6 rounded bg-emerald-950 border border-amber-300/30 text-amber-200 flex items-center justify-center font-bold">+</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-
-      totalEl.innerText = total.toLocaleString();
-    }
-
-    function changeQty(index, delta) {
-      cart[index].qty += delta;
-      if (cart[index].qty <= 0) {
-        cart.splice(index, 1);
-      }
-      saveCart();
-    }
-
-    // สั่งซื้อส่งตรงเข้า LINE Official Account
-    function checkoutViaLine() {
-      if (cart.length === 0) {
-        alert("กรุณาเลือกวัตถุมงคลลงในตะกร้าก่อนทำการสั่งซื้อครับ");
-        return;
-      }
-
-      let summary = "🙏 สนใจสั่งบูชาวัตถุมงคล (วินทร์ทรัพย์นาคราช):\n";
-      let total = 0;
-      cart.forEach((item, idx) => {
-        summary += `${idx + 1}. ${item.name} (${item.qty} ชิ้น) - ฿${(item.price * item.qty).toLocaleString()}\n`;
-        total += item.price * item.qty;
-      });
-      summary += `\n💰 ยอดรวมทั้งสิ้น: ${total.toLocaleString()} บาท\nรบกวนแอดมินยืนยันยอดและช่องทางจัดส่งครับ ✨`;
-
-      // ล้างตะกร้าและเปิด LINE
-      localStorage.removeItem("naga_cart");
-      cart = [];
-      updateCartBadge();
-      toggleCartModal();
-
-      const lineOAUrl = `https://line.me/R/oaMessage/@thewinmu/?${encodeURIComponent(summary)}`;
-      window.location.href = lineOAUrl;
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById("toast");
-      document.getElementById("toast-msg").innerText = msg;
-      toast.classList.remove("opacity-0");
-      setTimeout(() => {
-        toast.classList.add("opacity-0");
-      }, 2000);
     }
   </script>
 </body>

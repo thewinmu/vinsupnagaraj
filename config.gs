@@ -1,15 +1,16 @@
-// config.js - การตั้งค่าระบบเชื่อมต่อ วินทร์ทรัพย์นาคราช
-
-const APP_CONFIG = {
-  // Web App URL จาก Google Apps Script
-  WEB_URL: "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec", 
-  
-  // ข้อมูล LIFF ID สำหรับเชื่อมต่อแต่ละหน้า
-  LIFF: {
-    BOOKING: "2007499712-B0uid9G3",
-    PICKACARD_HUB: "2007499712-07LXXVaY",
-    PICKACARD: "2007499712-EtMhu4c2",
-    MEMBERSHIPS: "2007499712-J15McRGz",
-    MUTERU_SHOP: "2007499712-3e6TMnJJ"
-  }
+/**
+ * วินทร์ทรัพย์นาคราช (@thewinmu) - Master System Config
+ * ไฟล์ศูนย์รวม Web App URL ที่ทุกหน้าเว็บจะเรียกใช้งานร่วมกัน
+ */
+const SYSTEM_CONFIG = {
+  API_URL: "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec",
+  LAST_UPDATED: "2026-10-22"
 };
+
+function getMasterApiUrl() {
+  const cachedUrl = localStorage.getItem("NAGA_MASTER_API_URL");
+  if (cachedUrl && cachedUrl.startsWith("https://script.google.com/macros/s/")) {
+    return cachedUrl;
+  }
+  return SYSTEM_CONFIG.API_URL;
+}

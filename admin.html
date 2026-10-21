@@ -3,157 +3,432 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ระบบจัดการรอบเวลาคิวดูดวง | วินทร์ทรัพย์นาคราช</title>
+  <title>ระบบบริหารจัดการหลังบ้าน • วินทร์ทรัพย์นาคราช</title>
   
-  <script src="./config.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
   <style>
-    body { font-family: 'Prompt', sans-serif; background-color: #F8FAFC; color: #0F172A; -webkit-tap-highlight-color: transparent; }
-    .slot-open { background-color: #ECFDF5; border: 1.5px solid #10B981; color: #065F46; }
-    .slot-blocked { background-color: #FEF2F2; border: 1.5px solid #EF4444; color: #991B1B; }
+    :root {
+      --bg-deep: #01140f;
+      --pearl-cream: #fbfbee;
+      --gold-bright: #fef9c3;
+      --gold-mid: #fef08a;
+      --gold-dark: #ca8a04;
+      --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.88) 0%, rgba(2, 16, 12, 0.96) 100%);
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #064e3b 0%, var(--bg-deep) 45%, #000806 100%);
+      color: var(--pearl-cream);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .bright-white-gold-text {
+      background: linear-gradient(135deg, #ffffff 0%, var(--gold-bright) 30%, var(--gold-mid) 65%, var(--gold-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 25px rgba(254, 249, 195, 0.4);
+    }
+
+    .glossy-panel {
+      background: var(--glossy-card);
+      border: 1px solid rgba(254, 240, 138, 0.28);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .custom-input {
+      background: rgba(2, 22, 17, 0.85);
+      border: 1px solid rgba(254, 240, 138, 0.35);
+      color: var(--pearl-cream);
+      transition: all 0.2s ease;
+    }
+    .custom-input:focus {
+      outline: none;
+      border-color: #fef08a;
+      box-shadow: 0 0 14px rgba(254, 240, 138, 0.4);
+    }
+
+    .tab-admin.active {
+      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
+      color: #022c22;
+      font-weight: 700;
+    }
+
+    /* สวิตช์เปิด-ปิด iOS Style */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #374151; transition: .3s; border-radius: 24px;
+      border: 1px solid rgba(254, 240, 138, 0.2);
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 2px;
+      background-color: white; transition: .3s; border-radius: 50%;
+    }
+    input:checked + .slider { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
+    input:checked + .slider:before { transform: translateX(20px); }
   </style>
 </head>
-<body class="p-4 max-w-md mx-auto min-h-screen flex flex-col justify-between">
-  <div>
-    <!-- Executive Admin Header -->
-    <header class="bg-slate-900 text-white p-5 rounded-3xl mb-4 shadow-sm border border-slate-800">
-      <div class="text-[11px] text-amber-400 font-bold uppercase tracking-wider">ระบบจัดการหลังบ้าน</div>
-      <h1 class="text-base font-extrabold mt-0.5">เปิด-ปิดรอบคิวพยากรณ์</h1>
-      <p class="text-xs text-slate-400 mt-1">แตะที่กล่องรอบเวลาเพื่อสลับ ว่าง 🟢 / เต็ม 🔴</p>
-    </header>
+<body class="p-3 sm:p-6 max-w-4xl mx-auto pb-32">
 
-    <!-- กล่องเลือกวันที่ -->
-    <div class="bg-white p-4 rounded-3xl border border-slate-200 mb-4 shadow-sm">
-      <label class="text-xs font-bold text-slate-700 block mb-1.5">📅 เลือกวันที่ต้องการจัดการ</label>
-      <input type="date" id="manage-date" onchange="loadAdminSlots()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-slate-900">
-      
-      <!-- ปุ่มทางลัด ปิด/เปิดทั้งวัน -->
-      <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100">
-        <button onclick="setAllDay(true)" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-bold transition active:scale-95">
-          🔴 ปิดรับทั้งวัน
-        </button>
-        <button onclick="setAllDay(false)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-2.5 rounded-xl text-xs font-bold transition active:scale-95">
-          🟢 เปิดรับทั้งวัน
-        </button>
+  <!-- ส่วนหัวแผงควบคุม -->
+  <div class="flex flex-wrap items-center justify-between gap-3 py-3 mb-4 border-b border-amber-300/20">
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-full bg-emerald-950/90 border border-amber-300/40 flex items-center justify-center shadow-lg">
+        <span class="text-xl">⚙️</span>
+      </div>
+      <div>
+        <h1 class="text-sm font-extrabold bright-white-gold-text tracking-wider uppercase">Master Console • @thewinmu</h1>
+        <p class="text-[10px] text-emerald-300">ระบบควบคุมกลาง CRM & สถิติวิเคราะห์มงคล</p>
       </div>
     </div>
-
-    <!-- รายการ 15 คิว -->
-    <div class="flex justify-between items-center mb-2 px-1">
-      <span class="text-xs font-bold text-slate-700">รอบเวลาทั้งหมด (15 คิว)</span>
-      <div class="text-[10px] font-bold flex gap-2">
-        <span class="text-emerald-700 font-extrabold">🟢 ว่าง (เปิด)</span>
-        <span class="text-rose-700 font-extrabold">🔴 เต็ม (ปิด)</span>
-      </div>
-    </div>
-
-    <div id="admin-slots-container" class="grid grid-cols-2 gap-2.5 max-h-[55vh] overflow-y-auto p-1">
-      <div class="col-span-2 text-center text-xs text-slate-400 py-8 font-bold">กำลังโหลดข้อมูลรอบคิว...</div>
+    
+    <div class="flex gap-2">
+      <a href="https://shop.line.me/@thewinmu" target="_blank" class="text-xs bg-emerald-900/60 border border-emerald-400/40 px-3 py-1.5 rounded-xl hover:bg-emerald-800 transition">
+        🛍️ MyShop
+      </a>
+      <button onclick="refreshAll()" class="text-xs bg-black/60 border border-amber-300/40 px-3 py-1.5 rounded-xl text-amber-200 hover:border-amber-300 transition">
+        🔄 อัปเดต
+      </button>
     </div>
   </div>
 
-  <footer class="text-center py-4 text-[11px] text-slate-400">
-    วินทร์ทรัพย์นาคราช Backoffice • ซิงค์กับชีต <span class="font-bold text-slate-600">slot_blocks</span>
-  </footer>
+  <!-- แถบเลือกโหมดการทำงาน -->
+  <div class="flex gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
+    <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-admin active px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📊 สถิติ & เปอร์เซ็นต์</button>
+    <button onclick="switchTab('switches')" id="btn-switches" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">🎚️ เปิด/ปิด ระบบ</button>
+    <button onclick="switchTab('crm')" id="btn-crm" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">👥 ตรวจสอบ CRM</button>
+    <button onclick="switchTab('broadcast')" id="btn-broadcast" class="tab-admin px-4 py-2 rounded-xl text-xs whitespace-nowrap border border-white/10">📢 ประกาศ Broadcast</button>
+  </div>
+
+  <!-- TAB 1: วิเคราะห์สถิติ เปอร์เซ็นต์ (รายวัน / รายเดือน / รายปี) -->
+  <div id="tab-pane-analytics" class="space-y-4">
+    <!-- ภาพรวม Conversion Rate -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-emerald-300">👥 สมาชิกทั้งหมด</div>
+        <div id="stat-total-members" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
+        <div class="text-[9px] text-slate-400 mt-1">ลงทะเบียนในระบบ</div>
+      </div>
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-amber-300">📈 Conversion วันนี้</div>
+        <div id="stat-daily-cr" class="text-2xl font-extrabold text-amber-200 mt-1">0%</div>
+        <div class="text-[9px] text-slate-400 mt-1">ผู้เข้าชม ➔ จองคิว</div>
+      </div>
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-emerald-300">🔮 เปิดไพ่วันนี้</div>
+        <div id="stat-daily-picks" class="text-2xl font-extrabold bright-white-gold-text mt-1">0</div>
+        <div class="text-[9px] text-slate-400 mt-1">สถิติ Pick a Card</div>
+      </div>
+      <div class="glossy-panel p-4 rounded-2xl">
+        <div class="text-[10px] text-amber-300">📅 การจองเดือนนี้</div>
+        <div id="stat-monthly-bookings" class="text-2xl font-extrabold text-amber-200 mt-1">0</div>
+        <div class="text-[9px] text-slate-400 mt-1">รอบเวลา 15 นาที</div>
+      </div>
+    </div>
+
+    <!-- ตารางเปรียบเทียบสถิติรอบเวลา -->
+    <div class="glossy-panel rounded-2xl p-5">
+      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-3">สรุปผลการวัดกิจกรรมในระบบ</h3>
+      <div class="overflow-x-auto text-xs">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-white/10 text-slate-400 text-[11px]">
+              <th class="py-2">ช่วงเวลา</th>
+              <th>ผู้เข้าชม (คน)</th>
+              <th>เปิดไพ่ (ครั้ง)</th>
+              <th>จองคิวสำเร็จ</th>
+              <th>อัตราผลสัมฤทธิ์</th>
+            </tr>
+          </thead>
+          <tbody id="analytics-table-body" class="divide-y divide-white/5">
+            <tr>
+              <td class="py-3 font-bold text-emerald-300">รายวัน (Today)</td>
+              <td id="tr-day-vis">-</td>
+              <td id="tr-day-pick">-</td>
+              <td id="tr-day-book">-</td>
+              <td id="tr-day-pct" class="text-amber-300 font-bold">-</td>
+            </tr>
+            <tr>
+              <td class="py-3 font-bold text-emerald-300">รายเดือน (This Month)</td>
+              <td id="tr-mon-vis">-</td>
+              <td id="tr-mon-pick">-</td>
+              <td id="tr-mon-book">-</td>
+              <td id="tr-mon-pct" class="text-amber-300 font-bold">-</td>
+            </tr>
+            <tr>
+              <td class="py-3 font-bold text-emerald-300">รายปี (This Year)</td>
+              <td id="tr-yr-vis">-</td>
+              <td id="tr-yr-pick">-</td>
+              <td id="tr-yr-book">-</td>
+              <td id="tr-yr-pct" class="text-amber-300 font-bold">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: สวิตช์ เปิด/ปิด โมดูลระบบทั้งหมด -->
+  <div id="tab-pane-switches" class="hidden space-y-4">
+    <div class="glossy-panel rounded-2xl p-5">
+      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-4">ควบคุมการเปิดให้บริการของแต่ละโมดูล</h3>
+      
+      <div class="space-y-4 text-xs">
+        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
+          <div>
+            <div class="font-bold text-white">ระบบจองคิวรอบเวลา (15 นาที)</div>
+            <div class="text-[10px] text-slate-400">ปิดเพื่อระงับการจองคิวใหม่ชั่วคราว</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sw-booking" onchange="toggleModule('booking_system', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
+          <div>
+            <div class="font-bold text-white">ระบบ Pick a Card (ไพ่นาคราช)</div>
+            <div class="text-[10px] text-slate-400">สวิตช์ควบคุมหน้าเสี่ยงทายไพ่ 6 หมวด</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sw-oracle" onchange="toggleModule('oracle_system', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
+          <div>
+            <div class="font-bold text-white">ระบบเชื่อมต่อร้านค้า MyShop</div>
+            <div class="text-[10px] text-slate-400">ควบคุมการแสดงปุ่มและตะกร้าสั่งซื้อ</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sw-myshop" onchange="toggleModule('myshop_system', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
+          <div>
+            <div class="font-bold text-white">ระบบรับลงทะเบียนสมาชิกใหม่</div>
+            <div class="text-[10px] text-slate-400">เปิดสิทธิ์ Free Trial 30 วันอัตโนมัติ</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="sw-reg" onchange="toggleModule('registration_system', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: ตรวจสอบ ค้นหา CRM และแก้ไขชีต -->
+  <div id="tab-pane-crm" class="hidden space-y-4">
+    <div class="glossy-panel rounded-2xl p-5">
+      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-3">ค้นหาข้อมูลลูกค้า สมาชิก และคิวจอง</h3>
+      <div class="flex gap-2 mb-4">
+        <input type="text" id="crm-search-box" placeholder="ค้นหาด้วย ชื่อ, รหัสสมาชิก M-XXX, หรือเบอร์โทร..." class="custom-input w-full p-3 rounded-xl text-xs">
+        <button onclick="performCRMSearch()" class="px-5 py-2 rounded-xl bg-amber-400 text-black font-bold text-xs flex-shrink-0">ค้นหา</button>
+      </div>
+
+      <div id="crm-results" class="space-y-3">
+        <div class="text-center py-8 text-xs text-slate-400">พิมพ์คำค้นหาเพื่อดึงข้อมูลจากระบบ Google Sheets</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: ข้อความประกาศ Broadcast ส่งถึงลูกค้า -->
+  <div id="tab-pane-broadcast" class="hidden space-y-4">
+    <div class="glossy-panel rounded-2xl p-5">
+      <h3 class="text-xs font-bold text-amber-200 uppercase tracking-widest mb-2">ส่งสาส์นประกาศ Broadcast ผ่าน LINE Official Account</h3>
+      <p class="text-[11px] text-slate-300 mb-4 font-light">ระบบจะส่งข้อความประกาศแจ้งเตือนเข้าแชท LINE ของสมาชิกลูกค้าทุกคนโดยตรง</p>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">กลุ่มเป้าหมายผู้รับสาร</label>
+          <select id="bc-target" class="custom-input w-full p-2.5 rounded-xl text-xs">
+            <option value="all">สมาชิกทั้งหมดในระบบ</option>
+            <option value="trial_users">ผู้ที่อยู่ในช่วงทดลองใช้ฟรี 30 วัน</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1">ข้อความสาส์นประกาศมงคล</label>
+          <textarea id="bc-message" rows="4" placeholder="พิมพ์ข้อความที่ต้องการประกาศ เช่น แจ้งรอบวันทำนายพิเศษ หรือเปิดรับวัตถุมงคลรุ่นใหม่..." class="custom-input w-full p-3 rounded-xl text-xs resize-none"></textarea>
+        </div>
+
+        <button onclick="dispatchBroadcast()" id="btn-send-bc" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-black font-bold text-xs shadow-lg hover:brightness-110 transition">
+          🚀 ยืนยันการส่งข้อความ Broadcast ทันที
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbzrsGqScvhhIR3pnXGXw8KlOQ_rtWE86rzRjcJZoZd1Pl_knar_uvgH4EWEOinv2QKV/exec";
-    const WEB_URL = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB_URL) ? APP_CONFIG.WEB_URL : DEFAULT_URL;
+    const API_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
 
     window.onload = function() {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('manage-date').value = today;
-      loadAdminSlots();
+      refreshAll();
     };
 
-    function loadAdminSlots() {
-      const date = document.getElementById('manage-date').value;
-      const container = document.getElementById('admin-slots-container');
-      container.innerHTML = '<div class="col-span-2 text-center text-xs text-slate-400 py-8 font-bold">กำลังเช็ครอบเวลา...</div>';
+    function refreshAll() {
+      loadAnalytics();
+      loadSwitches();
+    }
 
-      fetch(`${WEB_URL}?action=admin_get_slots&date=${date}`, {
-        method: "GET",
-        mode: "cors",
-        redirect: "follow"
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-admin").forEach(b => b.classList.remove("active"));
+      document.getElementById(`btn-${tabId}`).classList.add("active");
+
+      document.getElementById("tab-pane-analytics").classList.add("hidden");
+      document.getElementById("tab-pane-switches").classList.add("hidden");
+      document.getElementById("tab-pane-crm").classList.add("hidden");
+      document.getElementById("tab-pane-broadcast").classList.add("hidden");
+
+      document.getElementById(`tab-pane-${tabId}`).classList.remove("hidden");
+    }
+
+    function loadAnalytics() {
+      fetch(`${API_URL}?action=get_dashboard_analytics`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            const d = res.data;
+            document.getElementById("stat-total-members").innerText = d.totalMembers;
+            document.getElementById("stat-daily-cr").innerText = `${d.daily.conversionPct}%`;
+            document.getElementById("stat-daily-picks").innerText = d.daily.picks;
+            document.getElementById("stat-monthly-bookings").innerText = d.monthly.bookings;
+
+            // ตารางสรุป
+            document.getElementById("tr-day-vis").innerText = d.daily.visitors;
+            document.getElementById("tr-day-pick").innerText = d.daily.picks;
+            document.getElementById("tr-day-book").innerText = d.daily.bookings;
+            document.getElementById("tr-day-pct").innerText = `${d.daily.conversionPct}%`;
+
+            document.getElementById("tr-mon-vis").innerText = d.monthly.visitors;
+            document.getElementById("tr-mon-pick").innerText = d.monthly.picks;
+            document.getElementById("tr-mon-book").innerText = d.monthly.bookings;
+            document.getElementById("tr-mon-pct").innerText = `${d.monthly.conversionPct}%`;
+
+            document.getElementById("tr-yr-vis").innerText = d.yearly.visitors;
+            document.getElementById("tr-yr-pick").innerText = d.yearly.picks;
+            document.getElementById("tr-yr-book").innerText = d.yearly.bookings;
+            document.getElementById("tr-yr-pct").innerText = "-";
+          }
+        });
+    }
+
+    function loadSwitches() {
+      fetch(`${API_URL}?action=get_system_switches`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === "success") {
+            const sw = res.switches;
+            document.getElementById("sw-booking").checked = sw.booking_system;
+            document.getElementById("sw-oracle").checked = sw.oracle_system;
+            document.getElementById("sw-myshop").checked = sw.myshop_system;
+            document.getElementById("sw-reg").checked = sw.registration_system;
+          }
+        });
+    }
+
+    function toggleModule(key, status) {
+      fetch(`${API_URL}?action=toggle_system_switch&key=${key}&status=${status}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status !== "success") alert("ปรับเปลี่ยนสถานะล้มเหลว");
+        });
+    }
+
+    function performCRMSearch() {
+      const q = document.getElementById("crm-search-box").value.trim();
+      const resContainer = document.getElementById("crm-results");
+      if (!q) return;
+
+      resContainer.innerHTML = `<div class="py-4 text-center text-xs text-amber-200 animate-pulse">กำลังสแกนฐานข้อมูล...</div>`;
+
+      fetch(`${API_URL}?action=search_crm&query=${encodeURIComponent(q)}`)
+        .then(r => r.json())
+        .then(res => {
+          resContainer.innerHTML = "";
+          if (res.status === "success") {
+            const members = res.results.members || [];
+            const bookings = res.results.bookings || [];
+
+            if (members.length === 0 && bookings.length === 0) {
+              resContainer.innerHTML = `<div class="py-6 text-center text-xs text-slate-400">ไม่พบข้อมูลที่ตรงกับคำค้นหา</div>`;
+              return;
+            }
+
+            // แสดงรายการสมาชิก
+            members.forEach(m => {
+              const div = document.createElement("div");
+              div.className = "p-3 rounded-xl bg-black/40 border border-white/5 text-xs flex justify-between items-center";
+              div.innerHTML = `
+                <div>
+                  <div class="font-bold text-amber-200">${m.name} (${m.code})</div>
+                  <div class="text-[10px] text-slate-400">เบอร์: ${m.phone} | ทรัพย์: ฿${m.balance} | สถานะ: ${m.status}</div>
+                </div>
+                <div class="text-[10px] text-emerald-400 font-bold">แถวที่ ${m.rowIdx}</div>
+              `;
+              resContainer.appendChild(div);
+            });
+
+            // แสดงรายการจองคิว
+            bookings.forEach(b => {
+              const div = document.createElement("div");
+              div.className = "p-3 rounded-xl bg-emerald-950/40 border border-emerald-400/20 text-xs flex justify-between items-center";
+              div.innerHTML = `
+                <div>
+                  <div class="font-bold text-white">📅 คิว: ${b.name}</div>
+                  <div class="text-[10px] text-emerald-300">วัน: ${b.date} เวลา ${b.slot} (${b.service})</div>
+                </div>
+                <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-900 border border-emerald-400/30 text-emerald-300">${b.status}</span>
+              `;
+              resContainer.appendChild(div);
+            });
+          }
+        });
+    }
+
+    function dispatchBroadcast() {
+      const msg = document.getElementById("bc-message").value.trim();
+      const target = document.getElementById("bc-target").value;
+      if (!msg) {
+        alert("กรุณากรอกข้อความก่อนส่งประกาศ");
+        return;
+      }
+
+      if (!confirm("ยืนยันการส่งข้อความ Broadcast ไปยังสมาชิกทุกคน?")) return;
+
+      const btn = document.getElementById("btn-send-bc");
+      btn.disabled = true;
+      btn.innerText = "⏳ กำลังกระจายข้อความผ่านระบบ LINE...";
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "send_broadcast", message: msg, targetGroup: target })
       })
-      .then(r => {
-        if (!r.ok) throw new Error("HTTP Status " + r.status);
-        return r.json();
-      })
+      .then(r => r.json())
       .then(res => {
-        if (res.status === "success" && Array.isArray(res.slots)) {
-          container.innerHTML = "";
-          res.slots.forEach(s => {
-            let btn = document.createElement('button');
-            const isBlocked = s.isBlocked;
-            btn.className = `${isBlocked ? 'slot-blocked' : 'slot-open'} p-3 rounded-2xl text-xs font-bold transition active:scale-95 text-center flex flex-col justify-center items-center shadow-sm`;
-            btn.innerHTML = `
-              <div class="text-[10px] ${isBlocked ? 'text-rose-800' : 'text-emerald-800'} font-extrabold mb-0.5">คิวที่ ${s.queue}</div>
-              <div class="font-bold">${s.time}</div>
-              <div class="text-[9px] ${isBlocked ? 'text-rose-600' : 'text-emerald-600'} font-extrabold mt-1">
-                ${isBlocked ? '🔴 เต็ม (ปิด)' : '🟢 ว่าง (เปิด)'}
-              </div>
-              ${s.reason ? `<div class="text-[8px] text-slate-400 mt-0.5 truncate max-w-full">${s.reason}</div>` : ''}
-            `;
-            
-            btn.onclick = () => toggleSlot(date, s.time, !isBlocked);
-            container.appendChild(btn);
-          });
+        btn.disabled = false;
+        btn.innerText = "🚀 ยืนยันการส่งข้อความ Broadcast ทันที";
+        if (res.status === "success") {
+          alert(`ส่งประกาศสำเร็จเรียบร้อย ถึงสมาชิก ${res.count} ท่าน`);
+          document.getElementById("bc-message").value = "";
         } else {
-          throw new Error(res.message || "ข้อมูลไม่ถูกต้อง");
-        }
-      })
-      .catch(err => {
-        container.innerHTML = `
-          <div class="col-span-2 text-center py-6">
-            <div class="text-rose-500 text-xs font-bold mb-2">⚠️ ${err.message}</div>
-            <button onclick="loadAdminSlots()" class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-xl active:scale-95 transition">
-              🔄 กดเพื่อโหลดใหม่อีกครั้ง
-            </button>
-          </div>
-        `;
-      });
-    }
-
-    function toggleSlot(date, timeSlot, setBlocked) {
-      fetch(WEB_URL, {
-        method: "post",
-        contentType: "application/json",
-        body: JSON.stringify({
-          action: "admin_toggle_slot",
-          date: date,
-          timeSlot: timeSlot,
-          isBlocked: setBlocked
-        })
-      })
-      .then(r => r.json())
-      .then(res => {
-        if (res.status === "success") {
-          loadAdminSlots();
-        }
-      });
-    }
-
-    function setAllDay(setBlocked) {
-      const date = document.getElementById('manage-date').value;
-      const confirmText = setBlocked ? "ต้องการปิดรับคิวทั้งวัน ใช่หรือไม่?" : "ต้องการเปิดรับคิวทั้งวัน ใช่หรือไม่?";
-      if (!confirm(confirmText)) return;
-
-      fetch(WEB_URL, {
-        method: "post",
-        contentType: "application/json",
-        body: JSON.stringify({
-          action: "admin_toggle_all_day",
-          date: date,
-          isBlocked: setBlocked
-        })
-      })
-      .then(r => r.json())
-      .then(res => {
-        if (res.status === "success") {
-          loadAdminSlots();
+          alert("เกิดข้อผิดพลาด: " + res.message);
         }
       });
     }

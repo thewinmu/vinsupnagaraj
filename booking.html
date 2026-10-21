@@ -16,7 +16,7 @@
       --gold-bright: #fef9c3;
       --gold-mid: #fef08a;
       --gold-dark: #ca8a04;
-      --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.88) 0%, rgba(2, 16, 12, 0.96) 100%);
+      --glossy-card: linear-gradient(145deg, rgba(4, 41, 31, 0.9) 0%, rgba(2, 16, 12, 0.98) 100%);
     }
 
     body {
@@ -39,7 +39,6 @@
       border: 1px solid rgba(254, 240, 138, 0.28);
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
     }
 
     .custom-input {
@@ -89,9 +88,10 @@
 </head>
 <body class="p-4 sm:p-6 max-w-lg mx-auto flex flex-col pb-28">
 
+  <!-- Header โลโก้จริง -->
   <div class="flex items-center justify-between py-3 mb-4">
     <button onclick="window.location.href='./index.html'" class="text-xs text-pearl-cream bg-black/60 border border-amber-300/30 px-4 py-2 rounded-full hover:border-amber-300 transition shadow-md">
-      ⟨ กลับหน้าร้าน
+      ⟨ หน้าร้านค้า
     </button>
     <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="text-xs text-amber-200 border border-amber-300/30 px-3 py-1.5 rounded-full bg-black/40">
       🎵 TikTok @thewinmu
@@ -101,75 +101,96 @@
   <div class="text-center mb-6 relative">
     <div class="relative w-16 h-16 mx-auto mb-2 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-emerald-500 to-amber-200 shadow-[0_0_20px_rgba(254,240,138,0.55)]">
       <div class="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden">
-        <img src="./logo.png" alt="วินทร์ทรัพย์นาคราช" class="w-full h-full object-contain p-1">
+        <img src="./logo.png" alt="ตราพญานาคราช" class="w-full h-full object-contain p-1"> <!--[cite: 3] -->
       </div>
     </div>
-    <h1 class="text-2xl sm:text-3xl font-extrabold bright-white-gold-text mb-1">จองคิวตรวจดวงชะตา</h1>
-    <p class="text-xs text-emerald-200/90 tracking-wider">จัดสรรเวลา 15 นาที • ตรวจนับคิวแบบวันต่อวัน</p>
+    <h1 class="text-2xl sm:text-3xl font-extrabold bright-white-gold-text mb-1">จองคิวดูดวงสนทนาสด</h1>
+    <p class="text-xs text-emerald-200/90 tracking-wider">จัดสรรเวลาโทรเป็นนาที • ตรวจนับคิววันต่อวัน</p>
   </div>
 
-  <div class="glossy-panel rounded-3xl p-5 sm:p-6 space-y-5">
+  <!-- ฟอร์มการจอง (ตัดช่องชื่อ เบอร์ เรื่องถามล่วงหน้าออกทั้งหมด) -->
+  <div id="booking-box" class="glossy-panel rounded-3xl p-5 sm:p-6 space-y-5">
+    <!-- 1. เลือกแพ็กเกจ (เฉพาะโทรรายนาที) -->
     <div>
       <label class="block text-xs font-bold text-amber-200 mb-2 flex items-center gap-1.5">
-        <span>📜</span> 1. เลือกแพ็กเกจบริการ
+        <span>📞</span> 1. เลือกแพ็กเกจโทรดูดวงสด
       </label>
       <select id="service-select" onchange="onServiceChanged()" class="custom-input w-full p-3.5 rounded-xl text-xs sm:text-sm"></select>
       <div id="service-desc" class="text-[11px] text-emerald-300/80 mt-1.5 px-1 font-light"></div>
     </div>
 
+    <!-- 2. เลือกวัน -->
     <div>
       <label class="block text-xs font-bold text-amber-200 mb-2 flex items-center gap-1.5">
-        <span>📅</span> 2. เลือกวันที่เปิดรับญาณ (จัดการวันต่อวัน)
+        <span>📅</span> 2. เลือกวันที่ต้องการตรวจดวง
       </label>
       <input type="date" id="booking-date" onchange="loadAvailableSlots()" class="custom-input w-full p-3.5 rounded-xl text-xs sm:text-sm cursor-pointer">
     </div>
 
+    <!-- 3. เลือกรอบเวลา (ไม่มีคำว่า booking_status) -->
     <div>
       <div class="flex justify-between items-center mb-2">
         <label class="text-xs font-bold text-amber-200 flex items-center gap-1.5">
-          <span>⏳</span> 3. เลือกรอบเวลาว่าง (15 นาที/รอบ)
+          <span>⏳</span> 3. เลือกรอบเวลาว่าง
         </label>
-        <span id="slot-status-label" class="text-[10px] text-emerald-300">เลือกรอบเวลา</span>
+        <span id="slot-status-label" class="text-[10px] text-emerald-300">คลิกเลือกรอบเวลา</span>
       </div>
       <div id="slots-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-52 overflow-y-auto p-1"></div>
     </div>
 
-    <div class="border-t border-amber-300/20 pt-4 space-y-3">
-      <div>
-        <label class="block text-xs text-slate-300 mb-1">ชื่อ-นามสกุล / ชื่อเล่น</label>
-        <input type="text" id="cust-name" placeholder="ชื่อผู้รับคำพยากรณ์" class="custom-input w-full p-3 rounded-xl text-xs">
-      </div>
-      <div>
-        <label class="block text-xs text-slate-300 mb-1">เบอร์โทร หรือ LINE ID</label>
-        <input type="tel" id="cust-phone" placeholder="เช่น 0812345678" class="custom-input w-full p-3 rounded-xl text-xs">
-      </div>
-      <div>
-        <label class="block text-xs text-slate-300 mb-1">เรื่องที่ต้องการถามล่วงหน้า</label>
-        <textarea id="cust-note" rows="2" placeholder="เช่น การงาน การเงิน ความรัก" class="custom-input w-full p-3 rounded-xl text-xs resize-none"></textarea>
-      </div>
-    </div>
-
-    <div class="pt-2">
+    <div class="pt-2 border-t border-amber-300/20">
       <div class="flex justify-between items-center mb-4 px-1">
         <span class="text-xs text-emerald-200">ยอดค่าบูชาครู:</span>
         <span id="display-price" class="text-xl font-extrabold bright-white-gold-text">0 บาท</span>
       </div>
 
-      <button id="btn-submit" onclick="submitBooking()" class="btn-gold-action w-full py-4 rounded-2xl font-extrabold text-sm uppercase tracking-wider">
-        ✨ ยืนยันการจองคิวมงคล
+      <button id="btn-submit" onclick="submitFastBooking()" class="btn-gold-action w-full py-4 rounded-2xl font-extrabold text-sm uppercase tracking-wider">
+        ✨ ยืนยันการจองคิวทันที
       </button>
     </div>
   </div>
 
-  <div id="result-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="glossy-panel border-2 border-amber-300/80 rounded-3xl p-6 text-center max-w-sm w-full shadow-2xl">
-      <div id="modal-icon" class="text-4xl mb-3">🙏</div>
-      <h3 id="modal-title" class="text-lg font-bold bright-white-gold-text mb-2">ผลการจองคิว</h3>
-      <p id="modal-desc" class="text-xs text-slate-200 leading-relaxed mb-5 whitespace-pre-line">-</p>
-      <button onclick="closeModalAndRedirect()" class="btn-gold-action w-full py-3 rounded-xl text-xs font-bold">
-        ตกลง / ปิดหน้าต่าง
-      </button>
+  <!-- กล่องแสดงรายละเอียดการจอง & แจ้งชำระเงิน 15 นาที -->
+  <div id="invoice-box" class="hidden glossy-panel rounded-3xl p-5 sm:p-6 space-y-4 border-2 border-amber-300/60 mt-4 shadow-2xl">
+    <div class="text-center">
+      <span class="text-3xl">🙏</span>
+      <h2 class="text-lg font-bold bright-white-gold-text mt-1">บันทึกการจองสำเร็จ</h2>
+      <p class="text-xs text-emerald-300">รหัสการจอง: <span id="inv-booking-id" class="font-mono font-bold text-white">-</span></p>
     </div>
+
+    <!-- รายละเอียดการจอง -->
+    <div class="bg-black/50 p-3.5 rounded-2xl border border-white/5 space-y-1.5 text-xs">
+      <div class="flex justify-between"><span class="text-slate-400">รายการ:</span><span id="inv-service" class="font-bold text-white text-right">-</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">วันที่:</span><span id="inv-date" class="text-emerald-300">-</span></div>
+      <div class="flex justify-between"><span class="text-slate-400">ช่วงเวลา:</span><span id="inv-slot" class="text-amber-200 font-bold">-</span></div>
+      <div class="flex justify-between border-t border-white/10 pt-1.5"><span class="text-slate-300">ยอดที่ต้องชำระ:</span><span id="inv-price" class="text-base font-extrabold bright-white-gold-text">0 บาท</span></div>
+    </div>
+
+    <!-- บัญชีธนาคาร & ปุ่มคัดลอก -->
+    <div class="bg-emerald-950/70 p-3.5 rounded-2xl border border-amber-300/30 text-xs space-y-2">
+      <div class="text-[11px] text-slate-300">ช่องทางโอนชำระค่าครู:</div>
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="text-slate-300 font-light">ธ.กสิกรไทย (KBANK)</div>
+          <div id="inv-bank-acc" class="text-base font-bold text-amber-300 font-mono">2251495656</div> <!--[cite: 5] -->
+          <div class="text-[10px] text-slate-300">ชื่อ: พีรดิษฐ์ กิตติเขมานนท์</div> <!--[cite: 5] -->
+        </div>
+        <button onclick="copyBankAccNumber()" class="px-3 py-1.5 bg-amber-400 text-black font-bold text-[11px] rounded-lg shadow hover:bg-amber-300 transition">
+          📋 คัดลอกเลขบัญชี
+        </button>
+      </div>
+    </div>
+
+    <!-- ข้อความตัวหนังสือสีแดงเล็กๆ แจ้งหมดอายุภายใน 15 นาที -->
+    <div class="text-center">
+      <p class="text-[10px] text-red-400 font-light">
+        * กรุณาชำระภายใน 15 นาที การจองจะถูกยกเลิกอัตโนมัติ
+      </p>
+    </div>
+
+    <a href="https://line.me/R/ti/p/@thewinmu" target="_blank" class="btn-gold-action block text-center py-3 rounded-xl text-xs font-bold">
+      💬 ส่งสลิปยืนยันทาง LINE OA (ตรวจสอบอัตโนมัติ)
+    </a>
   </div>
 
   <script>
@@ -189,24 +210,24 @@
       dInput.min = `${yyyy}-${mm}-${dd}`;
       dInput.value = `${yyyy}-${mm}-${dd}`;
 
-      loadServices();
+      loadCallServices();
     };
 
-    function loadServices() {
-      fetch(`${WEB_URL}?action=get_services`)
+    function loadCallServices() {
+      fetch(`${WEB_URL}?action=get_call_services`)
         .then(r => r.json())
         .then(res => {
           const select = document.getElementById("service-select");
           select.innerHTML = "";
           let list = (res.status === "success" && res.services.length > 0) ? res.services : [
-            { name: "ดูดวงญาณนาคราช 15 นาที", price: 108, description: "เปิดมิติชะตาการงาน การเงิน ความรัก และวิธีแก้เคล็ดเฉพาะบุคคล" }
+            { name: "ดูดวงญาณนาคราช (โทรสด 15 นาที)", price: 108, desc: "สนทนาสดเปิดญาณชี้ทางสว่างเฉพาะบุคคล 15 นาที" }
           ];
 
           list.forEach((s, idx) => {
             const opt = document.createElement("option");
             opt.value = s.name;
             opt.dataset.price = s.price;
-            opt.dataset.desc = s.description;
+            opt.dataset.desc = s.desc;
             opt.innerText = `${s.name} (฿${s.price.toLocaleString()})`;
             if (idx === 0) opt.selected = true;
             select.appendChild(opt);
@@ -225,7 +246,7 @@
       const opt = select.options[select.selectedIndex];
       selectedPrice = Number(opt.dataset.price || 0);
       document.getElementById("display-price").innerText = `${selectedPrice.toLocaleString()} บาท`;
-      document.getElementById("service-desc").innerText = opt.dataset.desc || "บริการจัดสรรเวลา 15 นาที";
+      document.getElementById("service-desc").innerText = opt.dataset.desc || "บริการสนทนาเปิดญาณโทรเป็นนาที";
     }
 
     function loadAvailableSlots() {
@@ -259,62 +280,55 @@
         });
     }
 
-    function submitBooking() {
+    function submitFastBooking() {
       const serviceName = document.getElementById("service-select").value;
       const bookingDate = document.getElementById("booking-date").value;
-      const custName = document.getElementById("cust-name").value.trim();
-      const custPhone = document.getElementById("cust-phone").value.trim();
-      const custNote = document.getElementById("cust-note").value.trim();
 
-      if (!bookingDate || !selectedSlot || !custName) {
-        alert("กรุณาเลือกวัน รอบเวลา และระบุชื่อให้ครบถ้วนครับ");
+      if (!bookingDate || !selectedSlot) {
+        alert("กรุณาเลือกวันและรอบเวลาที่ต้องการจองครับ");
         return;
       }
 
       const btn = document.getElementById("btn-submit");
       btn.disabled = true;
-      btn.innerText = "กำลังตรวจสอบและบันทึกคิว...";
+      btn.innerText = "กำลังจัดสรรคิว...";
 
       const params = new URLSearchParams({
-        action: "submit_booking",
+        action: "submit_fast_booking",
         serviceName: serviceName,
         bookingDate: bookingDate,
         slotTime: selectedSlot,
-        price: selectedPrice,
-        name: custName,
-        phone: custPhone,
-        note: custNote
+        price: selectedPrice
       });
 
       fetch(`${WEB_URL}?${params.toString()}`)
         .then(r => r.json())
         .then(res => {
           btn.disabled = false;
-          btn.innerText = "✨ ยืนยันการจองคิวมงคล";
+          btn.innerText = "✨ ยืนยันการจองคิวทันที";
 
           if (res.status === "success") {
-            showModal("🙏", "บันทึกการจองสำเร็จ", `คิวของคุณได้รับการยืนยันแล้ว:\nวันที่: ${bookingDate}\nรอบเวลา: ${selectedSlot}\n\nกรุณาส่งสลิปค่าครูผ่าน LINE เพื่อความสมบูรณ์ครับ`);
-          } else if (res.status === "full") {
-            showModal("⚠️", "คิวจองเต็มแล้ว", res.message);
-            loadAvailableSlots();
+            // แสดงใบแจ้งชำระเงินและซ่อนฟอร์ม
+            document.getElementById("booking-box").classList.add("hidden");
+            const inv = document.getElementById("invoice-box");
+            inv.classList.remove("hidden");
+
+            document.getElementById("inv-booking-id").innerText = res.bookingId;
+            document.getElementById("inv-service").innerText = res.serviceName;
+            document.getElementById("inv-date").innerText = res.bookingDate;
+            document.getElementById("inv-slot").innerText = res.slotTime;
+            document.getElementById("inv-price").innerText = `${Number(res.price).toLocaleString()} บาท`;
+            document.getElementById("inv-bank-acc").innerText = res.bankAccount;
           } else {
-            showModal("❌", "แจ้งเตือน", res.message || "เกิดข้อผิดพลาด");
+            alert(res.message || "รอบเวลานี้เต็มแล้ว กรุณาเลือกรอบอื่น");
+            loadAvailableSlots();
           }
         });
     }
 
-    function showModal(icon, title, desc) {
-      document.getElementById("modal-icon").innerText = icon;
-      document.getElementById("modal-title").innerText = title;
-      document.getElementById("modal-desc").innerText = desc;
-      document.getElementById("result-modal").classList.remove("hidden");
-    }
-
-    function closeModalAndRedirect() {
-      document.getElementById("result-modal").classList.add("hidden");
-      if (document.getElementById("modal-title").innerText.includes("สำเร็จ")) {
-        window.location.href = "./index.html";
-      }
+    function copyBankAccNumber() {
+      navigator.clipboard.writeText("2251495656"); //[cite: 5]
+      alert("📋 คัดลอกเลขบัญชี 2251495656 สำเร็จแล้วครับ");
     }
   </script>
 </body>

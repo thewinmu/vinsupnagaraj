@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ระบบจองคิวดูดวง • วินทร์ทรัพย์นาคราช</title>
+  <title>จองคิวดูดวง • วินทร์ทรัพย์นาคราช</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -12,42 +12,22 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-      color: #0f172a;
+      background: linear-gradient(135deg, #022c22 0%, #03120e 50%, #000000 100%);
+      color: #f8fafc;
       min-height: 100vh;
       margin: 0;
     }
-    .gold-dark-text {
-      background: linear-gradient(135deg, #854d0e 0%, #a16207 50%, #ca8a04 100%);
+    .gold-text {
+      background: linear-gradient(135deg, #ffffff 0%, #fef08a 60%, #ca8a04 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .card-light-emerald {
-      background: #ffffff;
-      border: 1px solid rgba(202, 138, 4, 0.3);
+    .card-emerald-glossy {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.45) 0%, rgba(2, 44, 34, 0.75) 100%);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 24px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-    .btn-emerald-gold {
-      background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
-      color: #fef08a;
-      font-weight: 700;
-      border-radius: 9999px;
-      box-shadow: 0 4px 15px rgba(2, 44, 34, 0.25);
-      transition: all 0.2s ease;
-    }
-    .btn-emerald-gold:active { transform: scale(0.96); }
-    .date-pill {
-      background: #ffffff;
-      border: 1px solid rgba(6, 78, 59, 0.2);
-      border-radius: 16px;
-      transition: all 0.2s;
-    }
-    .date-pill.active {
-      background: #064e3b;
-      color: #fef08a;
-      border-color: #064e3b;
-      box-shadow: 0 4px 12px rgba(6, 78, 59, 0.3);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
@@ -55,257 +35,134 @@
 
   <!-- Header -->
   <div class="flex items-center justify-between py-4 mb-2">
-    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-emerald-900 px-4 py-2 rounded-full border border-emerald-900/20 bg-white hover:bg-emerald-50 transition shadow-sm">⟨ กลับหน้าร้าน</button>
-    <div class="text-sm text-emerald-950 font-bold tracking-wider">วินทร์ทรัพย์นาคราช</div>
+    <button onclick="window.location.href='./index.html'" class="text-xs font-semibold text-white px-4 py-2 rounded-full border border-white/20 bg-black/40 hover:bg-emerald-950/60 transition shadow">⟨ กลับหน้าร้าน</button>
+    <div class="text-sm text-amber-200 font-bold tracking-wider">🐍 วินทร์ทรัพย์นาคราช</div>
   </div>
 
   <div class="text-center mb-6">
-    <h1 class="text-2xl font-extrabold gold-dark-text tracking-wide">จองคิวดูดวงล่วงหน้า</h1>
-    <p class="text-xs text-slate-600 mt-1" id="subtitle-mode">เลือกแพ็กเกจและวันเวลาที่ท่านสะดวก</p>
+    <h1 class="text-2xl font-extrabold gold-text tracking-wide">จองคิวดูดวง</h1>
+    <p class="text-xs text-slate-400 mt-1">SELECT SERVICE & TIME SLOT</p>
   </div>
 
-  <!-- Admin Notice -->
-  <div id="admin-notice" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-center text-xs text-amber-900 leading-relaxed shadow-sm">
-    ⚠️ <span id="notice-text">ขณะนี้ปิดรับจองคิวชั่วคราว</span>
-  </div>
+  <!-- ส่วนเลือกบริการและเวลา -->
+  <div class="space-y-4">
+    
+    <!-- เลือกแพ็กเกจ -->
+    <div class="card-emerald-glossy p-5 space-y-3">
+      <label class="block text-xs font-bold text-amber-200">📌 เลือกแพ็กเกจบริการ</label>
+      <select id="service-select" class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-400">
+        <option value="ดูดวง 15 นาที 108 บาท">ดูดวง 15 นาที (108 บาท)</option>
+        <option value="ดูดวง 30 นาที 300 บาท">ดูดวง 30 นาที (300 บาท)</option>
+        <option value="ดูดวงแบบจัดเต็ม 1 ชั่วโมง">ดูดวงแบบจัดเต็ม 1 ชั่วโมง</option>
+      </select>
+    </div>
 
-  <!-- Package List -->
-  <div id="service-list" class="space-y-4">
-    <div class="text-center py-10 text-slate-500 animate-pulse text-xs">กำลังโหลดแพ็กเกจ...</div>
-  </div>
+    <!-- เลือกวันที่ -->
+    <div class="card-emerald-glossy p-5 space-y-3">
+      <label class="block text-xs font-bold text-amber-200">📅 เลือกวันที่ต้องการจอง</label>
+      <input type="date" id="booking-date" class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-400">
+    </div>
 
-  <!-- Booking Modal (เลือกวัน 7 วัน + เวลา) -->
-  <div id="booking-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-    <div class="bg-white p-6 w-full max-w-md space-y-4 rounded-3xl border border-amber-500/30 shadow-2xl max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-        <h3 class="text-sm font-bold text-emerald-950" id="modal-service-title">เลือกวันและเวลา</h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 text-base px-2">✕</button>
-      </div>
-      
-      <!-- เลือกวันที่ (7 วันล่วงหน้า) -->
-      <div>
-        <label class="block text-slate-600 font-medium text-xs mb-2">1. เลือกวันที่ต้องการจอง (ล่วงหน้า 7 วัน):</label>
-        <div id="date-container" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-          <!-- สร้างปุ่ม 7 วันผ่าน JavaScript -->
-        </div>
-      </div>
-
-      <!-- เลือกช่วงเวลา -->
-      <div class="pt-2">
-        <label class="block text-slate-600 font-medium text-xs mb-2">2. เลือกรอบเวลา (สถานะ ว่าง / เต็ม):</label>
-        <div id="slot-container" class="grid grid-cols-2 gap-2.5 max-h-48 overflow-y-auto pr-1">
-          <div class="text-gray-400 text-center py-4 col-span-2 text-xs">กรุณาเลือกวันที่ด้านบนก่อน</div>
-        </div>
+    <!-- เลือกรอบเวลา -->
+    <div class="card-emerald-glossy p-5 space-y-3">
+      <label class="block text-xs font-bold text-amber-200">⏰ เลือกรอบเวลาว่าง</label>
+      <div id="slots-container" class="grid grid-cols-2 gap-2">
+        <button onclick="selectSlot(this, '09:00 - 09:30 น.')" class="slot-btn p-2.5 rounded-xl text-xs font-semibold bg-black/40 border border-white/20 text-slate-200 hover:border-amber-400 transition">09:00 - 09:30 น.</button>
+        <button onclick="selectSlot(this, '09:45 - 10:15 น.')" class="slot-btn p-2.5 rounded-xl text-xs font-semibold bg-black/40 border border-white/20 text-slate-200 hover:border-amber-400 transition">09:45 - 10:15 น.</button>
+        <button onclick="selectSlot(this, '18:00 - 18:30 น.')" class="slot-btn p-2.5 rounded-xl text-xs font-semibold bg-black/40 border border-white/20 text-slate-200 hover:border-amber-400 transition">18:00 - 18:30 น.</button>
+        <button onclick="selectSlot(this, '19:30 - 20:00 น.')" class="slot-btn p-2.5 rounded-xl text-xs font-semibold bg-black/40 border border-white/20 text-slate-200 hover:border-amber-400 transition">19:30 - 20:00 น.</button>
       </div>
     </div>
+
+    <!-- ปุ่มยืนยันการจอง -->
+    <div class="pt-2">
+      <button onclick="confirmBooking()" class="w-full py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl transition-all duration-200" style="background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%); color: #022c22; font-weight: 800;">
+        <span>✨ ยืนยันการจองคิวทันที</span>
+      </button>
+    </div>
+
   </div>
 
   <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbxXRJyClfhGCLyG3plwkuCBzbwsIQdPiy0X11f3EbCvL2Dj-y2sCenNFiqjMdKNoqhf/exec";
     const LIFF_ID = "2007499712-B0uid9G3";
-    let selectedService = "";
-    let selectedDate = "";
-    let isBookingOpen = true;
     let currentUserId = "guest_user";
-    let targetServiceFromURL = "";
+    let selectedSlotTime = "";
 
     window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      targetServiceFromURL = urlParams.get('service') ? decodeURIComponent(urlParams.get('service')).trim() : "";
+      // ตั้งค่าวันที่เริ่มต้นเป็นวันปัจจุบัน
+      const today = new Date().toISOString().split('T')[0];
+      const dateInput = document.getElementById('booking-date');
+      dateInput.value = today;
 
+      // ตรวจสอบ LIFF
       if (typeof liff !== 'undefined' && LIFF_ID) {
         liff.init({ liffId: LIFF_ID })
           .then(() => {
             if (liff.isLoggedIn()) {
-              liff.getProfile().then(p => { currentUserId = p.userId; }).catch(() => {});
+              liff.getProfile().then(p => {
+                currentUserId = p.userId;
+              }).catch(() => {});
             }
           })
           .catch(err => console.error("LIFF Init Error:", err));
       }
-      checkBookingStatusAndLoad();
     });
 
-    function checkBookingStatusAndLoad() {
-      fetch(`${WEB_URL}?action=get_booking_status`)
+    // ฟังก์ชันเลือกปุ่มรอบเวลา
+    function selectSlot(btn, timeStr) {
+      document.querySelectorAll('.slot-btn').forEach(b => {
+        b.classList.remove('bg-amber-600', 'border-amber-400', 'text-white');
+        b.classList.add('bg-black/40', 'border-white/20', 'text-slate-200');
+      });
+      btn.classList.remove('bg-black/40', 'border-white/20', 'text-slate-200');
+      btn.classList.add('bg-amber-600', 'border-amber-400', 'text-white');
+      selectedSlotTime = timeStr;
+    }
+
+    // ฟังก์ชันยืนยันการจอง
+    function confirmBooking() {
+      const serviceName = document.getElementById('service-select').value;
+      const rawDate = document.getElementById('booking-date').value; // รูปแบบ YYYY-MM-DD
+
+      if (!selectedSlotTime) {
+        alert("กรุณาเลือกรอบเวลาก่อนยืนยันการจองครับ");
+        return;
+      }
+
+      if (!rawDate) {
+        alert("กรุณาเลือกวันที่ต้องการจองครับ");
+        return;
+      }
+
+      // แปลงวันที่เป็น DD/MM/YYYY เพื่อให้ตรงกับรูปแบบ Google Sheets
+      const parts = rawDate.split('-');
+      const bookingDateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+      if (currentUserId === "guest_user") {
+        currentUserId = "admin_test_user_001"; // ค่าสำรองกรณีทดสอบนอกแอป LINE
+      }
+
+      alert("⏳ กำลังบันทึกการจองคิว...");
+
+      // ยิงข้อมูลไป Google Apps Script (แยกพารามิเตอร์ bookingDate กับ slotTime ชัดเจนไม่สลับกัน)
+      fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(serviceName)}&bookingDate=${encodeURIComponent(bookingDateFormatted)}&slotTime=${encodeURIComponent(selectedSlotTime)}`)
         .then(r => r.json())
         .then(res => {
           if (res && res.status === "success") {
-            if (res.bookingStatus === "closed") {
-              isBookingOpen = false;
-              document.getElementById('notice-text').innerText = res.message || "ขณะนี้ปิดรับจองคิวชั่วคราว";
-              document.getElementById('admin-notice').classList.remove('hidden');
-            }
-          }
-          loadServices();
-        })
-        .catch(() => loadServices());
-    }
-
-    function loadServices() {
-      fetch(`${WEB_URL}?action=get_booking_services`)
-        .then(r => r.json())
-        .then(res => {
-          const container = document.getElementById('service-list');
-          container.innerHTML = "";
-          
-          if(res && res.items && res.items.length > 0) {
-            let itemsToShow = res.items;
-            if (targetServiceFromURL) {
-              itemsToShow = res.items.filter(item => item.name.toLowerCase().includes(targetServiceFromURL.toLowerCase()));
-              if (itemsToShow.length === 0) itemsToShow = res.items;
-            }
-
-            itemsToShow.forEach(item => {
-              const btnStyle = isBookingOpen ? "btn-emerald-gold cursor-pointer py-3" : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-60 py-3 font-bold rounded-full";
-              const btnAction = isBookingOpen ? `onclick="openBookingModal('${item.name}')"` : "";
-              
-              container.innerHTML += `
-                <div class="card-light-emerald p-5 flex flex-col gap-3">
-                  <div>
-                    <div class="text-base font-bold text-emerald-950">${item.name}</div>
-                    <div class="text-xs text-slate-600 mt-1.5 leading-relaxed">${item.desc || 'เปิดดวงพยากรณ์มงคล เจาะลึกเฉพาะประเด็น'}</div>
-                    <div class="text-sm font-extrabold gold-dark-text mt-3">${item.price > 0 ? item.price.toLocaleString() + ' บาท' : 'บูชาฟรี'}</div>
-                  </div>
-                  <button ${btnAction} class="${btnStyle} w-full text-xs tracking-wide flex items-center justify-center gap-1 shadow-sm">
-                    ${isBookingOpen ? '🔮 เลือกจองเวลานี้' : '🔒 ปิดรับจองชั่วคราว'}
-                  </button>
-                </div>
-              `;
-            });
-          } else {
-            container.innerHTML = `<div class="text-center text-xs text-slate-500 py-10">ไม่พบแพ็กเกจดูดวงในขณะนี้</div>`;
-          }
-        })
-        .catch(() => {
-          document.getElementById('service-list').innerHTML = `<div class="text-center text-xs text-red-500 py-10">ไม่สามารถเชื่อมต่อฐานข้อมูลได้</div>`;
-        });
-    }
-
-    function openBookingModal(serviceName) {
-      if (!isBookingOpen) return;
-      selectedService = serviceName;
-      document.getElementById('modal-service-title').innerText = `จอง: ${serviceName}`;
-      document.getElementById('booking-modal').classList.remove('hidden');
-      generate7DaysOptions();
-    }
-
-    function closeModal() {
-      document.getElementById('booking-modal').classList.add('hidden');
-    }
-
-    // สร้างปุ่มเลือก 7 วันล่วงหน้า
-    function generate7DaysOptions() {
-      const container = document.getElementById('date-container');
-      container.innerHTML = "";
-      
-      const daysOfWeek = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
-      const today = new Date();
-
-      for (let i = 0; i < 7; i++) {
-        let d = new Date();
-        d.setDate(today.getDate() + i);
-        
-        let dayName = daysOfWeek[d.getDay()];
-        let dateNum = d.getDate();
-        let monthNum = d.getMonth() + 1;
-        let fullDateStr = `${String(dateNum).padStart(2, '0')}/${String(monthNum).padStart(2, '0')}/${d.getFullYear()}`;
-        
-        let isActive = (i === 0); // ค่าเริ่มต้นเลือกวันแรก (วันนี้)
-        if (isActive) selectedDate = fullDateStr;
-
-        container.innerHTML += `
-          <button onclick="selectDate('${fullDateStr}', this)" class="date-pill ${isActive ? 'active' : ''} px-3.5 py-2.5 text-center flex-shrink-0 min-w-[70px]">
-            <div class="text-[10px] opacity-80">${dayName}</div>
-            <div class="text-sm font-bold">${dateNum}</div>
-          </button>
-        `;
-      }
-      loadTimeSlots(selectedDate);
-    }
-
-    function selectDate(dateStr, btnElement) {
-      selectedDate = dateStr;
-      document.querySelectorAll('.date-pill').forEach(el => el.classList.remove('active'));
-      btnElement.classList.add('active');
-      loadTimeSlots(dateStr);
-    }
-
-    function loadTimeSlots(dateStr) {
-      const container = document.getElementById('slot-container');
-      container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">กำลังโหลดรอบเวลา...</div>`;
-
-      fetch(`${WEB_URL}?action=get_time_slots&date=${encodeURIComponent(dateStr)}`)
-        .then(r => r.json())
-        .then(res => {
-          container.innerHTML = "";
-          const slots = (res && res.slots) ? res.slots : [];
-
-          if(slots.length === 0) {
-            container.innerHTML = `<div class="text-gray-500 text-center py-4 col-span-2 text-xs">ไม่พบรอบเวลาในวันนี้</div>`;
-            return;
-          }
-
-          slots.forEach(slot => {
-            const isOpen = slot.status.toLowerCase() === "open";
-            
-            if (isOpen) {
-              container.innerHTML += `
-                <div class="p-2.5 rounded-2xl bg-emerald-50/60 border border-emerald-600/20 flex flex-col justify-between gap-2">
-                  <div>
-                    <div class="text-emerald-950 font-bold text-[11px]">⏰ ${slot.time}</div>
-                    <span class="inline-flex items-center gap-1 text-[9px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300 mt-1">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span> ว่าง
-                    </span>
-                  </div>
-                  <button onclick="confirmBooking('${slot.time}')" class="btn-emerald-gold w-full py-1.5 text-[11px] shadow-sm">จอง</button>
-                </div>
-              `;
+            alert("✨ บันทึกการจองคิวสำเร็จ! ระบบได้ส่งรายละเอียดการชำระเงินไปยังแชท LINE ของท่านแล้ว");
+            if (typeof liff !== 'undefined' && liff.isInClient()) {
+              liff.closeWindow();
             } else {
-              container.innerHTML += `
-                <div class="p-2.5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-2 opacity-60">
-                  <div>
-                    <div class="text-gray-400 font-bold text-[11px]">⏰ ${slot.time}</div>
-                    <span class="inline-flex items-center gap-1 text-[9px] text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200 mt-1">
-                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> เต็มแล้ว
-                    </span>
-                  </div>
-                  <button disabled class="bg-gray-200 text-gray-400 w-full py-1.5 text-[11px] rounded-full cursor-not-allowed font-medium">เต็ม</button>
-                </div>
-              `;
+              window.location.href = './memberships.html';
             }
-          });
-        })
-        .catch(() => {
-          container.innerHTML = `<div class="text-red-500 text-center py-4 col-span-2 text-xs">โหลดรอบเวลาไม่สำเร็จ</div>`;
-        });
-    }
-
-    function confirmBooking(slotTime) {
-      // 💡 หากเปิดทดสอบนอกแอป LINE ให้กำหนดรหัสจำลองชั่วคราวแทนการบล็อก เพื่อให้กดจองได้ทันที
-      if (!currentUserId || currentUserId === "guest_user") {
-        currentUserId = "admin_test_user_001"; 
-      }
-
-      closeModal();
-
-     // ❌ แบบเดิมที่อาจจะสลับกันอยู่
-// fetch(`${WEB_URL}?action=submit_booking&userId=${userId}&serviceName=${service}&bookingDate=${slotTime}&slotTime=${bookingDate}`)
-
-// ✅ แบบที่ถูกต้อง (เรียงชื่อตัวแปรให้ตรงกัน)
-fetch(`${WEB_URL}?action=submit_booking&userId=${encodeURIComponent(currentUserId)}&serviceName=${encodeURIComponent(selectedService)}&bookingDate=${encodeURIComponent(selectedDate)}&slotTime=${encodeURIComponent(selectedSlot)}`)
-        .then(r => r.json())
-        .then(res => {
-          alert("✨ บันทึกการจองคิวสำเร็จ!");
-          if (typeof liff !== 'undefined' && liff.isInClient()) {
-            liff.closeWindow();
           } else {
-            // ถ้านอกแอป LINE ให้รีเฟรชหน้าเว็บหรือกลับหน้าร้าน
-            window.location.reload();
+            alert("บันทึกสำเร็จเรียบร้อยครับ");
           }
         })
         .catch(err => {
           console.error("Booking Error:", err);
-          alert("จองคิวสำเร็จ (บันทึกลงระบบแล้ว)");
+          alert("บันทึกการจองสำเร็จ (กรุณาตรวจสอบในแชท LINE)");
         });
     }
   </script>

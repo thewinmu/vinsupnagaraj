@@ -11,7 +11,7 @@
   
   <style>
     body {
-      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Prompt", sans-serif;
       background: radial-gradient(circle at 50% -10%, #064032 0%, #032018 45%, #010a08 100%);
       color: #f8fafc;
       min-height: 100vh;
@@ -52,19 +52,21 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      border-radius: 20px;
+      border-radius: 24px;
     }
+    /* ด้านหลังไพ่ */
     .card-back-face {
       background: radial-gradient(circle at 50% 50%, #031c15 0%, #010a08 100%);
       border: 2px solid #facc15;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(250, 204, 21, 0.25);
       cursor: pointer;
     }
+    /* ด้านหน้าไพ่ (ไม่มีรูปภาพ ดีไซน์ทองมินิมอล) */
     .card-front-face {
       transform: rotateY(180deg);
-      background: #ffffff;
+      background: linear-gradient(160deg, #ffffff 0%, #fefce8 60%, #fef08a 100%);
       border: 2px solid #ca8a04;
-      box-shadow: 0 10px 30px rgba(202, 138, 4, 0.4);
+      box-shadow: 0 12px 35px rgba(202, 138, 4, 0.45);
     }
 
     /* แท็บหมวดหมู่ */
@@ -135,48 +137,57 @@
     </p>
   </div>
 
-  <!-- พื้นที่ใบไพ่ 3D -->
+  <!-- พื้นที่ใบไพ่ 3D (ลบรูปภาพออกทั้งหมด) -->
   <div class="flex flex-col items-center justify-center my-2 card-perspective">
-    <div id="card-box" onclick="flipCard()" class="card-flipper w-56 h-84 cursor-pointer">
+    <div id="card-box" onclick="flipCard()" class="card-flipper w-56 h-80 cursor-pointer">
       
-      <!-- หลังไพ่พญานาคสีทอง -->
-      <div class="card-face card-back-face flex flex-col items-center justify-between p-4">
+      <!-- หลังไพ่: ลายทองนาคราช -->
+      <div class="card-face card-back-face flex flex-col items-center justify-between p-5">
         <span class="text-[8px] font-mono tracking-widest text-amber-300/60 uppercase">NAGA BLESSING</span>
         
-        <div class="w-32 h-32 rounded-full border-2 border-amber-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(250,204,21,0.25)] p-2">
-          <img src="./card_back_kru.png" class="w-full h-full object-contain" onerror="this.outerHTML='<span class=\'text-5xl text-amber-300\'>🐍</span>'">
+        <div class="w-28 h-28 rounded-full border-2 border-amber-400/50 flex flex-col items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(250,204,21,0.25)] p-2">
+          <span class="text-5xl drop-shadow-[0_2px_10px_rgba(250,204,21,0.5)]">🐍</span>
         </div>
 
         <div class="text-center">
-          <span class="text-[11px] font-bold text-amber-200 block">แตะเพื่อเปิดคำทำนาย</span>
+          <span class="text-[11px] font-bold text-amber-200 block">แตะเพื่อเปิดสาส์นนำทาง</span>
           <span class="text-[8px] text-emerald-300/70 font-light">วินทร์ทรัพย์นาคราช</span>
         </div>
       </div>
 
-      <!-- หน้าไพ่เมื่อพลิกแล้ว -->
-      <div class="card-face card-front-face p-3.5 flex flex-col justify-between text-slate-800">
+      <!-- หน้าไพ่: แบบข้อความล้วน หรูหรา สะอาดตา (ไม่มีกล่องรูป) -->
+      <div class="card-face card-front-face p-5 flex flex-col justify-between text-slate-800 border-2 border-amber-500">
         <div>
-          <div class="flex items-center justify-between pb-1 border-b border-amber-200">
-            <span id="front-category" class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">สาส์นนำทาง</span>
-            <span class="text-amber-500 text-xs">✨</span>
+          <div class="flex items-center justify-between pb-2 border-b border-amber-300/60">
+            <span id="front-category" class="text-[10px] font-bold text-emerald-900 bg-emerald-100/80 border border-emerald-400/30 px-2.5 py-0.5 rounded-full">
+              สาส์นนำทาง
+            </span>
+            <span class="text-amber-600 text-sm">✨</span>
           </div>
 
-          <!-- ช่องแสดงรูปภาพจาก LinkImage -->
-          <div id="front-img-container" class="w-full h-48 bg-slate-50 rounded-xl overflow-hidden my-2 flex items-center justify-center p-1 border border-slate-200 shadow-inner">
-            <img id="front-img" src="" alt="หน้าไพ่" class="w-full h-full object-contain">
+          <!-- ตราสัญลักษณ์กลางการ์ด แทนที่รูปภาพ -->
+          <div class="my-6 flex flex-col items-center justify-center">
+            <div class="w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shadow-inner mb-3">
+              <span class="text-4xl">🪷</span>
+            </div>
+            <span class="text-[10px] font-mono text-amber-800 tracking-widest uppercase font-semibold">DIVINE MESSAGE</span>
           </div>
 
-          <h3 id="front-name" class="text-xs font-extrabold text-slate-900 text-center line-clamp-1">ชื่อไพ่</h3>
+          <!-- ชื่อไพ่ตัวหนาเด่นชัด -->
+          <h3 id="front-name" class="text-base font-extrabold text-slate-900 text-center leading-snug px-2">
+            ชื่อไพ่
+          </h3>
         </div>
-        <div class="text-[9px] text-center text-slate-400 font-light pb-1">
-          วินทร์ทรัพย์นาคราช • สำรับนำทาง
+
+        <div class="text-[9px] text-center text-amber-900/60 font-medium border-t border-amber-300/40 pt-2">
+          วินทร์ทรัพย์นาคราช • สำรับนำทางชีวิต
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- กล่องผลลัพธ์คำทำนาย -->
+  <!-- กล่องผลลัพธ์คำทำนาย (ข้อความดึงตรงจาก Sheets) -->
   <div id="result-container" class="hidden space-y-3 mt-4">
     <div class="lux-glass-box rounded-2xl p-4">
       <div class="text-xs font-bold text-amber-300 mb-1.5 flex items-center gap-1.5">
@@ -197,7 +208,7 @@
     </button>
   </div>
 
-  <!-- Bottom Navigation 2 แถวแบบคงที่ -->
+  <!-- แถบนำทางด้านล่างสไตล์ iOS 2 แถวแบบคงที่ -->
   <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
     <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
       <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
@@ -280,29 +291,6 @@
         .catch(() => {});
     }
 
-    // ฟังก์ชันแปลง URL ในคอลัมน์ LinkImage เป็นภาพที่แสดงผลได้ทันที
-    function formatDriveImageUrl(rawUrl) {
-      if (!rawUrl || typeof rawUrl !== "string") return "";
-      const trimmed = rawUrl.trim();
-
-      // สกัด File ID จากลิงก์ Google Drive
-      if (trimmed.includes("drive.google.com")) {
-        let fileId = "";
-        const idParamMatch = trimmed.match(/[?&]id=([-\w]{25,})/);
-        if (idParamMatch) {
-          fileId = idParamMatch[1];
-        } else {
-          const pathMatch = trimmed.match(/\/d\/([-\w]{25,})/);
-          if (pathMatch) fileId = pathMatch[1];
-        }
-
-        if (fileId) {
-          return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
-        }
-      }
-      return trimmed;
-    }
-
     function flipCard() {
       if (isFlipped) return;
       if (cardsData.length === 0) return alert("กำลังจัดเตรียมสำรับไพ่ กรุณาลองใหม่อีกครั้ง");
@@ -310,28 +298,14 @@
       isFlipped = true;
       const picked = cardsData[Math.floor(Math.random() * cardsData.length)];
 
+      // กำหนดข้อความหน้าไพ่ (ไม่มีรูปภาพ)
       document.getElementById("front-name").innerText = picked.name || "สาส์นนำทาง";
       document.getElementById("front-category").innerText = picked.category || (catLabels[currentCat] || "สาส์นนำทาง");
 
-      // แปลง URL จาก LinkImage
-      const directImgUrl = formatDriveImageUrl(picked.imageUrl);
-      const imgContainer = document.getElementById("front-img-container");
-
-      if (directImgUrl) {
-        imgContainer.innerHTML = `
-          <img id="front-img" src="${directImgUrl}" alt="${picked.name}" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-amber-500\\'><span class=\\'text-4xl\\'>🐍</span><span class=\\'text-[10px] mt-1 text-slate-400 font-light\\'>${picked.name}</span></div>'">
-        `;
-      } else {
-        imgContainer.innerHTML = `
-          <div class="flex flex-col items-center justify-center h-full text-center text-amber-500">
-            <span class="text-4xl drop-shadow">🐍</span>
-            <span class="text-[11px] font-bold text-slate-800 mt-1">${picked.name}</span>
-          </div>
-        `;
-      }
-
+      // พลิกการ์ด 3D
       document.getElementById("card-box").classList.add("flipped");
 
+      // แสดงรายละเอียดคำทำนายและแนวทางปฏิบัติ
       setTimeout(() => {
         document.getElementById("res-meaning").innerText = picked.meaning;
         document.getElementById("res-advice").innerText = picked.advice;

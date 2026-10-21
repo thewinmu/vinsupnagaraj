@@ -16,6 +16,7 @@
       min-height: 100vh;
       margin: 0;
       overflow-x: hidden;
+      overflow-y: auto; /* 🔓 ปลดล็อคให้เลื่อนหน้าจอขึ้นลงได้ปกติ */
     }
     
     .gold-text {
@@ -68,7 +69,7 @@
       box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
     }
 
-    /* หลังไพ่ (อัพเดตเป็นตราอุณาโลม) */
+    /* หลังไพ่ (ตราประทับอุณาโลมทองคำ) */
     .card-back {
       background: linear-gradient(135deg, #000000 0%, #064e3b 50%, #000000 100%);
       display: flex;
@@ -117,7 +118,7 @@
     @keyframes blink { 50% { opacity: 0; } }
   </style>
 </head>
-<body class="p-5 max-w-md mx-auto flex flex-col pb-12 relative overflow-hidden">
+<body class="p-5 max-w-md mx-auto flex flex-col pb-24 relative min-h-screen">
 
   <!-- Header -->
   <div class="flex items-center justify-between py-4 mb-2 relative z-50">
@@ -138,7 +139,7 @@
 
     <div class="grid grid-cols-2 gap-4 relative z-10">
       <div onclick="startMagic('pcardoftheday', 'Card of the Day')" class="category-card rounded-2xl p-5 text-center col-span-2 cursor-pointer">
-        <!-- ไอคอนอุณาโลมทองคำ (ย่อ) -->
+        <!-- ตราประทับอุณาโลมทองคำ -->
         <svg viewBox="0 0 100 120" class="w-10 h-10 mx-auto mb-2 drop-shadow-[0_0_10px_rgba(254,240,138,0.8)]">
           <defs>
             <linearGradient id="goldGradHub" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -179,7 +180,6 @@
   <div id="view-loading" class="hidden flex-col items-center justify-center mt-20 transition-opacity duration-500 w-full">
     <div class="relative w-28 h-40 mx-auto shuffling mb-8">
       <div class="absolute inset-0 bg-gradient-to-br from-black to-emerald-900 rounded-xl border-2 border-amber-400/80 shadow-[0_0_30px_rgba(16,185,129,0.8)] flex items-center justify-center">
-        <!-- อุณาโลม Loading -->
         <svg viewBox="0 0 100 120" class="w-12 h-14 opacity-80 drop-shadow-[0_0_15px_rgba(254,240,138,0.5)]">
           <defs>
             <linearGradient id="goldGradLoad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -191,7 +191,6 @@
           <circle cx="50" cy="5" r="4" fill="url(#goldGradLoad)"/>
         </svg>
       </div>
-      <!-- ไพ่ซ้อนด้านหลัง -->
       <div class="absolute inset-0 bg-emerald-950 rounded-xl border-2 border-amber-400/30 transform rotate-6 translate-x-2 translate-y-2 -z-10"></div>
       <div class="absolute inset-0 bg-emerald-950 rounded-xl border-2 border-amber-400/30 transform -rotate-6 -translate-x-2 translate-y-2 -z-20"></div>
     </div>
@@ -208,11 +207,9 @@
     
     <div class="relative flex justify-center items-center w-full h-48 mt-4">
       
-      <!-- Template การ์ดหลังไพ่ที่มีอุณาโลมทองคำ -->
       <!-- ใบที่ 1 -->
       <div id="card-0" class="card-3d fan-left absolute" onclick="revealCard(0)">
         <div class="card-face card-back">
-          <!-- ตราประทับอุณาโลม SVG -->
           <svg viewBox="0 0 100 120" class="w-12 h-14 drop-shadow-[0_0_15px_rgba(254,240,138,0.8)]">
             <defs>
               <linearGradient id="goldGradBack" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -265,7 +262,12 @@
       <h2 id="res-name" class="text-2xl font-extrabold gold-text mb-1 tracking-wide drop-shadow-lg">ชื่อไพ่</h2>
     </div>
 
-    <div class="bg-black/60 border border-emerald-900/50 rounded-2xl p-5 backdrop-blur-md shadow-inner mt-4">
+    <!-- กรอบรูปไพ่ที่เลือก -->
+    <div class="relative w-48 h-72 mx-auto rounded-xl overflow-hidden border-2 border-amber-400/60 shadow-[0_0_35px_rgba(202,138,4,0.4)] my-2">
+      <img id="res-card-img" src="" alt="Card" class="w-full h-full object-cover">
+    </div>
+
+    <div class="bg-black/60 border border-emerald-900/50 rounded-2xl p-5 backdrop-blur-md shadow-inner mt-2">
       <h3 class="text-xs font-bold text-emerald-400 mb-2 uppercase tracking-widest flex items-center gap-2"><span>📜</span> คำทำนายหลัก</h3>
       <p id="res-meaning" class="text-sm text-slate-200 leading-relaxed font-light">-</p>
     </div>
@@ -292,7 +294,7 @@
        ========================================== -->
   <script>
     // 📌 WEB_URL ของระบบ API ล่าสุด
-    const WEB_URL = "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
+    const WEB_URL = "https://script.google.com/macros/s/AKfycbwb0ZKg3fkudFRh5aTY-Oetsx-gou-aRMd5Hq1mFKudAMyrsNlPEcLzVvx30CIV8Jag/exec";
     
     let activeCards = [];
     let currentCategory = '';
@@ -311,6 +313,7 @@
       document.getElementById('header-title').innerText = "Naga Oracle";
       document.getElementById('btn-back').classList.add('hidden');
       document.getElementById('btn-home').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function startMagic(catKey, catName) {
@@ -322,6 +325,7 @@
       document.getElementById('header-title').innerText = catName;
       document.getElementById('btn-home').classList.add('hidden');
       document.getElementById('btn-back').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
       for(let i=0; i<=2; i++) {
         let el = document.getElementById(`card-${i}`);
@@ -338,7 +342,6 @@
             activeCards = res.cards;
             setTimeout(showSpread, 1500); 
           } else {
-            // แจ้งเตือนกรณีไม่มีข้อมูลหรือไม่ได้ใส่คำว่า Active
             alert("⚠️ ยังไม่มีข้อมูลไพ่ในหมวดหมู่นี้ หรือกำลังปรับปรุงครับ");
             goToHub();
           }
@@ -360,16 +363,20 @@
         let cardData = shuffled[i % shuffled.length]; 
         let imgElem = document.getElementById(`img-${i}`);
         
+        let imageUrl = "";
         if(cardData.imageId && cardData.imageId.length > 10) {
-          imgElem.src = `https://drive.google.com/uc?id=${cardData.imageId}`;
+          imageUrl = `https://drive.google.com/uc?id=${cardData.imageId}`;
+          imgElem.src = imageUrl;
         } else {
-          imgElem.src = "https://via.placeholder.com/400x600/022c22/ca8a04?text=NAGA+ORACLE";
+          imageUrl = "https://via.placeholder.com/400x600/022c22/ca8a04?text=NAGA+ORACLE";
+          imgElem.src = imageUrl;
         }
         
         let cardEl = document.getElementById(`card-${i}`);
         cardEl.dataset.name = cardData.name || "ไพ่ไร้นาม";
         cardEl.dataset.meaning = cardData.meaning || "ไม่มีคำทำนายหลักระบุไว้";
         cardEl.dataset.ai = cardData.ai_advice || "จักรวาลกำลังจัดสรรพลังงานที่ดีที่สุดให้กับคุณ โปรดเปิดรับสิ่งดีๆ ที่กำลังเข้ามา...";
+        cardEl.dataset.img = imageUrl;
         
         cardEl.style.pointerEvents = "auto";
       }
@@ -396,6 +403,7 @@
 
       document.getElementById('res-name').innerText = selectedEl.dataset.name;
       document.getElementById('res-meaning').innerText = selectedEl.dataset.meaning;
+      document.getElementById('res-card-img').src = selectedEl.dataset.img;
       const aiTextToType = selectedEl.dataset.ai;
 
       setTimeout(() => {
@@ -404,6 +412,7 @@
         setTimeout(() => resView.classList.remove('opacity-0'), 100);
         
         typeWriterAI(aiTextToType);
+        window.scrollTo({ top: 100, behavior: 'smooth' });
       }, 1000);
     }
 

@@ -11,49 +11,58 @@
   <script src="./config.js"></script>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     body {
       font-family: 'Prompt', -apple-system, sans-serif;
-      background: radial-gradient(circle at 50% -10%, #064032 0%, #021a13 50%, #000806 100%);
-      color: #f8fafc;
+      background: #F8FAFC; /* พื้นหลังสีขาวนวลสบายตา */
+      color: #0F172A;      /* ตัวหนังสือสีดำคมชัด */
       min-height: 100vh;
       margin: 0;
       -webkit-font-smoothing: antialiased;
     }
-    .naga-glass-altar {
-      background: linear-gradient(145deg, rgba(6, 44, 34, 0.92) 0%, rgba(1, 20, 14, 0.98) 100%);
-      border: 1.2px solid rgba(250, 204, 21, 0.4);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 20px rgba(52, 211, 153, 0.15);
-      backdrop-filter: blur(25px);
+
+    /* กล่องข้อมูลพื้นขาวขลิบทองมรกต */
+    .lux-white-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     }
-    .naga-card-emerald {
-      background: linear-gradient(135deg, #064e3b 0%, #022c22 45%, #00120c 100%);
-      border: 1.5px solid #facc15;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 20px rgba(250, 204, 21, 0.25);
+
+    /* บัตรสมาชิกรัตนบารมี ดีไซน์หรูหราสีมรกตขลิบทอง */
+    .naga-luxury-card {
+      background: linear-gradient(135deg, #064E3B 0%, #043629 60%, #022018 100%);
+      border: 1.5px solid #F59E0B;
+      box-shadow: 0 16px 32px -8px rgba(6, 78, 59, 0.35);
     }
-    .soul-input {
-      background: rgba(0, 15, 11, 0.85);
-      border: 1px solid rgba(250, 204, 21, 0.25);
-      color: #fef9c3;
+
+    /* ช่องกรอกข้อมูลพื้นขาว คมชัด */
+    .lux-input {
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      color: #0F172A;
       transition: all 0.2s ease;
     }
-    .soul-input:focus {
-      border-color: #facc15;
-      background: rgba(0, 25, 18, 0.95);
+    .lux-input:focus {
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
       outline: none;
-      box-shadow: 0 0 14px rgba(250, 204, 21, 0.3);
     }
-    .btn-naga-bless {
-      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022018;
-      border-radius: 9999px;
-      font-weight: 800;
-      box-shadow: 0 4px 18px rgba(202, 138, 4, 0.4);
+
+    /* ปุ่มบันทึกทองคำเปล่งประกาย */
+    .btn-gold-action {
+      background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+      color: #FFFFFF;
+      font-weight: 700;
+      box-shadow: 0 8px 20px -4px rgba(180, 83, 9, 0.35);
       transition: all 0.2s ease;
     }
-    .btn-naga-bless:disabled {
+    .btn-gold-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px -4px rgba(180, 83, 9, 0.45);
+    }
+    .btn-gold-action:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
@@ -62,120 +71,125 @@
 </head>
 <body class="p-4 max-w-md mx-auto flex flex-col pb-36">
 
-  <!-- Header -->
-  <header class="naga-glass-altar rounded-3xl p-3.5 mb-4 flex items-center justify-between">
+  <!-- แถบด้านบน: สัญลักษณ์เรือนวินทร์ทรัพย์นาคราช -->
+  <header class="lux-white-card rounded-3xl p-3.5 mb-4 flex items-center justify-between border-emerald-100">
     <div class="flex items-center gap-2.5">
-      <div class="w-10 h-10 rounded-full bg-black/80 border border-amber-400 flex items-center justify-center text-xl shadow-inner">
+      <div class="w-10 h-10 rounded-full bg-emerald-900 border-2 border-amber-400 flex items-center justify-center text-xl shadow-sm text-white">
         🐍
       </div>
       <div>
-        <h1 class="text-xs font-bold text-amber-200">วินทร์ทรัพย์นาคราช</h1>
-        <p class="text-[9px] text-emerald-300/80">มหาพิธีสลักนามผูกจิตบาดาล</p>
+        <h1 class="text-xs font-bold text-emerald-950">วินทร์ทรัพย์นาคราช</h1>
+        <p class="text-[9px] text-emerald-700 font-medium">มหาพิธีสลักนามผูกจิตบาดาล</p>
       </div>
     </div>
-    <span class="text-[9px] text-amber-300 font-mono bg-amber-400/10 px-2.5 py-1 rounded-full border border-amber-400/30">
-      ภพมนุษย์ ⟨-⟩ บาดาล
+    <span class="text-[10px] font-bold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-300">
+      บัตรสมาชิกรัตนบารมี
     </span>
   </header>
 
-  <!-- แท่นแก้วแสดงบัตรสมาชิกประจำกาย (Simply Digital Card) -->
-  <div class="naga-card-emerald rounded-3xl p-5 text-white mb-4 flex flex-col justify-between min-h-[190px]">
+  <!-- บัตรสมาชิกรัตนบารมี (หน้าบัตรมรกตขลิบทอง เด่นสง่าบนพื้นขาว) -->
+  <div class="naga-luxury-card rounded-3xl p-5 text-white mb-4 flex flex-col justify-between min-h-[195px] relative overflow-hidden">
+    <!-- ลายน้ำพญานาคบางๆ หลังบัตร -->
+    <div class="absolute -right-4 -bottom-4 text-8xl opacity-10 pointer-events-none select-none">🐍</div>
+
     <div>
       <div class="flex justify-between items-start">
         <div>
-          <div class="text-[8px] text-amber-300 font-mono tracking-widest uppercase">NAGA SOUL IDENTITY</div>
-          <div class="text-xs font-bold text-slate-100">บัตรแก้วรัตนบารมีนาคาธิบดี</div>
+          <div class="text-[8px] text-amber-300 font-mono tracking-widest uppercase font-bold">NAGA SOUL IDENTITY</div>
+          <div class="text-xs font-bold text-white tracking-wide">บัตรสมาชิกรัตนบารมีนาคาธิบดี</div>
         </div>
-        <span id="soul-privilege" class="text-[9px] font-bold text-black bg-amber-400 px-2.5 py-0.5 rounded-full shadow">
+        <span id="soul-privilege" class="text-[9px] font-bold text-emerald-950 bg-gradient-to-r from-amber-300 to-yellow-400 px-3 py-0.5 rounded-full shadow-sm">
           วรรณะนาคารัตนบารมี
         </span>
       </div>
 
-      <div class="mt-4 flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full border border-amber-300/60 bg-black/60 overflow-hidden flex items-center justify-center shadow">
-          <img id="soul-avatar" src="https://placehold.co/100x100/064032/fef08a?text=🐍" class="w-full h-full object-cover">
+      <div class="mt-4 flex items-center gap-3.5">
+        <div class="w-13 h-13 w-12 h-12 rounded-full border-2 border-amber-300 bg-emerald-950/80 overflow-hidden flex items-center justify-center shadow-md">
+          <img id="soul-avatar" src="https://placehold.co/100x100/064e3b/ffffff?text=VIP" class="w-full h-full object-cover">
         </div>
         <div>
           <div id="soul-name" class="text-sm font-extrabold text-amber-200 line-clamp-1">กำลังสดับดวงจิต...</div>
-          <div id="soul-phone" class="text-[11px] text-emerald-300/90 font-mono">08X-XXX-XXXX</div>
+          <div id="soul-phone" class="text-[11px] text-emerald-200 font-mono tracking-wide">08X-XXX-XXXX</div>
         </div>
       </div>
     </div>
 
-    <div class="pt-3 border-t border-white/15 flex justify-between items-end mt-3">
+    <div class="pt-3 border-t border-emerald-600/40 flex justify-between items-end mt-4">
       <div>
-        <div class="text-[8px] text-slate-400 uppercase">สังข์แก้วประจำกาย (Member Code)</div>
-        <div id="soul-code" class="text-xs font-mono font-bold text-amber-300">NAGA-PENDING</div>
+        <div class="text-[8px] text-emerald-200/80 uppercase font-medium">สังข์แก้วประจำกาย</div>
+        <div id="soul-code" class="text-xs font-mono font-bold text-amber-300 tracking-wider">NAGA-PENDING</div>
       </div>
       <div class="text-right">
-        <div class="text-[8px] text-slate-400 uppercase">ทรัพย์มณีคงคลัง (ยอดคงเหลือ)</div>
-        <div id="soul-balance" class="text-xs font-mono font-bold text-sky-300">฿0 มณี</div>
+        <div class="text-[8px] text-emerald-200/80 uppercase font-medium">ทรัพย์มณีคงคลัง</div>
+        <div id="soul-balance" class="text-xs font-mono font-bold text-emerald-300">฿0 มณี</div>
       </div>
     </div>
   </div>
 
-  <!-- แท่นจารึกสัจจะ (ฟอร์มบันทึกข้อมูล A ถึง F ของชีต member) -->
-  <div class="naga-glass-altar rounded-3xl p-5 mb-4 space-y-3">
-    <div class="flex items-center justify-between pb-2 border-b border-amber-400/20">
-      <h2 class="text-xs font-bold text-amber-200 flex items-center gap-1.5">
-        <span>📜</span> แผ่นทองคำจารึกนาม
+  <!-- ฟอร์มลงทะเบียน: พื้นขาว คมชัด อ่านง่าย -->
+  <div class="lux-white-card rounded-3xl p-5 mb-4 space-y-3.5">
+    <div class="flex items-center justify-between pb-2.5 border-b border-slate-200">
+      <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+        <span class="text-amber-600">📜</span> แผ่นทองคำจารึกนาม (ข้อมูลสมาชิก)
       </h2>
-      <span id="sync-status" class="text-[9px] text-emerald-300 font-light">กำลังหยั่งจิต...</span>
+      <span id="sync-status" class="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+        กำลังหยั่งจิต...
+      </span>
     </div>
 
-    <div class="space-y-2.5 text-xs">
+    <div class="space-y-3 text-xs">
       <div>
-        <label class="block text-slate-300 mb-1">นามผู้ถือครองบัญชีแก้ว (ชื่อ-นามสกุลจริง):</label>
-        <input type="text" id="m-name" placeholder="ระบุนามจริงเพื่อประสิทธิ์พร" class="soul-input w-full p-2.5 rounded-xl">
+        <label class="block text-slate-700 font-bold mb-1">ชื่อผู้ถือครองบัญชีแก้ว (ชื่อ-นามสกุลจริง):</label>
+        <input type="text" id="m-name" placeholder="ระบุนามจริงเพื่อประสิทธิ์พร" class="lux-input w-full p-2.5 rounded-xl font-medium">
       </div>
 
       <div>
-        <label class="block text-slate-300 mb-1">สดับวจีผ่านสายสวรรค์ (เบอร์โทรศัพท์):</label>
-        <input type="tel" id="m-phone" placeholder="08XXXXXXXX" class="soul-input w-full p-2.5 rounded-xl">
+        <label class="block text-slate-700 font-bold mb-1">สดับวจีผ่านสายสวรรค์ (เบอร์โทรศัพท์):</label>
+        <input type="tel" id="m-phone" placeholder="08XXXXXXXX" class="lux-input w-full p-2.5 rounded-xl font-mono">
       </div>
 
       <div>
-        <label class="block text-slate-300 mb-1">สาส์นลมปราณ (อีเมล):</label>
-        <input type="email" id="m-email" placeholder="example@email.com" class="soul-input w-full p-2.5 rounded-xl">
+        <label class="block text-slate-700 font-bold mb-1">สาส์นลมปราณ (อีเมล):</label>
+        <input type="email" id="m-email" placeholder="example@email.com" class="lux-input w-full p-2.5 rounded-xl">
       </div>
 
       <div>
-        <label class="block text-slate-300 mb-1">เรือนเคหาสน์ในมนุษยโลก (ที่อยู่รับพัสดุมงคล):</label>
-        <textarea id="m-address" rows="2" placeholder="ที่อยู่รับพัสดุมงคลให้ถึงมือโดยสวัสดิภาพ" class="soul-input w-full p-2.5 rounded-xl"></textarea>
+        <label class="block text-slate-700 font-bold mb-1">เรือนเคหาสน์ในมนุษยโลก (ที่อยู่รับพัสดุมงคล):</label>
+        <textarea id="m-address" rows="2" placeholder="ที่อยู่จัดส่งพัสดุและเอกสารสำคัญ" class="lux-input w-full p-2.5 rounded-xl"></textarea>
       </div>
 
-      <button id="btn-save" onclick="blessAndRegisterSoul()" class="btn-naga-bless w-full py-3.5 text-xs shadow-xl mt-3 flex items-center justify-center gap-1.5">
+      <button id="btn-save" onclick="blessAndRegisterSoul()" class="btn-gold-action w-full py-3.5 text-xs rounded-2xl shadow-md mt-3 flex items-center justify-center gap-2">
         <span>✨ ประทับตราจิต & อัญเชิญบัตรแก้วเข้า LINE</span>
       </button>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
-    <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
-      <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+  <!-- Bottom Navigation: ธีมขาว คลีน หรูหรา -->
+  <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-white/95 border border-slate-200 backdrop-blur-md rounded-3xl p-2.5 z-40 shadow-xl">
+    <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-slate-100 text-center">
+      <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-600 hover:text-emerald-700 py-1 font-medium">
         <span class="text-xs">🛍️</span>
         <span class="text-[10px]">ร้านค้า</span>
       </a>
-      <a href="./booking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+      <a href="./booking.html" class="flex items-center justify-center gap-1 text-slate-600 hover:text-emerald-700 py-1 font-medium">
         <span class="text-xs">📅</span>
         <span class="text-[10px]">จองคิว</span>
       </a>
-      <a href="./pickacard_hub.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+      <a href="./pickacard_hub.html" class="flex items-center justify-center gap-1 text-slate-600 hover:text-emerald-700 py-1 font-medium">
         <span class="text-xs">🔮</span>
         <span class="text-[10px]">เสี่ยงทาย</span>
       </a>
     </div>
     <div class="grid grid-cols-3 gap-1 pt-1.5 text-center">
-      <a href="./tracking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+      <a href="./tracking.html" class="flex items-center justify-center gap-1 text-slate-600 hover:text-emerald-700 py-1 font-medium">
         <span class="text-xs">📦</span>
         <span class="text-[10px]">พัสดุ</span>
       </a>
-      <a href="./memberships.html" class="flex items-center justify-center gap-1 text-amber-300 font-bold py-1 bg-amber-400/10 rounded-xl border border-amber-300/30">
+      <a href="./memberships.html" class="flex items-center justify-center gap-1 text-emerald-800 font-bold py-1 bg-emerald-50 rounded-xl border border-emerald-200">
         <span class="text-xs">👤</span>
         <span class="text-[10px]">สมาชิก</span>
       </a>
-      <a href="./admin.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
+      <a href="./admin.html" class="flex items-center justify-center gap-1 text-slate-600 hover:text-emerald-700 py-1 font-medium">
         <span class="text-xs">⚙️</span>
         <span class="text-[10px]">แอดมิน</span>
       </a>
@@ -188,103 +202,87 @@
 
     let currentUserId = "";
 
-    window.onload = function() {
-      initLiffSoul();
-    };
+    document.addEventListener("DOMContentLoaded", function() {
+      startLiffProcess();
+    });
 
-    async function initLiffSoul() {
+    async function startLiffProcess() {
       const syncStatus = document.getElementById("sync-status");
       const soulName = document.getElementById("soul-name");
       const btn = document.getElementById("btn-save");
 
-      // ปิดปุ่มไว้ก่อนเพื่อรอให้ดึง Profile จาก LINE สำเร็จ
       if (btn) btn.disabled = true;
+      if (syncStatus) syncStatus.innerText = "กำลังเชื่อมจิตกับ LINE...";
 
       if (typeof liff === "undefined") {
-        if (syncStatus) syncStatus.innerText = "ไม่พบ LINE SDK";
-        alert("ไม่สามารถโหลดระบบ LINE LIFF SDK ได้ กรุณาลองรีเฟรชหน้าเว็บ");
+        if (syncStatus) syncStatus.innerText = "❌ ไม่พบ LINE SDK";
         return;
       }
 
       try {
-        if (syncStatus) syncStatus.innerText = "กำลังเชื่อมต่อ LINE...";
         await liff.init({ liffId: LIFF_ID });
 
-        // หากเปิดจาก Browser อื่นหรือยังไม่ได้ล็อกอิน ให้พาไปหน้ายืนยันตัวตน LINE ทันที
         if (!liff.isLoggedIn()) {
           if (syncStatus) syncStatus.innerText = "กำลังเข้าสู่ระบบ...";
           liff.login({ redirectUri: window.location.href });
           return;
         }
 
-        // ดักจับ User ID หลายช่องทางเพื่อป้องกัน ID หลุดหาย
-        let uid = "";
-        let displayName = "";
-        let pictureUrl = "";
-
-        // ช่องทางที่ 1: ดึงจาก LIFF Context ในแอป
+        // 1. ดึงจาก Context ก่อน (เสถียรที่สุดใน In-App Browser)
         const context = liff.getContext();
         if (context && context.userId) {
-          uid = context.userId;
+          currentUserId = context.userId;
         }
 
-        // ช่องทางที่ 2: ดึงจาก Decoded ID Token
-        if (!uid) {
+        // 2. ดึงจาก ID Token เสริม
+        if (!currentUserId) {
           const idToken = liff.getDecodedIDToken();
           if (idToken && idToken.sub) {
-            uid = idToken.sub;
+            currentUserId = idToken.sub;
           }
         }
 
-        // ช่องทางที่ 3: ดึงจาก liff.getProfile()
+        // 3. ดึง Profile เต็มเพื่อเอาชื่อและรูป
         try {
           const profile = await liff.getProfile();
           if (profile) {
-            if (!uid) uid = profile.userId;
-            displayName = profile.displayName || "";
-            pictureUrl = profile.pictureUrl || "";
+            if (!currentUserId) currentUserId = profile.userId;
+            if (profile.pictureUrl) {
+              document.getElementById("soul-avatar").src = profile.pictureUrl;
+            }
+            if (soulName) {
+              soulName.innerText = profile.displayName || "ผู้ถือบัญชี";
+            }
+            const nameInput = document.getElementById("m-name");
+            if (nameInput && !nameInput.value) {
+              nameInput.value = profile.displayName || "";
+            }
           }
-        } catch (profErr) {
-          console.warn("getProfile failed, using fallback context uid:", profErr);
+        } catch (pErr) {
+          console.warn("Profile fetch skipped:", pErr);
         }
 
-        currentUserId = uid;
-
-        if (!currentUserId) {
-          if (syncStatus) syncStatus.innerText = "ไม่พบ User ID";
-          alert("ระบบไม่สามารถระบุตัวตน LINE ของท่านได้ กรุณาเปิดผ่านลิงก์ LIFF ในแอปพลิเคชัน LINE อีกครั้งครับ");
-          return;
+        if (currentUserId) {
+          if (syncStatus) {
+            syncStatus.innerText = "ผูกดวงจิตแล้ว (" + currentUserId.substring(0, 5) + "...) ✅";
+            syncStatus.className = "text-[10px] font-medium text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300";
+          }
+          if (btn) btn.disabled = false;
+          recallPastSoul(currentUserId);
+        } else {
+          if (syncStatus) syncStatus.innerText = "⚠️ ไม่พบ User ID";
         }
-
-        // แสดงรูปและชื่อโปรไฟล์บนบัตร
-        if (pictureUrl) {
-          document.getElementById("soul-avatar").src = pictureUrl;
-        }
-        if (soulName) {
-          soulName.innerText = displayName || "ผู้ถือบัญชีแก้ว";
-        }
-
-        const nameInput = document.getElementById("m-name");
-        if (nameInput && !nameInput.value) {
-          nameInput.value = displayName || "";
-        }
-
-        // ปลดล็อกปุ่มบันทึก
-        if (btn) btn.disabled = false;
-        if (syncStatus) syncStatus.innerText = "ผูกดวงจิตแล้ว ✅";
-
-        // ค้นหาข้อมูลเดิมจากชีต member (Auto-fill)
-        recallPastSoul(currentUserId);
 
       } catch (err) {
-        console.error("LIFF Init Error:", err);
-        if (syncStatus) syncStatus.innerText = "การเชื่อมต่อขัดข้อง";
-        alert("เกิดข้อผิดพลาดในการโหลดตัวตน LINE: " + (err.message || JSON.stringify(err)));
+        if (syncStatus) syncStatus.innerText = "เชื่อมต่อขัดข้อง";
+        console.error("LIFF Error:", err);
       }
     }
 
     function recallPastSoul(uid) {
-      document.getElementById("sync-status").innerText = "กำลังเปิดบัญชีแก้ว...";
+      const syncStatus = document.getElementById("sync-status");
+      syncStatus.innerText = "กำลังเปิดบัญชีแก้ว...";
+
       fetch(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`)
         .then(r => r.json())
         .then(res => {
@@ -301,13 +299,13 @@
             document.getElementById("soul-balance").innerText = "฿" + Number(m.balance || 0).toLocaleString() + " มณี";
             document.getElementById("soul-privilege").innerText = m.privilege || "วรรณะนาคารัตนบารมี";
 
-            document.getElementById("sync-status").innerText = "ดึงข้อมูลเดิมแล้ว ✅";
+            syncStatus.innerText = "ดึงข้อมูลเดิมแล้ว ✅";
           } else {
-            document.getElementById("sync-status").innerText = "ดวงจิตใหม่พร้อมจารึก ✨";
+            syncStatus.innerText = "ดวงจิตใหม่พร้อมจารึก ✨";
           }
         })
         .catch(() => {
-          document.getElementById("sync-status").innerText = "พร้อมเข้าสู่พิธี";
+          syncStatus.innerText = "พร้อมเข้าสู่พิธี";
         });
     }
 
@@ -323,8 +321,7 @@
       const address = document.getElementById("m-address").value.trim();
 
       if (!name || !phone) {
-        alert("กรุณาระบุนามและเบอร์ติดต่อเพื่อผูกจิตสู่บาดาลครับ");
-        return;
+        return alert("กรุณาระบุนามและเบอร์ติดต่อเพื่อผูกจิตสู่บาดาลครับ");
       }
 
       const btn = document.getElementById("btn-save");
@@ -353,7 +350,7 @@
           alert(`🐍 สลักนามลงคลังแก้วสำเร็จ!\nสังข์ประจำกาย: [${res.memberCode}]\nบัตรแก้วรัตนบารมีได้สำแดงขึ้นในห้องแชท LINE แล้วครับ`);
 
           if (typeof liff !== "undefined" && liff.isInClient()) {
-            liff.closeWindow(); // ปิดหน้าต่างกลับสู่ห้องแชทเพื่อดูบัตร Flex Message ทันที
+            liff.closeWindow();
           }
         } else {
           alert("แจ้งเตือน: " + (res.message || "ไม่สามารถจารึกได้"));

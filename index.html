@@ -3,665 +3,521 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Shop@วินทร์ทรัพย์นาคราช • วัตถุมงคล & ของแท้</title>
-  
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="./config.js"></script>
+  <title>เรือนพยากรณ์วินทร์ทรัพย์นาคราช - ร้านค้าวัตถุมงคล</title>
+  <!-- Google Fonts & Tailwind CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <!-- LINE LIFF SDK -->
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            gold: {
+              light: '#FDE68A',
+              DEFAULT: '#D4AF37',
+              dark: '#9A6B15',
+              border: '#E6CA65'
+            },
+            emerald: {
+              deep: '#064E3B',
+              soft: '#047857',
+              light: '#F0FDF4'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Prompt", sans-serif;
-      background: radial-gradient(circle at 50% 0%, #064032 0%, #022018 45%, #010a08 100%);
-      color: #f8fafc;
-      min-height: 100vh;
-      margin: 0;
-      -webkit-font-smoothing: antialiased;
+      font-family: 'Prompt', sans-serif;
+      background: #FAF8F5;
+      color: #1C1917;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    .pearl-header {
-      background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
-      border: 1px solid rgba(250, 204, 21, 0.35);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid #E6CA65;
     }
-
-    .membership-style-card {
-      background: linear-gradient(160deg, rgba(6, 44, 34, 0.9) 0%, rgba(2, 24, 18, 0.95) 100%);
-      border: 1.4px solid rgba(250, 204, 21, 0.45);
-      border-radius: 22px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 16px rgba(250, 204, 21, 0.15);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    .badge-gold {
+      background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 100%);
+      color: #064E3B;
     }
-    .membership-style-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(250, 204, 21, 0.3);
-      border-color: #facc15;
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
     }
-
-    .btn-cart-add {
-      background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
-      border: 1px solid rgba(250, 204, 21, 0.4);
-      border-radius: 9999px;
-      color: #fef08a;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-    .btn-cart-add:hover {
-      background: #047857;
-      color: #ffffff;
-      box-shadow: 0 0 14px rgba(250, 204, 21, 0.4);
-    }
-    .plus-badge {
-      color: #ef4444;
-      font-weight: 900;
-      font-size: 13px;
-      line-height: 1;
-      margin-left: 2px;
-      text-shadow: 0 0 4px rgba(239, 68, 68, 0.6);
-    }
-
-    .cart-glossy-panel {
-      background: linear-gradient(160deg, rgba(6, 40, 32, 0.98) 0%, rgba(2, 18, 14, 0.99) 60%, rgba(0, 8, 6, 1) 100%);
-      border: 1.5px solid rgba(250, 204, 21, 0.4);
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(250, 204, 21, 0.15);
-      backdrop-filter: blur(25px);
-    }
-    .cart-input-lux {
-      background: rgba(0, 15, 11, 0.75);
-      border: 1px solid rgba(250, 204, 21, 0.25);
-      color: #fef9c3;
-    }
-    .cart-input-lux:focus {
-      border-color: #facc15;
-      background: rgba(0, 22, 16, 0.9);
-      outline: none;
-    }
-
-    .cat-btn.active {
-      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022018;
-      font-weight: 700;
-      box-shadow: 0 3px 10px rgba(202, 138, 4, 0.35);
-    }
-    .cat-btn {
-      background: rgba(2, 44, 34, 0.7);
-      border: 1px solid rgba(254, 240, 138, 0.2);
-      color: #cbd5e1;
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
-<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-36">
+<body class="min-h-screen pb-24">
 
-  <!-- Header -->
-  <header class="pearl-header rounded-3xl p-3 mb-3.5 flex items-center justify-between">
-    <div class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
-        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
-          <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain p-0.5" onerror="this.src='https://placehold.co/60x60/064032/fef08a?text=🐍'">
+  <!-- Header Bar -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#E6CA65]/40 shadow-sm px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="text-2xl">🐍</span>
+        <div>
+          <h1 class="text-sm font-bold text-emerald-deep leading-tight">วินทร์ทรัพย์นาคราช</h1>
+          <p class="text-[10px] text-gold-dark font-medium">ร้านค้าวัตถุมงคล & เทียนบูชาสายญาณ</p>
         </div>
       </div>
-      <div>
-        <h1 class="text-xs font-bold text-amber-200 tracking-wide">Shop@วินทร์ทรัพย์นาคราช</h1>
-        <p class="text-[9px] text-emerald-300/80 font-light">บูชาวัตถุมงคล & ของแท้บารมี</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center gap-2">
-      <button onclick="openCartModal()" class="relative p-2 rounded-full bg-black/50 border border-amber-300/30 text-amber-300">
-        🛒
-        <span id="cart-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+      <!-- ตะกร้าสินค้าปุ่มบน -->
+      <button onclick="openCartModal()" class="relative p-2 rounded-full bg-[#FAF8F5] border border-gold-border hover:bg-white transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
       </button>
-      <a href="https://www.facebook.com/thewinmu/" target="_blank" class="text-[10px] bg-blue-600/25 border border-blue-400/40 text-blue-100 px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
-        <span>📘</span>
-        <span>เพจ</span>
-      </a>
-      <a href="https://shop.line.me/@thewinmu" target="_blank" class="text-[10px] bg-amber-400/20 border border-amber-300/40 text-amber-200 px-2.5 py-1 rounded-full font-medium">
-        MyShop ↗
-      </a>
     </div>
   </header>
 
-  <!-- เมนูลัด 3 ช่องด้านบน -->
-  <div class="grid grid-cols-3 gap-2 mb-3.5">
-    <a href="./booking.html" class="bg-black/40 border border-amber-400/30 rounded-2xl p-2.5 text-center flex flex-col items-center hover:bg-black/60 transition">
-      <span class="text-base mb-0.5">📅</span>
-      <span class="text-[10px] font-bold text-amber-200">จองคิวตรวจดวง</span>
-      <span class="text-[8px] text-emerald-300/80 font-light">โทรปรึกษาสด</span>
-    </a>
-    <a href="./pickacard_hub.html" class="bg-black/40 border border-amber-400/30 rounded-2xl p-2.5 text-center flex flex-col items-center hover:bg-black/60 transition">
-      <span class="text-base mb-0.5">🔮</span>
-      <span class="text-[10px] font-bold text-amber-200">เปิดไพ่นำทาง</span>
-      <span class="text-[8px] text-emerald-300/80 font-light">สาส์นบรมครู & ดวง</span>
-    </a>
-    <a href="./tracking.html" class="bg-black/40 border border-amber-400/30 rounded-2xl p-2.5 text-center flex flex-col items-center hover:bg-black/60 transition">
-      <span class="text-base mb-0.5">📦</span>
-      <span class="text-[10px] font-bold text-amber-200">เช็กสถานะพัสดุ</span>
-      <span class="text-[8px] text-emerald-300/80 font-light">ติดตามเรียลไทม์</span>
-    </a>
-  </div>
-
-  <!-- ช่องค้นหาสินค้า -->
-  <div class="bg-white/95 rounded-full px-3.5 py-2 mb-3 shadow-md flex items-center justify-between border border-amber-300/40">
-    <div class="flex items-center gap-2 flex-1">
-      <span class="text-xs text-amber-600">🔍</span>
-      <input type="text" id="search-input" oninput="handleSearch()" placeholder="ค้นหาสินค้ามงคล หรือรหัสสินค้า..." class="bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none w-full font-normal">
-    </div>
-    <span id="search-count" class="text-[10px] text-emerald-800 font-semibold font-mono"></span>
-  </div>
-
-  <!-- แถบหมวดหมู่สินค้า -->
-  <div id="category-bar" class="flex items-center gap-1.5 mb-3.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-    <button onclick="filterCategory('all')" id="tab-all" class="cat-btn active px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]">
-      ทั้งหมด
-    </button>
-  </div>
-
-  <!-- รายการสินค้า 2 คอลัมน์ -->
-  <div id="product-container" class="grid grid-cols-2 gap-3">
-    <div class="col-span-full py-16 text-center text-xs text-amber-200/80 animate-pulse font-light">
-      กำลังเปิดคลังวัตถุมงคล...
-    </div>
-  </div>
-
-  <!-- MODAL: รายละเอียดสินค้า -->
-  <div id="detail-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="cart-glossy-panel rounded-t-3xl sm:rounded-3xl w-full max-w-md p-5 text-white max-h-[88vh] flex flex-col justify-between overflow-y-auto">
-      <div>
-        <div class="flex items-center justify-between pb-2.5 border-b border-amber-400/20 mb-3">
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] font-mono font-bold text-amber-300 bg-amber-400/20 px-2 py-0.5 rounded border border-amber-400/30" id="detail-code">A001</span>
-            <span class="text-xs font-semibold text-emerald-200" id="detail-category">หมวดหมู่</span>
+  <!-- Banner & Status Bar -->
+  <main class="max-w-md mx-auto px-4 mt-3 space-y-4">
+    <!-- กล่องโปรไฟล์สมาชิก -->
+    <div id="user-info-box" class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-sm">
+      <div class="flex items-center space-x-3">
+        <img id="user-avatar" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full border border-gold-border object-cover" alt="User">
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <span id="user-name" class="text-xs font-bold text-stone-800">กำลังเชื่อมต่อ LINE...</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded badge-gold font-bold">ศรัทธาบารมี</span>
           </div>
-          <button onclick="closeDetailModal()" class="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white text-sm">✕</button>
-        </div>
-
-        <div id="detail-img-box" class="w-full h-52 bg-black/40 rounded-2xl overflow-hidden mb-3.5 flex items-center justify-center p-2 border border-amber-400/30">
-          <img id="detail-img" src="" alt="รูปสินค้า" class="w-full h-full object-contain">
-        </div>
-
-        <h2 id="detail-name" class="text-sm font-bold text-amber-100 leading-snug mb-1">ชื่อสินค้า</h2>
-        
-        <div class="flex items-baseline gap-2 mb-3">
-          <span id="detail-price" class="text-xl font-black text-amber-300 font-mono">฿0</span>
-          <span id="detail-original-price" class="text-xs text-slate-400 line-through"></span>
-          <span class="ml-auto text-[10px] font-bold text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-400/30">✨ พร้อมบูชา</span>
-        </div>
-
-        <div class="bg-black/30 p-3 rounded-xl border border-white/5 text-xs text-slate-200 leading-relaxed font-light mb-3">
-          <div class="font-bold text-amber-300 mb-0.5">รายละเอียดวัตถุมงคล:</div>
-          <p id="detail-desc" class="whitespace-pre-line text-slate-300 font-light">-</p>
+          <p id="user-uid" class="text-[10px] text-stone-400">LINE Connected</p>
         </div>
       </div>
+      <a href="booking.html" class="text-[11px] font-semibold text-emerald-soft bg-emerald-light px-2.5 py-1.5 rounded-lg border border-emerald-deep/20 hover:bg-emerald-100 transition">
+        📅 จองคิวดูดวง
+      </a>
+    </div>
 
-      <div class="pt-2 border-t border-amber-400/20 flex gap-2">
-        <button id="detail-btn-cart" class="btn-cart-add flex-1 py-3 text-xs font-bold shadow flex items-center justify-center gap-1.5">
-          <span>🛒 หยิบใส่ตะกร้า</span><span class="plus-badge">+</span>
+    <!-- รายการสินค้า -->
+    <div>
+      <div class="flex items-center justify-between mb-2 px-1">
+        <h2 class="text-sm font-bold text-stone-800 flex items-center gap-1.5">
+          <span class="text-gold-dark">✦</span> รายการวัตถุมงคลทั้งหมด
+        </h2>
+        <span id="product-count" class="text-[11px] text-stone-500 font-medium">กำลังโหลด...</span>
+      </div>
+
+      <!-- รายการสินค้า (Grid) -->
+      <div id="product-grid" class="grid grid-cols-2 gap-3">
+        <!-- Skeleton Loading -->
+        <div class="glass-card rounded-2xl p-3 animate-pulse space-y-2">
+          <div class="w-full h-36 bg-stone-200 rounded-xl"></div>
+          <div class="h-3 bg-stone-200 rounded w-3/4"></div>
+          <div class="h-3 bg-stone-200 rounded w-1/2"></div>
+        </div>
+        <div class="glass-card rounded-2xl p-3 animate-pulse space-y-2">
+          <div class="w-full h-36 bg-stone-200 rounded-xl"></div>
+          <div class="h-3 bg-stone-200 rounded w-3/4"></div>
+          <div class="h-3 bg-stone-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- แถบด้านล่าง: สรุปตะกร้า (Sticky Bottom) -->
+  <div id="bottom-cart-bar" class="hidden fixed bottom-3 left-4 right-4 max-w-md mx-auto z-40">
+    <div class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-lg border border-gold-border bg-white/95">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-full bg-emerald-deep flex items-center justify-center text-white text-xs font-bold" id="bottom-cart-qty">
+          0
+        </div>
+        <div>
+          <p class="text-[10px] text-stone-500">ยอดรวมทั้งสิ้น</p>
+          <p class="text-sm font-bold text-gold-dark" id="bottom-cart-total">฿0</p>
+        </div>
+      </div>
+      <button onclick="openCartModal()" class="bg-emerald-deep text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md hover:bg-emerald-800 transition">
+        ดูตะกร้าสินค้า 🛒
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal ตะกร้าสินค้าและฟอร์มจัดส่ง -->
+  <div id="cart-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-gold-border">
+      <!-- Modal Header -->
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-[#FAF8F5]">
+        <div class="flex items-center space-x-2">
+          <span class="text-emerald-deep font-bold text-sm">🛒 ตะกร้าสินค้า & รายละเอียดจัดส่ง</span>
+        </div>
+        <button onclick="closeCartModal()" class="text-stone-400 hover:text-stone-600 p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
-    </div>
-  </div>
 
-  <!-- MODAL: ตะกร้าสินค้า & สั่งซื้อ -->
-  <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="cart-glossy-panel rounded-t-3xl sm:rounded-3xl w-full max-w-md p-5 text-white max-h-[90vh] flex flex-col justify-between overflow-y-auto">
-      <div>
-        <div class="flex items-center justify-between pb-3 border-b border-amber-400/20 mb-3">
-          <h3 class="text-xs font-extrabold text-amber-200 tracking-wider flex items-center gap-2">
-            <span>🛒</span> ตะกร้าวัตถุมงคล & สั่งซื้อ
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-4 overflow-y-auto space-y-4 flex-1 hide-scrollbar">
+        <!-- รายการสินค้าในตะกร้า -->
+        <div>
+          <h3 class="text-xs font-bold text-stone-700 mb-2">รายการที่เลือก</h3>
+          <div id="cart-items-container" class="space-y-2">
+            <!-- Render Cart Items -->
+          </div>
+          <div id="cart-empty-msg" class="text-center py-6 text-xs text-stone-400 hidden">
+            ไม่มีสินค้าในตะกร้า
+          </div>
+        </div>
+
+        <!-- ฟอร์มชื่อ ที่อยู่ เบอร์โทร -->
+        <div class="border-t border-stone-200 pt-3 space-y-2.5">
+          <h3 class="text-xs font-bold text-stone-700 flex items-center gap-1">
+            <span>📍</span> ข้อมูลผู้รับพัสดุ
           </h3>
-          <button onclick="closeCartModal()" class="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white text-sm">✕</button>
+          <div>
+            <label class="text-[11px] text-stone-600 block mb-1">ชื่อ-นามสกุล ผู้รับ *</label>
+            <input type="text" id="cust-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep">
+          </div>
+          <div>
+            <label class="text-[11px] text-stone-600 block mb-1">เบอร์โทรศัพท์ *</label>
+            <input type="tel" id="cust-phone" placeholder="08xxxxxxxx" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep">
+          </div>
+          <div>
+            <label class="text-[11px] text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุ (บ้านเลขที่ ตำบล อำเภอ จังหวัด รหัสไปรษณีย์) *</label>
+            <textarea id="cust-address" rows="2" placeholder="ระบุที่อยู่จัดส่งโดยละเอียด" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep"></textarea>
+          </div>
         </div>
 
-        <div id="cart-items-container" class="space-y-2 max-h-44 overflow-y-auto py-1 my-1 text-xs no-scrollbar"></div>
-
-        <div class="mt-3 pt-3 border-t border-amber-400/20 space-y-2 text-xs">
-          <div class="font-bold text-amber-300 flex items-center gap-1.5">
-            <span>📍</span> ที่อยู่จัดส่งพัสดุ
+        <!-- สรุปยอด -->
+        <div class="bg-[#FDFBF7] p-3 rounded-2xl border border-gold-border space-y-1.5">
+          <div class="flex justify-between text-xs text-stone-600">
+            <span>รวมค่าสินค้า</span>
+            <span id="modal-subtotal" class="font-bold text-stone-800">฿0</span>
           </div>
-          <input type="text" id="cust-name" placeholder="ชื่อ-นามสกุล ผู้รับพัสดุ" class="cart-input-lux w-full p-2.5 rounded-xl text-xs placeholder-slate-400">
-          <input type="tel" id="cust-phone" placeholder="เบอร์โทรศัพท์ติดต่อ" class="cart-input-lux w-full p-2.5 rounded-xl text-xs placeholder-slate-400">
-          <textarea id="cust-address" rows="2" placeholder="ที่อยู่จัดส่งครบถ้วน (บ้านเลขที่, แขวง/ตำบล, เขต/อำเภอ, จังหวัด, รหัสไปรษณีย์)" class="cart-input-lux w-full p-2.5 rounded-xl text-xs placeholder-slate-400"></textarea>
+          <div class="flex justify-between text-xs text-stone-600">
+            <span>ค่าบริการจัดส่ง</span>
+            <span class="font-bold text-emerald-deep">ฟรีมงคลบารมี</span>
+          </div>
+          <div class="border-t border-gold-border/40 pt-1.5 flex justify-between text-sm font-bold">
+            <span class="text-stone-800">ยอดชำระสุทธิ</span>
+            <span id="modal-total" class="text-gold-dark">฿0</span>
+          </div>
         </div>
       </div>
 
-      <div class="pt-3 border-t border-amber-400/20 space-y-2.5 mt-3">
-        <div class="flex justify-between items-center bg-black/40 px-3.5 py-2.5 rounded-xl border border-amber-400/20">
-          <span class="text-xs text-emerald-200/90 font-light">ยอดชำระสุทธิ:</span>
-          <span id="cart-total-price" class="text-lg font-black text-amber-300 font-mono">฿0</span>
-        </div>
-
-        <button id="btn-submit-order" onclick="submitOrderViaLiff()" class="btn-cart-add w-full py-3.5 text-center text-xs font-bold shadow-xl flex items-center justify-center gap-2">
-          <span>💬 ยืนยันสั่งซื้อและส่งบิลเข้าแชท LINE</span>
+      <!-- Modal Footer -->
+      <div class="p-3 border-t border-stone-200 bg-white">
+        <button id="btn-submit-order" onclick="confirmOrder()" class="w-full bg-emerald-deep text-white font-bold text-xs py-3 rounded-xl shadow-md hover:bg-emerald-800 transition flex items-center justify-center space-x-1.5">
+          <span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>
         </button>
       </div>
     </div>
   </div>
-
-  <!-- แถบนำทางด้านล่าง 2 แถวแบบคงที่ ไม่เลื่อน ไม่ตาลาย -->
-  <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
-    <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
-      <a href="./index.html" class="flex items-center justify-center gap-1 text-amber-300 font-bold py-1 bg-amber-400/10 rounded-xl border border-amber-300/30">
-        <span class="text-xs">🛍️</span>
-        <span class="text-[10px]">ร้านค้า</span>
-      </a>
-      <a href="./booking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">📅</span>
-        <span class="text-[10px]">จองคิว</span>
-      </a>
-      <a href="./pickacard_hub.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">🔮</span>
-        <span class="text-[10px]">เสี่ยงทาย</span>
-      </a>
-    </div>
-    <div class="grid grid-cols-3 gap-1 pt-1.5 text-center">
-      <a href="./tracking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">📦</span>
-        <span class="text-[10px]">ติดตามพัสดุ</span>
-      </a>
-      <a href="./memberships.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">👤</span>
-        <span class="text-[10px]">ระบบสมาชิก</span>
-      </a>
-      <a href="./admin.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">⚙️</span>
-        <span class="text-[10px]">แอดมิน</span>
-      </a>
-    </div>
-  </nav>
 
   <script>
-    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
-    const MY_LIFF_ID = "2007499712-B0uid9G3";
+    // ==========================================
+    // CONFIGURATION (ตั้งค่า LIFF & Backend API)
+    // ==========================================
+    const LIFF_ID = "2006625890-g27yBv5e";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwYyY1q6F0qBjhqN9cO-W_KSp-6ZlU4Lw9mYfG3d2A/exec";
 
+    let currentUserId = "GUEST_USER";
     let allProducts = [];
-    let currentCategory = "all";
-    let searchKeyword = "";
-    let localCart = JSON.parse(localStorage.getItem("naga_cart") || "[]");
+    let cart = [];
 
-    window.addEventListener("DOMContentLoaded", () => {
-      updateCartBadge();
-      initLiff();
-      fetchProducts();
+    // ==========================================
+    // INITIALIZATION (LIFF SDK)
+    // ==========================================
+    window.addEventListener("DOMContentLoaded", async () => {
+      try {
+        if (typeof liff !== "undefined") {
+          await liff.init({ liffId: LIFF_ID });
+          if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            currentUserId = profile.userId;
+            document.getElementById("user-name").innerText = profile.displayName || "ผู้ศรัทธา";
+            document.getElementById("user-uid").innerText = "ID: " + profile.userId.substring(0, 10) + "...";
+            if (profile.pictureUrl) {
+              document.getElementById("user-avatar").src = profile.pictureUrl;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("LIFF Init Notice:", err);
+      }
+      loadProducts();
     });
 
-    function initLiff() {
-      if (typeof liff !== "undefined") {
-        liff.init({ liffId: MY_LIFF_ID }).then(() => {
-          if (liff.isLoggedIn()) {
-            liff.getProfile().then(p => {
-              const nameInput = document.getElementById("cust-name");
-              if (nameInput && !nameInput.value) nameInput.value = p.displayName;
-            });
-          }
-        }).catch(() => {});
-      }
-    }
+    // ==========================================
+    // FETCH PRODUCTS (ดึงจาก Apps Script พร้อม Cache)
+    // ==========================================
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${API_URL}?action=get_shop_products`);
+        const data = await res.json();
 
-    function resolveProductImage(imgId) {
-      if (imgId && typeof imgId === "string" && imgId.trim() !== "") {
-        const raw = imgId.trim();
-        if (raw.startsWith("http://") || raw.startsWith("https://")) {
-          return raw;
+        if (data.status === "success" && data.products) {
+          allProducts = data.products;
+          renderProductGrid(allProducts);
+        } else {
+          document.getElementById("product-grid").innerHTML = `
+            <div class="col-span-2 text-center py-10 text-xs text-stone-400">
+              ไม่พบรายการสินค้าที่เปิดจำหน่าย
+            </div>`;
         }
-        return `https://drive.google.com/thumbnail?id=${raw}&sz=w1000`;
+      } catch (err) {
+        console.error("Load Products Error:", err);
+        document.getElementById("product-grid").innerHTML = `
+          <div class="col-span-2 text-center py-10 text-xs text-red-500">
+            สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง
+          </div>`;
       }
-      return null;
     }
 
-    function fetchProducts() {
-      fetch(`${WEB_URL}?action=get_shop_products`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success" && res.products && res.products.length > 0) {
-            allProducts = res.products;
-            buildCategoryTabs();
-            renderProductCards();
-          } else {
-            document.getElementById("product-container").innerHTML = `
-              <div class="col-span-full py-16 text-center text-xs text-slate-300 font-light">
-                ขณะนี้ไม่มีสินค้าพร้อมจำหน่าย
-              </div>
-            `;
-          }
-        })
-        .catch(() => {
-          document.getElementById("product-container").innerHTML = `
-            <div class="col-span-full py-16 text-center text-xs text-slate-300 font-light">
-              การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้ง
-            </div>
-          `;
-        });
+    function formatDriveImg(imgVal) {
+      if (!imgVal) return "https://images.unsplash.com/photo-1603555501671-8f96b3fce8b4?w=500&q=80";
+      if (imgVal.startsWith("http")) return imgVal;
+      return `https://drive.google.com/thumbnail?id=${imgVal}&sz=w600`;
     }
 
-    function buildCategoryTabs() {
-      const bar = document.getElementById("category-bar");
-      const cats = Array.from(new Set(allProducts.map(p => p.category))).filter(Boolean);
-      cats.forEach(c => {
-        const btn = document.createElement("button");
-        btn.id = `tab-${c}`;
-        btn.className = "cat-btn px-3.5 py-1.5 rounded-full whitespace-nowrap text-[11px]";
-        btn.innerText = c;
-        btn.onclick = () => filterCategory(c);
-        bar.appendChild(btn);
-      });
-    }
+    function renderProductGrid(products) {
+      const container = document.getElementById("product-grid");
+      document.getElementById("product-count").innerText = `${products.length} รายการ`;
 
-    function filterCategory(cat) {
-      currentCategory = cat;
-      document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-      const activeBtn = document.getElementById(`tab-${cat}`);
-      if (activeBtn) activeBtn.classList.add("active");
-      renderProductCards();
-    }
-
-    function handleSearch() {
-      searchKeyword = document.getElementById("search-input").value.trim().toLowerCase();
-      renderProductCards();
-    }
-
-    function renderProductCards() {
-      const container = document.getElementById("product-container");
-      container.innerHTML = "";
-
-      const filtered = allProducts.filter(p => {
-        const matchCat = (currentCategory === "all" || p.category === currentCategory);
-        const matchSearch = (!searchKeyword || 
-                             p.name.toLowerCase().includes(searchKeyword) || 
-                             p.id.toLowerCase().includes(searchKeyword) ||
-                             (p.description && p.description.toLowerCase().includes(searchKeyword)));
-        return matchCat && matchSearch;
-      });
-
-      document.getElementById("search-count").innerText = `${filtered.length} รายการ`;
-
-      if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-12 text-center text-xs text-slate-300">ไม่พบสินค้า</div>`;
+      if (products.length === 0) {
+        container.innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-stone-400">ขณะนี้ไม่มีสินค้าในคลัง</div>`;
         return;
       }
 
-      filtered.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "membership-style-card p-3";
-
-        const productImgUrl = resolveProductImage(p.imageId);
-
-        let imgBlockHtml = "";
-        if (productImgUrl) {
-          imgBlockHtml = `
-            <div class="w-full h-32 bg-black/40 rounded-xl overflow-hidden mb-2 flex items-center justify-center p-1.5 border border-amber-400/20">
-              <img src="${productImgUrl}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-amber-300\\'><span class=\\'text-2xl\\'>🐍</span><span class=\\'text-[9px] font-mono mt-1 text-slate-400\\'>${p.id}</span></div>'">
-            </div>
-          `;
-        } else {
-          imgBlockHtml = `
-            <div class="w-full h-32 bg-gradient-to-br from-black/60 to-emerald-950/40 rounded-xl overflow-hidden mb-2 flex flex-col items-center justify-center border border-amber-400/20 text-center p-2">
-              <span class="text-3xl text-amber-300 drop-shadow-[0_2px_8px_rgba(250,204,21,0.4)]">🐍</span>
-              <span class="text-[10px] font-mono font-bold text-amber-200 mt-1">${p.id}</span>
-              <span class="text-[8px] text-emerald-300/70">วินทร์ทรัพย์นาคราช</span>
-            </div>
-          `;
-        }
-
-        const origPriceHtml = p.originalPrice 
-          ? `<span class="text-[9px] text-slate-400 line-through">฿${Number(p.originalPrice).toLocaleString()}</span>` 
-          : '';
-
-        card.innerHTML = `
-          <div onclick="openDetailModal('${p.id}')" class="cursor-pointer">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-[10px] font-bold text-amber-300 font-mono">${p.id || 'A001'}</span>
-              <span class="text-[9px] text-emerald-300 font-semibold bg-emerald-500/20 border border-emerald-400/30 px-1.5 py-0.5 rounded">ของแท้</span>
-            </div>
-
-            ${imgBlockHtml}
-
-            <h3 class="text-[11px] font-bold text-amber-100 leading-snug line-clamp-1 mb-0.5">${p.name}</h3>
-            <p class="text-[9px] text-emerald-200/60 font-light line-clamp-1 mb-2">${p.description || '-'}</p>
-          </div>
-
-          <div class="pt-2 border-t border-amber-400/20 flex items-center justify-between">
-            <div onclick="openDetailModal('${p.id}')" class="cursor-pointer">
-              ${origPriceHtml}
-              <div class="text-xs font-black text-amber-300 font-mono">฿${Number(p.price).toLocaleString()}</div>
+      container.innerHTML = products.map(p => {
+        const imgUrl = formatDriveImg(p.imageId);
+        return `
+          <div class="glass-card rounded-2xl p-2.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+            <div>
+              <div class="relative w-full h-36 rounded-xl overflow-hidden bg-stone-100 mb-2 border border-gold-border/40">
+                <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-cover">
+                <span class="absolute top-1.5 right-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded badge-gold">
+                  คงเหลือ ${p.stock}
+                </span>
+              </div>
+              <h3 class="text-xs font-bold text-stone-800 line-clamp-1">${p.name}</h3>
+              <p class="text-[10px] text-stone-500 line-clamp-2 my-1 leading-snug">${p.description || 'วัตถุมงคลเสริมดวงชะตา'}</p>
             </div>
             
-            <button onclick="addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${productImgUrl || ''}')" class="btn-cart-add px-2.5 py-1 text-[11px] font-bold shadow flex items-center gap-0.5">
-              <span>🛒</span>
-              <span class="plus-badge">+</span>
-            </button>
+            <div class="mt-2 pt-2 border-t border-stone-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-gold-dark">฿${Number(p.price).toLocaleString()}</span>
+                ${p.originalPrice ? `<span class="text-[9px] text-stone-400 line-through ml-1">฿${p.originalPrice}</span>` : ''}
+              </div>
+              <button onclick="addToCart('${p.id}')" class="bg-emerald-deep text-white text-[11px] font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-800 transition shadow-sm">
+                + สั่งจอง
+              </button>
+            </div>
           </div>
         `;
-        container.appendChild(card);
-      });
+      }).join("");
     }
 
-    function openDetailModal(productId) {
-      const p = allProducts.find(item => item.id === productId);
-      if (!p) return;
+    // ==========================================
+    // CART MANAGEMENT
+    // ==========================================
+    function addToCart(productId) {
+      const product = allProducts.find(p => String(p.id).trim() === String(productId).trim());
+      if (!product) return;
 
-      document.getElementById("detail-code").innerText = p.id;
-      document.getElementById("detail-category").innerText = p.category || "ทั่วไป";
-      document.getElementById("detail-name").innerText = p.name;
-      document.getElementById("detail-price").innerText = `฿${Number(p.price).toLocaleString()}`;
-      document.getElementById("detail-desc").innerText = p.description || "ไม่มีรายละเอียดเพิ่มเติม";
-      
-      const origEl = document.getElementById("detail-original-price");
-      if (p.originalPrice) {
-        origEl.innerText = `฿${Number(p.originalPrice).toLocaleString()}`;
-        origEl.classList.remove("hidden");
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        if (existing.qty < product.stock) {
+          existing.qty += 1;
+        } else {
+          alert(`สินค้า ${product.name} มีในคลังเพียง ${product.stock} ชิ้นครับ`);
+          return;
+        }
       } else {
-        origEl.classList.add("hidden");
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: Number(product.price),
+          img: formatDriveImg(product.imageId),
+          qty: 1
+        });
       }
-
-      const productImgUrl = resolveProductImage(p.imageId);
-      const imgBox = document.getElementById("detail-img-box");
-
-      if (productImgUrl) {
-        imgBox.innerHTML = `
-          <img id="detail-img" src="${productImgUrl}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-amber-300\\'><span class=\\'text-4xl\\'>🐍</span><span class=\\'text-xs font-mono mt-1 text-slate-300\\'>${p.id}</span></div>'">
-        `;
-      } else {
-        imgBox.innerHTML = `
-          <div class="flex flex-col items-center justify-center h-full text-center text-amber-300">
-            <span class="text-5xl drop-shadow-[0_2px_10px_rgba(250,204,21,0.5)]">🐍</span>
-            <span class="text-sm font-mono font-bold text-amber-200 mt-2">${p.id}</span>
-            <span class="text-[10px] text-emerald-300/80">วินทร์ทรัพย์นาคราช</span>
-          </div>
-        `;
-      }
-
-      const btnCart = document.getElementById("detail-btn-cart");
-      btnCart.onclick = () => {
-        addToCart(p.id, p.name, p.price, productImgUrl || '');
-        closeDetailModal();
-      };
-
-      document.getElementById("detail-modal").classList.remove("hidden");
+      updateCartUI();
     }
 
-    function closeDetailModal() {
-      document.getElementById("detail-modal").classList.add("hidden");
-    }
+    function changeQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
 
-    function addToCart(id, name, price, img) {
-      const exist = localCart.find(i => i.id === id);
-      if (exist) {
-        exist.qty += 1;
-      } else {
-        localCart.push({ id, name, price, img, qty: 1 });
+      const product = allProducts.find(p => p.id === productId);
+      const maxStock = product ? product.stock : 99;
+
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      } else if (item.qty > maxStock) {
+        item.qty = maxStock;
+        alert(`มีสินค้าในคลังสูงสุด ${maxStock} ชิ้นครับ`);
       }
-      localStorage.setItem("naga_cart", JSON.stringify(localCart));
-      updateCartBadge();
-      alert(`หยิบ "${name}" ใส่ตะกร้าเรียบร้อยแล้ว`);
+      updateCartUI();
     }
 
-    function updateCartBadge() {
+    function updateCartUI() {
+      const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+      const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
       const badge = document.getElementById("cart-badge");
-      const totalQty = localCart.reduce((sum, i) => sum + i.qty, 0);
       if (totalQty > 0) {
         badge.innerText = totalQty;
         badge.classList.remove("hidden");
       } else {
         badge.classList.add("hidden");
       }
+
+      const bottomBar = document.getElementById("bottom-cart-bar");
+      if (totalQty > 0) {
+        bottomBar.classList.remove("hidden");
+        document.getElementById("bottom-cart-qty").innerText = totalQty;
+        document.getElementById("bottom-cart-total").innerText = `฿${totalAmount.toLocaleString()}`;
+      } else {
+        bottomBar.classList.add("hidden");
+      }
+
+      renderCartModalItems(totalAmount);
+    }
+
+    function renderCartModalItems(totalAmount) {
+      const container = document.getElementById("cart-items-container");
+      const emptyMsg = document.getElementById("cart-empty-msg");
+
+      if (cart.length === 0) {
+        container.innerHTML = "";
+        emptyMsg.classList.remove("hidden");
+      } else {
+        emptyMsg.classList.add("hidden");
+        container.innerHTML = cart.map(i => `
+          <div class="flex items-center justify-between bg-stone-50 p-2 rounded-xl border border-stone-200">
+            <div class="flex items-center space-x-2">
+              <img src="${i.img}" class="w-10 h-10 rounded-lg object-cover border border-gold-border" alt="${i.name}">
+              <div>
+                <p class="text-xs font-bold text-stone-800 line-clamp-1">${i.name}</p>
+                <p class="text-[10px] text-gold-dark font-medium">฿${i.price.toLocaleString()} / ชิ้น</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="changeQty('${i.id}', -1)" class="w-6 h-6 rounded-md bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs">-</button>
+              <span class="text-xs font-bold w-4 text-center">${i.qty}</span>
+              <button onclick="changeQty('${i.id}', 1)" class="w-6 h-6 rounded-md bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs">+</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      document.getElementById("modal-subtotal").innerText = `฿${totalAmount.toLocaleString()}`;
+      document.getElementById("modal-total").innerText = `฿${totalAmount.toLocaleString()}`;
     }
 
     function openCartModal() {
-      const container = document.getElementById("cart-items-container");
-      container.innerHTML = "";
-
-      if (localCart.length === 0) {
-        container.innerHTML = `<div class="py-8 text-center text-xs text-slate-400 font-light">ยังไม่มีสินค้าในตะกร้า</div>`;
-        document.getElementById("cart-total-price").innerText = "฿0";
-      } else {
-        let total = 0;
-        localCart.forEach((item, index) => {
-          total += item.price * item.qty;
-          const row = document.createElement("div");
-          row.className = "p-2.5 rounded-xl bg-black/40 border border-amber-400/20 flex items-center justify-between";
-          
-          let imgHtml = item.img 
-            ? `<img src="${item.img}" class="w-9 h-9 rounded-lg object-contain bg-black/60 border border-amber-400/20 p-0.5">`
-            : `<div class="w-9 h-9 rounded-lg bg-black/60 border border-amber-400/20 flex items-center justify-center text-xs">🐍</div>`;
-
-          row.innerHTML = `
-            <div class="flex items-center gap-2.5">
-              ${imgHtml}
-              <div>
-                <div class="font-bold text-amber-100 text-[11px] line-clamp-1">${item.name}</div>
-                <div class="text-emerald-300/80 text-[10px]">฿${item.price.toLocaleString()} x ${item.qty}</div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-amber-300 font-mono text-xs">฿${(item.price * item.qty).toLocaleString()}</span>
-              <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300 font-bold ml-1 text-sm">✕</button>
-            </div>
-          `;
-          container.appendChild(row);
-        });
-        document.getElementById("cart-total-price").innerText = `฿${total.toLocaleString()}`;
-      }
-
       document.getElementById("cart-modal").classList.remove("hidden");
+      renderCartModalItems(cart.reduce((sum, i) => sum + (i.price * i.qty), 0));
     }
 
     function closeCartModal() {
       document.getElementById("cart-modal").classList.add("hidden");
     }
 
-    function removeFromCart(index) {
-      localCart.splice(index, 1);
-      localStorage.setItem("naga_cart", JSON.stringify(localCart));
-      updateCartBadge();
-      openCartModal();
-    }
-
-    // ฟังก์ชันสั่งซื้อและพิมพ์ส่งข้อความยืนยันเข้าห้องแชท LINE เป็นหลัก
-    async function submitOrderViaLiff() {
-      if (localCart.length === 0) return alert("ไม่มีสินค้าในตะกร้า");
+    // ==========================================
+    // CONFIRM ORDER & DUAL-TRIGGER SENDING
+    // ==========================================
+    async function confirmOrder() {
+      if (cart.length === 0) {
+        alert("กรุณาเลือกสินค้าลงตะกร้าก่อนครับ");
+        return;
+      }
 
       const name = document.getElementById("cust-name").value.trim();
       const phone = document.getElementById("cust-phone").value.trim();
       const address = document.getElementById("cust-address").value.trim();
 
       if (!name || !phone || !address) {
-        return alert("กรุณากรอกชื่อ เบอร์โทรศัพท์ และที่อยู่จัดส่งให้ครบถ้วน");
+        alert("กรุณาระบุชื่อ เบอร์โทรศัพท์ และที่อยู่จัดส่งให้ครบถ้วนครับ");
+        return;
       }
 
       const btn = document.getElementById("btn-submit-order");
       btn.disabled = true;
-      btn.innerText = "กำลังบันทึกคำสั่งซื้อ...";
+      btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังส่งคำสั่งซื้อ...`;
 
-      const totalAmount = localCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      let userId = "GUEST_USER";
+      let uid = currentUserId;
+      try {
+        if (typeof liff !== "undefined" && liff.isLoggedIn()) {
+          const prof = await liff.getProfile();
+          uid = prof.userId;
+        }
+      } catch (e) {}
 
-      if (typeof liff !== "undefined" && liff.isLoggedIn()) {
-        try {
-          const profile = await liff.getProfile();
-          userId = profile.userId;
-        } catch (e) {}
-      }
+      const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
 
       const payload = {
         action: "submit_shop_order",
-        orderDataPayload: JSON.stringify({
-          userId: userId,
-          customerName: name,
-          phone: phone,
-          address: address,
-          items: localCart,
-          totalAmount: totalAmount
-        })
+        userId: uid || "GUEST_USER",
+        customerName: name,
+        phone: phone,
+        address: address,
+        items: cart,
+        totalAmount: total
       };
 
       try {
-        const response = await fetch(WEB_URL, {
+        const response = await fetch(API_URL, {
           method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
-        const res = await response.json();
+        const result = await response.json();
 
-        if (res.status === "success" && res.orderId) {
-          const orderId = res.orderId;
-          const itemsListText = localCart.map(i => `• ${i.name} (x${i.qty}) = ฿${(i.price * i.qty).toLocaleString()}`).join("\n");
-
-          // ข้อความสรุปรายการสั่งซื้อที่พิมพ์ส่งเข้าห้องแชท LINE เป็นหลัก
-          const chatMessage = [
-            {
-              type: "text",
-              text: `🛍️ ใบสั่งซื้อวัตถุมงคล [${orderId}]\n` +
-                    `━━━━━━━━━━━━━━━━\n` +
-                    `${itemsListText}\n` +
-                    `━━━━━━━━━━━━━━━━\n` +
-                    `💰 ยอดชำระสุทธิ: ฿${totalAmount.toLocaleString()} บาท\n\n` +
-                    `📦 ข้อมูลจัดส่ง:\n` +
-                    `คุณ ${name} (${phone})\n` +
-                    `${address}\n\n` +
-                    `🏦 ช่องทางโอนเงิน:\n` +
-                    `ธ.กสิกรไทย (KBANK)\n` +
-                    `เลขบัญชี: 2251495656\n` +
-                    `ชื่อบัญชี: นายพีรดิษฐ์ กิตติเขมานนท์\n\n` +
-                    `⚠️ กรุณาโอนเงินและแนบรูปสลิปในแชทนี้ภายใน 15 นาที ระบบจะตรวจสอบยอดให้อัตโนมัติครับ 🙏`
+        if (result.status === "success") {
+          // หากอยู่ใน LINE App และมีสิทธิ์ chat_message.write ให้สั่งส่งเข้าห้องแชท
+          if (typeof liff !== "undefined" && liff.isInClient() && result.flexBubble) {
+            try {
+              await liff.sendMessages([{
+                type: "flex",
+                altText: `ใบแจ้งยอดชำระคำสั่งซื้อ [${result.orderId}] กรุณาโอนเงินภายใน 15 นาที`,
+                contents: result.flexBubble
+              }]);
+            } catch (sendErr) {
+              console.warn("liff.sendMessages warning:", sendErr);
             }
-          ];
-
-          // พิมพ์ส่งเข้าห้องแชทและปิดหน้าต่าง LIFF ทันที
-          if (typeof liff !== "undefined" && liff.isInClient()) {
-            liff.sendMessages(chatMessage)
-              .then(() => {
-                localStorage.removeItem("naga_cart");
-                localCart = [];
-                updateCartBadge();
-                closeCartModal();
-                liff.closeWindow(); // ปิดกลับสู่ห้องแชท LINE ทันที
-              })
-              .catch(() => {
-                alert(`บันทึกคำสั่งซื้อเรียบร้อย! รหัสออเดอร์: ${orderId}\nกรุณาส่งรูปสลิปในแชท LINE`);
-                closeCartModal();
-              });
-          } else {
-            alert(`บันทึกคำสั่งซื้อสำเร็จ!\nรหัสคำสั่งซื้อ: ${orderId}\nยอดชำระ: ฿${totalAmount.toLocaleString()} บาท`);
-            localStorage.removeItem("naga_cart");
-            localCart = [];
-            updateCartBadge();
-            closeCartModal();
           }
 
-        } else {
-          alert("เกิดข้อผิดพลาด: " + (res.message || "ไม่สามารถทำรายการได้"));
-          btn.disabled = false;
-          btn.innerText = "💬 ยืนยันสั่งซื้อและส่งบิลเข้าแชท LINE";
-        }
+          // หน่วงเวลา 350ms เพื่อให้การส่งข้อความสมบูรณ์ก่อนปิดหน้าจอ LIFF
+          setTimeout(() => {
+            if (typeof liff !== "undefined" && liff.isInClient()) {
+              liff.closeWindow();
+            } else {
+              alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE ของท่านแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
+              closeCartModal();
+              cart = [];
+              updateCartUI();
+              btn.disabled = false;
+              btn.innerHTML = `<span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>`;
+            }
+          }, 350);
 
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสั่งซื้อได้"));
+          btn.disabled = false;
+          btn.innerHTML = `<span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>`;
+        }
       } catch (err) {
-        alert("การเชื่อมต่อระบบขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        console.error("Submit Order Error:", err);
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
         btn.disabled = false;
-        btn.innerText = "💬 ยืนยันสั่งซื้อและส่งบิลเข้าแชท LINE";
+        btn.innerHTML = `<span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>`;
       }
     }
   </script>

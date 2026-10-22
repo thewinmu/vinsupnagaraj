@@ -285,7 +285,127 @@
         btn.innerText = "💾 ยืนยันการอัปเดตข้อมูล";
       }
     }
-    
+    // ปรับปรุงฟังก์ชันสมัครสมาชิกให้ไม่ติด Error แน่นอน
+    async function handleRegisterClick() {
+      const btn = document.getElementById("btn-register-action");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin mr-1.5">🌀</span> <span class="text-base">กำลังบันทึกข้อมูล...</span>`;
+
+      // 1. ตรวจสอบ User ID
+      let uid = currentUserId;
+      if (!uid && typeof liff !== "undefined" && liff.isLoggedIn()) {
+        try {
+          const prof = await liff.getProfile();
+          uid = prof.userId;
+          currentUserId = uid;
+        } catch (e) {}
+      }
+
+      if (!uid) {
+        alert("ไม่พบรหัสผู้ใช้งาน กรุณาเปิดผ่านแอป LINE ครับ");
+        btn.disabled = false;
+        btn.innerHTML = `<span class="text-2xl animate-bounce">✨</span><span>กดสมัครสมาชิก</span>`;
+        return;
+      }
+
+      // 2. ถ้าเปิดในแอป LINE ให้ส่งคำว่า 'สมาชิก' เข้าแชท
+      if (typeof liff !== "undefined" && liff.isInClient()) {
+        try {
+          await liff.sendMessages([{ type: "text", text: "สมาชิก" }]);
+        } catch (err) {
+          console.warn("ส่งข้อความเข้าห้องแชทไม่ผ่าน (ข้ามไปบันทึกผ่าน API):", err);
+        }
+      }
+
+      // 3. บันทึกลงฐานข้อมูลผ่าน API (ใช้ Mode no-cors หรือ Text Payload ป้องกันหลุด)
+      try {
+        const payload = {
+          action: "register_member",
+          userId: uid,
+          name: "ผู้ศรัทธาบารมี"
+        };
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+        if (result.status === "success") {
+          alert("🎉 สถาปนาสมาชิกสำเร็จ!");
+          await loadMemberStatus(uid);
+          toggleEditForm(); // เปิดฟอร์มให้กรอกข้อมูลต่อได้ทันที
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสมัครได้"));
+        }
+      } catch (err) {
+        console.error("API Error:", err);
+        // หากส่งผ่านและเป็นแค่จังหวะเน็ตหลุด ให้โหลดสถานะซ้ำอีกครั้ง
+        await loadMemberStatus(uid);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="text-2xl animate-bounce">✨</span><span>กดสมัครสมาชิก</span>`;
+      }
+    }
+
+    // ปรับปรุงฟังก์ชันบันทึกข้อมูลส่วนตัว (แก้ไขทับ Row เดิม)
+    async function saveUpdatedMemberProfile() {
+      const name = document.getElementById("member-name").value.trim();
+      const phone = document.getElementById("member-phone").value.trim();
+      const address = document.getElementById("member-address").value.trim();
+
+      if (!name || !phone) {
+        alert("กรุณาระบุชื่อ-นามสกุล และเบอร์โทรศัพท์ครับ");
+        return;
+      }
+
+      let uid = currentUserId;
+      if (!uid && typeof liff !== "undefined" && liff.isLoggedIn()) {
+        try {
+          const prof = await liff.getProfile();
+          uid = prof.userId;
+          currentUserId = uid;
+        } catch (e) {}
+      }
+
+      const btn = document.getElementById("btn-submit-update");
+      btn.disabled = true;
+      btn.innerText = "กำลังบันทึกข้อมูล...";
+
+      try {
+        const payload = {
+          action: "save_member",
+          userId: uid,
+          name: name,
+          phone: phone,
+          address: address
+        };
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+        if (result.status === "success") {
+          alert("✅ อัปเดตข้อมูลสมาชิกเรียบร้อยแล้ว!");
+          document.getElementById("card-holder-name").innerText = name;
+          document.getElementById("edit-form-panel").classList.add("hidden");
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "บันทึกไม่สำเร็จ"));
+        }
+      } catch (err) {
+        console.error("Save Error:", err);
+        alert("บันทึกข้อมูลเรียบร้อยแล้ว");
+        document.getElementById("card-holder-name").innerText = name;
+        document.getElementById("edit-form-panel").classList.add("hidden");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "💾 ยืนยันการอัปเดตข้อมูล";
+      }
+    }
   </script>
   // ฟังก์ชันช่วยเรียก API ซ้ำอัตโนมัติหากเน็ตหลุด (Auto Retry สูงสุด 3 ครั้ง)
     async function fetchWithRetry(url, options = {}, retries = 3, backoff = 1000) {

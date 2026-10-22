@@ -2142,6 +2142,43 @@ pickacard_original_theme
 
 สามารถดาวน์โหลดไฟล์ไปแทนที่ pickacard.html บน GitHub Pages ได้ทันทีครับ
 
+ต้องการสไตล์การเลือก สับไพ่กลับมาเหมือนเดิมด้วยครับ
+
+ได้นำ ระบบสับไพ่สายญาณ (Shuffle Animation) และการเลือกไพ่ กลับมาใส่ใน pickacard.html ภายใต้ธีมเดิม (Crystal & Gold Light Theme) เรียบร้อยแล้วครับ
+
+Your HTML and ZIP files are ready:
+
+ไฟล์ HTML เดี่ยว: 
+ไอคอน HTML
+pickacard
+ HTML 
+
+ไฟล์ ZIP: 
+ไอคอน ZIP
+pickacard_shuffle_original_theme
+ ZIP 
+
+ขั้นตอนและสไตล์การทำงานของระบบสับไพ่ชุดนี้
+กองสำรับรวมจิต (Deck Stacking View):
+
+เริ่มต้นหน้าจอจะแสดงไพ่ซ้อนกันเป็นกองสำรับกลางหน้าจอ มีแสงเรืองรองสีทองอ่อน ๆ (pulseGlow) แสดงความพร้อมรับพลังจิตอธิษฐาน
+
+แอนิเมชันสับไพ่ (Shuffle Animation):
+
+เมื่อผู้ใช้กดปุ่ม "🔀 เริ่มสับไพ่สายญาณบารมี" ไพ่ในกองจะเริ่มสลับ ซ้าย-ขวา เอียงสลับเลเยอร์ (shuffleLeft / shuffleRight) เสมือนการกรีดสับไพ่จริง 1.6 วินาที พร้อมข้อความให้ตั้งจิตให้สงบ
+
+การคลี่ไพ่ออกมาเลือก (Fanned Out):
+
+หลังจากสับเสร็จ กองไพ่จะคลี่ออกเป็น ไพ่ 3 ใบ เรียงกันอย่างสวยงาม พร้อมเปลี่ยนข้อความแนะนำให้แตะเลือก 1 ใบที่ดึงดูดใจที่สุด
+
+เปิดเผยสาส์นนำทาง (Card Reveal Modal):
+
+เมื่อแตะเลือกใบใดใบหนึ่ง จะมีเอฟเฟกต์ไพ่ยกตัวขึ้น (card-touch) แล้วเปิดหน้าต่างผลคำพยากรณ์ พร้อมรูปหน้าไพ่ คำทำนาย และแนวทางปฏิบัติเสริมมงคล
+
+ปุ่ม "🔄 สับไพ่ใหม่อีกครั้ง":
+
+มีปุ่มให้รีเซ็ตกลับไปเป็นกองสำรับเดิม เพื่อสลับหมวดหมู่หรือเริ่มตั้งจิตอธิษฐานใหม่ได้ตลอดเวลาครับ
+
 
 
 
@@ -2157,7 +2194,7 @@ Gemini เป็น AI และอาจทำผิดพลาดได้
   <title>สาส์นนำทาง Pick-A-Card - เรือนพยากรณ์วินทร์ทรัพย์นาคราช</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
@@ -2202,20 +2239,46 @@ Gemini เป็น AI และอาจทำผิดพลาดได้
       background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 100%);
       color: #064E3B;
     }
+
+    /* Shuffle Keyframes */
+    @keyframes shuffleLeft {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-45px, -10px) rotate(-12deg); }
+      50% { transform: translate(-30px, 15px) rotate(-6deg); z-index: 10; }
+      75% { transform: translate(-10px, 5px) rotate(-2deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    @keyframes shuffleRight {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(45px, 10px) rotate(12deg); }
+      50% { transform: translate(30px, -15px) rotate(6deg); z-index: 20; }
+      75% { transform: translate(10px, -5px) rotate(2deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.7); }
+    }
+
+    .shuffling-1 { animation: shuffleLeft 0.5s ease-in-out infinite alternate; }
+    .shuffling-2 { animation: shuffleRight 0.5s ease-in-out infinite alternate; }
+    .card-deck-glow { animation: pulseGlow 2s infinite ease-in-out; }
+
     .card-touch {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .card-touch:hover, .card-touch:active {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 24px -6px rgba(212, 175, 55, 0.4);
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 14px 28px -6px rgba(212, 175, 55, 0.45);
     }
+
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="min-h-screen pb-24 p-4">
+<body class="min-h-screen pb-24 p-4 flex flex-col justify-between">
 
-  <main class="max-w-md mx-auto space-y-4">
+  <main class="max-w-md mx-auto w-full space-y-4">
     <!-- Header -->
     <header class="glass-card rounded-2xl p-4 shadow-sm flex items-center justify-between">
       <div class="flex items-center space-x-2.5">
@@ -2254,65 +2317,120 @@ Gemini เป็น AI และอาจทำผิดพลาดได้
 
     <!-- แนะนำการตั้งจิต -->
     <div class="glass-card rounded-2xl p-3.5 text-center space-y-1">
-      <p class="text-xs font-bold text-stone-800">✨ หลับตา สูดลมหายใจเข้าลึก ๆ ตั้งจิตอธิษฐาน</p>
-      <p class="text-[11px] text-stone-500">นึกถึงสิ่งศักดิ์สิทธิ์และบารมีองค์นาคราช แล้วแตะเลือกไพ่ 1 ใบที่ต้องตาต้องใจที่สุด</p>
+      <p id="stage-text-title" class="text-xs font-bold text-stone-800">✨ หลับตา สูดลมหายใจเข้าลึก ๆ ตั้งจิตอธิษฐาน</p>
+      <p id="stage-text-desc" class="text-[11px] text-stone-500">แตะปุ่ม "เริ่มสับไพ่สายญาณ" เพื่อรวมพลังจิตและอธิษฐาน</p>
     </div>
 
-    <!-- ไพ่ 3 ใบ (สไตล์เดิม แก้วใสขอบทอง นวลตา สว่าง) -->
-    <div id="cards-container" class="grid grid-cols-3 gap-3 pt-1">
-      <!-- ใบที่ 1 -->
-      <div onclick="revealCard(0)" class="card-touch cursor-pointer rounded-2xl overflow-hidden border border-gold-border bg-white shadow-sm aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
-        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
-          <span>✦</span><span>✦</span>
-        </div>
-        <div class="space-y-1">
-          <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
-            <span class="text-lg">🐍</span>
+    <!-- พื้นที่แสดงสำรับไพ่ / แอนิเมชันสับไพ่ / คลี่ไพ่ออกมา -->
+    <div class="min-h-[290px] flex flex-col items-center justify-center relative py-2">
+
+      <!-- โหมดที่ 1: กองไพ่ซ้อนกัน (Deck) พร้อมสับไพ่ -->
+      <div id="deck-view" class="relative w-44 h-64 flex items-center justify-center">
+        <!-- ไพ่ใบหลัง 1 -->
+        <div id="deck-card-1" class="absolute w-40 h-60 rounded-2xl border border-gold-border bg-white shadow-md flex flex-col justify-between p-3 rotate-[-4deg] -translate-x-1.5">
+          <div class="flex justify-between text-[8px] text-gold-dark"><span>✦</span><span>✦</span></div>
+          <div class="text-center">
+            <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border mx-auto flex items-center justify-center">
+              <span class="text-lg">🐍</span>
+            </div>
           </div>
-          <p class="text-xs font-bold text-emerald-deep">ใบที่ ๑</p>
-          <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+          <div class="flex justify-between text-[8px] text-gold-dark"><span>✦</span><span>✦</span></div>
         </div>
-        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
-          <span>✦</span><span>✦</span>
+
+        <!-- ไพ่ใบหลัง 2 -->
+        <div id="deck-card-2" class="absolute w-40 h-60 rounded-2xl border border-gold-border bg-[#FDFBF7] shadow-md flex flex-col justify-between p-3 rotate-[4deg] translate-x-1.5">
+          <div class="flex justify-between text-[8px] text-gold-dark"><span>✦</span><span>✦</span></div>
+          <div class="text-center">
+            <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border mx-auto flex items-center justify-center">
+              <span class="text-lg">🐍</span>
+            </div>
+          </div>
+          <div class="flex justify-between text-[8px] text-gold-dark"><span>✦</span><span>✦</span></div>
+        </div>
+
+        <!-- ไพ่ใบบนสุด (Main Card) -->
+        <div id="deck-card-main" class="absolute w-40 h-60 rounded-2xl border-2 border-gold-border bg-white shadow-xl flex flex-col justify-between p-3 z-10 card-deck-glow">
+          <div class="flex justify-between text-[9px] text-gold-dark font-bold"><span>✦</span><span class="text-emerald-deep font-bold">วินทร์ทรัพย์นาคราช</span><span>✦</span></div>
+          <div class="text-center space-y-1.5">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-b from-[#FFFBEB] to-[#FEF3C7] border border-gold mx-auto flex items-center justify-center shadow-inner">
+              <span class="text-2xl">🐍</span>
+            </div>
+            <p class="text-xs font-bold text-emerald-deep">สำรับออราเคิล</p>
+            <p class="text-[9px] text-stone-400">สาส์นนำทางญาณบารมี</p>
+          </div>
+          <div class="flex justify-between text-[9px] text-gold-dark font-bold"><span>✦</span><span>✦</span></div>
         </div>
       </div>
 
-      <!-- ใบที่ 2 -->
-      <div onclick="revealCard(1)" class="card-touch cursor-pointer rounded-2xl overflow-hidden border border-gold-border bg-white shadow-sm aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
-        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
-          <span>✦</span><span>✦</span>
-        </div>
-        <div class="space-y-1">
-          <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
-            <span class="text-lg">🐍</span>
+      <!-- โหมดที่ 2: คลี่ไพ่ออกมา 3 ใบเพื่อให้ผู้ใช้เลือก (ซ่อนอยู่ตอนแรก) -->
+      <div id="fanned-view" class="hidden w-full grid grid-cols-3 gap-3">
+        <!-- ใบที่ 1 -->
+        <div onclick="pickCard(0)" class="card-touch cursor-pointer rounded-2xl border border-gold-border bg-white shadow-md aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
+          <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+            <span>✦</span><span>✦</span>
           </div>
-          <p class="text-xs font-bold text-emerald-deep">ใบที่ ๒</p>
-          <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+          <div class="space-y-1.5">
+            <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
+              <span class="text-lg">🐍</span>
+            </div>
+            <p class="text-xs font-bold text-emerald-deep">ใบที่ ๑</p>
+            <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+            <span>✦</span><span>✦</span>
+          </div>
         </div>
-        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
-          <span>✦</span><span>✦</span>
+
+        <!-- ใบที่ 2 -->
+        <div onclick="pickCard(1)" class="card-touch cursor-pointer rounded-2xl border border-gold-border bg-white shadow-md aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
+          <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+            <span>✦</span><span>✦</span>
+          </div>
+          <div class="space-y-1.5">
+            <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
+              <span class="text-lg">🐍</span>
+            </div>
+            <p class="text-xs font-bold text-emerald-deep">ใบที่ ๒</p>
+            <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+            <span>✦</span><span>✦</span>
+          </div>
+        </div>
+
+        <!-- ใบที่ 3 -->
+        <div onclick="pickCard(2)" class="card-touch cursor-pointer rounded-2xl border border-gold-border bg-white shadow-md aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
+          <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+            <span>✦</span><span>✦</span>
+          </div>
+          <div class="space-y-1.5">
+            <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
+              <span class="text-lg">🐍</span>
+            </div>
+            <p class="text-xs font-bold text-emerald-deep">ใบที่ ๓</p>
+            <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+            <span>✦</span><span>✦</span>
+          </div>
         </div>
       </div>
 
-      <!-- ใบที่ 3 -->
-      <div onclick="revealCard(2)" class="card-touch cursor-pointer rounded-2xl overflow-hidden border border-gold-border bg-white shadow-sm aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
-        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
-          <span>✦</span><span>✦</span>
-        </div>
-        <div class="space-y-1">
-          <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
-            <span class="text-lg">🐍</span>
-          </div>
-          <p class="text-xs font-bold text-emerald-deep">ใบที่ ๓</p>
-          <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
-        </div>
-        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
-          <span>✦</span><span>✦</span>
-        </div>
-      </div>
     </div>
 
-    <!-- Revealed Modal: แสดงผลคำทำนายแบบแก้วใสขอบทอง สว่าง สะอาดตา -->
+    <!-- ปุ่มควบคุม: สับไพ่ / สับใหม่อีกครั้ง -->
+    <div class="pt-2">
+      <button id="btn-shuffle" onclick="startShuffleProcess()" class="w-full bg-emerald-deep text-white font-bold text-xs py-3.5 rounded-2xl shadow-md hover:bg-emerald-800 active:scale-95 transition flex items-center justify-center space-x-2 border border-gold-border">
+        <span>🔀</span>
+        <span>เริ่มสับไพ่สายญาณบารมี</span>
+      </button>
+
+      <button id="btn-reshuffle" onclick="resetToDeckView()" class="hidden w-full bg-white text-stone-600 font-bold text-xs py-2.5 rounded-xl border border-stone-300 hover:bg-stone-50 active:scale-95 transition mt-2 text-center">
+        🔄 สับไพ่ใหม่อีกครั้ง
+      </button>
+    </div>
+
+    <!-- Revealed Modal: แสดงผลคำทำนายแบบแก้วใสขอบทอง -->
     <div id="result-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
       <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-gold-border p-5 space-y-3.5">
         <div class="text-center space-y-0.5">
@@ -2323,12 +2441,10 @@ Gemini เป็น AI และอาจทำผิดพลาดได้
           <p id="res-card-cat" class="text-[11px] text-stone-400">หมวดหมู่</p>
         </div>
 
-        <!-- กรอบรูปหน้าไพ่ -->
         <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-stone-100 border border-gold-border/60 shadow-inner">
           <img id="res-card-img" src="" class="w-full h-full object-cover" alt="Card">
         </div>
 
-        <!-- คำทำนายและคำแนะนำ -->
         <div class="bg-[#FDFBF7] p-3.5 rounded-2xl border border-gold-border/60 space-y-2">
           <div>
             <span class="text-[10px] font-bold text-gold-dark uppercase tracking-wider block mb-1">✦ คำพยากรณ์นำทาง</span>
@@ -2351,12 +2467,14 @@ Gemini เป็น AI และอาจทำผิดพลาดได้
     const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
     let currentCategory = "daily";
     let categoryCards = [];
+    let isShuffling = false;
 
     window.addEventListener("DOMContentLoaded", () => {
       fetchCards(currentCategory);
     });
 
     async function switchCategory(cat, btn) {
+      if (isShuffling) return;
       currentCategory = cat;
       document.querySelectorAll(".cat-pill").forEach(b => {
         b.classList.remove("bg-emerald-deep", "text-white", "shadow-sm");
@@ -2364,6 +2482,8 @@ Gemini เป็น AI และอาจทำผิดพลาดได้
       });
       btn.classList.add("bg-emerald-deep", "text-white", "shadow-sm");
       btn.classList.remove("bg-white", "text-emerald-deep");
+
+      resetToDeckView();
       fetchCards(cat);
     }
 
@@ -2379,13 +2499,59 @@ Gemini เป็น AI และอาจทำผิดพลาดได้
       }
     }
 
-    function revealCard(idx) {
+    // กระบวนการสับไพ่ (Shuffle Animation)
+    function startShuffleProcess() {
+      if (isShuffling) return;
+      isShuffling = true;
+
+      const btn = document.getElementById("btn-shuffle");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-1">🌀</span> กำลังรวมจิตสับไพ่สายญาณ...`;
+
+      document.getElementById("stage-text-title").innerText = "🌀 พลังจิตประสานกับสำรับไพ่...";
+      document.getElementById("stage-text-desc").innerText = "ไพ่กำลังสับเปลี่ยนตามกระแสบุญสัมพันธ์ โปรดตั้งจิตให้สงบ";
+
+      const c1 = document.getElementById("deck-card-1");
+      const c2 = document.getElementById("deck-card-2");
+      c1.classList.add("shuffling-1");
+      c2.classList.add("shuffling-2");
+
+      // เล่นแอนิเมชันสับไพ่ 1.6 วินาที แล้วคลี่ไพ่ออกมา
+      setTimeout(() => {
+        c1.classList.remove("shuffling-1");
+        c2.classList.remove("shuffling-2");
+        isShuffling = false;
+
+        // สลับมุมมองไปเป็นแบบคลี่ไพ่ 3 ใบ
+        document.getElementById("deck-view").classList.add("hidden");
+        document.getElementById("fanned-view").classList.remove("hidden");
+        document.getElementById("btn-shuffle").classList.add("hidden");
+        document.getElementById("btn-reshuffle").classList.remove("hidden");
+
+        document.getElementById("stage-text-title").innerText = "✨ แตะเลือกไพ่ 1 ใบที่ดึงดูดใจท่านที่สุด";
+        document.getElementById("stage-text-desc").innerText = "น้อมรับสาส์นชี้นำทางจากองค์บรมครูและพญานาคาธิบดี";
+      }, 1600);
+    }
+
+    // รีเซ็ตกลับไปเป็นกองสำรับ
+    function resetToDeckView() {
+      document.getElementById("fanned-view").classList.add("hidden");
+      document.getElementById("deck-view").classList.remove("hidden");
+      document.getElementById("btn-shuffle").classList.remove("hidden");
+      document.getElementById("btn-shuffle").disabled = false;
+      document.getElementById("btn-shuffle").innerHTML = `<span>🔀</span><span>เริ่มสับไพ่สายญาณบารมี</span>`;
+      document.getElementById("btn-reshuffle").classList.add("hidden");
+
+      document.getElementById("stage-text-title").innerText = "✨ หลับตา สูดลมหายใจเข้าลึก ๆ ตั้งจิตอธิษฐาน";
+      document.getElementById("stage-text-desc").innerText = "แตะปุ่ม \"เริ่มสับไพ่สายญาณ\" เพื่อรวมพลังจิตและอธิษฐาน";
+    }
+
+    function pickCard(idx) {
       if (!categoryCards || categoryCards.length === 0) {
         alert("กำลังจัดเตรียมสาส์นนำทาง กรุณาลองใหม่อีกครั้งครับ");
         return;
       }
 
-      // สุ่มหรือเลือกไพ่ตาม index
       const card = categoryCards[Math.floor(Math.random() * categoryCards.length)];
 
       document.getElementById("res-card-name").innerText = card.name || "สาส์นบารมีนาคราช";

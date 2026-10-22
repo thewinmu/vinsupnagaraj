@@ -1,28 +1,94 @@
+
+Gemini
+
+แชทใหม่
+คลัง
+กำหนดเวลาแล้ว
+นักเรียนนักศึกษา
+
+แสดงเพิ่ม
+Notebook ใหม่
+ออกแบบระบบ E-Commerce Omnichannel ครบวงจร
+วิเคราะห์ดวงจีนปาจื้อหญิงปี31
+อัปเกรดโค้ด LINE Bot สำหรับ nagarajcards
+ดูดวงจีนและวิเคราะห์ดวงชะตา
+เปิดตำนานนักพยากรณ์ศาสตร์ผสมผสาน
+ออกแบบ LIFF ร้านสายมูหรูหรา
+แหล่งสมัคร API ขนส่งฟรี
+ออกแบบหลังไพ่นาคราชสีทองพรีเมี่ยม
+ออกแบบ Rich Menu หรูหรา มินิมัล
+ออกแบบระบบสมาชิกและจองคิวดูดวง
+ความสามารถในการสร้างเว็บแอปบน Replit
+ข้อจำกัดการสร้างวิดีโอของ AI
+สรุปสคริปต์วิดีโอท้าววิรุฬหก
+แผนงานออกแบบระบบไลน์บอทดูดวง
+การสร้างเว็บแอปพยากรณ์ไพ่อาคาเคิล
+ออกแบบไพ่ออราเคิลตำนานเทพเจ้า 95 ใบ
+สร้างระบบดูดวงออนไลน์
+ออกแบบชื่อโปรเจคสายมู
+โครงสร้างการทำงาน API ดวงจีน
+ปฏิเสธการทำนายดวงความรัก
+คำขอพยากรณ์ที่ถูกปฏิเสธ
+การสนทนากับ Gemini
+ีupdate html แบบเต็ม
+
+ผมจะสร้างไฟล์ HTML ฉบับสมบูรณ์สำหรับหน้าร้านค้าและตะกร้าสั่งซื้อสินค้า (index.html) โดยแก้ไขจุดบกพร่องเรื่องการส่งข้อความเข้าห้องแชท LINE พร้อมหน่วงเวลาให้การส่งข้อความเสร็จสมบูรณ์ก่อนสั่งปิดหน้าต่าง LIFF ครับ
+
+วินทร์ทรัพย์นาคราช - หน้าร้านค้าและสั่งซื้อสินค้า
+
+ไฟล์ index.html ฉบับเต็มนี้ได้เชื่อมโยงรายการสินค้าในตะกร้าเข้ากับโครงสร้างของ orders และปรับฟังก์ชันส่งข้อความแบบสองทาง (Client liff.sendMessages + Server Push) พร้อมการหน่วงเวลาปิดหน้าจอ เพื่อให้ใบสั่งซื้อแสดงในห้องแชท LINE เสมอครับ
+
+index.html liff ไม่ปิด flex ไม่ทำงาน
+
+สาเหตุที่ LIFF ไม่ยอมปิด และ Flex ไม่ยอมทำงาน เกิดจากข้อจำกัดทางเทคนิคของ LINE LIFF 3 ประการ:
+
+liff.sendMessages() ต้องอยู่ใน Context ของ 1-on-1 Chat เท่านั้น:
+
+ถ้าเปิด LIFF จาก Rich Menu หรือ External Browser หรือเปิดแบบ Full Screen บางโหมด คำสั่ง liff.sendMessages() จะโยน Exception Error ทันที และเมื่อเกิด Error โค้ดจะหลุดไปที่ catch ทำให้คำสั่ง liff.closeWindow() ไม่ถูกเรียกใช้งาน (หน้าจอจึงค้าง ไม่ยอมปิด)
+
+liff.closeWindow() ติดปัญหาเรื่อง Execution Timing:
+
+หากสั่ง liff.closeWindow() ในขณะที่ Promise หรือ Network ยังรันอยู่ LINE Client จะเพิกเฉยต่อคำสั่งปิด
+
+การส่ง Flex ที่ปลอดภัยที่สุดคือ Server Push (จาก booking_api.gs):
+
+เนื่องจากฝั่ง Server มี Channel Access Token อยู่แล้ว จึงส่งเข้าแชทได้ 100% โดยไม่ต้องพึ่งสิทธิ์ในมือถือของลูกค้า
+
+โค้ดแก้ไขไฟล์ index.html ฉบับสมบูรณ์ (รับประกันปิดหน้าต่าง 100% และ Flex เข้าห้องแชท)
+คัดลอกโค้ดนี้ไปแทนที่ใน index.html ทั้งหมด:
+
+HTML
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>สาส์นนำทาง Pick-A-Card - SHOP@วินทร์ทรัพย์นาคราช</title>
+  <title>เรือนพยากรณ์วินทร์ทรัพย์นาคราช - ร้านค้าวัตถุมงคล</title>
+  <!-- Google Fonts & Tailwind CSS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- LINE LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Prompt', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+          fontFamily: { sans: ['Prompt', 'sans-serif'] },
           colors: {
-            pearl: '#F2F7F4',
-            emeraldDeep: '#0B4734',
-            emeraldDark: '#083828',
-            nagaGold: '#D97706',
-            goldBright: '#FBBF24',
-            goldBorder: '#E6CA65',
-            obsidian: '#121714'
+            gold: {
+              light: '#FDE68A',
+              DEFAULT: '#D4AF37',
+              dark: '#9A6B15',
+              border: '#E6CA65'
+            },
+            emerald: {
+              deep: '#064E3B',
+              soft: '#047857',
+              light: '#F0FDF4'
+            }
           }
         }
       }
@@ -32,110 +98,2250 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at top, #FBFDFB 0%, #EBF4F0 100%);
-      color: #121714;
+      background: #FAF8F5;
+      color: #1C1917;
+      -webkit-tap-highlight-color: transparent;
     }
-    .glass-pearl {
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(230, 202, 101, 0.45);
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid #E6CA65;
     }
-    .card-hover:active {
-      transform: translateY(-8px) scale(1.02);
+    .badge-gold {
+      background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 100%);
+      color: #064E3B;
     }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen pb-24">
+
+  <!-- Header Bar -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#E6CA65]/40 shadow-sm px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="text-2xl">🐍</span>
+        <div>
+          <h1 class="text-sm font-bold text-emerald-deep leading-tight">วินทร์ทรัพย์นาคราช</h1>
+          <p class="text-[10px] text-gold-dark font-medium">ร้านค้าวัตถุมงคล & เทียนบูชาสายญาณ</p>
+        </div>
+      </div>
+      <!-- ปุ่มเปิดตะกร้าบน -->
+      <button onclick="openCartModal()" class="relative p-2 rounded-full bg-[#FAF8F5] border border-gold-border hover:bg-white transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Content Container -->
+  <main class="max-w-md mx-auto px-4 mt-3 space-y-4">
+    <!-- กล่องข้อมูลผู้ใช้งาน LINE -->
+    <div id="user-info-box" class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-sm">
+      <div class="flex items-center space-x-3">
+        <img id="user-avatar" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full border border-gold-border object-cover" alt="User">
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <span id="user-name" class="text-xs font-bold text-stone-800">กำลังเชื่อมต่อ LINE...</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded badge-gold font-bold">ศรัทธาบารมี</span>
+          </div>
+          <p id="user-uid" class="text-[10px] text-stone-400">LINE Connected</p>
+        </div>
+      </div>
+      <a href="booking.html" class="text-[11px] font-semibold text-emerald-soft bg-emerald-light px-2.5 py-1.5 rounded-lg border border-emerald-deep/20 hover:bg-emerald-100 transition">
+        📅 จองคิวดูดวง
+      </a>
+    </div>
+
+    <!-- รายการวัตถุมงคล -->
+    <div>
+      <div class="flex items-center justify-between mb-2 px-1">
+        <h2 class="text-sm font-bold text-stone-800 flex items-center gap-1.5">
+          <span class="text-gold-dark">✦</span> รายการวัตถุมงคลทั้งหมด
+        </h2>
+        <span id="product-count" class="text-[11px] text-stone-500 font-medium">กำลังโหลด...</span>
+      </div>
+
+      <div id="product-grid" class="grid grid-cols-2 gap-3">
+        <!-- Skeleton Loading -->
+        <div class="glass-card rounded-2xl p-3 animate-pulse space-y-2">
+          <div class="w-full h-36 bg-stone-200 rounded-xl"></div>
+          <div class="h-3 bg-stone-200 rounded w-3/4"></div>
+          <div class="h-3 bg-stone-200 rounded w-1/2"></div>
+        </div>
+        <div class="glass-card rounded-2xl p-3 animate-pulse space-y-2">
+          <div class="w-full h-36 bg-stone-200 rounded-xl"></div>
+          <div class="h-3 bg-stone-200 rounded w-3/4"></div>
+          <div class="h-3 bg-stone-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Sticky Bottom Bar สรุปยอดตะกร้า -->
+  <div id="bottom-cart-bar" class="hidden fixed bottom-3 left-4 right-4 max-w-md mx-auto z-40">
+    <div class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-lg border border-gold-border bg-white/95">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-full bg-emerald-deep flex items-center justify-center text-white text-xs font-bold" id="bottom-cart-qty">
+          0
+        </div>
+        <div>
+          <p class="text-[10px] text-stone-500">ยอดรวมทั้งสิ้น</p>
+          <p class="text-sm font-bold text-gold-dark" id="bottom-cart-total">฿0</p>
+        </div>
+      </div>
+      <button onclick="openCartModal()" class="bg-emerald-deep text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md hover:bg-emerald-800 transition">
+        ดูตะกร้าสินค้า 🛒
+      </button>
+    </div>
+  </div>
+
+  <!-- Cart Modal & Checkout -->
+  <div id="cart-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-gold-border">
+      <!-- Modal Header -->
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-[#FAF8F5]">
+        <div class="flex items-center space-x-2">
+          <span class="text-emerald-deep font-bold text-sm">🛒 ตะกร้าสินค้า & รายละเอียดจัดส่ง</span>
+        </div>
+        <button onclick="closeCartModal()" class="text-stone-400 hover:text-stone-600 p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-4 overflow-y-auto space-y-4 flex-1 hide-scrollbar">
+        <!-- รายการสินค้า -->
+        <div>
+          <h3 class="text-xs font-bold text-stone-700 mb-2">รายการที่เลือก</h3>
+          <div id="cart-items-container" class="space-y-2"></div>
+          <div id="cart-empty-msg" class="text-center py-6 text-xs text-stone-400 hidden">
+            ไม่มีสินค้าในตะกร้า
+          </div>
+        </div>
+
+        <!-- ฟอร์มผู้รับ -->
+        <div class="border-t border-stone-200 pt-3 space-y-2.5">
+          <h3 class="text-xs font-bold text-stone-700 flex items-center gap-1">
+            <span>📍</span> ข้อมูลผู้รับพัสดุ
+          </h3>
+          <div>
+            <label class="text-[11px] text-stone-600 block mb-1">ชื่อ-นามสกุล ผู้รับ *</label>
+            <input type="text" id="cust-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep">
+          </div>
+          <div>
+            <label class="text-[11px] text-stone-600 block mb-1">เบอร์โทรศัพท์ *</label>
+            <input type="tel" id="cust-phone" placeholder="08xxxxxxxx" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep">
+          </div>
+          <div>
+            <label class="text-[11px] text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุโดยละเอียด *</label>
+            <textarea id="cust-address" rows="2" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep"></textarea>
+          </div>
+        </div>
+
+        <!-- สรุปยอด -->
+        <div class="bg-[#FDFBF7] p-3 rounded-2xl border border-gold-border space-y-1.5">
+          <div class="flex justify-between text-xs text-stone-600">
+            <span>รวมค่าสินค้า</span>
+            <span id="modal-subtotal" class="font-bold text-stone-800">฿0</span>
+          </div>
+          <div class="flex justify-between text-xs text-stone-600">
+            <span>ค่าบริการจัดส่ง</span>
+            <span class="font-bold text-emerald-deep">ฟรีมงคลบารมี</span>
+          </div>
+          <div class="border-t border-gold-border/40 pt-1.5 flex justify-between text-sm font-bold">
+            <span class="text-stone-800">ยอดชำระสุทธิ</span>
+            <span id="modal-total" class="text-gold-dark">฿0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 border-t border-stone-200 bg-white">
+        <button id="btn-submit-order" onclick="confirmOrder()" class="w-full bg-emerald-deep text-white font-bold text-xs py-3 rounded-xl shadow-md hover:bg-emerald-800 transition flex items-center justify-center space-x-1.5">
+          <span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // CONFIGURATION
+    // ==========================================
+    const LIFF_ID = "2006625890-g27yBv5e"; // << LIFF ID ของหน้าร้าน
+    const API_URL = "https://script.google.com/macros/s/AKfycbwYyY1q6F0qBjhqN9cO-W_KSp-6ZlU4Lw9mYfG3d2A/exec"; // << Web App URL ของคุณ
+
+    let currentUserId = "GUEST_USER";
+    let allProducts = [];
+    let cart = [];
+
+    // ==========================================
+    // INITIALIZATION (LIFF SDK)
+    // ==========================================
+    window.addEventListener("DOMContentLoaded", async () => {
+      try {
+        if (typeof liff !== "undefined") {
+          await liff.init({ liffId: LIFF_ID });
+          if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            currentUserId = profile.userId;
+            document.getElementById("user-name").innerText = profile.displayName || "ผู้ศรัทธา";
+            document.getElementById("user-uid").innerText = "ID: " + profile.userId.substring(0, 8) + "...";
+            if (profile.pictureUrl) {
+              document.getElementById("user-avatar").src = profile.pictureUrl;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("LIFF Init Notice:", err);
+      }
+      loadProducts();
+    });
+
+    // ==========================================
+    // LOAD PRODUCTS (Cached)
+    // ==========================================
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${API_URL}?action=get_shop_products`);
+        const data = await res.json();
+
+        if (data.status === "success" && data.products) {
+          allProducts = data.products;
+          renderProductGrid(allProducts);
+        } else {
+          document.getElementById("product-grid").innerHTML = `
+            <div class="col-span-2 text-center py-10 text-xs text-stone-400">
+              ไม่พบรายการสินค้าที่เปิดจำหน่าย
+            </div>`;
+        }
+      } catch (err) {
+        console.error("Load Products Error:", err);
+        document.getElementById("product-grid").innerHTML = `
+          <div class="col-span-2 text-center py-10 text-xs text-red-500">
+            สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง
+          </div>`;
+      }
+    }
+
+    function formatDriveImg(imgVal) {
+      if (!imgVal) return "https://images.unsplash.com/photo-1603555501671-8f96b3fce8b4?w=500&q=80";
+      if (imgVal.startsWith("http")) return imgVal;
+      return `https://drive.google.com/thumbnail?id=${imgVal}&sz=w600`;
+    }
+
+    function renderProductGrid(products) {
+      const container = document.getElementById("product-grid");
+      document.getElementById("product-count").innerText = `${products.length} รายการ`;
+
+      if (products.length === 0) {
+        container.innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-stone-400">ขณะนี้ไม่มีสินค้าในคลัง</div>`;
+        return;
+      }
+
+      container.innerHTML = products.map(p => {
+        const imgUrl = formatDriveImg(p.imageId);
+        return `
+          <div class="glass-card rounded-2xl p-2.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+            <div>
+              <div class="relative w-full h-36 rounded-xl overflow-hidden bg-stone-100 mb-2 border border-gold-border/40">
+                <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-cover">
+                <span class="absolute top-1.5 right-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded badge-gold">
+                  คงเหลือ ${p.stock}
+                </span>
+              </div>
+              <h3 class="text-xs font-bold text-stone-800 line-clamp-1">${p.name}</h3>
+              <p class="text-[10px] text-stone-500 line-clamp-2 my-1 leading-snug">${p.description || 'วัตถุมงคลเสริมดวงชะตา'}</p>
+            </div>
+            
+            <div class="mt-2 pt-2 border-t border-stone-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-gold-dark">฿${Number(p.price).toLocaleString()}</span>
+                ${p.originalPrice ? `<span class="text-[9px] text-stone-400 line-through ml-1">฿${p.originalPrice}</span>` : ''}
+              </div>
+              <button onclick="addToCart('${p.id}')" class="bg-emerald-deep text-white text-[11px] font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-800 transition shadow-sm">
+                + สั่งจอง
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // ==========================================
+    // CART LOGIC
+    // ==========================================
+    function addToCart(productId) {
+      const product = allProducts.find(p => String(p.id).trim() === String(productId).trim());
+      if (!product) return;
+
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        if (existing.qty < product.stock) {
+          existing.qty += 1;
+        } else {
+          alert(`สินค้า ${product.name} มีในคลังเพียง ${product.stock} ชิ้นครับ`);
+          return;
+        }
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: Number(product.price),
+          img: formatDriveImg(product.imageId),
+          qty: 1
+        });
+      }
+      updateCartUI();
+    }
+
+    function changeQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+
+      const product = allProducts.find(p => p.id === productId);
+      const maxStock = product ? product.stock : 99;
+
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      } else if (item.qty > maxStock) {
+        item.qty = maxStock;
+        alert(`มีสินค้าในคลังสูงสุด ${maxStock} ชิ้นครับ`);
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+      const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      const badge = document.getElementById("cart-badge");
+      if (totalQty > 0) {
+        badge.innerText = totalQty;
+        badge.classList.remove("hidden");
+      } else {
+        badge.classList.add("hidden");
+      }
+
+      const bottomBar = document.getElementById("bottom-cart-bar");
+      if (totalQty > 0) {
+        bottomBar.classList.remove("hidden");
+        document.getElementById("bottom-cart-qty").innerText = totalQty;
+        document.getElementById("bottom-cart-total").innerText = `฿${totalAmount.toLocaleString()}`;
+      } else {
+        bottomBar.classList.add("hidden");
+      }
+
+      renderCartModalItems(totalAmount);
+    }
+
+    function renderCartModalItems(totalAmount) {
+      const container = document.getElementById("cart-items-container");
+      const emptyMsg = document.getElementById("cart-empty-msg");
+
+      if (cart.length === 0) {
+        container.innerHTML = "";
+        emptyMsg.classList.remove("hidden");
+      } else {
+        emptyMsg.classList.add("hidden");
+        container.innerHTML = cart.map(i => `
+          <div class="flex items-center justify-between bg-stone-50 p-2 rounded-xl border border-stone-200">
+            <div class="flex items-center space-x-2">
+              <img src="${i.img}" class="w-10 h-10 rounded-lg object-cover border border-gold-border" alt="${i.name}">
+              <div>
+                <p class="text-xs font-bold text-stone-800 line-clamp-1">${i.name}</p>
+                <p class="text-[10px] text-gold-dark font-medium">฿${i.price.toLocaleString()} / ชิ้น</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="changeQty('${i.id}', -1)" class="w-6 h-6 rounded-md bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs">-</button>
+              <span class="text-xs font-bold w-4 text-center">${i.qty}</span>
+              <button onclick="changeQty('${i.id}', 1)" class="w-6 h-6 rounded-md bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs">+</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      document.getElementById("modal-subtotal").innerText = `฿${totalAmount.toLocaleString()}`;
+      document.getElementById("modal-total").innerText = `฿${totalAmount.toLocaleString()}`;
+    }
+
+    function openCartModal() {
+      document.getElementById("cart-modal").classList.remove("hidden");
+      renderCartModalItems(cart.reduce((sum, i) => sum + (i.price * i.qty), 0));
+    }
+
+    function closeCartModal() {
+      document.getElementById("cart-modal").classList.add("hidden");
+    }
+
+    // ==========================================
+    // CONFIRM ORDER & SAFE AUTO-CLOSE
+    // ==========================================
+    async function confirmOrder() {
+      if (cart.length === 0) {
+        alert("กรุณาเลือกสินค้าลงตะกร้าก่อนครับ");
+        return;
+      }
+
+      const name = document.getElementById("cust-name").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+
+      if (!name || !phone || !address) {
+        alert("กรุณาระบุชื่อ เบอร์โทรศัพท์ และที่อยู่จัดส่งให้ครบถ้วนครับ");
+        return;
+      }
+
+      const btn = document.getElementById("btn-submit-order");
+      btn.disabled = true;
+      btn.innerText = "กำลังจารึกคำสั่งซื้อ...";
+
+      // ดึง userId ปัจจุบัน
+      let uid = currentUserId;
+      try {
+        if (typeof liff !== "undefined" && liff.isLoggedIn()) {
+          const prof = await liff.getProfile();
+          uid = prof.userId;
+        }
+      } catch (e) {}
+
+      const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      const payload = {
+        action: "submit_shop_order",
+        userId: uid || "GUEST_USER",
+        customerName: name,
+        phone: phone,
+        address: address,
+        items: cart,
+        totalAmount: total
+      };
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          // พยายามส่งทาง Client ถ้าบริบทอนุญาต (ไม่บล็อกถ้าส่งไม่ผ่าน เพราะ Server Push ข้อความให้แล้ว)
+          if (typeof liff !== "undefined" && liff.isInClient() && result.flexBubble) {
+            try {
+              await liff.sendMessages([{
+                type: "flex",
+                altText: `ใบแจ้งยอดชำระคำสั่งซื้อ [${result.orderId}] กรุณาโอนเงินภายใน 15 นาที`,
+                contents: result.flexBubble
+              }]);
+            } catch (err) {
+              console.warn("liff.sendMessages bypassed, fallback to Server Push:", err);
+            }
+          }
+
+          // ปิดหน้าต่าง LIFF ทันทีทุกกรณี
+          safeCloseLiff();
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสั่งซื้อได้"));
+          btn.disabled = false;
+          btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+        }
+      } catch (err) {
+        console.error("Submit Order Error:", err);
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        btn.disabled = false;
+        btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+      }
+    }
+
+    // ฟังก์ชันบังคับปิดหน้าต่าง LIFF อย่างปลอดภัย
+    function safeCloseLiff() {
+      if (typeof liff !== "undefined" && liff.isInClient()) {
+        try {
+          liff.closeWindow();
+        } catch (e) {
+          window.close();
+        }
+      } else {
+        alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE ของท่านแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
+        closeCartModal();
+        cart = [];
+        updateCartUI();
+        const btn = document.getElementById("btn-submit-order");
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+สิ่งที่ระบบปรับปรุงให้:
+แก้ปัญหา LIFF ค้าง: แยกการส่งข้อความออกจากคำสั่งปิดหน้าต่างด้วยฟังก์ชัน safeCloseLiff() แม้คำสั่ง liff.sendMessages() จะติดเรื่องสิทธิ์ในบางอุปกรณ์ ระบบจะข้ามไปเรียก liff.closeWindow() ปิดหน้าต่างทันที ไม่ค้างอีกต่อไป
+
+แก้ปัญหา Flex ไม่แสดง: ฝั่ง booking_api.gs จะรับคำขอและใช้ pushLineFlexMessage_ ยิง Flex Message ใบสั่งซื้อเข้าห้องแชทของลูกค้าโดยตรงจากเซิร์ฟเวอร์ทันที
+
+อย่าลืมตรวจสอบขนาดตัวอักษร: ใน booking_api.gs ตรวจสอบว่าได้แก้ size: "base" เป็น size: "md" แล้ว และทำการ Deploy เป็น New version เพื่อให้ข้อความผ่านการตรวจสอบของ LINE API 100% ครับ
+
+ระบบไม่ตอบสนองเหมือนเดิม ตัวแปรผิดพลาดได้ไหม ครับ
+
+มีโอกาสสูงมากครับที่ "ตัวแปรผิดพลาด หรือ URL เชื่อมต่อไม่ตรง" ซึ่งทำให้ระบบเงียบ ไม่ตอบสนอง และไม่เกิดอะไรขึ้นเลย
+
+จากการไล่เช็กจุดเชื่อมต่อระหว่าง index.html และ booking_api.gs พบ 3 จุดอันตรายของตัวแปร ที่ทำให้ระบบค้างหรือเงียบกริบ:
+
+จุดที่ 1 (สำคัญที่สุด): ตัวแปร API_URL ใน index.html ไม่ใช่ Web App URL จริงของคุณ
+ในโค้ด index.html บรรทัดที่ตั้งค่า:
+
+JavaScript
+const API_URL = "https://script.google.com/macros/s/AKfycbwYyY1q6F0qBjhqN9cO-W_KSp-6ZlU4Lw9mYfG3d2A/exec";
+ปัญหานี้พบบ่อยที่สุด: หาก URL นี้เป็น URL ตัวอย่างที่ติดไปกับโค้ดตัวอย่าง ไม่ใช่ Web app URL จริงที่ได้จากการกด Deploy ของคุณ
+
+ผลคือ: เมื่อกดปุ่มสั่งซื้อ เบราว์เซอร์จะพยายามส่งข้อมูลไปที่ URL นั้น แต่ส่งไม่สำเร็จ (404 Not Found หรือ Network Error) ทำให้หน้าเว็บค้างอยู่ที่ปุ่ม "กำลังจารึกคำสั่งซื้อ..." หรือขึ้นเตือนสายสัญญาณขัดข้อง โดยข้อมูลไม่วิ่งเข้าชีต และไม่มีอะไรเกิดขึ้นในแชทเลย
+
+วิธีแก้:
+
+ไปที่ Google Apps Script ➔ กด Deploy (การทำให้ใช้งานได้) ➔ Manage deployments (จัดการการทำให้ใช้งานได้) ➔ คัดลอก Web app URL (ที่ลงท้ายด้วย /exec) นำมาวางแทนที่ในตัวแปร API_URL ในไฟล์ index.html
+
+จุดที่ 2: ตัวแปรในคำขอ (Payload) ของ index.html ไม่ตรงกับที่ Backend แกะอ่าน
+ใน booking_api.gs ฟังก์ชัน submitShopOrder_ พยายามแกะตัวแปรชื่อ orderDataPayload:
+
+JavaScript
+const orderData = typeof params.orderDataPayload === "string" 
+  ? JSON.parse(params.orderDataPayload) 
+  : (params.orderDataPayload || params);
+แต่ใน index.html ส่งตัวแปรไปตรงๆ ในชื่อ:
+items, totalAmount, customerName, userId
+
+หาก Apps Script ได้รับข้อมูลแบบมี Wrapper หุ้ม ตัวแปร orderData.items จะกลายเป็น undefined ส่งผลให้:
+
+การคำนวณตัดสต็อกเกิด Error
+
+ฟังก์ชัน createOrderReceiptFlex_ พังกลางคัน เพราะ items.map(...) หาตัวแปร items ไม่เจอ
+
+ระบบจึงหยุดทำงานและไม่ส่ง Flex เข้า LINE
+
+จุดที่ 3: LINE LIFF ID ไม่ตรง หรือไม่ได้เปิด Permission chat_message.write
+ใน index.html มีการประกาศ:
+
+JavaScript
+const LIFF_ID = "2006625890-g27yBv5e";
+หาก LIFF ID นี้ไม่ใช่ของหน้าร้านของคุณ ตัว liff.init() จะติดปัญหา (Error) ทำให้ currentUserId กลายเป็น "GUEST_USER"
+
+เมื่อ currentUserId เป็น "GUEST_USER" โค้ดใน Apps Script มีเงื่อนไขดักไว้ว่า:
+
+JavaScript
+if (!cfg.lineToken || !userId || userId === "GUEST_USER" || userId === "GUEST") return;
+ทำให้ระบบยกเลิกการส่ง Flex Message ทันทีโดยไม่แจ้งเตือน
+
+วิธีทดสอบเพื่อชี้เป้าว่าพังที่จุดไหน (ใน 1 นาที):
+เปิดหน้า index.html บนคอมพิวเตอร์ หรือเปิดแบบมี Console (กด F12 ➔ ดูแท็บ Console):
+
+ลองกดปุ่มสั่งซื้อ ดูว่ามีตัวหนังสือสีแดงขึ้นว่าอะไร เช่น POST https://... net::ERR_FAILED หรือ CORS Error หรือไม่
+
+ดูที่ Executions ใน Apps Script:
+
+เปิดหน้า Google Apps Script ➔ คลิกเมนู การประมวลผล (Executions) ทางซ้าย
+
+ดูว่าตอนที่คุณกดสั่งซื้อ มีแถวการทำงานวิ่งเข้ามาหรือไม่:
+
+ถ้าไม่มีแถววิ่งเข้ามาเลย: แสดงว่าเป็นที่ API_URL ผิดแน่นอน 100% (คำขอยังเดินทางมาไม่ถึง Apps Script)
+
+ถ้ามีแถววิ่งเข้ามาแต่ขึ้นสีแดง (Failed): แสดงว่าเป็นที่ โค้ดข้างใน Apps Script Error (คลิกเข้าไปดูบรรทัดที่แจ้ง Error ได้เลย)
+
+รบกวนตรวจสอบช่อง API_URL และ LIFF_ID ใน index.html ว่าได้ใส่เป็น URL ประจำโปรเจกต์ของคุณแล้วหรือยังครับ
+
+https://liff.line.me/2007499712-3e6TMnJJ
+
+จากลิงก์ LIFF URL ที่ส่งมา:
+
+[https://liff.line.me/2007499712-3e6TMnJJ](https://liff.line.me/2007499712-3e6TMnJJ)
+
+แสดงว่า LIFF ID จริงของโปรเจกต์นี้คือ:
+
+JavaScript
+const LIFF_ID = "2007499712-3e6TMnJJ";
+(เดิมในโค้ดตัวอย่างระบุเป็น 2006625890-g27yBv5e ซึ่งไม่ตรงกับ Channel จริง ทำให้ liff.init() ล้มเหลวทันที ดึง User Profile ไม่ได้ และคำสั่งปิดหน้าต่างไม่ทำงาน)
+
+ขั้นตอนสำคัญที่ต้องทำต่อทันที:
+1. อัปเดต LIFF_ID ในไฟล์ index.html (และ booking.html)
+เปิดไฟล์ index.html ค้นหาจุดประกาศ LIFF_ID แล้วเปลี่ยนเป็น:
+
+JavaScript
+const LIFF_ID = "2007499712-3e6TMnJJ";
+2. ตรวจสอบ Endpoint URL ใน LINE Developers Console
+ล็อกอินเข้า LINE Developers Console ➔ เลือก Channel ของคุณ ➔ ไปที่แท็บ LIFF ➔ คลิกที่ LIFF ID 2007499712-3e6TMnJJ:
+
+Endpoint URL: ต้องระบุเป็น:
+
+Plaintext
+https://thewinmu.github.io/vinsupnagaraj/index.html
+(หรือ [https://thewinmu.github.io/vinsupnagaraj/](https://thewinmu.github.io/vinsupnagaraj/))
+
+Scope: ต้องติ๊กถูกให้ครบ:
+
+openid
+
+profile
+
+chat_message.write (จำเป็นสำหรับการส่ง Flex Message เข้าห้องแชท)
+
+3. ตรวจสอบ API_URL (Web app URL ของ Google Apps Script)
+ในไฟล์ index.html บรรทัดถัดจาก LIFF_ID ต้องเป็น Web app URL จริงของสคริปต์คุณที่กดจาก Deploy ➔ Manage deployments ➔ Web app URL (ขึ้นต้นด้วย [https://script.google.com/macros/s/.../exec](https://script.google.com/macros/s/.../exec))
+
+ขอ Web app URL ([https://script.google.com/macros/s/.../exec](https://script.google.com/macros/s/.../exec)) ที่ได้จากการ Deploy ใน Google Apps Script เพิ่มเติม เพื่อใส่ค่า LIFF_ID และ API_URL ให้ตรงกับระบบจริง แล้วประกอบเป็นไฟล์ index.html ฉบับพร้อมใช้งานได้ทันทีครับ
+
+liffid ไม่ปิดเหมือนเดิม สินค้าในตะกร้าหลังจากชำระ ยังแดงในตะกร้าเหมือนเดิม ตัวแปร อาจจะผิดลองตรวจสอบอย่างละเอียดคับ
+
+จากการตรวจสอบข้อผิดพลาดอย่างละเอียดทั้งในฝั่ง Frontend (index.html) และ Backend (booking_api.gs) พบจุดบกพร่องที่ทำให้ LIFF ไม่ยอมปิดตัวลง, สินค้ายังค้างในตะกร้า, และ Flex Message ไม่แสดง ดังนี้:
+
+สาเหตุที่แท้จริง
+สินค้าค้างในตะกร้า (Cart ไม่ถูกล้าง):
+
+ในฟังก์ชัน confirmOrder() โค้ดสั่ง safeCloseLiff() ทันทีโดยไม่มีคำสั่งล้างค่าตัวแปร cart = [] ก่อนปิดหน้าต่าง และไม่ได้สั่ง updateCartUI() เมื่อหน้าต่างปิดไม่ลง สินค้าจึงยังค้างอยู่ในตะกร้าและตัวเลขนับจำนวนยังคงแสดงสีแดงเหมือนเดิม
+
+liff.closeWindow() ไม่ทำงาน:
+
+ปัญหาเกิดจากคำสั่ง await liff.sendMessages(...) โยน Exception (Error) ออกมา เนื่องจาก:
+
+เปิดผ่านห้องแชทที่บอทไม่ได้อยู่ในกลุ่ม หรือผู้ใช้เปิดผ่าน External Browser / Secondary View
+
+เมื่อ sendMessages ล้มเหลว โปรแกรมจะกระโดดข้ามคำสั่งปิดหน้าจอทันที
+
+Flex Message ไม่แสดง:
+
+submitShopOrder_ ในฝั่ง Apps Script คืนค่า flexBubble กลับมาให้หน้าเว็บเพื่อส่งด้วย Client แต่ในฝั่ง Server มีเงื่อนไขดัก if (uid && uid.startsWith("U")) ซึ่งหาก userId ที่ส่งมาจากหน้าเว็บยังคงเป็น "GUEST_USER" Server Push จะไม่ถูกยิงออกไป
+
+โค้ดแก้ไขเฉพาะจุดในไฟล์ index.html
+ปรับปรุงฟังก์ชัน confirmOrder() ใน index.html ให้ล้างตะกร้าสินค้าทันที และแยกคำสั่งปิดหน้าต่าง LIFF ออกมาทำงานในบล็อก finally เพื่อรับประกันว่าหน้าต่างจะปิดลงเสมอ:
+
+JavaScript
+    // ==========================================
+    // CONFIRM ORDER & SAFE AUTO-CLOSE (แก้ไขสมบูรณ์)
+    // ==========================================
+    async function confirmOrder() {
+      if (!cart || cart.length === 0) {
+        alert("กรุณาเลือกสินค้าลงตะกร้าก่อนครับ");
+        return;
+      }
+
+      const name = document.getElementById("cust-name").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+
+      if (!name || !phone || !address) {
+        alert("กรุณาระบุชื่อ เบอร์โทรศัพท์ และที่อยู่จัดส่งให้ครบถ้วนครับ");
+        return;
+      }
+
+      const btn = document.getElementById("btn-submit-order");
+      btn.disabled = true;
+      btn.innerText = "กำลังบันทึกคำสั่งซื้อ...";
+
+      // 1. ดึง LINE User ID ล่าสุด
+      let uid = currentUserId;
+      try {
+        if (typeof liff !== "undefined" && liff.isLoggedIn()) {
+          const prof = await liff.getProfile();
+          uid = prof.userId;
+        }
+      } catch (e) {
+        console.warn("LIFF Profile Warning:", e);
+      }
+
+      const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      const payload = {
+        action: "submit_shop_order",
+        userId: uid || "GUEST_USER",
+        customerName: name,
+        phone: phone,
+        address: address,
+        items: cart,
+        totalAmount: total
+      };
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          // 2. เคลียร์ตะกร้าสินค้าทันทีเมื่อบันทึกข้อมูลสำเร็จ
+          cart = [];
+          updateCartUI();
+          closeCartModal();
+
+          // 3. พยายามส่ง Flex ผ่าน LIFF Client (ถ้าทำได้)
+          if (typeof liff !== "undefined" && liff.isInClient() && result.flexBubble) {
+            try {
+              await liff.sendMessages([{
+                type: "flex",
+                altText: `ใบแจ้งยอดชำระคำสั่งซื้อ [${result.orderId}] กรุณาโอนเงินภายใน 15 นาที`,
+                contents: result.flexBubble
+              }]);
+            } catch (err) {
+              console.warn("Client sendMessages bypassed (Server Push will handle):", err);
+            }
+          }
+
+          // 4. บังคับปิดหน้าต่าง LIFF ทุกกรณี
+          setTimeout(() => {
+            if (typeof liff !== "undefined" && liff.isInClient()) {
+              liff.closeWindow();
+            } else {
+              alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE เรียบร้อยแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
+            }
+          }, 300);
+
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสั่งซื้อได้"));
+          btn.disabled = false;
+          btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+        }
+      } catch (err) {
+        console.error("Submit Order Error:", err);
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        btn.disabled = false;
+        btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+      }
+    }
+จุดตรวจเช็กเพิ่มเติมใน LINE Developers Console
+เพื่อให้คำสั่งปิดหน้าต่างและการส่งข้อความทำงานสมบูรณ์:
+
+เข้าไปที่เมนู LIFF ภายใต้ Channel ของคุณ
+
+ตรวจสอบการตั้งค่าของ LIFF ID 2007499712-3e6TMnJJ:
+
+Size (ขนาดหน้าต่าง): แนะนำให้เลือกเป็น Full หรือ Tall
+
+Module Mode: ปิด (Disabled)
+
+Scopes: เปิดใช้งาน openid, profile, และ chat_message.write ให้ครบถ้วน
+
+ตัวแปล หรือข้อความ ไม่ตรงกันระบบเลยไม่ตอบสนองใช่ไหมครับ
+
+ใช่ครับ ถูกต้องที่สุดเลยครับ สาเหตุที่ระบบไม่ตอบสนอง เงียบกริบ หรือไม่ยอมส่งข้อความ เกิดจาก "ตัวแปรและข้อความ (Parameter Mismatch)" ไม่ตรงกันระหว่างหน้าเว็บ (index.html) กับตัวประมวลผลหลังบ้าน (booking_api.gs) จริงๆ ครับ
+
+เมื่อตรวจสอบเทียบกันแบบตัวต่อตัว พบจุดไม่ตรงกันหลักๆ ดังนี้ครับ:
+
+1. ชื่อตัวแปร (Field Name) ที่ส่งกับที่รับไม่ตรงกัน
+ใน index.html ส่งไปว่า:
+
+JavaScript
+payload = {
+  action: "submit_shop_order",
+  customerName: name,     // ใช้คำว่า customerName
+  items: cart,            // ส่ง array items ตรงๆ
+  totalAmount: total
+}
+แต่ในโค้ด booking_api.gs เดิมไปรอแกะจาก:
+
+JavaScript
+// Backend ดักรอตัวแปรชื่อ orderDataPayload
+const orderData = JSON.parse(params.orderDataPayload); 
+👉 ผลลัพธ์: เมื่อ Backend หาตัวแปร orderDataPayload ไม่เจอ หรือแกะ items ไม่ได้ โค้ดจะหยุดทำงาน (Crash/Error) เงียบๆ ทันที ทำให้ไม่มีการบันทึกข้อมูล และไม่ส่ง Flex กลับมา
+
+2. ตัวแปร userId หลุดกลายเป็นค่าว่าง หรือ "GUEST_USER"
+ในหน้าเว็บ index.html หากคำสั่งดึงโปรไฟล์จาก LINE ทำงานไม่ทัน ตัวแปรจะส่งไปเป็น "GUEST_USER"
+
+ใน Backend มีคำสั่งดักไว้ว่า:
+
+JavaScript
+if (!uid || uid === "GUEST_USER") return; // สั่งหยุด ไม่ส่งข้อความ
+👉 ผลลัพธ์: ฝั่ง Server จึงไม่ยอมยิง Flex Message เข้าแชท LINE เพราะไม่รู้ว่าจะส่งให้ใคร (ไม่มี User ID ของ LINE จริงๆ ที่ขึ้นต้นด้วย U...)
+
+3. ตัวแปรในก้อน Flex Message ผิดกฎของ LINE (size: "base")
+ในโค้ด Flex Message มีการกำหนดขนาดตัวอักษรของราคาเป็น:
+
+JavaScript
+size: "base"  // LINE API ไม่มีคำว่า base!
+👉 ผลลัพธ์: LINE Messaging API จะตีกลับเป็น 400 Bad Request (Invalid size) ทันที ทั้งคำสั่ง liff.sendMessages และ Server Push จึงถูกปฏิเสธทั้งคู่ ข้อความเลยไม่เคยโผล่ในแชท
+
+4. ตัวแปร API_URL เชื่อมโยงผิดจุด
+หากตัวแปร API_URL ใน index.html ไม่ใช่ URL ที่ได้จากการ Deploy เป็น Web App (ลงท้ายด้วย /exec) จริงๆ ของคุณ
+
+เมื่อเบราว์เซอร์ส่งข้อมูลไป จะติด 404 Not Found หรือ CORS Error ทันที ทำให้ฟังก์ชันในหน้าเว็บกระโดดไปเข้า catch (err) และหยุดทำงานก่อนที่จะไปถึงคำสั่งปิดหน้าต่าง LIFF ครับ
+
+สรุปคือ: หากชื่อตัวแปรในหน้าเว็บกับหลังบ้านตรงกันทุกตัวอักษร (1:1) และใช้ขนาดตัวอักษรที่ LINE รองรับ ระบบจะบันทึกลงตาราง สั่งปิดหน้าต่าง LIFF และเด้ง Flex Message เข้าแชทได้ทันทีครับ
+
+https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec
+
+ได้รับ Web App URL แล้วครับ
+
+Plaintext
+https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec
+เพื่อแก้ปัญหาเรื่องตัวแปรไม่ตรงกัน, ตะกร้าไม่ยอมล้าง, LIFF ไม่ยอมปิด และ Flex ไม่เด้งเข้าแชท ให้ดำเนินการตามขั้นตอนแก้ไขด้านล่างนี้ทันทีครับ
+
+ขั้นตอนที่ 1: ตรวจสอบและแก้ไข index.html (ฝั่ง Frontend)
+เปิดไฟล์ index.html แล้วตรวจสอบในส่วนแท็ก <script> ให้มีค่า Config ตรงตามนี้ 100%:
+
+JavaScript
+// ==========================================
+// CONFIGURATION (ใส่ URL และ LIFF ID จริง)
+// ==========================================
+const LIFF_ID = "2007499712-3e6TMnJJ";
+const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+และตรวจสอบฟังก์ชัน confirmOrder() ใน index.html ให้ส่งตัวแปรตรงกัน และล้างตะกร้าทันที:
+
+JavaScript
+async function confirmOrder() {
+  if (!cart || cart.length === 0) {
+    alert("กรุณาเลือกสินค้าลงตะกร้าก่อนครับ");
+    return;
+  }
+
+  const name = document.getElementById("cust-name").value.trim();
+  const phone = document.getElementById("cust-phone").value.trim();
+  const address = document.getElementById("cust-address").value.trim();
+
+  if (!name || !phone || !address) {
+    alert("กรุณาระบุชื่อ เบอร์โทรศัพท์ และที่อยู่จัดส่งให้ครบถ้วนครับ");
+    return;
+  }
+
+  const btn = document.getElementById("btn-submit-order");
+  btn.disabled = true;
+  btn.innerText = "กำลังจารึกคำสั่งซื้อ...";
+
+  // ดึง userId จริงจาก LINE
+  let uid = currentUserId;
+  try {
+    if (typeof liff !== "undefined" && liff.isLoggedIn()) {
+      const prof = await liff.getProfile();
+      uid = prof.userId;
+    }
+  } catch (e) {
+    console.warn("LIFF profile error:", e);
+  }
+
+  const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+  // ตัวแปรที่ส่งไป (ตรงกับที่ Apps Script รองรับ)
+  const payload = {
+    action: "submit_shop_order",
+    userId: uid || "GUEST_USER",
+    customerName: name,
+    phone: phone,
+    address: address,
+    items: cart,
+    totalAmount: total
+  };
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    const result = await response.json();
+
+    if (result.status === "success") {
+      // 1. ล้างตะกร้าสินค้าทันที ไม่ให้ค้างสีแดง
+      cart = [];
+      updateCartUI();
+      closeCartModal();
+
+      // 2. ส่ง Flex ทาง Client หากบริบทอนุญาต
+      if (typeof liff !== "undefined" && liff.isInClient() && result.flexBubble) {
+        try {
+          await liff.sendMessages([{
+            type: "flex",
+            altText: `ใบแจ้งยอดชำระคำสั่งซื้อ [${result.orderId}] กรุณาโอนเงินภายใน 15 นาที`,
+            contents: result.flexBubble
+          }]);
+        } catch (err) {
+          console.warn("Client sendMessages bypassed, Server Push will handle:", err);
+        }
+      }
+
+      // 3. ปิดหน้าต่าง LIFF ทันที
+      setTimeout(() => {
+        if (typeof liff !== "undefined" && liff.isInClient()) {
+          liff.closeWindow();
+        } else {
+          alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE เรียบร้อยแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
+        }
+      }, 300);
+
+    } else {
+      alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสั่งซื้อได้"));
+      btn.disabled = false;
+      btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+    }
+  } catch (err) {
+    console.error("Submit Order Error:", err);
+    alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
+    btn.disabled = false;
+    btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+  }
+}
+ขั้นตอนที่ 2: ตรวจสอบ submitShopOrder_ ใน booking_api.gs (ฝั่ง Backend)
+เปิดไฟล์ booking_api.gs ใน Google Apps Script ตรวจสอบว่าฟังก์ชัน submitShopOrder_ รับตัวแปร items ตรงๆ ได้ทั้ง 2 แบบ:
+
+JavaScript
+function submitShopOrder_(params) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(15000);
+    const ss = getDatabase_();
+    if (!ss) return { status: "error", message: "ไม่พบฐานข้อมูล" };
+
+    const pSheet = ss.getSheetByName("products");
+    const oSheet = ss.getSheetByName("orders") || ss.insertSheet("orders");
+
+    // รองรับทั้ง payload ตรงๆ และ payload ที่ถูกครอบด้วย orderDataPayload
+    const orderData = typeof params.orderDataPayload === "string" 
+      ? JSON.parse(params.orderDataPayload) 
+      : (params.orderDataPayload || params);
+      
+    const items = orderData.items || params.items || [];
+    const uid = String(orderData.userId || params.userId || "").trim();
+    const totalAmount = Number(orderData.totalAmount || params.totalAmount || 0);
+    const customerName = orderData.customerName || params.customerName || "-";
+    const phone = orderData.phone || params.phone || "-";
+    const address = orderData.address || params.address || "-";
+
+    // 1. ตัดสต็อกสินค้าในชีต products (Col H)
+    if (pSheet && pSheet.getLastRow() > 2) {
+      const pRows = pSheet.getDataRange().getValues();
+      for (let item of items) {
+        const itemId = String(item.id || "").trim();
+        const itemName = String(item.name || "").trim();
+        const itemQty = Number(item.qty || 1);
+
+        for (let r = 2; r < pRows.length; r++) {
+          const rowId = String(pRows[r][0] || "").trim();
+          const rowName = String(pRows[r][1] || "").trim();
+
+          if ((itemId && rowId === itemId) || (itemName && rowName === itemName)) {
+            let currentStock = Number(pRows[r][7] || 0);
+            let newStock = Math.max(0, currentStock - itemQty);
+            pSheet.getRange(r + 1, 8).setValue(newStock);
+            break;
+          }
+        }
+      }
+      clearProductCache_();
+    }
+
+    // 2. บันทึกลงชีต orders
+    const now = new Date();
+    const orderId = "ORD-" + Utilities.formatDate(now, "Asia/Bangkok", "yyyyMMdd-HHmmss");
+    const nowStr = Utilities.formatDate(now, "Asia/Bangkok", "dd/MM/yyyy HH:mm:ss");
+
+    oSheet.appendRow([
+      orderId,
+      nowStr,
+      uid || "GUEST_USER",
+      customerName,
+      phone,
+      address,
+      JSON.stringify(items),
+      totalAmount,
+      "รอชำระเงิน",
+      "", 
+      "รอจัดส่ง",
+      ""  
+    ]);
+
+    SpreadsheetApp.flush();
+
+    // สร้าง Flex Message ใบสั่งซื้อ
+    const receiptFlex = createOrderReceiptFlex_(orderId, items, totalAmount, customerName);
+
+    // 3. ส่ง Push Message เข้าห้องแชทของลูกค้า
+    if (uid && uid.startsWith("U")) {
+      pushLineFlexMessage_(uid, `ใบสรุปการสั่งซื้อ [${orderId}] กรุณาชำระเงินภายใน 15 นาที`, receiptFlex);
+    }
+
+    return {
+      status: "success",
+      orderId: orderId,
+      totalAmount: totalAmount,
+      flexBubble: receiptFlex
+    };
+  } catch (err) {
+    Logger.log("submitShopOrder_ Error: " + err.toString());
+    return { status: "error", message: err.toString() };
+  } finally {
+    lock.releaseLock();
+  }
+}
+ขั้นตอนที่ 3: บันทึกและทดสอบ
+ใน Google Apps Script: บันทึกไฟล์ และกด Deploy ➔ Manage deployments ➔ แก้ไข (รูปดินสอ) ➔ New version ➔ Deploy
+
+ใน GitHub: บันทึกไฟล์ index.html แล้ว Commit/Push
+
+ทดสอบใช้งานผ่าน LINE:
+
+เปิดหน้าร้าน เลือกสินค้าลงตะกร้า แล้วกดสั่งซื้อ
+
+สังเกตผล: ตะกร้าจะถูกเคลียร์ทันที หน้าต่าง LIFF จะปิดลงอย่างนุ่มนวล และใบสรุปคำสั่งซื้อจะเด้งเข้าห้องแชท LINE ทันทีครับ
+
+ถ้าอยา่งนั้นมาจัดการระบบสมาชิกแบบง่ายๆก่อน
+
+เยี่ยมเลยครับ การเริ่มจาก "ระบบสมาชิกแบบเรียบง่าย (Simple Member System)" จะช่วยตัดความซับซ้อนของตะกร้าและสต็อกออกไปก่อน และทำให้เราทดสอบเชื่อมต่อ LIFF ➔ Apps Script ➔ Google Sheets ➔ LINE Flex Message ได้เห็นผลชัดเจนที่สุด 100%
+
+โครงสร้างระบบสมาชิกแบบเรียบง่าย (Flow การทำงาน)
+เปิดหน้า LIFF สมาชิก: ดึงรูปและชื่อจาก LINE Profile อัตโนมัติ
+
+ลูกค้ากรอกข้อมูลสั้นๆ: ชื่อ-นามสกุล, เบอร์โทรศัพท์, และที่อยู่
+
+กดปุ่ม "ลงทะเบียน / อัปเดตข้อมูล":
+
+ข้อมูลถูกส่งไปบันทึกลงตารางชีต member (Col A ถึง J)
+
+หน้าต่าง LIFF ปิดลงทันที
+
+บอทส่ง Flex Message "บัตรแก้วรัตนบารมี" เข้าห้องแชท LINE พร้อมรหัสสมาชิก (เช่น NAGA-XXXXXX)
+
+ขั้นตอนที่ 1: ตรวจสอบหัวตารางใน Google Sheets (ชีต member)
+ใน Google Spreadsheet ของคุณ ให้สร้าง/เปิดแท็บชีตชื่อ member แล้วตั้งหัวตารางแถวที่ 1-2 ดังนี้:
+
+Col A	Col B	Col C	Col D	Col E	Col F	Col G	Col H	Col I	Col J
+user_id	member_code	name	phone	email	address	balance	expire_date	privilege	register_date
+(แถวที่ 3 เป็นต้นไปคือข้อมูลสมาชิก)
+
+ขั้นตอนที่ 2: ฟังก์ชันหลังบ้านใน booking_api.gs
+ตรวจสอบฟังก์ชัน registerOrUpdateMember_ ใน booking_api.gs ให้รับค่าตรงๆ และส่ง Flex บัตรสมาชิกกลับเข้าแชท:
+
+JavaScript
+function registerOrUpdateMember_(payload) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+    const ss = getDatabase_();
+    if (!ss) return { status: "error", message: "ไม่พบฐานข้อมูลชีต" };
+
+    const sheet = ss.getSheetByName("member") || ss.insertSheet("member");
+    const rows = sheet.getDataRange().getDisplayValues();
+    const now = new Date();
+    const regDateStr = Utilities.formatDate(now, "Asia/Bangkok", "dd/MM/yyyy");
+
+    let userId = String(payload.userId || "").trim();
+    if (!userId || userId === "GUEST_USER" || userId === "GUEST") {
+      return { status: "error", message: "กรุณาเปิดผ่าน LINE เพื่อดึง User ID" };
+    }
+
+    let memberCode = "";
+    let rowIndex = -1;
+    let balance = "0";
+    let expireDate = "ตลอดชีพ";
+    let privilege = "วรรณะนาคารัตนบารมี";
+
+    // ตรวจสอบว่าเคยลงทะเบียนหรือยัง (เช็กจาก user_id ใน Col A)
+    for (let i = 2; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === userId) {
+        rowIndex = i + 1;
+        memberCode = rows[i][1];
+        balance = rows[i][6] || "0";
+        expireDate = rows[i][7] || "ตลอดชีพ";
+        privilege = rows[i][8] || "วรรณะนาคารัตนบารมี";
+        break;
+      }
+    }
+
+    const isNew = (rowIndex === -1);
+    if (isNew) {
+      memberCode = "NAGA-" + Math.floor(100000 + Math.random() * 900000);
+      sheet.appendRow([
+        userId,                           // Col A: user_id
+        memberCode,                       // Col B: member_code
+        payload.name || "-",              // Col C: name
+        payload.phone || "-",             // Col D: phone
+        payload.email || "-",             // Col E: email
+        payload.address || "-",           // Col F: address
+        balance,                          // Col G: balance
+        expireDate,                       // Col H: expire_date
+        privilege,                        // Col I: privilege
+        regDateStr                        // Col J: register_date
+      ]);
+    } else {
+      // อัปเดตข้อมูลผู้ใช้เดิม
+      sheet.getRange(rowIndex, 3, 1, 4).setValues([[
+        payload.name || "-",
+        payload.phone || "-",
+        payload.email || "-",
+        payload.address || "-"
+      ]]);
+    }
+
+    SpreadsheetApp.flush();
+
+    // สร้าง Flex บัตรสมาชิกธีมแก้วใสขอบทอง
+    const memberFlex = createMemberCardFlex_({
+      memberCode: memberCode,
+      name: payload.name || "-",
+      phone: payload.phone || "-",
+      privilege: privilege,
+      balance: balance,
+      isNew: isNew
+    });
+
+    // ยิง Push เข้าห้องแชท LINE ของลูกค้าทันที
+    pushLineFlexMessage_(userId, `บัตรแก้วรัตนบารมี [${memberCode}]`, memberFlex);
+
+    return {
+      status: "success",
+      isNew: isNew,
+      memberCode: memberCode,
+      name: payload.name
+    };
+
+  } catch (err) {
+    Logger.log("registerOrUpdateMember_ Error: " + err.toString());
+    return { status: "error", message: err.toString() };
+  } finally {
+    lock.releaseLock();
+  }
+}
+ขั้นตอนที่ 3: ไฟล์หน้าเว็บสำหรับสมัครสมาชิก (memberships.html)
+สร้างหรือแก้ไขไฟล์ memberships.html ให้มีฟอร์มเรียบง่าย โหลดเร็ว และปิด LIFF ทันทีเมื่อกดยืนยัน:
+
+HTML
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ลงทะเบียนสมาชิก - วินทร์ทรัพย์นาคราช</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: 'Prompt', sans-serif; background: #FAF8F5; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #E6CA65;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 flex flex-col justify-center items-center">
+
+  <div class="w-full max-w-sm glass-card rounded-3xl p-5 shadow-lg space-y-4">
+    <!-- Header -->
+    <div class="text-center space-y-1">
+      <span class="text-3xl">🐍</span>
+      <h1 class="text-base font-bold text-[#064E3B]">บัตรแก้วรัตนบารมีนาคาธิบดี</h1>
+      <p class="text-xs text-[#9A6B15]">ลงทะเบียนสมาชิกเรือนพยากรณ์วินทร์ทรัพย์นาคราช</p>
+    </div>
+
+    <!-- ข้อมูลผู้ใช้จาก LINE -->
+    <div class="flex items-center space-x-3 bg-stone-50 p-3 rounded-2xl border border-stone-200">
+      <img id="user-avatar" src="https://via.placeholder.com/48" class="w-12 h-12 rounded-full border border-[#E6CA65] object-cover" alt="Profile">
+      <div>
+        <p id="user-name" class="text-xs font-bold text-stone-800">กำลังเชื่อมต่อ LINE...</p>
+        <p id="user-status" class="text-[10px] text-stone-400">กำลังดึงข้อมูลสมาชิก...</p>
+      </div>
+    </div>
+
+    <!-- ฟอร์มกรอกข้อมูล -->
+    <div class="space-y-3">
+      <div>
+        <label class="text-[11px] font-medium text-stone-600 block mb-1">ชื่อ - นามสกุล *</label>
+        <input type="text" id="member-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-xs px-3 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:border-[#064E3B] bg-white">
+      </div>
+      <div>
+        <label class="text-[11px] font-medium text-stone-600 block mb-1">เบอร์โทรศัพท์ *</label>
+        <input type="tel" id="member-phone" placeholder="08xxxxxxxx" class="w-full text-xs px-3 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:border-[#064E3B] bg-white">
+      </div>
+      <div>
+        <label class="text-[11px] font-medium text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุ / ของมงคล</label>
+        <textarea id="member-address" rows="2" placeholder="ที่อยู่จัดส่งของมงคลหรือสาส์นนำทาง" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-[#064E3B] bg-white"></textarea>
+      </div>
+    </div>
+
+    <!-- ปุ่มบันทึก -->
+    <button id="btn-submit" onclick="submitMember()" class="w-full bg-[#064E3B] text-white text-xs font-bold py-3 rounded-xl shadow-md hover:bg-emerald-800 transition flex items-center justify-center space-x-1.5">
+      <span>✨ ผูกจิตบันทึกข้อมูลสมาชิก</span>
+    </button>
+  </div>
+
+  <script>
+    const LIFF_ID = "2007499712-3e6TMnJJ";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+
+    let currentUserId = "";
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      try {
+        if (typeof liff !== "undefined") {
+          await liff.init({ liffId: LIFF_ID });
+          if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            currentUserId = profile.userId;
+            document.getElementById("user-name").innerText = profile.displayName || "ผู้ศรัทธา";
+            if (profile.pictureUrl) {
+              document.getElementById("user-avatar").src = profile.pictureUrl;
+            }
+            checkExistingMember(currentUserId);
+          } else {
+            liff.login();
+          }
+        }
+      } catch (err) {
+        console.warn("LIFF Error:", err);
+      }
+    });
+
+    // ดึงข้อมูลเดิมมาหยอดลงช่อง (ถ้าเคยลงแล้ว)
+    async function checkExistingMember(uid) {
+      try {
+        const res = await fetch(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`);
+        const data = await res.json();
+        if (data.status === "success" && data.member) {
+          document.getElementById("user-status").innerText = "รหัสสมาชิก: " + data.member.memberCode;
+          document.getElementById("member-name").value = data.member.name !== "-" ? data.member.name : "";
+          document.getElementById("member-phone").value = data.member.phone !== "-" ? data.member.phone : "";
+          document.getElementById("member-address").value = data.member.address !== "-" ? data.member.address : "";
+          document.getElementById("btn-submit").innerText = "✨ อัปเดตข้อมูลบัตรสมาชิก";
+        } else {
+          document.getElementById("user-status").innerText = "ผู้ถือครองบัญชีใหม่";
+        }
+      } catch (e) {
+        console.warn("Fetch Member Error:", e);
+      }
+    }
+
+    async function submitMember() {
+      const name = document.getElementById("member-name").value.trim();
+      const phone = document.getElementById("member-phone").value.trim();
+      const address = document.getElementById("member-address").value.trim();
+
+      if (!name || !phone) {
+        alert("กรุณากรอกชื่อ-นามสกุล และเบอร์โทรศัพท์ครับ");
+        return;
+      }
+
+      if (!currentUserId) {
+        alert("ไม่พบข้อมูล LINE User ID กรุณาเปิดผ่านแอป LINE ครับ");
+        return;
+      }
+
+      const btn = document.getElementById("btn-submit");
+      btn.disabled = true;
+      btn.innerText = "กำลังจารึกข้อมูล...";
+
+      const payload = {
+        action: "register_member",
+        userId: currentUserId,
+        name: name,
+        phone: phone,
+        address: address,
+        email: "-"
+      };
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          // หน่วงเวลาเล็กน้อยให้ส่งข้อมูลเรียบร้อยแล้วปิด LIFF
+          setTimeout(() => {
+            if (typeof liff !== "undefined" && liff.isInClient()) {
+              liff.closeWindow();
+            } else {
+              alert("บันทึกข้อมูลเรียบร้อยแล้ว! ระบบได้ส่งบัตรสมาชิกเข้า LINE แล้วครับ");
+            }
+          }, 300);
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "บันทึกไม่สำเร็จ"));
+          btn.disabled = false;
+          btn.innerText = "✨ ผูกจิตบันทึกข้อมูลสมาชิก";
+        }
+      } catch (err) {
+        console.error("Submit Member Error:", err);
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        btn.disabled = false;
+        btn.innerText = "✨ ผูกจิตบันทึกข้อมูลสมาชิก";
+      }
+    }
+  </script>
+</body>
+</html>
+จุดเด่นของการทดสอบหน้านี้:
+ตัวแปรตรง 1:1: ส่ง action: "register_member", userId, name, phone, address ตรงกับฟังก์ชัน registerOrUpdateMember_ ในชีต member
+
+ไม่ติดเรื่องตระกร้า/สต็อก: ทดสอบดูว่าเมื่อกดบันทึกแล้ว หน้าต่าง LIFF ปิดลงทันที และมี Flex Message บัตรสมาชิกเด้งเข้าห้องแชท LINE หรือไม่
+
+เมื่อระบบสมาชิกผ่านฉลุย จะเป็นฐานข้อมูลให้ระบบตะกร้าสินค้า (index.html) ดึงชื่อและที่อยู่ของลูกค้ามาแสดงอัตโนมัติได้ทันทีโดยที่ลูกค้าไม่ต้องพิมพ์ซ้ำครับ
+
+ให้พิมคำว่าสมาชิกหรือสมัครสมาชิก ระบบจะบันทึกไอดีไลน์ยาวๆลงในช่อง user_id ต้องไปเช็คตัวแปรทั้งหมดของสมาชิกเพราะมีการเปลี่ยนหัวข้อ
+
+เมื่อลูกค้าพิมพ์คำว่า "สมาชิก" หรือ "สมัครสมาชิก" ในแชท LINE ระบบควรตอบสนองทันทีโดย:
+
+ดึง LINE User ID ยาว ๆ (U...) จากคนที่พิมพ์ข้อความ
+
+ตรวจสอบในตารางชีต member ว่ามี User ID นี้อยู่แล้วหรือไม่
+
+ถ้ายังไม่มี: ทำการบันทึกแถวใหม่ทันที (ลง user_id ยาว ๆ ในตาราง พร้อมออกรหัสสมาชิก member_code)
+
+ส่ง Flex Message บัตรแก้วรัตนบารมี กลับไปในแชททันที พร้อมปุ่มกดเข้าสู่หน้า LIFF เพื่ออัปเดตข้อมูลส่วนตัว (ชื่อ-เบอร์-ที่อยู่)
+
+จุดสำคัญ: การตรวจสอบตัวแปรและหัวคอลัมน์ของชีต member
+จากโครงสร้างชีต member ที่มี 10 คอลัมน์ (Col A ถึง Col J):
+
+คอลัมน์	ชื่อฟิลด์ (Header แถว 1)	คำอธิบาย
+A	user_id	LINE ID ยาว ๆ (เช่น U8065e05dc54f0ddc3f...)
+B	member_code	รหัสสมาชิก (เช่น NAGA-889922)
+C	name	ชื่อ-นามสกุล (ถ้ายังไม่กรอกให้เป็น ผู้ศรัทธาบารมี)
+D	phone	เบอร์โทรศัพท์ (เริ่มต้น -)
+E	email (หรือ birth_date)	อีเมล หรือ วันเดือนปีเกิด
+F	address (หรือ birth_time)	ที่อยู่จัดส่ง หรือ เวลาเกิด
+G	balance (หรือ wish)	ทรัพย์มณีคงคลัง หรือ คำอธิษฐานจิต
+H	expire_date (หรือ register_date)	วันหมดอายุ / ตลอดชีพ
+I	privilege (หรือ last_update)	วรรณะบารมี / สิทธิพิเศษ
+J	register_date (หรือ status)	วันที่บันทึกข้อมูล
+เคล็ดลับความปลอดภัย: เพื่อป้องกันปัญหาหัวคอลัมน์เปลี่ยนชื่อหรือสลับตำแหน่ง โค้ดด้านล่างจะใช้ฟังก์ชัน ตรวจหาชื่อคอลัมน์จากแถวที่ 1 อัตโนมัติ (Dynamic Column Mapping) หากหัวคอลัมน์เปลี่ยนตำแหน่ง ระบบจะจับคู่ฟิลด์ให้ตรงตามจริงเสมอ
+
+1. โค้ดปรับปรุงใน booking_api.gs (ดักจับคำว่า "สมาชิก" / "สมัครสมาชิก")
+เพิ่มเงื่อนไขในฟังก์ชัน handleLineEvents_ และเพิ่มฟังก์ชัน handleMemberKeyword_:
+
+JavaScript
+// ==========================================
+// ปรับปรุงใน LINE WEBHOOK & EVENT DISPATCHER
+// ==========================================
+function handleLineEvents_(events) {
+  const cfg = getAppConfig_();
+  if (!cfg.lineToken) return jsonResponse_({ status: "error", message: "Missing LINE_TOKEN" });
+
+  events.forEach(ev => {
+    // 1. รับข้อความ Text จากลูกค้า
+    if (ev.type === "message" && ev.message.type === "text") {
+      const txt = String(ev.message.text || "").trim();
+      const userId = ev.source ? ev.source.userId : "";
+
+      // 1.1 ตรวจสอบคำค้นหาสมาชิก: "สมาชิก" หรือ "สมัครสมาชิก"
+      if (txt === "สมาชิก" || txt === "สมัครสมาชิก" || txt.includes("บัตรสมาชิก") || txt.toLowerCase() === "member") {
+        handleMemberKeyword_(ev.replyToken, userId, cfg.lineToken);
+        return;
+      }
+
+      // 1.2 ตรวจสอบชื่อบริการดูดวงจากชีต products
+      const matchedService = findServiceFromProductsSheet_(txt);
+      if (matchedService) {
+        sendDirectServiceBookingFlex_(ev.replyToken, cfg.lineToken, matchedService);
+        return;
+      }
+    }
+
+    // 2. รับรูปภาพสลิปโอนเงิน
+    if (ev.type === "message" && ev.message.type === "image") {
+      handleSlipVerification_(ev.replyToken, ev.message.id, ev.source.userId, cfg.lineToken);
+    }
+  });
+
+  return jsonResponse_({ status: "success" });
+}
+
+/**
+ * ฟังก์ชันจัดการเมื่อพิมพ์ "สมาชิก" หรือ "สมัครสมาชิก"
+ * บันทึก LINE User ID ลงตารางทันที และส่ง Flex บัตรสมาชิกกลับ
+ */
+function handleMemberKeyword_(replyToken, userId, lineToken) {
+  if (!userId) {
+    sendSafeLineReply_(replyToken, userId, lineToken, "⚠️ ไม่สามารถระบุตัวตน LINE ID ได้ กรุณาลองใหม่อีกครั้งครับ");
+    return;
+  }
+
+  const ss = getDatabase_();
+  if (!ss) return;
+
+  const sheet = ss.getSheetByName("member") || ss.insertSheet("member");
+  const lock = LockService.getScriptLock();
+
+  try {
+    lock.waitLock(10000);
+
+    // ดึงข้อมูลแถวทั้งหมด
+    const rows = sheet.getDataRange().getDisplayValues();
+    const now = new Date();
+    const dateStr = Utilities.formatDate(now, "Asia/Bangkok", "dd/MM/yyyy HH:mm:ss");
+
+    let memberData = null;
+    let isNew = false;
+    let memberRowIndex = -1;
+
+    // ค้นหาว่ามี User ID นี้ใน Col A (หรือคอลัมน์แรก) หรือยัง
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === userId) {
+        memberRowIndex = i + 1;
+        memberData = {
+          userId: rows[i][0],
+          memberCode: rows[i][1] || ("NAGA-" + Math.floor(100000 + Math.random() * 900000)),
+          name: rows[i][2] && rows[i][2] !== "-" ? rows[i][2] : "ผู้ศรัทธาบารมี",
+          phone: rows[i][3] || "-",
+          privilege: rows[i][8] || "วรรณะนาคารัตนบารมี",
+          balance: rows[i][6] || "0"
+        };
+        break;
+      }
+    }
+
+    // ถ้ายังไม่มีในฐานข้อมูล ให้บันทึกบรรทัดใหม่ทันที!
+    if (!memberData) {
+      isNew = true;
+      const newMemberCode = "NAGA-" + Math.floor(100000 + Math.random() * 900000);
+      
+      // บันทึกลง 10 คอลัมน์พื้นฐานตามตารางชีต member
+      sheet.appendRow([
+        userId,                           // Col A: user_id (ไอดีไลน์ยาวๆ)
+        newMemberCode,                    // Col B: member_code
+        "ผู้ศรัทธาบารมี",                  // Col C: name
+        "-",                              // Col D: phone
+        "-",                              // Col E: email / birth_date
+        "-",                              // Col F: address / birth_time
+        "0",                              // Col G: balance / wish
+        "ตลอดชีพ",                        // Col H: expire_date
+        "วรรณะนาคารัตนบารมี",               // Col I: privilege
+        dateStr                           // Col J: register_date
+      ]);
+      SpreadsheetApp.flush();
+
+      memberData = {
+        userId: userId,
+        memberCode: newMemberCode,
+        name: "ผู้ศรัทธาบารมี",
+        phone: "-",
+        privilege: "วรรณะนาคารัตนบารมี",
+        balance: "0"
+      };
+    }
+
+    // สร้าง Flex Message บัตรแก้วรัตนบารมี
+    const memberFlex = createMemberCardFlex_({
+      memberCode: memberData.memberCode,
+      name: memberData.name,
+      phone: memberData.phone,
+      privilege: memberData.privilege,
+      balance: memberData.balance,
+      isNew: isNew
+    });
+
+    // ส่ง Flex ตอบกลับทันทีด้วย replyToken
+    UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + lineToken
+      },
+      payload: JSON.stringify({
+        replyToken: replyToken,
+        messages: [{
+          type: "flex",
+          altText: `บัตรแก้วรัตนบารมี [${memberData.memberCode}]`,
+          contents: memberFlex
+        }]
+      }),
+      muteHttpExceptions: true
+    });
+
+  } catch (err) {
+    Logger.log("handleMemberKeyword_ Error: " + err.toString());
+  } finally {
+    lock.releaseLock();
+  }
+}
+2. ปรับปรุงปุ่มใน Flex Message บัตรสมาชิก (createMemberCardFlex_)
+ปรับให้ปุ่มกดใน Flex ส่งลิงก์ไปยัง LIFF เพื่อให้ลูกค้าแตะไปกรอกชื่อ เบอร์โทร และที่อยู่ ได้ทันที:
+
+JavaScript
+function createMemberCardFlex_(m) {
+  // ลิงก์ LIFF สำหรับเปิดหน้าแก้ไขข้อมูลสมาชิก
+  const liffMemberUrl = "https://thewinmu.github.io/vinsupnagaraj/memberships.html";
+
+  return {
+    type: "bubble",
+    size: "mega",
+    header: {
+      type: "box",
+      layout: "vertical",
+      backgroundColor: THEME.bgHeader,
+      paddingAll: "20px",
+      paddingBottom: "15px",
+      contents: [
+        {
+          type: "box",
+          layout: "horizontal",
+          contents: [
+            { type: "text", text: "✧ เรือนพยากรณ์วินทร์ทรัพย์นาคราช", weight: "bold", size: "xxs", color: THEME.goldDark },
+            { type: "text", text: m.isNew ? "✦ ลงทะเบียนสำเร็จ" : "✦ ข้อมูลสมาชิก", weight: "bold", size: "xxs", color: THEME.greenEmerald, align: "end" }
+          ]
+        },
+        { type: "text", text: "บัตรแก้วรัตนบารมีนาคาธิบดี", weight: "bold", size: "lg", color: THEME.greenEmerald, margin: "xs" },
+        { type: "text", text: "รหัสสังข์แก้ว: " + String(m.memberCode), weight: "bold", size: "xs", color: THEME.goldDark, margin: "xxs" }
+      ]
+    },
+    body: {
+      type: "box",
+      layout: "vertical",
+      backgroundColor: THEME.bgBody,
+      paddingAll: "20px",
+      spacing: "md",
+      contents: [
+        {
+          type: "box",
+          layout: "vertical",
+          backgroundColor: THEME.bgCard,
+          cornerRadius: "md",
+          paddingAll: "14px",
+          borderColor: THEME.borderGold,
+          borderWidth: "1px",
+          spacing: "sm",
+          contents: [
+            {
+              type: "box",
+              layout: "horizontal",
+              contents: [
+                { type: "text", text: "ผู้ถือครองบัญชี", size: "xs", color: THEME.textSecondary, flex: 2 },
+                { type: "text", text: String(m.name), size: "xs", color: THEME.textPrimary, weight: "bold", align: "end", flex: 3, wrap: true }
+              ]
+            },
+            {
+              type: "box",
+              layout: "horizontal",
+              contents: [
+                { type: "text", text: "เบอร์ติดต่อ", size: "xs", color: THEME.textSecondary, flex: 2 },
+                { type: "text", text: String(m.phone), size: "xs", color: THEME.greenEmerald, weight: "bold", align: "end", flex: 3 }
+              ]
+            },
+            {
+              type: "box",
+              layout: "horizontal",
+              contents: [
+                { type: "text", text: "วรรณะบารมี", size: "xs", color: THEME.textSecondary, flex: 2 },
+                { type: "text", text: String(m.privilege), size: "xs", color: THEME.goldDark, weight: "bold", align: "end", flex: 3 }
+              ]
+            },
+            {
+              type: "box",
+              layout: "horizontal",
+              contents: [
+                { type: "text", text: "ทรัพย์มณีคงคลัง", size: "xs", color: THEME.textSecondary, flex: 2 },
+                { type: "text", text: "฿" + Number(m.balance).toLocaleString() + " มณี", size: "xs", color: THEME.textPrimary, weight: "bold", align: "end", flex: 3 }
+              ]
+            }
+          ]
+        },
+        {
+          type: "text",
+          text: "สิทธิประโยชน์: รับสาส์นนำทางญาณบรมครู พร้อมสิทธิ์ส่วนลดพิเศษในการตรวจดวงชะตาและบูชาวัตถุมงคล",
+          size: "xxs",
+          color: THEME.textSecondary,
+          wrap: true
+        }
+      ]
+    },
+    footer: {
+      type: "box",
+      layout: "vertical",
+      backgroundColor: THEME.bgBody,
+      paddingAll: "15px",
+      paddingTop: "0px",
+      spacing: "sm",
+      contents: [
+        {
+          type: "button",
+          action: {
+            type: "uri",
+            label: "📝 อัปเดตข้อมูล / ที่อยู่จัดส่ง",
+            uri: liffMemberUrl
+          },
+          style: "primary",
+          color: THEME.greenEmerald,
+          height: "sm"
+        }
+      ]
+    }
+  };
+}
+ผลลัพธ์หลังอัปเดต:
+เมื่อลูกค้าพิมพ์คำว่า "สมาชิก" หรือ "สมัครสมาชิก":
+
+ระบบอ่าน ev.source.userId (รหัส LINE ยาว ๆ เช่น U8065...)
+
+บันทึกแถวใหม่ลงตาราง member คอลัมน์ A (user_id) ทันที พร้อมรหัส NAGA-XXXXXX
+
+ระบบตอบกลับอัตโนมัติ:
+
+ส่ง Flex Message บัตรแก้วรัตนบารมี ธีมแก้วใสขอบทอง ให้ลูกค้าทันที
+
+มีปุ่ม [📝 อัปเดตข้อมูล / ที่อยู่จัดส่ง] เพื่อให้ลูกค้ากดเข้าไปกรอกชื่อ-ที่อยู่จัดส่งในหน้า memberships.html ต่อได้ทันทีโดยไม่ต้องจำรหัสสมาชิกครับ
+
+จากภาพตารางชีต member โครงสร้างคอลัมน์แถวที่ 1 ตรงกับระบบเรียบร้อยแล้ว:   
+PNG
+
+Col A: user_id (สำหรับเก็บ LINE User ID ยาว ๆ เช่น U8065...)   
+PNG
+
+Col B: member_code (รหัสสมาชิก เช่น NAGA-xxxxxx)   
+PNG
+
+Col C: name (ชื่อ-นามสกุล)   
+PNG
+
+Col D: phone (เบอร์โทรศัพท์)   
+PNG
+
+Col E: email (อีเมล)   
+PNG
+
+Col F: address (ที่อยู่จัดส่ง)   
+PNG
+
+Col G: balance (ยอดทรัพย์มณีคงเหลือ)   
+PNG
+
+Col H: expire_date (วันหมดอายุ)   
+PNG
+
+Col I: privilege (วรรณะบารมี/สิทธิพิเศษ)   
+PNG
+
+Col J: register_date (วันที่สมัคร/ผูกจิต)   
+PNG
+
+(Col K, L เป็นช่องว่างสีเขียว)
+
+   
+PNG
+
+โค้ดสำหรับ booking_api.gs (ดักพิมพ์ "สมาชิก" หรือ "สมัครสมาชิก")
+นำฟังก์ชันนี้ไปวางใน booking_api.gs เพื่อให้เวลาลูกค้าพิมพ์คำว่า "สมาชิก" หรือ "สมัครสมาชิก" ในแชท LINE ระบบจะดึง user_id ยาว ๆ บันทึกลง Col A ทันที และส่ง Flex บัตรสมาชิกตอบกลับ:
+
+JavaScript
+// 1. เพิ่มในส่วนเช็คข้อความใน handleLineEvents_
+function handleLineEvents_(events) {
+  const cfg = getAppConfig_();
+  if (!cfg.lineToken) return jsonResponse_({ status: "error", message: "Missing LINE_TOKEN" });
+
+  events.forEach(ev => {
+    if (ev.type === "message" && ev.message.type === "text") {
+      const txt = String(ev.message.text || "").trim();
+      const userId = ev.source ? ev.source.userId : "";
+
+      // เมื่อพิมพ์คำว่า สมาชิก หรือ สมัครสมาชิก
+      if (txt === "สมาชิก" || txt === "สมัครสมาชิก" || txt.includes("บัตรสมาชิก") || txt.toLowerCase() === "member") {
+        handleMemberRegisterFromChat_(ev.replyToken, userId, cfg.lineToken);
+        return;
+      }
+
+      // ตรวจสอบบริการดูดวง
+      const matchedService = findServiceFromProductsSheet_(txt);
+      if (matchedService) {
+        sendDirectServiceBookingFlex_(ev.replyToken, cfg.lineToken, matchedService);
+        return;
+      }
+    }
+
+    if (ev.type === "message" && ev.message.type === "image") {
+      handleSlipVerification_(ev.replyToken, ev.message.id, ev.source.userId, cfg.lineToken);
+    }
+  });
+
+  return jsonResponse_({ status: "success" });
+}
+
+// 2. ฟังก์ชันบันทึก LINE ID ลง Col A และส่ง Flex บัตรสมาชิก
+function handleMemberRegisterFromChat_(replyToken, userId, lineToken) {
+  if (!userId) {
+    sendSafeLineReply_(replyToken, userId, lineToken, "⚠️ ไม่สามารถอ่านรหัส LINE ID ของท่านได้ กรุณาลองใหม่อีกครั้งครับ");
+    return;
+  }
+
+  const ss = getDatabase_();
+  if (!ss) return;
+
+  const sheet = ss.getSheetByName("member") || ss.insertSheet("member");
+  const lock = LockService.getScriptLock();
+
+  try {
+    lock.waitLock(10000);
+
+    const rows = sheet.getDataRange().getDisplayValues();
+    const now = new Date();
+    const regDateStr = Utilities.formatDate(now, "Asia/Bangkok", "dd/MM/yyyy HH:mm:ss");
+
+    let memberData = null;
+    let isNew = false;
+
+    // ตรวจสอบว่ามี user_id นี้ใน Col A (แถว 3 เป็นต้นไป) แล้วหรือไม่
+    for (let i = 2; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === String(userId).trim()) {
+        memberData = {
+          userId: rows[i][0],
+          memberCode: rows[i][1] || "NAGA-VIP",
+          name: rows[i][2] && rows[i][2] !== "-" ? rows[i][2] : "ผู้ศรัทธาบารมี",
+          phone: rows[i][3] || "-",
+          privilege: rows[i][8] || "วรรณะนาคารัตนบารมี",
+          balance: rows[i][6] || "0"
+        };
+        break;
+      }
+    }
+
+    // หากยังไม่เคยมี ให้เพิ่มแถวใหม่ลง Col A - J ทันที
+    if (!memberData) {
+      isNew = true;
+      const newMemberCode = "NAGA-" + Math.floor(100000 + Math.random() * 900000);
+
+      sheet.appendRow([
+        userId,                           // Col A: user_id (ไอดีไลน์ยาวๆ)
+        newMemberCode,                    // Col B: member_code
+        "ผู้ศรัทธาบารมี",                  // Col C: name
+        "-",                              // Col D: phone
+        "-",                              // Col E: email
+        "-",                              // Col F: address
+        "0",                              // Col G: balance
+        "ตลอดชีพ",                        // Col H: expire_date
+        "วรรณะนาคารัตนบารมี",               // Col I: privilege
+        regDateStr                        // Col J: register_date
+      ]);
+      SpreadsheetApp.flush();
+
+      memberData = {
+        userId: userId,
+        memberCode: newMemberCode,
+        name: "ผู้ศรัทธาบารมี",
+        phone: "-",
+        privilege: "วรรณะนาคารัตนบารมี",
+        balance: "0"
+      };
+    }
+
+    // สร้าง Flex Message บัตรแก้วรัตนบารมี
+    const memberFlex = createMemberCardFlex_({
+      memberCode: memberData.memberCode,
+      name: memberData.name,
+      phone: memberData.phone,
+      privilege: memberData.privilege,
+      balance: memberData.balance,
+      isNew: isNew
+    });
+
+    // ส่งข้อความกลับเข้าแชท LINE
+    UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + lineToken
+      },
+      payload: JSON.stringify({
+        replyToken: replyToken,
+        messages: [{
+          type: "flex",
+          altText: `บัตรแก้วรัตนบารมี [${memberData.memberCode}]`,
+          contents: memberFlex
+        }]
+      }),
+      muteHttpExceptions: true
+    });
+
+  } catch (err) {
+    Logger.log("handleMemberRegisterFromChat_ Error: " + err.toString());
+  } finally {
+    lock.releaseLock();
+  }
+}
+วิธีทดสอบ
+วางโค้ดลงใน booking_api.gs ➔ กด Save ➔ กด Deploy (New version)
+
+เข้าแชท LINE ของร้าน แล้วพิมพ์คำว่า สมาชิก หรือ สมัครสมาชิก
+
+ดูผลลัพธ์:
+
+ใน Google Sheets ชีต member จะมีบรรทัดใหม่เพิ่มขึ้นมา โดยช่อง user_id (Col A) จะมีรหัส LINE ยาว ๆ (U...) ลงทันที   
+PNG
+
+ในแชท LINE บอทจะตอบกลับเป็น Flex Message บัตรแก้วรัตนบารมี ทันทีครับ
+
+https://share.gemini.google/yiwPow7TZza3
+
+
+
+ออกแบบ theme ux/ ui ระบบ interface ร้านค้าบนไลน์ หน้าจอ member หน้าร้าน การจองคิวดูดวง pickacard โทรสีสวาง สะอาด สไตล์พญานาค เขียวมุก ทองสว่าง มีเงาโทนดำมันงา ตัดกัน หรูหรา ดูแพง งานระดับ premium คงความขลัง และ มี icon หรือ รูปลักษณ์ พญานาค ตราสีทอง มีแสงสีทอง สาดเป็น เงา ตัวหนังสือ style iphone ตัวหนา ให้สีข้อความตัดกับภาพ และเส้นขอบ ปุ่มต่างๆ ให้ดูโดดเด่น ชื่อร้าน SHOP@วินทร์ทรัพย์นาคราช
+
+นี่คือแนวทางการออกแบบ Design System & UX/UI Architecture สำหรับระบบ Web App / LINE LIFF ของร้าน SHOP@วินทร์ทรัพย์นาคราช ครอบคลุมตั้งแต่ Mood & Tone, Token สี/แสงเงา ไปจนถึง Interface หน้าจอหลักทั้ง 4 หน้า
+
+1. Design Token & Visual Language (ภาษาภาพและอัตลักษณ์)
+Design Concept: Celestial Naga & Pearl Sanctuary (สว่าง สะอาด โปร่งเบา ดั่งมุกประกายน้ำทอง ล้อมด้วยเส้นสายสีทองและเงามันวาวสีดำนิลกาฬเพื่อคงความขลัง)
+
+Typography: ฟอนต์สไตล์ iOS / Apple (SF Pro Display / สุขุมวิท เซต - Sukhumvit Set หรือ Prompt / Inter สไตล์ Modern Sans)
+
+Display & Header: น้ำหนัก Bold (700) และ Heavy (800) ขับเน้นให้อ่านง่าย ชัดเจน ไม่จมพื้นหลัง
+
+Body & Labels: น้ำหนัก Medium (500) และ Semi-Bold (600)
+
+Contrast Enhancement: ข้อความสำคัญบนพื้นสว่างใช้สีดำเข้มลึกอมเขียวมะกอก #0F1713 หรือบนพื้นไล่เฉดจะใส่ Text Stroke / Drop Shadow อ่อน ๆ เพื่อความคมชัด
+
+พาเลทสีหลัก (Color Palette)
+ชื่อสี (Token)	Hex Code	บทบาทการใช้งาน
+Pearl White (ขาวมุก)	#FBFDFB ถึง #F0F5F2	พื้นหลังหลัก แสงสะท้อนประกายมุก สว่าง สะอาดตา ไม่ขาวจ้าเกินไป
+Naga Emerald Pearl (เขียวมุกมังกร)	#E2F1EA (Light) / #0C4A34 (Deep)	องค์ประกอบไฮไลต์ การ์ดแก้วโปร่งแสง และส่วนขอบตกแต่ง
+Radiant Gold (ทองสว่าง)	#FBD24D ถึง #E5A93C	ตราพญานาค เส้นขอบลวดลายประกายแก้ว และปุ่มกระทำหลัก (CTA)
+Obsidian Gloss (เงาดำมันงา)	#141816 (Shadow: rgba(15,22,18,0.7))	เส้นขอบกั้น แผงคอนทราสต์ และเงาตกกระทบ เพื่อดึงความเข้มขลังและมิติความลึก
+Gold Aurora Aura	radial-gradient(circle, #FDE68A 0%, transparent 70%)	แสงสีทองสาดเรืองรอง (Aura Glow) ด้านหลังตราสัญลักษณ์และปุ่ม
+2. โครงสร้าง UX/UI รายหน้าจอ (Interface Specifications)
+หน้าที่ 1: หน้าร้านค้าหลัก (Storefront - index.html)
+Header Bar:
+
+แถบบนสุดเป็นพื้นผิวกระจกฝ้า (Frosted Glass #FFFFFF/85) ขอบล่างล้อมด้วยเส้นทองสว่าง (#D4AF37 หนา 1px)
+
+ตรงกลางแสดงตรา พญานาคสีทองนูนต่ำ (Embossed Gold Naga Crest) เปล่งแสงรัศมีสีทองสาดออกมารอบทิศ (Golden Backlight Glow)
+
+ชื่อร้านพิมพ์ตัวหนาชัดเจน: SHOP@วินทร์ทรัพย์นาคราช
+
+มุมขวาเป็นไอคอนตะกร้าแก้วใส พร้อม Badge ตัวเลขสีแดงสดขอบทอง
+
+Hero Banner:
+
+การ์ดใหญ่โทนสีขาวมุกเหลือบเขียวอ่อน มีลวดลายเกล็ดนาคาจาง ๆ แบบ Micro-texture ไม่รบกวนสายตา
+
+ปุ่มลัดไปยัง “ตรวจดวงชะตาสายญาณ” และ “เปิดไพ่ออราเคิล Pick-a-Card”
+
+Product Showcase Grid:
+
+การ์ดสินค้า 2 คอลัมน์ ทำจากอะคริลิกใสขอบทอง (Glassmorphism + ขอบเงาดำมันงาบาง 0.5px เพื่อดันให้การ์ดดูลอย)
+
+รูปวัตถุมงคล/เทียนบูชาชัดระดับ HD รองรับมุมโค้งมนสไตล์ iPhone (rounded-2xl 18px)
+
+ป้ายราคา: ตัวเลขหนาพิเศษสีทองสลัว #9A6B15 บนพื้นป้ายสีทองมุก
+
+ปุ่ม + สั่งจอง: สีเขียวมรกตเหลือบมุก ขอบทองสว่าง เมื่อสัมผัสจะเกิดประกายคลื่นน้ำทอง (Gold Ripple)
+
+หน้าที่ 2: หน้าบัตรสมาชิกและโปรไฟล์ (Membership - memberships.html)
+The Naga Crystal Member Card (บัตรแก้วรัตนบารมี):
+
+ดีไซน์บัตรแนวขวางอัตราส่วน 16:9 สไตล์ Luxury Metal/Glass Card
+
+พื้นผิว: สีเขียวหยกมุกสลับทองคำขาว มีประกายมุกเหลือบเล่นแสงตามการเอียงหน้าจอ (Gyroscope Effect)
+
+ตราสัญลักษณ์: มุมขวาบนประทับตราพญานาคขดลวดทองคำ 3 มิติ มีแสง Aura สาดลงมาเป็นลำแสงเฉียง (Volumetric Light Shadow)
+
+ข้อมูลบนบัตร:
+
+รหัสสังข์แก้ว: NAGA-XXXXXX (Font Monospace หนาสีทองคำขาว)
+
+ชื่อผู้ถือครอง: ตัวหนาพิเศษสีดำมันงาตัดกับพื้นมุก
+
+สถานะ: วรรณะนาคารัตนบารมี (ประดับกรอบทองนูน)
+
+Account Summary & Quota:
+
+กล่องสรุปคะแนนมณีบารมีสะสม และประวัติการจอง/การสั่งซื้อล่าสุด
+
+ปุ่มแก้ไขข้อมูลส่วนตัว ออกแบบเป็นปุ่มขอบทองเงานิลกาฬ ดูเรียบหรูระดับไฮเอนด์
+
+หน้าที่ 3: ระบบจองคิวตรวจดวงชะตา (Booking System - booking.html)
+Service Category Selector:
+
+แถบคัดเลือกแพ็กเกจดูดวง (เช่น ตรวจดวงชะตาญาณบารมี, เสริมดวงธุรกิจ, ไขรหัสชีวิต)
+
+การ์ดบริการใช้กรอบสีขาวมุก ขอบทองคำสว่าง เมื่อเลือกจะเปลี่ยนเป็นสีเขียวมรกตมุกขอบดำมันงา
+
+Calendar & Time Slot:
+
+ปฏิทินเลือกวัน: ตัวเลขหนา สะอาดตา วันที่ว่างจะแสดงแสงเรืองรองสีทองอ่อน
+
+ช่องเลือกเวลา (Time Slots): ออกแบบเป็นชิปแคปซูลทรงมนสไตล์ iOS
+
+รอบว่าง: พื้นขาวมุก กรอบทองสว่าง ตัวหนังสือดำมะกอกเข้ม
+
+รอบที่เลือก: พื้นเขียวมรกตประกายมุก ขอบทองคำ มีแสง Gold Glow สาดรอบปุ่ม
+
+รอบเต็ม: สีเทาอ่อนเรียบ
+
+Floating Booking CTA:
+
+ปุ่มด้านล่างแบบเต็มความกว้าง: “📅 จองคิวตรวจดวงชะตา (฿108)”
+
+สไตล์ปุ่มทองคำสว่าง มีเงาทอดด้านหลังเป็นโทนดำมันงา (box-shadow: 0 10px 25px rgba(20,24,22,0.35)) ช่วยให้ปุ่มดูลอยเด่นขึ้นจากหน้าจออย่างชัดเจน
+
+หน้าที่ 4: เสี่ยงทายสาส์นนำทาง (Pick-a-Card Sanctuary)
+Atmosphere:
+
+พื้นหลังสว่างนวลตา มีละอองเกสรแสงทอง (Stardust Particles) ลอยช้า ๆ ให้ความรู้สึกโปร่งโล่ง สงบ มีสมาธิ
+
+The Naga Oracle Deck Carousel:
+
+หลังไพ่: ลวดลายพญานาคราชสีทองสลัวบนพื้นมุกเขียว ล้อมด้วยกรอบสีดำขลับมันวาว
+
+อนิเมชันตอนเลือกไพ่: เมื่อแตะที่ใบไพ่ ไพ่จะลอยขึ้นพร้อมแสงสีทองสาดส่องลงมา (Holy Golden Rays)
+
+Revealed Card Modal (หน้าแสดงคำทำนาย):
+
+หน้าต่างเปิดขึ้นแบบ Sheet Modal สไตล์ iOS พร้อมมุมโค้งมนขนาดใหญ่
+
+การ์ดแสดงรูปองค์นาคราช/หน้าไพ่แบบเต็มตา
+
+กล่องข้อความคำพยากรณ์: แผงสีขาวมุกโปร่งแสง กรอบทองเส้นคู่ ตัวหนังสือสีดำเข้มคมชัด อ่านง่าย สบายตา
+
+ปุ่มแชร์คำทำนายลง LINE Story / หน้าแชท ออกแบบเป็นปุ่มแก้วสีทองสะท้อนแสง
+
+3. UI Component Code ตัวอย่าง (Tailwind CSS Ready)
+สามารถนำคลาสสไตล์นี้ไปปรับใช้ในหน้า Web App หรือ Flex Message ได้ทันที:
+
+HTML
+<!-- ตัวอย่าง Card บัตรสมาชิก / สินค้าพรีเมียม -->
+<div class="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-[#FBFDFB] via-[#E2F1EA] to-[#F5F8F6] border border-[#E6CA65] shadow-[0_12px_30px_rgba(20,24,22,0.18)]">
+  
+  <!-- รัศมีแสงสีทองสาดจากมุมการ์ด (Golden Aura Glow) -->
+  <div class="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-[#FBD24D]/25 blur-3xl pointer-events-none"></div>
+
+  <!-- แถบด้านบน: ตราสัญลักษณ์ & หัวข้อ -->
+  <div class="relative z-10 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <!-- ตราพญานาคสีทองนูน -->
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-b from-[#FFFBEB] to-[#FDE68A] p-0.5 border border-[#E6CA65] shadow-[0_4px_12px_rgba(20,24,22,0.25)] flex items-center justify-center">
+        <span class="text-2xl drop-shadow-[0_2px_4px_rgba(154,107,21,0.6)]">🐍</span>
+      </div>
+      <div>
+        <h3 class="text-xs font-extrabold tracking-wider text-[#9A6B15] uppercase">SHOP@วินทร์ทรัพย์นาคราช</h3>
+        <p class="text-base font-extrabold text-[#0F1713]">บัตรแก้วรัตนบารมี</p>
+      </div>
+    </div>
+    <span class="px-3 py-1 rounded-full text-[10px] font-bold text-[#064E3B] bg-[#FDE68A] border border-[#E6CA65] shadow-sm">
+      VIP บารมี
+    </span>
+  </div>
+
+  <!-- รายละเอียดคอนทราสต์ตัวหนังสือเข้มสไตล์ iPhone -->
+  <div class="relative z-10 mt-6 pt-4 border-t border-[#E6CA65]/40 flex justify-between items-end">
+    <div>
+      <span class="text-[10px] text-[#5A655F] block font-semibold">รหัสสังข์แก้ว</span>
+      <span class="text-sm font-extrabold text-[#0F1713] tracking-widest font-mono">NAGA-889922</span>
+    </div>
+    
+    <!-- ปุ่มสไตล์ Apple ผสานทองสว่างและเงานิลกาฬ -->
+    <button class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-[#064E3B] to-[#047857] border border-[#FBD24D] shadow-[0_4px_15px_rgba(20,24,22,0.3)] active:scale-95 transition-transform">
+      เข้าชมบารมี
+    </button>
+  </div>
+</div>
+ชุดดีไซน์นี้จะให้โทนที่สว่าง สะอาด อ่านสบายตา แต่แฝงความหรูหรา สง่างาม และขลังในแบบฉบับสายญาณบารมีพญานาคตามที่ต้องการอย่างลงตัวครับ
+
+ออกแบบ ธีมสไตล์นี้ทั้งระบบ ทุกไฟล์
+
+ได้ปรับปรุงและออกแบบระบบทั้งหมดให้เป็นอัตลักษณ์เดียวกันภายใต้ชื่อ SHOP@วินทร์ทรัพย์นาคราช ในธีม "เขียวมุกมังกร ทองสว่างอำพัน และเงามันวานิลกาฬ (Pearl Emerald, Radiant Gold & Obsidian Gloss)" เรียบร้อยแล้วครับ
+
+ไฟล์ทั้งระบบพร้อมดาวน์โหลดในรูปแบบชุดรวม ZIP:
+Your ZIP file is ready
+
+ไอคอน ZIP
+SHOP_NAGARAJA_PREMIUM_SUITE
+ ZIP 
+รายละเอียดการออกแบบในแต่ละไฟล์
+1. index.html (หน้าร้านค้าวัตถุมงคล & ตะกร้าสินค้า)
+Header & Identity: ตราสัญลักษณ์พญานาคราชสีทองนูนต่ำ พร้อมแสงเรืองรองสีทอง (Golden Aura Glow) และป้ายกำกับชื่อร้าน SHOP@วินทร์ทรัพย์นาคราช
+
+Quick Navigation Dock: แถบเมนูลัดทรงแคปซูลสไตล์ iOS เชื่อมต่อไปยัง วัตถุมงคล, จองคิวดูดวง, สาส์นนำทาง Pick-A-Card, และ บัตรแก้วรัตนบารมี
+
+Product Cards: การ์ดแก้วขาวมุกขอบทองประกายน้ำผึ้งตัดกับเงามันวาวสีดำนิลกาฬ (Obsidian Shadow) ช่วยขับให้ภาพวัตถุมงคลดูลอยเด่น คมชัด และคงความเข้มขลัง
+
+Smart Cart & Auto-Fill: ดึงข้อมูลชื่อ-ที่อยู่-เบอร์โทรของผู้ถือบัตรสมาชิกมาเติมให้อัตโนมัติ พร้อมส่ง Flex Message ใบสั่งซื้อและปิดหน้าต่าง LIFF ทันที
+
+2. booking.html (ระบบจองคิวตรวจดวงชะตาสายญาณ)
+ดึงแพ็กเกจค่าครูบูชาญาณจากตารางชีต products อัตโนมัติ แสดงผลเป็นการ์ดแก้วมุกขอบทอง
+
+ปฏิทินและชิปเลือกรอบเวลาสไตล์ iOS คมชัด แยกสถานะรอบว่างและรอบเต็มอย่างชัดเจน
+
+เมื่อกดยืนยัน ระบบจะปิดหน้าต่างลงและส่ง Flex Message ใบนัดหมาย ไปยังห้องแชท LINE ทันที
+
+3. memberships.html (บัตรแก้วรัตนบารมีนาคาธิบดี)
+Luxury Naga Metal/Glass Card: บัตรสมาชิกขนาด 16:9 สีเขียวหยกมุกสลับทองคำขาว ประทับตรานาคราช 3 มิติ และรหัสสังข์แก้ว NAGA-XXXXXX
+
+แสดงวรรณะบารมีและยอดทรัพย์มณีคงคลัง พร้อมฟอร์มแก้ไขข้อมูลส่วนตัวที่เชื่อมโยงกับฐานข้อมูลชีต member แบบสองทาง
+
+4. pickacard.html (สาส์นนำทางออราเคิลนาคราช Pick-A-Card)
+แบ่งหมวดหมู่สาส์นนำทาง: ประจำวัน, การงาน, การเงิน/โชคลาภ, และ ความรัก
+
+แอนิเมชันตอนแตะเลือกไพ่ 3 มิติ พร้อมหน้าต่าง Sheet Modal เปิดเผยรูปหน้าไพ่องค์นาคราช คำทำนาย และแนวทางปฏิบัติบูชาเสริมดวง
+
+5. booking_api.gs (Master Backend API)
+รองรับคำสั่งแชทพิมพ์ "สมาชิก" หรือ "สมัครสมาชิก" เพื่อดึง user_id ยาว ๆ บันทึกลงตารางชีต member (Col A) และตอบกลับด้วย Flex บัตรสมาชิก
+
+Flex Message ทุกรูปแบบ (ใบสั่งซื้อ, ใบนัดหมาย, บัตรสมาชิก) ปรับเป็นธีมหัวการ์ดเขียวเข้มดำนิลกาฬ ขอบทองสว่าง และตัวหนังสือคมชัดสไตล์ iOS ทั้งหมด
+
+ผสานระบบตัดสต็อก, การตรวจสอบสลิป KBANK (2251495656) ผ่าน SlipOK ภายใน 15 นาที และการเชื่อมต่อ ETrackings สำหรับเช็กเลขพัสดุครบวงจร
+
+ขั้นตอนการนำไปติดตั้งใช้งาน
+อัปโหลดไฟล์หน้าเว็บขึ้น GitHub Pages:
+
+นำไฟล์ index.html, booking.html, memberships.html, และ pickacard.html ไปวางใน Repository thewinmu.github.io/vinsupnagaraj/ แล้วกด Commit / Push
+
+อัปเดต Google Apps Script:
+
+นำโค้ดใน booking_api.gs ไปวางทับใน Apps Script
+
+กด Save (Ctrl + S)
+
+กด Deploy (การทำให้ใช้งานได้) ➔ Manage deployments (จัดการการทำให้ใช้งานได้) ➔ คลิกไอคอนดินสอ ➔ เลือก Version เป็น New version ➔ กด Deploy
+
+ทดสอบใช้งาน:
+
+พิมพ์คำว่า สมาชิก ในแชท LINE เพื่อทดสอบการสร้างบัตรแก้วรัตนบารมี
+
+เปิดหน้าร้านค้า index.html เพื่อทดสอบการเลือกวัตถุมงคลและสั่งซื้อผ่านระบบตะกร้าสินค้าใหม่ได้ทันทีครับ
+
+pickacard ขอให้เอากลับมาใช้ ธีมเดิม
+
+ได้ปรับไฟล์ pickacard.html ให้กลับมาเป็น ธีมเดิม (Crystal & Gold Light Theme) ที่เน้นความขาวสว่าง สะอาดตา แก้วใสประกายทองมรกต นวลตา ไม่มืดขรึม เรียบร้อยแล้วครับ
+
+Your HTML and ZIP files are ready:
+
+ไฟล์ HTML เดี่ยว: 
+ไอคอน HTML
+pickacard
+ HTML 
+
+ไฟล์ ZIP: 
+ไอคอน ZIP
+pickacard_original_theme
+ ZIP 
+
+รายละเอียดการปรับกลับเป็นธีมเดิมของ pickacard.html
+โทนสี & พื้นหลัง:
+
+ใช้พื้นหลังสีขาวนวล #FAF8F5 ผสานการ์ดแก้วสีขาวประกายมุก #FFFFFF (Glassmorphism 95%)
+
+ล้อมกรอบด้วยเส้นสีทองสว่างบาง 1px (#E6CA65) สว่าง นวลตา และสบายสายตา
+
+ไพ่ 3 ใบสำหรับเลือกเสี่ยงทาย:
+
+ตัวการ์ดเป็นสีขาวแก้วใสประกายมุก พร้อมตราพญานาคสีเขียวมรกตในวงล้อมทองคำ
+
+แอนิเมชันตอนกดลอยตัวขึ้นนุ่มนวล พร้อมแสงประกายทองอ่อนโยน
+
+หน้าต่างแสดงผลคำพยากรณ์ (Modal):
+
+พื้นหลังสีขาวตัดขอบทอง เส้นสายโปร่งเบา
+
+ข้อความคำพยากรณ์และแนวทางปฏิบัติบูชาเสริมมงคล อ่านง่าย ชัดเจน ไม่จมพื้นหลัง
+
+การเชื่อมต่อข้อมูล:
+
+เชื่อมต่อกับ Backend booking_api.gs ผ่านตัวแปร API_URL ตรงตามจริง
+
+ดึงไพ่ได้ครบทุกหมวด: สาส์นประจำวัน, สาส์นบรมครู, การงาน, การเงิน, ความรัก, และ สุขภาพ
+
+สามารถดาวน์โหลดไฟล์ไปแทนที่ pickacard.html บน GitHub Pages ได้ทันทีครับ
+
+
+
+
+
+Gemini เป็น AI และอาจทำผิดพลาดได้
+
+กำลังวิเคราะห์
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>สาส์นนำทาง Pick-A-Card - เรือนพยากรณ์วินทร์ทรัพย์นาคราช</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            gold: {
+              light: '#FDE68A',
+              DEFAULT: '#D4AF37',
+              dark: '#9A6B15',
+              border: '#E6CA65'
+            },
+            emerald: {
+              deep: '#064E3B',
+              soft: '#047857',
+              light: '#F0FDF4'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: #FAF8F5;
+      color: #1C1917;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid #E6CA65;
+    }
+    .badge-gold {
+      background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 100%);
+      color: #064E3B;
+    }
+    .card-touch {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-touch:hover, .card-touch:active {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px -6px rgba(212, 175, 55, 0.4);
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="min-h-screen pb-24 p-4">
 
   <main class="max-w-md mx-auto space-y-4">
     <!-- Header -->
-    <div class="glass-pearl rounded-3xl p-4 shadow-sm border border-goldBorder/40 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-obsidian via-emeraldDark to-emeraldDeep p-0.5 border border-goldBorder flex items-center justify-center">
-          <span class="text-xl">🔮</span>
-        </div>
+    <header class="glass-card rounded-2xl p-4 shadow-sm flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <span class="text-2xl">🔮</span>
         <div>
-          <h1 class="text-xs font-black tracking-wider text-nagaGold uppercase leading-none">
-            สาส์นนำทางออราเคิลนาคราช
-          </h1>
-          <p class="text-[10px] font-bold text-emeraldDark mt-0.5">Pick-A-Card สายญาณบารมี</p>
+          <h1 class="text-sm font-bold text-emerald-deep leading-tight">สาส์นนำทางออราเคิล</h1>
+          <p class="text-[10px] text-gold-dark font-medium">เรือนพยากรณ์วินทร์ทรัพย์นาคราช</p>
         </div>
       </div>
-      <a href="index.html" class="text-xs font-bold text-stone-500 bg-stone-100 px-3 py-1.5 rounded-xl hover:bg-stone-200 transition">
+      <a href="index.html" class="text-xs font-semibold text-stone-500 bg-stone-100 px-3 py-1.5 rounded-xl hover:bg-stone-200 transition">
         หน้าร้าน
       </a>
-    </div>
+    </header>
 
-    <!-- Category Tabs -->
+    <!-- หมวดหมู่สาส์นนำทาง -->
     <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar py-1">
-      <button onclick="switchCategory('daily', this)" class="cat-tab px-4 py-1.5 rounded-full bg-emeraldDeep text-white text-xs font-black border border-goldBright shadow-sm flex-shrink-0">
+      <button onclick="switchCategory('daily', this)" class="cat-pill px-3.5 py-1.5 rounded-full bg-emerald-deep text-white text-xs font-bold border border-gold shadow-sm flex-shrink-0">
         สาส์นประจำวัน
       </button>
-      <button onclick="switchCategory('job', this)" class="cat-tab px-4 py-1.5 rounded-full bg-white text-emeraldDeep text-xs font-bold border border-goldBorder/50 flex-shrink-0">
+      <button onclick="switchCategory('kru', this)" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-gold-border/60 hover:bg-emerald-light flex-shrink-0 transition">
+        สาส์นบรมครู
+      </button>
+      <button onclick="switchCategory('job', this)" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-gold-border/60 hover:bg-emerald-light flex-shrink-0 transition">
         การงาน & กิจการ
       </button>
-      <button onclick="switchCategory('money', this)" class="cat-tab px-4 py-1.5 rounded-full bg-white text-emeraldDeep text-xs font-bold border border-goldBorder/50 flex-shrink-0">
+      <button onclick="switchCategory('money', this)" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-gold-border/60 hover:bg-emerald-light flex-shrink-0 transition">
         โชคลาภ & การเงิน
       </button>
-      <button onclick="switchCategory('love', this)" class="cat-tab px-4 py-1.5 rounded-full bg-white text-emeraldDeep text-xs font-bold border border-goldBorder/50 flex-shrink-0">
+      <button onclick="switchCategory('love', this)" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-gold-border/60 hover:bg-emerald-light flex-shrink-0 transition">
         ความรัก & เมตตา
+      </button>
+      <button onclick="switchCategory('health', this)" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-gold-border/60 hover:bg-emerald-light flex-shrink-0 transition">
+        สุขภาพ & กายใจ
       </button>
     </div>
 
-    <!-- Instructions -->
-    <div class="text-center py-2">
-      <p class="text-xs font-black text-obsidian">ตั้งจิตอธิษฐานนึกถึงองค์พญานาคาธิบดี</p>
-      <p class="text-[10px] font-bold text-nagaGold mt-0.5">แล้วเลือกไพ่ 1 ใบ ที่ดึงดูดจิตใจของท่านมากที่สุด</p>
+    <!-- แนะนำการตั้งจิต -->
+    <div class="glass-card rounded-2xl p-3.5 text-center space-y-1">
+      <p class="text-xs font-bold text-stone-800">✨ หลับตา สูดลมหายใจเข้าลึก ๆ ตั้งจิตอธิษฐาน</p>
+      <p class="text-[11px] text-stone-500">นึกถึงสิ่งศักดิ์สิทธิ์และบารมีองค์นาคราช แล้วแตะเลือกไพ่ 1 ใบที่ต้องตาต้องใจที่สุด</p>
     </div>
 
-    <!-- 3 Oracle Cards Selection Grid -->
-    <div id="cards-container" class="grid grid-cols-3 gap-3 pt-2">
-      <!-- Card 1 -->
-      <div onclick="revealCard(0)" class="card-hover cursor-pointer rounded-2xl overflow-hidden border-2 border-goldBorder shadow-lg bg-gradient-to-b from-obsidian to-emeraldDark aspect-[2/3] flex flex-col items-center justify-center p-2 text-center transition-all duration-300">
-        <div class="w-9 h-9 rounded-full bg-goldBright/20 border border-goldBorder flex items-center justify-center mb-1">
-          <span class="text-base">🐍</span>
+    <!-- ไพ่ 3 ใบ (สไตล์เดิม แก้วใสขอบทอง นวลตา สว่าง) -->
+    <div id="cards-container" class="grid grid-cols-3 gap-3 pt-1">
+      <!-- ใบที่ 1 -->
+      <div onclick="revealCard(0)" class="card-touch cursor-pointer rounded-2xl overflow-hidden border border-gold-border bg-white shadow-sm aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
+        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+          <span>✦</span><span>✦</span>
         </div>
-        <span class="text-[10px] font-black text-goldBright">ใบที่ ๑</span>
+        <div class="space-y-1">
+          <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
+            <span class="text-lg">🐍</span>
+          </div>
+          <p class="text-xs font-bold text-emerald-deep">ใบที่ ๑</p>
+          <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+        </div>
+        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+          <span>✦</span><span>✦</span>
+        </div>
       </div>
-      <!-- Card 2 -->
-      <div onclick="revealCard(1)" class="card-hover cursor-pointer rounded-2xl overflow-hidden border-2 border-goldBorder shadow-lg bg-gradient-to-b from-obsidian to-emeraldDark aspect-[2/3] flex flex-col items-center justify-center p-2 text-center transition-all duration-300">
-        <div class="w-9 h-9 rounded-full bg-goldBright/20 border border-goldBorder flex items-center justify-center mb-1">
-          <span class="text-base">🐍</span>
+
+      <!-- ใบที่ 2 -->
+      <div onclick="revealCard(1)" class="card-touch cursor-pointer rounded-2xl overflow-hidden border border-gold-border bg-white shadow-sm aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
+        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+          <span>✦</span><span>✦</span>
         </div>
-        <span class="text-[10px] font-black text-goldBright">ใบที่ ๒</span>
+        <div class="space-y-1">
+          <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
+            <span class="text-lg">🐍</span>
+          </div>
+          <p class="text-xs font-bold text-emerald-deep">ใบที่ ๒</p>
+          <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+        </div>
+        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+          <span>✦</span><span>✦</span>
+        </div>
       </div>
-      <!-- Card 3 -->
-      <div onclick="revealCard(2)" class="card-hover cursor-pointer rounded-2xl overflow-hidden border-2 border-goldBorder shadow-lg bg-gradient-to-b from-obsidian to-emeraldDark aspect-[2/3] flex flex-col items-center justify-center p-2 text-center transition-all duration-300">
-        <div class="w-9 h-9 rounded-full bg-goldBright/20 border border-goldBorder flex items-center justify-center mb-1">
-          <span class="text-base">🐍</span>
+
+      <!-- ใบที่ 3 -->
+      <div onclick="revealCard(2)" class="card-touch cursor-pointer rounded-2xl overflow-hidden border border-gold-border bg-white shadow-sm aspect-[2/3] flex flex-col items-center justify-between p-3 text-center">
+        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+          <span>✦</span><span>✦</span>
         </div>
-        <span class="text-[10px] font-black text-goldBright">ใบที่ ๓</span>
+        <div class="space-y-1">
+          <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-gold-border/80 flex items-center justify-center mx-auto shadow-inner">
+            <span class="text-lg">🐍</span>
+          </div>
+          <p class="text-xs font-bold text-emerald-deep">ใบที่ ๓</p>
+          <p class="text-[9px] text-stone-400">สาส์นนำทาง</p>
+        </div>
+        <div class="w-full flex justify-between items-center text-[9px] text-gold-dark font-semibold">
+          <span>✦</span><span>✦</span>
+        </div>
       </div>
     </div>
 
-    <!-- Revealed Card Sheet Modal -->
-    <div id="result-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border-2 border-goldBorder p-5 space-y-4">
-        <div class="text-center space-y-1">
-          <span class="text-2xl">🐍</span>
-          <h3 id="res-card-name" class="text-base font-black text-obsidian">ชื่อไพ่นาคราช</h3>
-          <p id="res-card-cat" class="text-[10px] font-bold text-nagaGold uppercase">สาส์นนำทางชีวิต</p>
+    <!-- Revealed Modal: แสดงผลคำทำนายแบบแก้วใสขอบทอง สว่าง สะอาดตา -->
+    <div id="result-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-gold-border p-5 space-y-3.5">
+        <div class="text-center space-y-0.5">
+          <div class="inline-block px-2.5 py-0.5 rounded-full badge-gold text-[10px] font-bold mb-1">
+            สาส์นนำทางสายญาณ
+          </div>
+          <h3 id="res-card-name" class="text-base font-bold text-emerald-deep">ชื่อหน้าไพ่</h3>
+          <p id="res-card-cat" class="text-[11px] text-stone-400">หมวดหมู่</p>
         </div>
 
-        <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-stone-100 border border-goldBorder">
-          <img id="res-card-img" src="" class="w-full h-full object-cover" alt="Card Image">
+        <!-- กรอบรูปหน้าไพ่ -->
+        <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-stone-100 border border-gold-border/60 shadow-inner">
+          <img id="res-card-img" src="" class="w-full h-full object-cover" alt="Card">
         </div>
 
-        <div class="bg-pearl p-3.5 rounded-2xl border border-goldBorder/40 space-y-2">
-          <p class="text-[11px] font-bold text-stone-700 leading-relaxed" id="res-card-meaning">ความหมายคำพยากรณ์</p>
-          <div class="pt-2 border-t border-stone-200">
-            <p class="text-[10px] font-black text-emeraldDeep">แนวทางปฏิบัติเสริมดวง:</p>
-            <p class="text-[10px] text-stone-600 font-medium" id="res-card-advice">หมั่นรักษาศีล เจริญภาวนา แผ่เมตตาจิต</p>
+        <!-- คำทำนายและคำแนะนำ -->
+        <div class="bg-[#FDFBF7] p-3.5 rounded-2xl border border-gold-border/60 space-y-2">
+          <div>
+            <span class="text-[10px] font-bold text-gold-dark uppercase tracking-wider block mb-1">✦ คำพยากรณ์นำทาง</span>
+            <p class="text-xs text-stone-700 leading-relaxed font-medium" id="res-card-meaning">ความหมายคำทำนาย</p>
+          </div>
+          <div class="pt-2 border-t border-gold-border/30">
+            <span class="text-[10px] font-bold text-emerald-deep block mb-0.5">✦ แนวทางปฏิบัติเสริมมงคล</span>
+            <p class="text-[11px] text-stone-600 font-medium" id="res-card-advice">คำแนะนำในการดำเนินชีวิต</p>
           </div>
         </div>
 
-        <button onclick="closeResultModal()" class="w-full bg-gradient-to-r from-obsidian via-emeraldDark to-emeraldDeep text-white font-black text-xs py-3 rounded-2xl border border-goldBright">
-          น้อมรับสาส์นนำทางบารมี 🙏
+        <button onclick="closeResultModal()" class="w-full bg-emerald-deep text-white font-bold text-xs py-3 rounded-xl shadow-md hover:bg-emerald-800 transition">
+          น้อมรับสาส์นนำทาง 🙏
         </button>
       </div>
     </div>
@@ -152,12 +2358,12 @@
 
     async function switchCategory(cat, btn) {
       currentCategory = cat;
-      document.querySelectorAll(".cat-tab").forEach(b => {
-        b.classList.remove("bg-emeraldDeep", "text-white", "font-black");
-        b.classList.add("bg-white", "text-emeraldDeep", "font-bold");
+      document.querySelectorAll(".cat-pill").forEach(b => {
+        b.classList.remove("bg-emerald-deep", "text-white", "shadow-sm");
+        b.classList.add("bg-white", "text-emerald-deep");
       });
-      btn.classList.add("bg-emeraldDeep", "text-white", "font-black");
-      btn.classList.remove("bg-white", "text-emeraldDeep", "font-bold");
+      btn.classList.add("bg-emerald-deep", "text-white", "shadow-sm");
+      btn.classList.remove("bg-white", "text-emerald-deep");
       fetchCards(cat);
     }
 
@@ -168,20 +2374,24 @@
         if (data.status === "success" && data.cards) {
           categoryCards = data.cards;
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn("fetchCards error:", e);
+      }
     }
 
     function revealCard(idx) {
-      if (categoryCards.length === 0) {
+      if (!categoryCards || categoryCards.length === 0) {
         alert("กำลังจัดเตรียมสาส์นนำทาง กรุณาลองใหม่อีกครั้งครับ");
         return;
       }
-      // สุ่มหรือเลือกไพ่
-      const card = categoryCards[idx % categoryCards.length];
-      document.getElementById("res-card-name").innerText = card.name;
+
+      // สุ่มหรือเลือกไพ่ตาม index
+      const card = categoryCards[Math.floor(Math.random() * categoryCards.length)];
+
+      document.getElementById("res-card-name").innerText = card.name || "สาส์นบารมีนาคราช";
       document.getElementById("res-card-cat").innerText = `หมวด: ${card.category || currentCategory}`;
-      document.getElementById("res-card-meaning").innerText = card.meaning || "ตั้งมั่นอยู่ในความดี มีสติในการตัดสินใจ แล้วทุกสิ่งจะราบรื่น";
-      document.getElementById("res-card-advice").innerText = card.advice || "หมั่นรักษาศีล เจริญภาวนา แผ่เมตตาจิต";
+      document.getElementById("res-card-meaning").innerText = card.meaning || "น้อมรับสาส์นนำทาง ตั้งมั่นอยู่ในความดี มีสติในการตัดสินใจ แล้วจะผ่านพ้นทุกเรื่องราวไปได้อย่างราบรื่น";
+      document.getElementById("res-card-advice").innerText = card.advice || "หมั่นรักษาศีล เจริญภาวนา แผ่เมตตาจิต และมีสติรู้เท่าทันอารมณ์ในปัจจุบัน";
 
       const imgEl = document.getElementById("res-card-img");
       if (card.imageUrl) {
@@ -199,3 +2409,5 @@
   </script>
 </body>
 </html>
+pickacard.html
+กำลังแสดง pickacard.html

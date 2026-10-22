@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SHOP@วินทร์ทรัพย์นาคราช - วัตถุมงคล & เทียนบูชาสายญาณ</title>
-  <!-- Google Fonts: Prompt & Inter สำหรับสไตล์ Apple iOS -->
+  <title>SHOP@วินทร์ทรัพย์นาคราช - วัตถุมงคล & บารมีนาคราช</title>
+  
+  <!-- ฟอนต์ Prompt สไตล์ iOS Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=SF+Pro+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- LINE LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <script>
@@ -20,36 +20,35 @@
             sans: ['Prompt', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
           },
           colors: {
-            pearl: {
-              light: '#FBFDFB',
-              DEFAULT: '#F2F7F4',
+            nagaEmerald: {
+              DEFAULT: '#0B4734',
+              deep: '#063828',
+              dark: '#04241A',
+              glow: '#106B4E',
+              light: '#EBF4F0'
+            },
+            ivoryPearl: {
+              DEFAULT: '#FAF8F5',
               surface: '#FFFFFF',
-              dark: '#E2ECE6'
+              dark: '#F0ECE4'
             },
-            emerald: {
-              dark: '#083828',
-              deep: '#0B4734',
-              pearl: '#14634B',
-              soft: '#2D8A6C',
-              light: '#E6F4EE'
+            obsidianGloss: {
+              DEFAULT: '#0E1310',
+              card: '#151D18',
+              border: '#243028'
             },
-            nagaGold: {
-              light: '#FEF3C7',
+            radiantGold: {
+              light: '#FEF08A',
               DEFAULT: '#F59E0B',
               bright: '#FBBF24',
-              radiant: '#D97706',
+              amber: '#D97706',
               border: '#E6CA65'
-            },
-            obsidian: {
-              DEFAULT: '#121714',
-              card: '#1A211D',
-              border: '#2A352F'
             }
           },
           boxShadow: {
-            'naga-gold': '0 8px 24px -4px rgba(245, 158, 11, 0.35)',
-            'obsidian-glow': '0 10px 30px -5px rgba(18, 23, 20, 0.45)',
-            'pearl-card': '0 10px 25px -3px rgba(11, 71, 52, 0.08), 0 4px 6px -2px rgba(18, 23, 20, 0.05)'
+            'card-float': '0 16px 35px -8px rgba(6, 56, 40, 0.16)',
+            'gold-aura': '0 0 25px rgba(245, 158, 11, 0.45)',
+            'obsidian-gloss': '0 12px 30px rgba(14, 19, 16, 0.35)'
           }
         }
       }
@@ -58,19 +57,19 @@
 
   <style>
     body {
-      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #FBFDFB 0%, #EBF4F0 100%);
-      color: #121714;
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF8F5 45%, #EAF2EE 100%);
+      color: #0E1310;
       -webkit-tap-highlight-color: transparent;
     }
-    .glass-pearl {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(230, 202, 101, 0.45);
+    .glass-ivory {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(230, 202, 101, 0.55);
     }
-    .gold-crest-glow {
-      box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), inset 0 0 10px rgba(254, 243, 199, 0.6);
+    .naga-aura-glow {
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), inset 0 0 10px rgba(254, 240, 138, 0.4);
     }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -78,25 +77,30 @@
 </head>
 <body class="min-h-screen pb-28">
 
-  <!-- Top Navigation Bar: Premium Naga Header -->
-  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-nagaGold-border/40 shadow-sm px-4 py-3">
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-radiantGold-border/40 shadow-sm px-4 py-3">
     <div class="max-w-md mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2.5">
-        <!-- ตราพญานาคสีทองนูนต่ำ พร้อมแสงเรืองรอง -->
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-obsidian via-emerald-dark to-emerald-pearl p-0.5 border border-nagaGold-border gold-crest-glow flex items-center justify-center">
-          <span class="text-xl filter drop-shadow">🐍</span>
+        <!-- ตราพญานาคราชมงคลศิลป์ 3D Glow -->
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald p-0.5 border border-radiantGold-border naga-aura-glow flex items-center justify-center">
+          <svg class="w-6 h-6 text-radiantGold-light" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M32 6C28 12 24 18 24 24C24 28 27 31 30 32C26 35 22 39 22 46C22 52 26 58 32 58C38 58 42 52 42 46C42 39 38 35 34 32C37 31 40 28 40 24C40 18 36 12 32 6Z" fill="currentColor" fill-opacity="0.2"/>
+            <circle cx="32" cy="18" r="2.5" fill="#FBBF24"/>
+            <path d="M22 28C18 32 16 38 18 44"/>
+            <path d="M42 28C46 32 48 38 46 44"/>
+          </svg>
         </div>
         <div>
-          <h1 class="text-xs font-black tracking-wider text-nagaGold-radiant uppercase leading-none">
+          <h1 class="text-xs font-black tracking-widest text-radiantGold-amber uppercase leading-none">
             SHOP@วินทร์ทรัพย์นาคราช
           </h1>
-          <p class="text-[10px] font-bold text-emerald-dark mt-0.5">คลังมงคลบารมี & วัตถุบูชาสายญาณ</p>
+          <p class="text-[10px] font-bold text-nagaEmerald mt-0.5">คลังวัตถุมงคล & ญาณบารมีนาคาธิบดี</p>
         </div>
       </div>
       
       <!-- Cart Icon Button -->
-      <button onclick="openCartModal()" class="relative p-2.5 rounded-2xl bg-pearl-light border border-nagaGold-border/60 hover:bg-white active:scale-95 transition shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <button onclick="openCartModal()" class="relative p-2.5 rounded-2xl bg-ivoryPearl border border-radiantGold-border/60 hover:bg-white active:scale-95 transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-nagaEmerald" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
         <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">0</span>
@@ -104,68 +108,100 @@
     </div>
   </header>
 
-  <!-- Quick Menu Bar (iOS Pill Tabs) -->
-  <div class="max-w-md mx-auto px-4 mt-3">
-    <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar py-1">
-      <a href="index.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-emerald-deep text-white text-xs font-bold border border-nagaGold-bright shadow-sm flex items-center gap-1.5">
-        <span>🛍️</span> วัตถุมงคล
-      </a>
-      <a href="booking.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-nagaGold-border/50 hover:bg-pearl transition flex items-center gap-1.5 shadow-sm">
-        <span>📅</span> จองคิวดูดวง
-      </a>
-      <a href="pickacard.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-nagaGold-border/50 hover:bg-pearl transition flex items-center gap-1.5 shadow-sm">
-        <span>🔮</span> สาส์นนำทาง Pick-A-Card
-      </a>
-      <a href="memberships.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-nagaGold-border/50 hover:bg-pearl transition flex items-center gap-1.5 shadow-sm">
-        <span>👑</span> บัตรแก้วรัตนบารมี
-      </a>
-    </div>
-  </div>
-
   <main class="max-w-md mx-auto px-4 mt-3 space-y-4">
-    <!-- User Profile Bar: Pearl Glass Panel -->
-    <div id="user-info-box" class="glass-pearl rounded-3xl p-3.5 shadow-pearl-card flex items-center justify-between border border-nagaGold-border/40">
+
+    <!-- User Identity & Member Ribbon -->
+    <div class="glass-ivory rounded-3xl p-3.5 shadow-card-float flex items-center justify-between border border-radiantGold-border/50">
       <div class="flex items-center space-x-3">
         <div class="relative">
-          <img id="user-avatar" src="https://via.placeholder.com/48" class="w-11 h-11 rounded-2xl border-2 border-nagaGold-bright object-cover shadow-sm" alt="User">
+          <img id="user-avatar" src="https://via.placeholder.com/48" class="w-11 h-11 rounded-2xl border-2 border-radiantGold-bright object-cover shadow-sm" alt="User">
           <span class="absolute -bottom-1 -right-1 text-[10px]">✨</span>
         </div>
         <div>
           <div class="flex items-center space-x-1.5">
-            <span id="user-name" class="text-xs font-black text-obsidian tracking-tight">กำลังเชื่อมต่อจิตญาณ LINE...</span>
-            <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-nagaGold-bright to-nagaGold-radiant text-obsidian border border-nagaGold-bright shadow-sm">
+            <span id="user-name" class="text-xs font-black text-obsidianGloss tracking-tight">เชื่อมต่อจิตญาณ LINE...</span>
+            <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-radiantGold-bright to-radiantGold-amber text-obsidianGloss shadow-sm">
               วรรณะนาคา
             </span>
           </div>
-          <p id="user-uid" class="text-[10px] font-medium text-emerald-soft mt-0.5">LINE Identity Verified</p>
+          <p id="user-uid" class="text-[10px] font-medium text-stone-500 mt-0.5">LINE Identity Verified</p>
         </div>
       </div>
-      <a href="memberships.html" class="text-[11px] font-bold text-nagaGold-radiant bg-pearl-light px-3 py-1.5 rounded-xl border border-nagaGold-border/70 hover:bg-white transition flex items-center gap-1 shadow-sm">
-        <span>บัตรสมาชิก</span> →
+      <a href="memberships.html" class="text-[11px] font-bold text-radiantGold-amber bg-white px-3 py-1.5 rounded-xl border border-radiantGold-border/70 hover:bg-creamPearl transition shadow-sm">
+        บัตรสมาชิก →
       </a>
     </div>
 
-    <!-- Product Grid Section -->
+    <!-- Sacred Services Hub (เมนูเต็มระบบ 5 รายการหลัก เห็นชัด เต็มตา) -->
     <div>
-      <div class="flex items-center justify-between mb-3 px-1">
-        <h2 class="text-xs font-black text-obsidian uppercase tracking-wider flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-nagaGold-bright animate-ping"></span>
-          คลังวัตถุมงคลศักดิ์สิทธิ์
+      <div class="flex items-center justify-between mb-2 px-1">
+        <h2 class="text-xs font-black text-obsidianGloss uppercase tracking-wider flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-radiantGold-bright animate-ping"></span>
+          บริการสายญาณ & มงคลบารมี
         </h2>
-        <span id="product-count" class="text-[11px] font-bold text-emerald-soft">กำลังโหลด...</span>
       </div>
 
-      <!-- Products Grid -->
-      <div id="product-grid" class="grid grid-cols-2 gap-3.5">
-        <!-- Skeleton Card 1 -->
-        <div class="glass-pearl rounded-3xl p-3 animate-pulse space-y-2 border border-nagaGold-border/20">
-          <div class="w-full h-36 bg-emerald-light/60 rounded-2xl"></div>
+      <div class="grid grid-cols-3 gap-2">
+        <!-- 1. คลังวัตถุมงคล (Active) -->
+        <a href="index.html" class="p-2.5 rounded-2xl bg-gradient-to-br from-nagaEmerald to-nagaEmerald-deep text-white border border-radiantGold shadow-md flex flex-col items-center justify-center text-center space-y-1">
+          <span class="text-base">🛍️</span>
+          <span class="text-[11px] font-black leading-tight">คลังมงคล</span>
+          <span class="text-[8px] text-radiantGold-light opacity-90 font-medium">สั่งจองวัตถุบูชา</span>
+        </a>
+
+        <!-- 2. จองคิวดูดวง -->
+        <a href="booking.html" class="p-2.5 rounded-2xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-ivoryPearl transition flex flex-col items-center justify-center text-center space-y-1 shadow-sm">
+          <span class="text-base">📅</span>
+          <span class="text-[11px] font-black leading-tight text-obsidianGloss">จองคิวดูดวง</span>
+          <span class="text-[8px] text-stone-400 font-medium">สนทนาญาณบารมี</span>
+        </a>
+
+        <!-- 3. สาส์นนำทาง Pick-A-Card -->
+        <a href="pickacard.html" class="p-2.5 rounded-2xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-ivoryPearl transition flex flex-col items-center justify-center text-center space-y-1 shadow-sm">
+          <span class="text-base">🔮</span>
+          <span class="text-[11px] font-black leading-tight text-obsidianGloss">สาส์นนำทาง</span>
+          <span class="text-[8px] text-stone-400 font-medium">เสี่ยงทาย 5 หมวด</span>
+        </a>
+
+        <!-- 4. สาส์นบรมครู -->
+        <a href="pickacard_kru.html" class="p-2.5 rounded-2xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-ivoryPearl transition flex flex-col items-center justify-center text-center space-y-1 shadow-sm">
+          <span class="text-base">👑</span>
+          <span class="text-[11px] font-black leading-tight text-obsidianGloss">สาส์นบรมครู</span>
+          <span class="text-[8px] text-stone-400 font-medium">ญาณครูชี้แนะ</span>
+        </a>
+
+        <!-- 5. บัตรแก้วรัตนบารมี -->
+        <a href="memberships.html" class="col-span-2 p-2.5 rounded-2xl bg-gradient-to-r from-creamPearl to-white text-obsidianGloss border border-radiantGold-border/70 hover:bg-white transition flex items-center justify-between px-4 shadow-sm">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-lg">🪪</span>
+            <div class="text-left">
+              <span class="text-[11px] font-black block leading-tight text-nagaEmerald">บัตรแก้วรัตนบารมี</span>
+              <span class="text-[9px] text-stone-400 font-medium">ตรวจวรรณะบารมี & ทรัพย์มณีคงคลัง</span>
+            </div>
+          </div>
+          <span class="text-xs text-radiantGold-amber font-bold">เข้าดู →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Product Showcase Grid -->
+    <div>
+      <div class="flex items-center justify-between mb-2.5 px-1 pt-1">
+        <h2 class="text-xs font-black text-obsidianGloss uppercase tracking-wider flex items-center gap-1.5">
+          <span>✨</span> รายการวัตถุมงคลศักดิ์สิทธิ์
+        </h2>
+        <span id="product-count" class="text-[11px] font-bold text-nagaEmerald">กำลังโหลด...</span>
+      </div>
+
+      <div id="product-grid" class="grid grid-cols-2 gap-3">
+        <!-- Skeleton Loading -->
+        <div class="glass-ivory rounded-3xl p-3 animate-pulse space-y-2 border border-radiantGold-border/30">
+          <div class="w-full h-36 bg-nagaEmerald-light/50 rounded-2xl"></div>
           <div class="h-3 bg-stone-200 rounded w-3/4"></div>
           <div class="h-3 bg-stone-200 rounded w-1/2"></div>
         </div>
-        <!-- Skeleton Card 2 -->
-        <div class="glass-pearl rounded-3xl p-3 animate-pulse space-y-2 border border-nagaGold-border/20">
-          <div class="w-full h-36 bg-emerald-light/60 rounded-2xl"></div>
+        <div class="glass-ivory rounded-3xl p-3 animate-pulse space-y-2 border border-radiantGold-border/30">
+          <div class="w-full h-36 bg-nagaEmerald-light/50 rounded-2xl"></div>
           <div class="h-3 bg-stone-200 rounded w-3/4"></div>
           <div class="h-3 bg-stone-200 rounded w-1/2"></div>
         </div>
@@ -173,38 +209,38 @@
     </div>
   </main>
 
-  <!-- Sticky Bottom Cart Summary (Floating iOS Dock) -->
+  <!-- Sticky Bottom Cart Summary Dock -->
   <div id="bottom-cart-bar" class="hidden fixed bottom-4 left-4 right-4 max-w-md mx-auto z-40">
-    <div class="glass-pearl rounded-3xl p-3.5 flex items-center justify-between shadow-obsidian-glow border-2 border-nagaGold-bright bg-white/95">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-obsidian to-emerald-dark flex items-center justify-center text-nagaGold-bright text-xs font-black border border-nagaGold-border" id="bottom-cart-qty">
+    <div class="glass-ivory rounded-3xl p-3 flex items-center justify-between shadow-obsidian-gloss border-2 border-radiantGold-bright bg-white/95">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-obsidianGloss to-nagaEmerald text-radiantGold-bright text-xs font-black flex items-center justify-center border border-radiantGold-border" id="bottom-cart-qty">
           0
         </div>
         <div>
-          <p class="text-[10px] font-bold text-stone-500 uppercase">ยอดรวมสุทธิ</p>
-          <p class="text-base font-black text-nagaGold-radiant tracking-tight" id="bottom-cart-total">฿0</p>
+          <p class="text-[9px] font-bold text-stone-400 uppercase">ยอดรวมสุทธิ</p>
+          <p class="text-sm font-black text-radiantGold-amber tracking-tight" id="bottom-cart-total">฿0</p>
         </div>
       </div>
-      <button onclick="openCartModal()" class="bg-gradient-to-r from-emerald-dark to-emerald-pearl text-white text-xs font-black px-5 py-3 rounded-2xl shadow-naga-gold border border-nagaGold-bright/60 hover:brightness-110 active:scale-95 transition flex items-center gap-1.5">
+      <button onclick="openCartModal()" class="bg-gradient-to-r from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald text-white text-xs font-black px-4 py-2.5 rounded-2xl shadow-md border border-radiantGold/60 hover:brightness-110 active:scale-95 transition flex items-center gap-1.5">
         <span>ตรวจดูตะกร้า</span> ➔
       </button>
     </div>
   </div>
 
   <!-- Cart Modal & Checkout Panel -->
-  <div id="cart-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border-2 border-nagaGold-border">
+  <div id="cart-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border-2 border-radiantGold-border">
       
       <!-- Modal Header -->
-      <div class="p-4 border-b border-nagaGold-border/30 flex items-center justify-between bg-gradient-to-r from-pearl-light via-white to-pearl-light">
+      <div class="p-4 border-b border-radiantGold-border/30 flex items-center justify-between bg-gradient-to-r from-ivoryPearl via-white to-ivoryPearl">
         <div class="flex items-center space-x-2">
           <span class="text-lg">🐍</span>
           <div>
-            <h3 class="text-xs font-black text-obsidian uppercase">ตะกร้าวัตถุมงคล</h3>
-            <p class="text-[10px] text-nagaGold-radiant font-bold">SHOP@วินทร์ทรัพย์นาคราช</p>
+            <h3 class="text-xs font-black text-obsidianGloss uppercase">ตะกร้าวัตถุมงคล</h3>
+            <p class="text-[10px] text-radiantGold-amber font-bold">SHOP@วินทร์ทรัพย์นาคราช</p>
           </div>
         </div>
-        <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 hover:text-obsidian transition">
+        <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 hover:text-obsidianGloss transition">
           ✕
         </button>
       </div>
@@ -213,54 +249,54 @@
       <div class="p-4 overflow-y-auto space-y-4 flex-1 hide-scrollbar">
         <!-- Selected Items -->
         <div>
-          <h4 class="text-xs font-black text-obsidian mb-2.5 flex items-center gap-1.5">
+          <h4 class="text-xs font-black text-obsidianGloss mb-2 flex items-center gap-1.5">
             <span>✧</span> รายการวัตถุมงคลที่น้อมรับ
           </h4>
-          <div id="cart-items-container" class="space-y-2.5"></div>
+          <div id="cart-items-container" class="space-y-2"></div>
           <div id="cart-empty-msg" class="text-center py-8 text-xs text-stone-400 font-bold hidden">
             ยังไม่มีวัตถุมงคลในตะกร้า
           </div>
         </div>
 
         <!-- Shipping Destination Form -->
-        <div class="border-t border-stone-200/80 pt-3.5 space-y-3">
-          <h4 class="text-xs font-black text-obsidian flex items-center gap-1.5">
-            <span>📍</span> ที่อยู่จัดส่งมงคลบารมี
+        <div class="border-t border-stone-200/80 pt-3 space-y-2.5">
+          <h4 class="text-xs font-black text-obsidianGloss flex items-center gap-1.5">
+            <span>📍</span> ข้อมูลผู้รับและที่อยู่จัดส่ง
           </h4>
           <div>
             <label class="text-[11px] font-bold text-stone-600 block mb-1">ชื่อ-นามสกุล ผู้รับ *</label>
-            <input type="text" id="cust-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-nagaGold-bright bg-pearl-light">
+            <input type="text" id="cust-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-radiantGold-bright bg-ivoryPearl">
           </div>
           <div>
             <label class="text-[11px] font-bold text-stone-600 block mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
-            <input type="tel" id="cust-phone" placeholder="08xxxxxxxx" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-nagaGold-bright bg-pearl-light">
+            <input type="tel" id="cust-phone" placeholder="08xxxxxxxx" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-radiantGold-bright bg-ivoryPearl">
           </div>
           <div>
             <label class="text-[11px] font-bold text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุโดยละเอียด *</label>
-            <textarea id="cust-address" rows="2" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-nagaGold-bright bg-pearl-light"></textarea>
+            <textarea id="cust-address" rows="2" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-radiantGold-bright bg-ivoryPearl"></textarea>
           </div>
         </div>
 
         <!-- Total Calculation Box -->
-        <div class="bg-gradient-to-br from-pearl-light to-white p-3.5 rounded-2xl border border-nagaGold-border/60 shadow-sm space-y-2">
+        <div class="bg-gradient-to-br from-ivoryPearl to-white p-3.5 rounded-2xl border border-radiantGold-border/60 shadow-sm space-y-2">
           <div class="flex justify-between text-xs font-bold text-stone-600">
             <span>รวมค่าบูชาวัตถุมงคล</span>
-            <span id="modal-subtotal" class="font-black text-obsidian">฿0</span>
+            <span id="modal-subtotal" class="font-black text-obsidianGloss">฿0</span>
           </div>
           <div class="flex justify-between text-xs font-bold text-stone-600">
             <span>ค่าจัดส่งผ่าน ETrackings</span>
-            <span class="font-black text-emerald-deep">ฟรีมงคลบารมี</span>
+            <span class="font-black text-nagaEmerald">ฟรีมงคลบารมี</span>
           </div>
-          <div class="border-t border-nagaGold-border/40 pt-2 flex justify-between text-sm font-black">
-            <span class="text-obsidian">ยอดชำระสุทธิ</span>
-            <span id="modal-total" class="text-nagaGold-radiant">฿0</span>
+          <div class="border-t border-radiantGold-border/40 pt-2 flex justify-between text-sm font-black">
+            <span class="text-obsidianGloss">ยอดชำระสุทธิ</span>
+            <span id="modal-total" class="text-radiantGold-amber">฿0</span>
           </div>
         </div>
       </div>
 
       <!-- Modal Footer -->
       <div class="p-3.5 border-t border-stone-200/80 bg-white">
-        <button id="btn-submit-order" onclick="confirmOrder()" class="w-full bg-gradient-to-r from-obsidian via-emerald-dark to-emerald-pearl text-white font-black text-xs py-3.5 rounded-2xl shadow-naga-gold border border-nagaGold-bright hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
+        <button id="btn-submit-order" onclick="confirmOrder()" class="w-full bg-gradient-to-r from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald text-white font-black text-xs py-3.5 rounded-2xl shadow-obsidian-gloss border border-radiantGold hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
           <span>✨ ยืนยันคำสั่งซื้อ & รับใบสรุปยอดใน LINE</span>
         </button>
       </div>
@@ -347,24 +383,24 @@
       container.innerHTML = products.map(p => {
         const imgUrl = formatDriveImg(p.imageId);
         return `
-          <div class="glass-pearl rounded-3xl p-3 flex flex-col justify-between shadow-pearl-card hover:shadow-obsidian-glow transition-all duration-300 border border-nagaGold-border/40">
+          <div class="glass-ivory rounded-3xl p-3 flex flex-col justify-between shadow-card-float hover:shadow-obsidian-gloss transition-all duration-300 border border-radiantGold-border/40">
             <div>
-              <div class="relative w-full h-36 rounded-2xl overflow-hidden bg-emerald-light/30 mb-2.5 border border-nagaGold-border/30">
+              <div class="relative w-full h-36 rounded-2xl overflow-hidden bg-nagaEmerald-light/30 mb-2.5 border border-radiantGold-border/30">
                 <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-cover">
-                <span class="absolute top-2 right-2 text-[9px] font-black px-2 py-0.5 rounded-full bg-obsidian text-nagaGold-bright border border-nagaGold-bright/60 shadow-sm">
+                <span class="absolute top-2 right-2 text-[9px] font-black px-2 py-0.5 rounded-full bg-obsidianGloss text-radiantGold-bright border border-radiantGold-bright/60 shadow-sm">
                   คงเหลือ ${p.stock}
                 </span>
               </div>
-              <h3 class="text-xs font-black text-obsidian line-clamp-1 tracking-tight">${p.name}</h3>
+              <h3 class="text-xs font-black text-obsidianGloss line-clamp-1 tracking-tight">${p.name}</h3>
               <p class="text-[10px] font-medium text-stone-500 line-clamp-2 my-1 leading-relaxed">${p.description || 'วัตถุมงคลเสริมสิริมงคล โชคลาภ และบารมี'}</p>
             </div>
             
             <div class="mt-2.5 pt-2 border-t border-stone-200/60 flex items-center justify-between">
               <div>
-                <span class="text-xs font-black text-nagaGold-radiant">฿${Number(p.price).toLocaleString()}</span>
+                <span class="text-xs font-black text-radiantGold-amber">฿${Number(p.price).toLocaleString()}</span>
                 ${p.originalPrice ? `<span class="text-[9px] text-stone-400 line-through ml-1">฿${p.originalPrice}</span>` : ''}
               </div>
-              <button onclick="addToCart('${p.id}')" class="bg-gradient-to-r from-emerald-dark to-emerald-pearl text-white text-[11px] font-black px-3 py-1.5 rounded-xl border border-nagaGold-bright/50 shadow-sm hover:brightness-110 active:scale-95 transition">
+              <button onclick="addToCart('${p.id}')" class="bg-gradient-to-r from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald text-white text-[11px] font-black px-3 py-1.5 rounded-xl border border-radiantGold-bright/50 shadow-sm hover:brightness-110 active:scale-95 transition">
                 + สั่งจอง
               </button>
             </div>
@@ -448,12 +484,12 @@
       } else {
         emptyMsg.classList.add("hidden");
         container.innerHTML = cart.map(i => `
-          <div class="flex items-center justify-between bg-pearl-light p-2.5 rounded-2xl border border-nagaGold-border/40">
+          <div class="flex items-center justify-between bg-ivoryPearl p-2 rounded-2xl border border-radiantGold-border/40">
             <div class="flex items-center space-x-2.5">
-              <img src="${i.img}" class="w-11 h-11 rounded-xl object-cover border border-nagaGold-border/60" alt="${i.name}">
+              <img src="${i.img}" class="w-10 h-10 rounded-xl object-cover border border-radiantGold-border/60" alt="${i.name}">
               <div>
-                <p class="text-xs font-black text-obsidian line-clamp-1">${i.name}</p>
-                <p class="text-[10px] text-nagaGold-radiant font-bold">฿${i.price.toLocaleString()} / ชิ้น</p>
+                <p class="text-xs font-black text-obsidianGloss line-clamp-1">${i.name}</p>
+                <p class="text-[10px] text-radiantGold-amber font-bold">฿${i.price.toLocaleString()} / ชิ้น</p>
               </div>
             </div>
             <div class="flex items-center space-x-2">

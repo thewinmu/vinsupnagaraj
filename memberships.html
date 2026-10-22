@@ -3,23 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>บัตรแก้วรัตนบารมี - วินทร์ทรัพย์นาคราช</title>
+  <title>บัตรแก้วรัตนบารมี & ศูนย์รวมบริการ - วินทร์ทรัพย์นาคราช</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Prompt', '-apple-system', 'sans-serif'] },
+          fontFamily: {
+            sans: ['Prompt', '-apple-system', 'sans-serif'],
+          },
           colors: {
-            mysticBg: { DEFAULT: '#08231C', light: '#0D382D', deep: '#051913' },
-            nagaEmerald: { DEFAULT: '#105B43', deep: '#063828', glow: '#16805E', light: '#A7F3D0' },
-            auroraGold: { light: '#FEF08A', DEFAULT: '#FBBF24', amber: '#F59E0B', border: '#E6CA65' }
+            mysticBg: {
+              DEFAULT: '#08231C',
+              light: '#0D382D',
+              deep: '#051913'
+            },
+            nagaEmerald: {
+              DEFAULT: '#105B43',
+              deep: '#063828',
+              glow: '#16805E',
+              bright: '#34D399',
+              light: '#A7F3D0'
+            },
+            auroraGold: {
+              light: '#FEF08A',
+              DEFAULT: '#FBBF24',
+              amber: '#F59E0B',
+              border: '#E6CA65'
+            }
           }
         }
       }
@@ -31,307 +47,271 @@
       font-family: 'Prompt', sans-serif;
       background: radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%);
       color: #F3F4F6;
+      -webkit-tap-highlight-color: transparent;
       min-height: 100vh;
-      transition: background 0.5s ease;
     }
-    .glass-mystic {
+    .glass-box {
       background: rgba(9, 39, 31, 0.85);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(230, 202, 101, 0.4);
+    }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(13, 56, 45, 0.95) 0%, rgba(6, 35, 27, 0.98) 100%);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(230, 202, 101, 0.45);
     }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="min-h-screen p-4 flex flex-col justify-center items-center pb-24">
+<body class="pb-28 p-3.5 max-w-md mx-auto">
 
-  <div class="w-full max-w-sm space-y-4">
-    <!-- หน้าบัตรแก้วรัตนบารมี -->
-    <div class="relative overflow-hidden rounded-[28px] p-5 bg-gradient-to-br from-mysticBg-light via-mysticBg to-mysticBg-deep border-2 border-auroraGold-border shadow-2xl">
-      <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-auroraGold-bright/25 blur-2xl pointer-events-none"></div>
+  <!-- Header หลัก -->
+  <header class="glass-box rounded-2xl p-4 shadow-xl flex items-center justify-between border border-auroraGold-border/60 mb-3.5">
+    <div class="flex items-center space-x-3">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-mysticBg-deep via-nagaEmerald to-nagaEmerald-glow p-0.5 border border-auroraGold-border flex items-center justify-center shadow-lg">
+        <span class="text-2xl">🪪</span>
+      </div>
+      <div>
+        <h1 class="text-xs font-black tracking-widest text-auroraGold-bright uppercase leading-tight">
+          วินทร์ทรัพย์นาคราช
+        </h1>
+        <p class="text-[11px] font-bold text-nagaEmerald-light">บัตรแก้วรัตนบารมี & สมาชิก</p>
+      </div>
+    </div>
+    <a href="index.html" class="text-xs font-bold text-auroraGold-light bg-black/40 px-3 py-1.5 rounded-xl border border-auroraGold-border/60 hover:bg-black/60 transition shadow-sm">
+      หน้าร้าน
+    </a>
+  </header>
 
-      <div class="relative z-10 flex items-center justify-between">
-        <div class="flex items-center space-x-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-mysticBg-deep to-nagaEmerald p-0.5 border border-auroraGold-border flex items-center justify-center shadow-md">
-            <span class="text-xl">🐍</span>
-          </div>
-          <div>
-            <h2 class="text-[10px] font-black tracking-wider text-auroraGold-bright uppercase leading-none">
-              SHOP@วินทร์ทรัพย์นาคราช
-            </h2>
-            <p class="text-xs font-black text-white mt-0.5">บัตรแก้วรัตนบารมี</p>
-          </div>
+  <!-- ========================================== -->
+  <!-- 1. การ์ดบัตรสมาชิกดิจิทัล (Digital Membership Card) -->
+  <!-- ========================================== -->
+  <div class="glass-card rounded-[26px] p-5 border-2 border-auroraGold-border shadow-2xl relative overflow-hidden mb-4">
+    <div class="absolute -top-12 -right-12 w-36 h-36 bg-nagaEmerald-glow/20 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="absolute -bottom-12 -left-12 w-36 h-36 bg-auroraGold/15 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="relative z-10 space-y-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <span class="text-[9px] font-black uppercase tracking-widest text-auroraGold-amber block">บัตรแก้วรัตนบารมี</span>
+          <h2 id="card-name" class="text-base font-black text-white tracking-wide">กำลังเชื่อมต่อญาณ...</h2>
         </div>
-        <span id="card-badge" class="px-2.5 py-0.5 rounded-full text-[9px] font-black text-mysticBg-deep bg-auroraGold-bright border border-auroraGold-border shadow-sm">
-          กำลังตรวจสอบสิทธิ์...
+        <span id="card-privilege" class="text-[9px] font-black px-2.5 py-1 rounded-full bg-nagaEmerald text-white border border-auroraGold-border shadow-sm">
+          วรรณะนาคารัตนบารมี
         </span>
       </div>
 
-      <div class="relative z-10 mt-5 space-y-1">
-        <span class="text-[10px] font-bold text-stone-300 uppercase tracking-wider block">ผู้ถือครองบัญชีมงคล</span>
-        <p id="card-holder-name" class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
-          <span class="animate-pulse">กำลังดึงข้อมูลจิตญาณ...</span>
-        </p>
-        <p id="card-member-code" class="text-xs font-mono font-black text-auroraGold-bright tracking-widest">NAGA-••••••</p>
-      </div>
-
-      <div class="relative z-10 mt-4 pt-3 border-t border-white/10 flex justify-between items-end">
+      <div class="bg-black/40 p-3 rounded-2xl border border-white/10 flex justify-between items-center">
         <div>
-          <span class="text-[9px] font-bold text-stone-300 block">วรรณะบารมี</span>
-          <span id="card-privilege" class="text-xs font-black text-nagaEmerald-light">รอการสถาปนา</span>
+          <span class="text-[10px] text-stone-400 block font-medium">รหัสสังข์แก้วประจำตัว</span>
+          <span id="card-code" class="text-sm font-black text-auroraGold-bright font-mono tracking-wider">NAGA-XXXXXX</span>
         </div>
-        <div>
-          <span class="text-[9px] font-bold text-stone-300 block text-right">ทรัพย์มณีคงคลัง</span>
-          <span id="card-balance" class="text-xs font-black text-auroraGold-bright text-right block">฿0 มณี</span>
+        <div class="text-right">
+          <span class="text-[10px] text-stone-400 block font-medium">อายุสมาชิก</span>
+          <span id="card-expire" class="text-xs font-bold text-white">ตลอดชีพ</span>
         </div>
       </div>
     </div>
-
-    <!-- ส่วนปุ่มควบคุมการสมัคร / แก้ไขข้อมูล -->
-    <div id="action-box" class="space-y-3">
-      <!-- ปุ่มกดสมัครสมาชิก -->
-      <button id="btn-register-action" onclick="handleRegisterClick()" class="hidden w-full bg-gradient-to-r from-[#FEF08A] via-[#FBBF24] to-[#F59E0B] text-[#051A14] font-black text-lg py-4 px-3 rounded-2xl shadow-[0_0_25px_rgba(251,191,36,0.55)] border-2 border-[#FFFFFF] hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2 tracking-wide">
-        <span class="text-2xl animate-bounce">✨</span>
-        <span class="drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">กดสมัครสมาชิก</span>
-      </button>
-
-      <!-- ปุ่มเปิดฟอร์มแก้ไขข้อมูลสำหรับสมาชิก -->
-      <button id="btn-toggle-edit" onclick="toggleEditForm()" class="hidden w-full bg-gradient-to-r from-nagaEmerald-glow to-nagaEmerald text-white font-black text-xs py-3.5 rounded-2xl shadow-md border border-auroraGold-bright/60 hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
-        <span>✏️ แก้ไขข้อมูลส่วนตัว & ที่อยู่จัดส่ง</span>
-      </button>
-    </div>
-
-    <!-- ฟอร์มแก้ไขข้อมูล -->
-    <div id="edit-form-panel" class="hidden glass-mystic rounded-[28px] p-5 shadow-lg border border-auroraGold-border/40 space-y-3">
-      <div class="flex items-center justify-between border-b border-white/10 pb-2">
-        <h3 class="text-xs font-black text-auroraGold-light uppercase flex items-center gap-1.5">
-          <span>✍️</span> แก้ไขข้อมูลสมาชิก
-        </h3>
-        <button onclick="toggleEditForm()" class="text-xs text-stone-400 hover:text-white">✕ ปิด</button>
-      </div>
-
-      <div>
-        <label class="text-[11px] font-bold text-stone-300 block mb-1">ชื่อ - นามสกุล *</label>
-        <input type="text" id="member-name" placeholder="ระบุชื่อ-นามสกุลจริง" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-auroraGold-border/40 focus:outline-none focus:border-auroraGold-bright bg-black/40 text-white">
-      </div>
-
-      <div>
-        <label class="text-[11px] font-bold text-stone-300 block mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
-        <input type="tel" id="member-phone" placeholder="08xxxxxxxx" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-auroraGold-border/40 focus:outline-none focus:border-auroraGold-bright bg-black/40 text-white">
-      </div>
-
-      <div>
-        <label class="text-[11px] font-bold text-stone-300 block mb-1">ที่อยู่จัดส่งพัสดุวัตถุมงคล</label>
-        <textarea id="member-address" rows="2" placeholder="ระบุบ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-auroraGold-border/40 focus:outline-none focus:border-auroraGold-bright bg-black/40 text-white"></textarea>
-      </div>
-
-      <button id="btn-submit-update" onclick="saveUpdatedMemberProfile()" class="w-full bg-gradient-to-r from-auroraGold-bright to-auroraGold-amber text-mysticBg-deep font-black text-xs py-3.5 rounded-2xl shadow-md border border-auroraGold-border hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-1.5">
-        <span>💾 ยืนยันการอัปเดตข้อมูล</span>
-      </button>
-    </div>
-
-    <a href="index.html" class="block text-center text-xs font-bold text-auroraGold-light hover:underline pt-2">
-      ← กลับสู่หน้าร้านวัตถุมงคล
-    </a>
   </div>
 
-  <!-- โค้ด JavaScript ทั้งหมดต้องอยู่ภายในแท็ก script นี้ -->
+  <!-- ========================================== -->
+  <!-- 2. ศูนย์รวมลิงก์บริการทั้งหมด (All Links Hub) -->
+  <!-- (ยกเว้น admincontrol ตามที่กำหนด) -->
+  <!-- ========================================== -->
+  <div class="space-y-2 mb-4">
+    <div class="flex items-center space-x-1.5 px-1">
+      <span class="text-xs">🌐</span>
+      <h3 class="text-xs font-black text-auroraGold-light uppercase tracking-wider">ศูนย์รวมบริการสายญาณทั้งหมด</h3>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2.5">
+      <!-- ลิงก์ที่ 1: หน้าร้านค้าวัตถุมงคล -->
+      <a href="index.html" class="glass-box rounded-2xl p-3 border border-auroraGold-border/40 hover:border-auroraGold-bright active:scale-95 transition flex flex-col justify-between space-y-2 shadow-md">
+        <div class="w-9 h-9 rounded-xl bg-black/40 border border-auroraGold-border/50 flex items-center justify-center text-lg shadow-inner">
+          🛒
+        </div>
+        <div>
+          <h4 class="text-xs font-black text-white">หน้าร้านค้าวัตถุมงคล</h4>
+          <p class="text-[10px] text-stone-300">บูชาเทียนเสริมดวง & วัตถุมงคล</p>
+        </div>
+        <span class="text-[9px] font-bold text-auroraGold-bright flex items-center justify-end">
+          เข้าสู่หน้าร้าน ➔
+        </span>
+      </a>
+
+      <!-- ลิงก์ที่ 2: จองคิวตรวจดวงชะตา (โทร) -->
+      <a href="booking.html" class="glass-box rounded-2xl p-3 border border-auroraGold-border/40 hover:border-auroraGold-bright active:scale-95 transition flex flex-col justify-between space-y-2 shadow-md">
+        <div class="w-9 h-9 rounded-xl bg-black/40 border border-auroraGold-border/50 flex items-center justify-center text-lg shadow-inner">
+          📞
+        </div>
+        <div>
+          <h4 class="text-xs font-black text-white">จองคิวตรวจดวง (โทร)</h4>
+          <p class="text-[10px] text-stone-300">สนทนาสายสด เจาะลึกดวงชะตา</p>
+        </div>
+        <span class="text-[9px] font-bold text-auroraGold-bright flex items-center justify-end">
+          จองคิวนัดหมาย ➔
+        </span>
+      </a>
+
+      <!-- ลิงก์ที่ 3: สาส์นบรมครูโบราณ & องค์เทพ -->
+      <a href="pickacard_kru.html" class="glass-box rounded-2xl p-3 border border-auroraGold-border/40 hover:border-auroraGold-bright active:scale-95 transition flex flex-col justify-between space-y-2 shadow-md">
+        <div class="w-9 h-9 rounded-xl bg-black/40 border border-auroraGold-border/50 flex items-center justify-center text-lg shadow-inner">
+          👑
+        </div>
+        <div>
+          <h4 class="text-xs font-black text-white">สาส์นบรมครูโบราณ</h4>
+          <p class="text-[10px] text-stone-300">น้อมรับคำสอน & แนวทางแก้กรรม</p>
+        </div>
+        <span class="text-[9px] font-bold text-nagaEmerald-light flex items-center justify-end">
+          เริ่มเสี่ยงทาย ➔
+        </span>
+      </a>
+
+      <!-- ลิงก์ที่ 4: สาส์นนำทาง 5 มิติ (การงาน, เงิน, รัก, สุขภาพ, โชค) -->
+      <a href="pickacard.html" class="glass-box rounded-2xl p-3 border border-auroraGold-border/40 hover:border-auroraGold-bright active:scale-95 transition flex flex-col justify-between space-y-2 shadow-md">
+        <div class="w-9 h-9 rounded-xl bg-black/40 border border-auroraGold-border/50 flex items-center justify-center text-lg shadow-inner">
+          🔮
+        </div>
+        <div>
+          <h4 class="text-xs font-black text-white">ไพ่สาส์นนำทาง 5 มิติ</h4>
+          <p class="text-[10px] text-stone-300">เปิดขุมทรัพย์ เสริมโชคลาภบารมี</p>
+        </div>
+        <span class="text-[9px] font-bold text-nagaEmerald-light flex items-center justify-end">
+          เปิดไพ่พยากรณ์ ➔
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. ฟอร์มอัปเดตข้อมูลสมาชิก & ที่อยู่จัดส่ง -->
+  <!-- ========================================== -->
+  <div class="glass-box rounded-2xl p-4 border border-auroraGold-border/40 space-y-3 shadow-lg">
+    <div class="flex items-center space-x-1.5 border-b border-white/10 pb-2">
+      <span class="text-xs">📝</span>
+      <h3 class="text-xs font-black text-white uppercase tracking-wider">ข้อมูลส่วนบุคคล & ที่อยู่จัดส่งพัสดุ</h3>
+    </div>
+
+    <div class="space-y-2.5">
+      <div>
+        <label class="text-[10px] font-bold text-stone-300 block mb-1">ชื่อ - นามสกุล หรือชื่อเรียก *</label>
+        <input type="text" id="inp-name" placeholder="ระบุชื่อของท่าน" class="w-full text-xs bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-auroraGold-bright">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-bold text-stone-300 block mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
+        <input type="tel" id="inp-phone" placeholder="ระบุเบอร์โทรศัพท์" class="w-full text-xs bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-auroraGold-bright">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-bold text-stone-300 block mb-1">อีเมล (ถ้ามี)</label>
+        <input type="email" id="inp-email" placeholder="ระบุอีเมลสำหรับรับข่าวสาร" class="w-full text-xs bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-auroraGold-bright">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-bold text-stone-300 block mb-1">ที่อยู่จัดส่งพัสดุมงคล *</label>
+        <textarea id="inp-address" rows="3" placeholder="บ้านเลขที่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-auroraGold-bright"></textarea>
+      </div>
+
+      <button id="btn-save-member" onclick="saveMemberProfile()" class="w-full bg-gradient-to-r from-auroraGold-bright via-auroraGold to-auroraGold-amber text-mysticBg-deep font-black text-xs py-3 rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-1.5 border border-white">
+        <span>💾</span>
+        <span>บันทึกข้อมูลสมาชิก & ที่อยู่จัดส่ง</span>
+      </button>
+    </div>
+  </div>
+
   <script>
     const LIFF_ID = "2007499712-3e6TMnJJ";
     const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
 
     let currentUserId = "";
-    let currentDisplayName = "";
-    let isMember = false;
-
-    // ฟังก์ชันช่วยเรียก API ซ้ำอัตโนมัติหากเน็ตหลุด
-    async function fetchWithRetry(url, options = {}, retries = 3, backoff = 1000) {
-      try {
-        const response = await fetch(url, options);
-        if (!response.ok) throw new Error("HTTP error " + response.status);
-        return await response.json();
-      } catch (err) {
-        if (retries > 0) {
-          console.warn("เน็ตสะดุด กำลังลองเชื่อมต่อใหม่...");
-          await new Promise(res => setTimeout(res, backoff));
-          return fetchWithRetry(url, options, retries - 1, backoff * 1.5);
-        }
-        throw err;
-      }
-    }
 
     window.addEventListener("DOMContentLoaded", async () => {
       try {
         if (typeof liff !== "undefined") {
           await liff.init({ liffId: LIFF_ID });
-          if (!liff.isLoggedIn()) {
+          if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            currentUserId = profile.userId;
+            loadMemberData(currentUserId, profile.displayName);
+          } else {
             liff.login();
-            return;
           }
-          const profile = await liff.getProfile();
-          currentUserId = profile.userId;
-          currentDisplayName = profile.displayName || "ผู้ศรัทธาบารมี";
-
-          loadMemberStatus(currentUserId, currentDisplayName);
         }
       } catch (err) {
-        console.error("LIFF Init Error:", err);
-        document.getElementById("card-holder-name").innerHTML = '<span class="text-xs text-amber-300">กรุณาเปิดใน LINE แอปพลิเคชัน</span>';
+        console.warn("LIFF init warning:", err);
       }
     });
 
-    async function loadMemberStatus(uid, displayName) {
-      const nameEl = document.getElementById("card-holder-name");
-      const badgeEl = document.getElementById("card-badge");
-      const btnReg = document.getElementById("btn-register-action");
-      const btnEdit = document.getElementById("btn-toggle-edit");
-
-      nameEl.innerHTML = '<span class="animate-pulse">กำลังตรวจสอบสิทธิ์...</span>';
-
+    async function loadMemberData(uid, defaultName) {
       try {
-        const data = await fetchWithRetry(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`);
+        const res = await fetch(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`);
+        const data = await res.json();
 
         if (data.status === "success" && data.member) {
-          isMember = true;
           const m = data.member;
-          nameEl.innerText = m.name || displayName || "ผู้ศรัทธาบารมี";
-          document.getElementById("card-member-code").innerText = m.memberCode || "NAGA-VIP";
+          document.getElementById("card-name").innerText = m.name || defaultName || "ผู้ศรัทธาบารมี";
+          document.getElementById("card-code").innerText = m.memberCode || "NAGA-888888";
           document.getElementById("card-privilege").innerText = m.privilege || "วรรณะนาคารัตนบารมี";
-          document.getElementById("card-balance").innerText = "฿" + Number(m.balance || 0).toLocaleString() + " มณี";
-          badgeEl.innerText = "สมาชิกสายญาณ";
+          document.getElementById("card-expire").innerText = m.expireDate || "ตลอดชีพ";
 
-          document.getElementById("member-name").value = (m.name && m.name !== "-") ? m.name : "";
-          document.getElementById("member-phone").value = (m.phone && m.phone !== "-") ? m.phone : "";
-          document.getElementById("member-address").value = (m.address && m.address !== "-") ? m.address : "";
-
-          btnReg.classList.add("hidden");
-          btnEdit.classList.remove("hidden");
+          document.getElementById("inp-name").value = (m.name && m.name !== "-") ? m.name : (defaultName || "");
+          document.getElementById("inp-phone").value = (m.phone && m.phone !== "-") ? m.phone : "";
+          document.getElementById("inp-email").value = (m.email && m.email !== "-") ? m.email : "";
+          document.getElementById("inp-address").value = (m.address && m.address !== "-") ? m.address : "";
         } else {
-          isMember = false;
-          nameEl.innerText = displayName || "ผู้ศรัทธาบารมี";
-          badgeEl.innerText = "ยังไม่เป็นสมาชิก";
-          btnReg.classList.remove("hidden");
-          btnEdit.classList.add("hidden");
+          document.getElementById("card-name").innerText = defaultName || "ผู้ศรัทธาบารมี";
+          document.getElementById("inp-name").value = defaultName || "";
         }
       } catch (e) {
-        console.error("Load Member Error:", e);
-        nameEl.innerHTML = '<span class="text-xs text-amber-300">สัญญาณขัดข้อง</span> <button onclick="loadMemberStatus(currentUserId, currentDisplayName)" class="ml-2 px-2.5 py-0.5 text-[10px] bg-black/50 border border-auroraGold-bright text-auroraGold-bright rounded-lg">แตะลองใหม่</button>';
+        console.warn("Load member error:", e);
       }
     }
 
-    async function handleRegisterClick() {
-      const btn = document.getElementById("btn-register-action");
-      btn.disabled = true;
-      btn.innerHTML = '<span class="animate-spin mr-1.5">🌀</span> <span class="text-base">กำลังสมัครสมาชิก...</span>';
-
-      let uid = currentUserId;
-      if (!uid && typeof liff !== "undefined" && liff.isLoggedIn()) {
-        try {
-          const prof = await liff.getProfile();
-          uid = prof.userId;
-          currentUserId = uid;
-        } catch (e) {}
-      }
-
-      if (!uid) {
-        alert("ไม่พบรหัสผู้ใช้งาน กรุณาเปิดผ่านแอป LINE ครับ");
-        btn.disabled = false;
-        btn.innerHTML = '<span class="text-2xl animate-bounce">✨</span><span>กดสมัครสมาชิก</span>';
-        return;
-      }
-
-      try {
-        if (typeof liff !== "undefined" && liff.isInClient()) {
-          try {
-            await liff.sendMessages([{ type: "text", text: "สมาชิก" }]);
-          } catch (chatErr) {
-            console.warn("ส่งเข้าแชทไม่ผ่าน ดำเนินการสมัครผ่าน API ต่อเนื่อง:", chatErr);
-          }
-        }
-
-        const result = await fetchWithRetry(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action: "register_member",
-            userId: uid,
-            name: currentDisplayName || "ผู้ศรัทธาบารมี"
-          })
-        });
-
-        if (result.status === "success") {
-          alert("🎉 สถาปนาสมาชิกสำเร็จ!");
-          await loadMemberStatus(uid, currentDisplayName);
-          toggleEditForm();
-        } else {
-          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสมัครได้"));
-        }
-      } catch (err) {
-        console.error("Register Error:", err);
-        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้งครับ");
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span class="text-2xl animate-bounce">✨</span><span>กดสมัครสมาชิก</span>';
-      }
-    }
-
-    function toggleEditForm() {
-      const form = document.getElementById("edit-form-panel");
-      form.classList.toggle("hidden");
-      if (!form.classList.contains("hidden")) {
-        form.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    async function saveUpdatedMemberProfile() {
-      const name = document.getElementById("member-name").value.trim();
-      const phone = document.getElementById("member-phone").value.trim();
-      const address = document.getElementById("member-address").value.trim();
+    async function saveMemberProfile() {
+      const name = document.getElementById("inp-name").value.trim();
+      const phone = document.getElementById("inp-phone").value.trim();
+      const email = document.getElementById("inp-email").value.trim();
+      const address = document.getElementById("inp-address").value.trim();
 
       if (!name || !phone) {
-        alert("กรุณาระบุชื่อ-นามสกุล และเบอร์โทรศัพท์ครับ");
+        alert("กรุณากรอกชื่อและเบอร์โทรศัพท์ติดต่อให้ครบถ้วนครับ");
         return;
       }
 
-      let uid = currentUserId;
-      if (!uid && typeof liff !== "undefined" && liff.isLoggedIn()) {
-        try {
-          const prof = await liff.getProfile();
-          uid = prof.userId;
-          currentUserId = uid;
-        } catch (e) {}
-      }
-
-      const btn = document.getElementById("btn-submit-update");
+      const btn = document.getElementById("btn-save-member");
       btn.disabled = true;
       btn.innerText = "กำลังบันทึกข้อมูล...";
 
+      const payload = {
+        action: "save_member",
+        userId: currentUserId || "GUEST_USER",
+        name: name,
+        phone: phone,
+        email: email,
+        address: address
+      };
+
       try {
-        const result = await fetchWithRetry(API_URL, {
+        const res = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action: "save_member",
-            userId: uid,
-            name: name,
-            phone: phone,
-            address: address
-          })
+          body: JSON.stringify(payload)
         });
+        const result = await res.json();
 
         if (result.status === "success") {
-          alert("✅ อัปเดตข้อมูลสมาชิกเรียบร้อยแล้ว!");
-          document.getElementById("card-holder-name").innerText = name;
-          document.getElementById("edit-form-panel").classList.add("hidden");
+          alert("🎉 บันทึกข้อมูลสมาชิกเรียบร้อยแล้วครับ");
+          loadMemberData(currentUserId, name);
         } else {
-          alert("แจ้งเตือน: " + (result.message || "บันทึกไม่สำเร็จ"));
+          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถบันทึกได้"));
         }
       } catch (err) {
-        console.error("Save Error:", err);
-        alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-        document.getElementById("card-holder-name").innerText = name;
-        document.getElementById("edit-form-panel").classList.add("hidden");
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้งครับ");
       } finally {
         btn.disabled = false;
-        btn.innerText = "💾 ยืนยันการอัปเดตข้อมูล";
+        btn.innerText = "💾 บันทึกข้อมูลสมาชิก & ที่อยู่จัดส่ง";
       }
     }
   </script>

@@ -91,6 +91,27 @@
     </div>
   </header>
 
+  <!-- ปุ่มเข้าสู่ระบบ Admin Control (ซ่อนไว้สำหรับ Admin U8065e05dc54f0ddc3fb46e97492eb53a เท่านั้น) -->
+  <div id="admin-menu-btn" class="hidden w-full mb-3.5">
+    <a href="admincontrol.html" class="w-full bg-gradient-to-r from-red-950 via-red-900 to-[#051913] border-2 border-red-500/70 rounded-2xl p-3 flex items-center justify-between shadow-2xl hover:brightness-110 active:scale-98 transition">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-black/60 border border-red-400 flex items-center justify-center text-xl shadow-md">
+          🛡️
+        </div>
+        <div class="text-left">
+          <p class="text-xs font-black text-red-300 uppercase tracking-wide flex items-center gap-1.5">
+            <span>ระบบจัดการหลังบ้าน</span>
+            <span class="text-[9px] bg-red-500 text-white px-1.5 py-0.2 rounded font-mono">ADMIN</span>
+          </p>
+          <p class="text-[10px] text-stone-300">สิทธิ์ควบคุมระบบสายญาณนาคราช</p>
+        </div>
+      </div>
+      <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-md">
+        จัดการ ➔
+      </span>
+    </a>
+  </div>
+
   <!-- เมนูลัดบริการ (Quick Action Bar) -->
   <div class="grid grid-cols-3 gap-2 mb-3.5">
     <a href="booking.html" class="glass-box rounded-xl p-2.5 text-center border border-auroraGold-border/40 hover:border-auroraGold-bright transition flex flex-col items-center justify-center space-y-1">
@@ -196,6 +217,7 @@
   <script>
     const LIFF_ID = "2007499712-3e6TMnJJ";
     const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+    const MASTER_ADMIN_UID = "U8065e05dc54f0ddc3fb46e97492eb53a";
 
     let currentUserId = "";
     let currentDisplayName = "";
@@ -204,7 +226,7 @@
     let activeCategory = "ALL";
 
     window.addEventListener("DOMContentLoaded", async () => {
-      // 1. เริ่มต้น LIFF SDK
+      // 1. เริ่มต้น LIFF SDK และตรวจสอบสิทธิ์ Admin
       try {
         if (typeof liff !== "undefined") {
           await liff.init({ liffId: LIFF_ID });
@@ -212,6 +234,13 @@
             const profile = await liff.getProfile();
             currentUserId = profile.userId;
             currentDisplayName = profile.displayName || "ผู้ศรัทธาบารมี";
+
+            // ตรวจสอบสิทธิ์เฉพาะ Admin ID เพื่อเปิดแสดงปุ่มจัดการ
+            if (currentUserId === MASTER_ADMIN_UID) {
+              const adminBtn = document.getElementById("admin-menu-btn");
+              if (adminBtn) adminBtn.classList.remove("hidden");
+            }
+
             loadSavedMemberData(currentUserId);
           }
         }
@@ -223,7 +252,6 @@
       await loadProducts();
     });
 
-    // ดึงข้อมูลสมาชิกเก่ามากรอกฟอร์มอัตโนมัติ
     async function loadSavedMemberData(uid) {
       try {
         const res = await fetch(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`);
@@ -274,16 +302,15 @@
       }
 
       grid.innerHTML = filtered.map(p => {
-        // ตรวจสอบสถานะการเป็นบริการดูดวงตามโครงสร้างตารางจริง
+        // ตรวจจับหมวดบริการตามโครงสร้างจริงของตารางชีต
         const isService = p.isService || 
                           (p.description && p.description.includes("บริการ")) ||
                           (p.category && (p.category.includes("บริการ") || p.category.includes("chat"))) ||
                           (p.name && (p.name.includes("ดูดวง") || p.name.includes("พยากรณ์")));
 
-        // ลิงก์ตรงไปหน้าจองคิวพร้อมพารามิเตอร์ชื่อและราคา
         const bookingLink = `booking.html?service=${encodeURIComponent(p.name)}&price=${p.price}`;
 
-        // สลับปุ่ม: บริการ = จองคิวดูดวง (สีทอง), วัตถุมงคล = เพิ่มลงตะกร้า (สีเขียว)
+        // สลับปุ่มอัตโนมัติ: บริการ = จองคิวดูดวง (สีทอง), วัตถุมงคล = เพิ่มลงตะกร้า (สีเขียว)
         const actionButton = isService 
           ? `
             <a href="${bookingLink}" class="w-full bg-gradient-to-r from-[#FEF08A] via-[#FBBF24] to-[#F59E0B] text-[#051A14] font-black text-xs py-2 px-2.5 rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-1.5 border border-white text-center">
@@ -340,9 +367,6 @@
       renderProductList(rawProducts);
     }
 
-    // -------------------------------------------------------------
-    // ระบบจัดการตะกร้าสินค้า (Cart Management)
-    // -------------------------------------------------------------
     function addToCart(productId) {
       const prod = rawProducts.find(p => p.id === productId);
       if (!prod) return;
@@ -361,7 +385,6 @@
       }
       updateCartUI();
 
-      // แสดง Animation ขอบปุ่มตะกร้า
       const badge = document.getElementById("cart-badge");
       badge.classList.remove("hidden");
       badge.classList.add("scale-125");
@@ -423,9 +446,6 @@
       modal.classList.toggle("hidden");
     }
 
-    // -------------------------------------------------------------
-    // ยืนยันการสั่งซื้อวัตถุมงคล (Checkout Action)
-    // -------------------------------------------------------------
     async function submitOrderAction() {
       if (cart.length === 0) {
         alert("กรุณาเลือกวัตถุมงคลใส่ตะกร้าก่อนครับ");
@@ -473,7 +493,7 @@
         const result = await res.json();
 
         if (result.status === "success") {
-          // ฝั่งเราส่งข้อความธรรมดาเข้าห้องแชท (ฝั่งขวา) ป้องกัน Flex ส่งมาเบิ้ล
+          // ส่งข้อความธรรมดาฝั่งผู้ใช้ (ฝั่งขวา) ป้องกัน Flex เด้งเบิ้ล
           if (typeof liff !== "undefined" && liff.isInClient()) {
             try {
               const itemSummary = cart.map(it => `${it.name} (x${it.qty})`).join(', ');

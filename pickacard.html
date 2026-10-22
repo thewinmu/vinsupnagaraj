@@ -133,52 +133,44 @@
       </a>
     </header>
 
-    <!-- Navigation Menu: 5 หมวดหมู่หลักแบบเต็มตา ไม่ต้องเลื่อนปัด (Responsive Layout) -->
+    <!-- Navigation Menu: 5 หมวดหมู่หลักแบบเต็มตา คลีน มินิมอล -->
     <div>
-      <div class="flex items-center justify-between mb-1.5 px-1">
+      <div class="mb-1.5 px-1">
         <span class="text-[10px] font-black tracking-wider text-radiantGold-amber uppercase">
           ✦ เลือกหมวดญาณที่ต้องการเปิดสาส์น
         </span>
-        <span id="current-sheet-label" class="text-[10px] font-bold text-nagaEmerald bg-nagaEmerald-light px-2 py-0.5 rounded-md border border-nagaEmerald/20 font-mono">
-          ชีต: pjob
-        </span>
       </div>
 
-      <!-- แถวที่ 1 (3 หมวด) + แถวที่ 2 (2 หมวด) เต็มสตรีม -->
+      <!-- แถวที่ 1 (3 หมวด) + แถวที่ 2 (2 หมวด) เต็มสตรีม ไม่รกตา -->
       <div class="grid grid-cols-6 gap-1.5" id="category-grid">
-        <!-- 1. pjob (การงาน) -->
-        <button onclick="switchCategory('job', this)" class="cat-card col-span-2 p-2 rounded-xl bg-nagaEmerald text-white border border-radiantGold shadow-md text-center transition flex flex-col items-center justify-center space-y-0.5">
-          <span class="text-xs">💼</span>
+        <!-- 1. การงาน & กิจการ -->
+        <button onclick="switchCategory('job', this)" class="cat-card col-span-2 p-2.5 rounded-xl bg-nagaEmerald text-white border border-radiantGold shadow-md text-center transition flex flex-col items-center justify-center space-y-1">
+          <span class="text-sm">💼</span>
           <span class="text-[11px] font-black leading-tight">การงาน & กิจการ</span>
-          <span class="text-[8px] opacity-80 font-mono">pjob</span>
         </button>
 
-        <!-- 2. pmoney (การเงิน) -->
-        <button onclick="switchCategory('money', this)" class="cat-card col-span-2 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
-          <span class="text-xs">💰</span>
+        <!-- 2. การเงิน & ทรัพย์ -->
+        <button onclick="switchCategory('money', this)" class="cat-card col-span-2 p-2.5 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-1 shadow-sm">
+          <span class="text-sm">💰</span>
           <span class="text-[11px] font-black leading-tight">การเงิน & ทรัพย์</span>
-          <span class="text-[8px] opacity-75 font-mono">pmoney</span>
         </button>
 
-        <!-- 3. plove (ความรัก) -->
-        <button onclick="switchCategory('love', this)" class="cat-card col-span-2 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
-          <span class="text-xs">💖</span>
+        <!-- 3. ความรัก & เมตตา -->
+        <button onclick="switchCategory('love', this)" class="cat-card col-span-2 p-2.5 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-1 shadow-sm">
+          <span class="text-sm">💖</span>
           <span class="text-[11px] font-black leading-tight">ความรัก & เมตตา</span>
-          <span class="text-[8px] opacity-75 font-mono">plove</span>
         </button>
 
-        <!-- 4. phealth (สุขภาพ) -->
-        <button onclick="switchCategory('health', this)" class="cat-card col-span-3 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
-          <span class="text-xs">🌿</span>
+        <!-- 4. สุขภาพ & ธาตุขันธ์ -->
+        <button onclick="switchCategory('health', this)" class="cat-card col-span-3 p-2.5 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-1 shadow-sm">
+          <span class="text-sm">🌿</span>
           <span class="text-[11px] font-black leading-tight">สุขภาพ & ธาตุขันธ์</span>
-          <span class="text-[8px] opacity-75 font-mono">phealth</span>
         </button>
 
-        <!-- 5. plucky (โชคลาภ) -->
-        <button onclick="switchCategory('lucky', this)" class="cat-card col-span-3 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
-          <span class="text-xs">🎲</span>
+        <!-- 5. โชคลาภ & วาสนา -->
+        <button onclick="switchCategory('lucky', this)" class="cat-card col-span-3 p-2.5 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-1 shadow-sm">
+          <span class="text-sm">🎲</span>
           <span class="text-[11px] font-black leading-tight">โชคลาภ & วาสนา</span>
-          <span class="text-[8px] opacity-75 font-mono">plucky</span>
         </button>
       </div>
     </div>
@@ -219,7 +211,7 @@
           <div class="flex justify-between text-[8px] text-radiantGold-amber font-bold"><span>✦</span><span>✦</span></div>
         </div>
 
-        <!-- ไพ่ประธานใบบนสุด (The Crown Naga Card) คมชัด มีมิติ -->
+        <!-- ไพ่ประธานใบบนสุด (The Crown Naga Card) -->
         <div id="deck-card-main" class="absolute w-40 h-60 rounded-3xl border-2 border-radiantGold-border bg-gradient-to-b from-white via-creamPearl to-[#EEF5F1] shadow-gloss-shadow flex flex-col justify-between p-3.5 z-10">
           <div class="flex justify-between items-center text-[9px] text-radiantGold-amber font-bold">
             <span>✧ ॐ ✧</span>
@@ -412,7 +404,7 @@
       "lucky": "plucky"
     };
 
-    // คลังพระมนต์ตราและพรเสริมมงคลอลังการ (สำหรับวรรคสุดท้ายที่ระบบออกแบบให้)
+    // คลังพระมนต์ตราและพรเสริมมงคลอลังการ
     const mysticBlessings = [
       {
         mantra: "กายะวาจาจิตตัง อะหังวันทา นาคาธิบดีศรีสุทโธ วิสุทธิเทวาปูเชมิ",
@@ -460,9 +452,6 @@
       });
       btn.classList.add("bg-nagaEmerald", "text-white", "shadow-md");
       btn.classList.remove("bg-white", "text-nagaEmerald", "shadow-sm");
-
-      const targetTab = sheetTabNames[cat] || "pjob";
-      document.getElementById("current-sheet-label").innerText = `ชีต: ${targetTab}`;
 
       resetToDeckArena();
       fetchCards(cat);

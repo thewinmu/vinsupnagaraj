@@ -47,7 +47,6 @@
       box-shadow: 0 0 12px rgba(250, 204, 21, 0.25);
     }
 
-    /* ปุ่มเลือกรอบเวลา */
     .slot-btn {
       background: rgba(2, 30, 24, 0.8);
       border: 1px solid rgba(250, 204, 21, 0.25);
@@ -89,10 +88,6 @@
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(202, 138, 4, 0.6);
     }
-    .btn-pearl-action:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
   </style>
 </head>
 <body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-36">
@@ -123,16 +118,15 @@
     </div>
   </header>
 
-  <!-- หัวข้อหลัก -->
+  <!-- Title -->
   <div class="text-center mb-4">
     <h2 class="text-xl font-extrabold text-amber-200 mb-1">จองคิวตรวจดวงชะตา</h2>
     <p class="text-xs text-emerald-300/80 font-light">เลือกรอบเวลาที่สะดวก • ปรึกษาพูดคุยสบายใจแบบวันต่อวัน</p>
   </div>
 
-  <!-- 1. กล่องฟอร์มจองคิว -->
+  <!-- Booking Form -->
   <div id="booking-box" class="lux-glass-box rounded-3xl p-5 space-y-4">
     
-    <!-- เลือกแพ็กเกจบริการ -->
     <div>
       <label class="block text-xs font-bold text-amber-300 mb-1.5">1. เลือกแพ็กเกจเวลาที่ต้องการปรึกษา</label>
       <select id="service-select" onchange="onServiceChange()" class="custom-input w-full p-3 rounded-2xl text-xs focus:outline-none">
@@ -141,13 +135,11 @@
       <div id="service-desc" class="text-[10px] text-emerald-200/70 mt-1 font-light px-1"></div>
     </div>
 
-    <!-- เลือกวันที่ -->
     <div>
       <label class="block text-xs font-bold text-amber-300 mb-1.5">2. เลือกวันที่สะดวก</label>
       <input type="date" id="booking-date" onchange="onDateChange()" class="custom-input w-full p-3 rounded-2xl text-xs cursor-pointer focus:outline-none">
     </div>
 
-    <!-- เลือกรอบเวลา -->
     <div>
       <div class="flex justify-between items-center mb-1.5">
         <label class="text-xs font-bold text-amber-300">3. เลือกรอบเวลาที่ว่าง</label>
@@ -160,7 +152,6 @@
       </div>
     </div>
 
-    <!-- สรุปราคาและปุ่มยืนยัน -->
     <div class="pt-3 border-t border-amber-400/20">
       <div class="flex justify-between items-center mb-3">
         <span class="text-xs text-slate-300 font-light">ค่าบริการ / ค่าครู:</span>
@@ -174,7 +165,7 @@
 
   </div>
 
-  <!-- 2. กล่องใบแจ้งยอดสำรอง (กรณีเปิดนอก LINE) -->
+  <!-- Fallback Invoice Box -->
   <div id="invoice-box" class="lux-glass-box rounded-3xl p-5 space-y-4 hidden">
     <div class="text-center">
       <div class="text-3xl mb-1">🙏</div>
@@ -201,7 +192,6 @@
       </div>
     </div>
 
-    <!-- ช่องทางโอนเงิน: เลขบัญชี 2251495656 คงที่แน่นอน ไม่ขึ้น undefined -->
     <div class="bg-emerald-950/70 p-3.5 rounded-2xl border border-amber-300/30 text-xs space-y-2">
       <div class="text-[11px] text-slate-300">ช่องทางการโอนเงิน:</div>
       <div class="flex justify-between items-center">
@@ -230,7 +220,7 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation 2 แถวแบบคงที่ ไม่เลื่อน ไม่ตาลาย -->
+  <!-- Bottom Nav 2 Rows -->
   <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
     <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
       <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
@@ -349,7 +339,6 @@
           document.getElementById("slot-loading").classList.add("hidden");
 
           if (res.status === "success" && res.slots && res.slots.length > 0) {
-            // กรองคำว่า BOOKING_STATUS ออก
             const cleanSlots = res.slots.filter(s => {
               const t = String(s.time || "").trim();
               return t && !t.includes("BOOKING") && !t.includes("STATUS");
@@ -390,7 +379,6 @@
       buttonElement.classList.add("selected");
     }
 
-    // ฟังก์ชันกดยืนยันการนัดหมายและพิมพ์ส่งเข้าแชท LINE ทันที
     function submitBooking() {
       const select = document.getElementById("service-select");
       const service = availableServices.find(s => s.id === select.value);
@@ -422,7 +410,6 @@
           if (res.status === "success") {
             const bookingId = res.bookingId;
 
-            // ข้อความที่จะพิมพ์ส่งตอบรับในห้องแชท LINE เป็นหลัก
             const bookingChatMessages = [
               {
                 type: "text",
@@ -441,11 +428,10 @@
               }
             ];
 
-            // ส่งเข้าห้องแชทและปิดหน้าต่าง LIFF กลับสู่ห้องแชททันที
             if (typeof liff !== "undefined" && liff.isInClient()) {
               liff.sendMessages(bookingChatMessages)
                 .then(() => {
-                  liff.closeWindow(); // ปิดกลับเข้าห้องแชท LINE ทันที
+                  liff.closeWindow();
                 })
                 .catch(() => {
                   showInvoiceFallback(res);

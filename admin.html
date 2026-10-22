@@ -16,7 +16,7 @@
 <body class="min-h-screen p-3 sm:p-6 pb-20">
 
   <div class="max-w-7xl mx-auto space-y-4">
-    <!-- Master Header -->
+    <!-- Header -->
     <header class="glass-box rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-xl">
       <div class="flex items-center space-x-3">
         <span class="text-3xl">🐍</span>
@@ -35,7 +35,7 @@
       </div>
     </header>
 
-    <!-- Overview Metrics Cards -->
+    <!-- Metrics Cards -->
     <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
       <div class="glass-box p-3 rounded-2xl border-l-4 border-l-[#FBBF24]">
         <span class="text-[10px] text-stone-400 font-bold block">สมาชิก (member)</span>
@@ -83,13 +83,9 @@
 
       <div class="overflow-x-auto max-h-[65vh]">
         <table class="w-full text-left text-xs">
-          <thead id="table-head" class="bg-black/60 text-stone-300 border-b border-white/10 sticky top-0 backdrop-blur-md">
-            <!-- Headers render dynamically -->
-          </thead>
+          <thead id="table-head" class="bg-black/60 text-stone-300 border-b border-white/10 sticky top-0 backdrop-blur-md"></thead>
           <tbody id="table-body" class="divide-y divide-white/5">
-            <tr>
-              <td class="p-8 text-center text-stone-400">กำลังประสานฐานข้อมูล...</td>
-            </tr>
+            <tr><td class="p-8 text-center text-stone-400">กำลังประสานฐานข้อมูล...</td></tr>
           </tbody>
         </table>
       </div>
@@ -118,9 +114,7 @@
           document.getElementById("stat-products").innerText = data.summary.productsCount;
           document.getElementById("stat-kru").innerText = data.summary.kruCardsCount;
         }
-      } catch (e) {
-        console.warn("Summary Load Error:", e);
-      }
+      } catch (e) {}
     }
 
     function switchTab(tabName) {
@@ -151,13 +145,12 @@
           currentHeaders = data.headers || [];
           currentRawData = data.rows || [];
           document.getElementById("row-count-badge").innerText = `${currentRawData.length} รายการ`;
-
           renderTable(currentHeaders, currentRawData);
         } else {
-          tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">เกิดข้อผิดพลาด: ${data.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">ข้อผิดพลาด: ${data.message}</td></tr>`;
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">สายสัญญาณขัดข้อง ไม่สามารถเชื่อมต่อตารางได้</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">สายสัญญาณขัดข้อง</td></tr>`;
       }
     }
 
@@ -171,7 +164,6 @@
         return;
       }
 
-      // Render Headers
       thead.innerHTML = `<tr>
         <th class="p-3 text-[10px] font-bold text-stone-400"># แถว</th>
         ${headers.map(h => `<th class="p-3 text-stone-200 font-bold whitespace-nowrap">${h}</th>`).join('')}
@@ -183,13 +175,10 @@
         return;
       }
 
-      // Render Rows
       tbody.innerHTML = rows.map(r => {
         return `<tr class="hover:bg-white/5 transition">
           <td class="p-3 text-[10px] text-stone-400 font-mono">${r.rowIndex}</td>
-          ${r.values.map((val, idx) => {
-            return `<td class="p-3 text-stone-300 max-w-xs truncate font-medium">${val || '-'}</td>`;
-          }).join('')}
+          ${r.values.map(val => `<td class="p-3 text-stone-300 max-w-xs truncate font-medium">${val || '-'}</td>`).join('')}
           <td class="p-3 text-center whitespace-nowrap">
             ${getActionButtons(activeTab, r)}
           </td>
@@ -232,7 +221,7 @@
           alert("ข้อผิดพลาด: " + data.message);
         }
       } catch (e) {
-        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่");
+        alert("สายสัญญาณขัดข้อง");
       }
     }
 
@@ -242,9 +231,7 @@
         renderTable(currentHeaders, currentRawData);
         return;
       }
-      const filtered = currentRawData.filter(r => {
-        return r.values.some(v => String(v).toLowerCase().includes(q));
-      });
+      const filtered = currentRawData.filter(r => r.values.some(v => String(v).toLowerCase().includes(q)));
       renderTable(currentHeaders, filtered);
     }
   </script>

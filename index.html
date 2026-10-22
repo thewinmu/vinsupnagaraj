@@ -92,7 +92,55 @@
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="min-h-screen pb-28">
+<body class="min-h-screen pb-28"> <!-- ปุ่มสวิตช์ลอยตัวมุมขวาล่าง -->
+<button id="theme-switch-btn" onclick="toggleNextTheme()" class="fixed bottom-20 right-4 z-50 p-3 rounded-full bg-black/60 border border-[#FBBF24] text-white shadow-lg backdrop-blur-md active:scale-90 transition-all flex items-center gap-2">
+  <span class="text-lg">🎨</span>
+  <span id="current-theme-name" class="text-[10px] font-bold text-[#FBBF24] pr-1">มรกตสุวรรณภูมิ</span>
+</button>
+
+<script>
+  // รายชื่อ 8 สกินมงคลนาคราช
+  const THEME_LIST = [
+    { id: "emerald_gold", name: "มรกตสุวรรณภูมิ", bg: "radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%)", text: "#F3F4F6" },
+    { id: "obsidian_night", name: "มณีรัตน์ราตรี", bg: "radial-gradient(circle at 50% 0%, #0D2B23 0%, #071612 60%, #030A08 100%)", text: "#F3F4F6" },
+    { id: "pearl_platinum", name: "เพชรนาคินทร์ไข่มุก", bg: "radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF8F5 45%, #EAF2EE 100%)", text: "#0E1310" },
+    { id: "solar_bronze", name: "สุริยันจันทราคราช", bg: "radial-gradient(circle at 50% 0%, #2D220B 0%, #1E1606 60%, #0F0A02 100%)", text: "#F3F4F6" },
+    { id: "lotus_ruby", name: "นาคีบงกชแก้ว", bg: "radial-gradient(circle at 50% 0%, #2A1620 0%, #1A0F14 60%, #0D060A 100%)", text: "#F3F4F6" },
+    { id: "deep_sea_sapphire", name: "สมุทรนพรัตน์", bg: "radial-gradient(circle at 50% 0%, #0C2B3B 0%, #061A24 60%, #020D13 100%)", text: "#F3F4F6" },
+    { id: "crimson_ruby", name: "เพลิงสุวรรณกาล", bg: "radial-gradient(circle at 50% 0%, #2B1212 0%, #180A0A 60%, #0B0404 100%)", text: "#F3F4F6" },
+    { id: "imperial_diamond", name: "มหาจักรพรรดิรัตน", bg: "radial-gradient(circle at 50% 0%, #161F2C 0%, #0D1117 60%, #05080C 100%)", text: "#F3F4F6" }
+  ];
+
+  // ฟังก์ชันสลับธีมเมื่อกดปุ่ม
+  function toggleNextTheme() {
+    let currentId = localStorage.getItem("vinsup_theme_id") || "emerald_gold";
+    let currentIndex = THEME_LIST.findIndex(t => t.id === currentId);
+    let nextIndex = (currentIndex + 1) % THEME_LIST.length; // วนกลับมาตัวแรก
+    let nextTheme = THEME_LIST[nextIndex];
+
+    applyTheme(nextTheme.id);
+  }
+
+  // ฟังก์ชันปรับใช้ธีม
+  function applyTheme(themeId) {
+    const theme = THEME_LIST.find(t => t.id === themeId) || THEME_LIST[0];
+    localStorage.setItem("vinsup_theme_id", theme.id);
+
+    // ปรับพื้นหลังและสีตัวอักษร
+    document.body.style.background = theme.bg;
+    document.body.style.color = theme.text;
+
+    // อัปเดตชื่อบนปุ่มสวิตช์
+    const label = document.getElementById("current-theme-name");
+    if (label) label.innerText = theme.name;
+  }
+
+  // โหลดธีมเดิมที่เคยเซฟไว้ทันทีที่เปิดหน้า
+  window.addEventListener("DOMContentLoaded", () => {
+    let savedThemeId = localStorage.getItem("vinsup_theme_id") || "emerald_gold";
+    applyTheme(savedThemeId);
+  });
+</script>
 
   <!-- Top Navigation Header -->
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-radiantGold-border/40 shadow-sm px-4 py-3">

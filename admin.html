@@ -3,59 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - วินทร์ทรัพย์นาคราช</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Admin Control Master - วินทร์ทรัพย์นาคราช</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>body { font-family: 'Prompt', sans-serif; }</style>
+  <style>
+    body { font-family: 'Prompt', sans-serif; background: #04120D; color: #F3F4F6; }
+    .glass-box { background: rgba(8, 38, 30, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(230, 202, 101, 0.35); }
+    .tab-active { background: linear-gradient(135deg, #105B43 0%, #063828 100%); border-color: #FBBF24; color: #FEF08A; font-weight: 800; }
+  </style>
 </head>
-<body class="bg-[#05140F] text-stone-100 min-h-screen p-4 sm:p-6">
+<body class="min-h-screen p-3 sm:p-6 pb-20">
 
-  <div class="max-w-5xl mx-auto space-y-5">
-    <!-- Header Admin -->
-    <div class="flex items-center justify-between border-b border-[#E6CA65]/30 pb-4">
+  <div class="max-w-7xl mx-auto space-y-4">
+    <!-- Master Header -->
+    <header class="glass-box rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-xl">
       <div class="flex items-center space-x-3">
         <span class="text-3xl">🐍</span>
         <div>
-          <h1 class="text-base font-black text-[#FBBF24] uppercase tracking-wider">ระบบจัดการหลังบ้าน (Admin Console)</h1>
-          <p class="text-xs text-stone-400">SHOP@วินทร์ทรัพย์นาคราช</p>
+          <h1 class="text-base sm:text-lg font-black text-[#FBBF24] uppercase tracking-wider flex items-center gap-2">
+            <span>วินทร์ทรัพย์นาคราช</span>
+            <span class="text-[10px] bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/40">ADMIN CONTROL</span>
+          </h1>
+          <p class="text-xs text-stone-400">ควบคุมระบบทุกหน้า ทุกแท็บฐานข้อมูล (member, orders, bookings, products, psarnkru, settings)</p>
         </div>
       </div>
-      <button onclick="loadAllMembers()" class="bg-[#105B43] border border-[#FBBF24] text-white px-4 py-2 rounded-xl text-xs font-bold hover:brightness-125 transition flex items-center gap-1.5">
-        <span>🔄</span> รีเฟรชข้อมูลสมาชิก
-      </button>
-    </div>
+      <div class="flex items-center gap-2">
+        <button onclick="refreshCurrentTab()" class="bg-[#105B43] border border-[#FBBF24] text-white px-3.5 py-1.5 rounded-xl text-xs font-bold hover:brightness-125 transition flex items-center gap-1.5">
+          <span>🔄</span> รีเฟรชข้อมูล
+        </button>
+      </div>
+    </header>
 
-    <!-- Stats Bar -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="bg-[#0D2B23] p-4 rounded-2xl border border-[#E6CA65]/30">
-        <span class="text-[10px] text-stone-400 block font-bold">จำนวนสมาชิกทั้งหมด</span>
-        <span id="stat-member-count" class="text-xl font-black text-[#FBBF24]">0</span>
+    <!-- Overview Metrics Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-[#FBBF24]">
+        <span class="text-[10px] text-stone-400 font-bold block">สมาชิก (member)</span>
+        <span id="stat-members" class="text-lg font-black text-white">0</span>
+      </div>
+      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-emerald-400">
+        <span class="text-[10px] text-stone-400 font-bold block">คำสั่งซื้อ (orders)</span>
+        <span id="stat-orders" class="text-lg font-black text-emerald-400">0</span>
+      </div>
+      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-amber-400">
+        <span class="text-[10px] text-stone-400 font-bold block">นัดหมายดูดวง (bookings)</span>
+        <span id="stat-bookings" class="text-lg font-black text-amber-300">0</span>
+      </div>
+      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-cyan-400">
+        <span class="text-[10px] text-stone-400 font-bold block">สินค้า/บริการ (products)</span>
+        <span id="stat-products" class="text-lg font-black text-cyan-300">0</span>
+      </div>
+      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-purple-400">
+        <span class="text-[10px] text-stone-400 font-bold block">สาส์นบรมครู (psarnkru)</span>
+        <span id="stat-kru" class="text-lg font-black text-purple-300">0</span>
       </div>
     </div>
 
-    <!-- ตารางรายชื่อสมาชิก (Member Table) -->
-    <div class="bg-[#0D2B23] rounded-2xl border border-[#E6CA65]/40 overflow-hidden shadow-2xl">
-      <div class="p-4 border-b border-white/10 flex justify-between items-center">
-        <h2 class="text-xs font-black text-[#FBBF24] uppercase">รายชื่อสมาชิกในระบบ (ชีต member)</h2>
-        <span id="load-status" class="text-[10px] text-stone-400">พร้อมดึงข้อมูล</span>
+    <!-- Navigation Tabs -->
+    <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs font-medium hide-scrollbar">
+      <button onclick="switchTab('member')" id="tab-btn-member" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap tab-active">👤 สมาชิก (member)</button>
+      <button onclick="switchTab('orders')" id="tab-btn-orders" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">📦 ออเดอร์ (orders)</button>
+      <button onclick="switchTab('bookings')" id="tab-btn-bookings" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">📞 คิวดูดวง (bookings)</button>
+      <button onclick="switchTab('products')" id="tab-btn-products" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">💎 สินค้า & บริการ (products)</button>
+      <button onclick="switchTab('psarnkru')" id="tab-btn-psarnkru" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">👑 สาส์นบรมครู (psarnkru)</button>
+      <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">⚙️ ตั้งค่าระบบ (settings)</button>
+    </div>
+
+    <!-- Data Table Container -->
+    <div class="glass-box rounded-2xl overflow-hidden shadow-2xl border border-[#E6CA65]/30">
+      <div class="p-3.5 border-b border-white/10 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center space-x-2">
+          <span id="current-tab-title" class="text-xs font-black text-[#FBBF24] uppercase">ตาราง: member</span>
+          <span id="row-count-badge" class="text-[10px] bg-black/40 px-2 py-0.5 rounded-full text-stone-300">0 รายการ</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="table-search" oninput="filterTable()" placeholder="ค้นหาข้อมูลในตาราง..." class="text-xs bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#FBBF24] text-white">
+        </div>
       </div>
 
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto max-h-[65vh]">
         <table class="w-full text-left text-xs">
-          <thead class="bg-black/40 text-stone-300 border-b border-white/10">
-            <tr>
-              <th class="p-3">รหัสสมาชิก</th>
-              <th class="p-3">ชื่อ - นามสกุล</th>
-              <th class="p-3">เบอร์โทรศัพท์</th>
-              <th class="p-3">ที่อยู่จัดส่ง</th>
-              <th class="p-3">วรรณะบารมี</th>
-              <th class="p-3">ทรัพย์มณี</th>
-              <th class="p-3">วันที่ลงทะเบียน</th>
-            </tr>
+          <thead id="table-head" class="bg-black/60 text-stone-300 border-b border-white/10 sticky top-0 backdrop-blur-md">
+            <!-- Headers render dynamically -->
           </thead>
-          <tbody id="member-table-body" class="divide-y divide-white/5">
+          <tbody id="table-body" class="divide-y divide-white/5">
             <tr>
-              <td colspan="7" class="p-6 text-center text-stone-400">กำลังโหลดรายชื่อสมาชิก...</td>
+              <td class="p-8 text-center text-stone-400">กำลังประสานฐานข้อมูล...</td>
             </tr>
           </tbody>
         </table>
@@ -65,48 +98,154 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+    let activeTab = "member";
+    let currentRawData = [];
+    let currentHeaders = [];
 
-    window.addEventListener("DOMContentLoaded", loadAllMembers);
+    window.addEventListener("DOMContentLoaded", () => {
+      loadOverviewStats();
+      loadTabData(activeTab);
+    });
 
-    async function loadAllMembers() {
-      const statusEl = document.getElementById("load-status");
-      const tbody = document.getElementById("member-table-body");
-      statusEl.innerText = "กำลังประสานฐานข้อมูล...";
+    async function loadOverviewStats() {
+      try {
+        const res = await fetch(`${API_URL}?action=admin_get_all_summary`);
+        const data = await res.json();
+        if (data.status === "success" && data.summary) {
+          document.getElementById("stat-members").innerText = data.summary.membersCount;
+          document.getElementById("stat-orders").innerText = data.summary.ordersCount;
+          document.getElementById("stat-bookings").innerText = data.summary.bookingsCount;
+          document.getElementById("stat-products").innerText = data.summary.productsCount;
+          document.getElementById("stat-kru").innerText = data.summary.kruCardsCount;
+        }
+      } catch (e) {
+        console.warn("Summary Load Error:", e);
+      }
+    }
+
+    function switchTab(tabName) {
+      activeTab = tabName;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("tab-active"));
+      const btn = document.getElementById(`tab-btn-${tabName}`);
+      if (btn) btn.classList.add("tab-active");
+
+      document.getElementById("current-tab-title").innerText = `ตาราง: ${tabName}`;
+      loadTabData(tabName);
+    }
+
+    function refreshCurrentTab() {
+      loadOverviewStats();
+      loadTabData(activeTab);
+    }
+
+    async function loadTabData(tabName) {
+      const tbody = document.getElementById("table-body");
+      const thead = document.getElementById("table-head");
+      tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-stone-400">กำลังดึงข้อมูลแท็บ ${tabName}...</td></tr>`;
 
       try {
-        const res = await fetch(`${API_URL}?action=get_all_members`);
+        const res = await fetch(`${API_URL}?action=admin_get_tab_data&tabName=${tabName}`);
         const data = await res.json();
 
-        if (data.status === "success" && data.members) {
-          document.getElementById("stat-member-count").innerText = data.count || data.members.length;
-          
-          if (data.members.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-stone-400">ยังไม่มีข้อมูลสมาชิกในชีต member</td></tr>`;
-            statusEl.innerText = "ไม่พบสมาชิก";
-            return;
-          }
+        if (data.status === "success") {
+          currentHeaders = data.headers || [];
+          currentRawData = data.rows || [];
+          document.getElementById("row-count-badge").innerText = `${currentRawData.length} รายการ`;
 
-          tbody.innerHTML = data.members.map(m => `
-            <tr class="hover:bg-white/5 transition">
-              <td class="p-3 font-mono font-bold text-[#FBBF24]">${m.memberCode || '-'}</td>
-              <td class="p-3 font-bold text-white">${m.name || '-'}</td>
-              <td class="p-3 text-stone-300">${m.phone || '-'}</td>
-              <td class="p-3 text-stone-300 max-w-xs truncate">${m.address || '-'}</td>
-              <td class="p-3 text-emerald-300 font-bold">${m.privilege || 'วรรณะนาคา'}</td>
-              <td class="p-3 text-[#FBBF24] font-bold">฿${Number(m.balance || 0).toLocaleString()}</td>
-              <td class="p-3 text-stone-400 font-mono text-[10px]">${m.registerDate || '-'}</td>
-            </tr>
-          `).join("");
-
-          statusEl.innerText = `โหลดสำเร็จ (${data.members.length} ท่าน)`;
+          renderTable(currentHeaders, currentRawData);
         } else {
-          tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-400">โหลดไม่สำเร็จ: ${data.message || ''}</td></tr>`;
-          statusEl.innerText = "เกิดข้อผิดพลาด";
+          tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">เกิดข้อผิดพลาด: ${data.message}</td></tr>`;
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-400">สายสัญญาณขัดข้อง ไม่สามารถเชื่อมต่อ API ได้</td></tr>`;
-        statusEl.innerText = "เชื่อมต่อล้มเหลว";
+        tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">สายสัญญาณขัดข้อง ไม่สามารถเชื่อมต่อตารางได้</td></tr>`;
       }
+    }
+
+    function renderTable(headers, rows) {
+      const thead = document.getElementById("table-head");
+      const tbody = document.getElementById("table-body");
+
+      if (headers.length === 0) {
+        thead.innerHTML = "";
+        tbody.innerHTML = `<tr><td class="p-8 text-center text-stone-400">แท็บนี้ยังไม่มีข้อมูล</td></tr>`;
+        return;
+      }
+
+      // Render Headers
+      thead.innerHTML = `<tr>
+        <th class="p-3 text-[10px] font-bold text-stone-400"># แถว</th>
+        ${headers.map(h => `<th class="p-3 text-stone-200 font-bold whitespace-nowrap">${h}</th>`).join('')}
+        <th class="p-3 text-stone-200 font-bold text-center">การจัดการ</th>
+      </tr>`;
+
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${headers.length + 2}" class="p-8 text-center text-stone-400">ไม่มีรายการในแท็บนี้</td></tr>`;
+        return;
+      }
+
+      // Render Rows
+      tbody.innerHTML = rows.map(r => {
+        return `<tr class="hover:bg-white/5 transition">
+          <td class="p-3 text-[10px] text-stone-400 font-mono">${r.rowIndex}</td>
+          ${r.values.map((val, idx) => {
+            return `<td class="p-3 text-stone-300 max-w-xs truncate font-medium">${val || '-'}</td>`;
+          }).join('')}
+          <td class="p-3 text-center whitespace-nowrap">
+            ${getActionButtons(activeTab, r)}
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function getActionButtons(tab, row) {
+      if (tab === "orders") {
+        return `<button onclick="quickUpdateStatus('orders', ${row.rowIndex}, 9, 'ชำระเงินแล้ว')" class="bg-emerald-800/80 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold mr-1">ชำระแล้ว</button>
+                <button onclick="quickUpdateStatus('orders', ${row.rowIndex}, 11, 'จัดส่งแล้ว')" class="bg-cyan-800/80 hover:bg-cyan-700 text-white px-2 py-1 rounded text-[10px] font-bold">ส่งแล้ว</button>`;
+      }
+      if (tab === "bookings") {
+        return `<button onclick="quickUpdateStatus('bookings', ${row.rowIndex}, 7, 'ยืนยันนัดหมายแล้ว')" class="bg-emerald-800/80 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold mr-1">ยืนยันคิว</button>
+                <button onclick="quickUpdateStatus('bookings', ${row.rowIndex}, 7, 'ยกเลิก')" class="bg-red-800/80 hover:bg-red-700 text-white px-2 py-1 rounded text-[10px] font-bold">ยกเลิก</button>`;
+      }
+      return `<span class="text-stone-500 text-[10px]">บันทึกอัตโนมัติ</span>`;
+    }
+
+    async function quickUpdateStatus(tab, rowIndex, colIndex, statusValue) {
+      if (!confirm(`ยืนยันการปรับสถานะเป็น "${statusValue}" หรือไม่?`)) return;
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "admin_update_status",
+            tabName: tab,
+            rowIndex: rowIndex,
+            colIndex: colIndex,
+            statusValue: statusValue
+          })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("✅ อัปเดตสถานะสำเร็จ!");
+          loadTabData(tab);
+        } else {
+          alert("ข้อผิดพลาด: " + data.message);
+        }
+      } catch (e) {
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่");
+      }
+    }
+
+    function filterTable() {
+      const q = document.getElementById("table-search").value.toLowerCase();
+      if (!q) {
+        renderTable(currentHeaders, currentRawData);
+        return;
+      }
+      const filtered = currentRawData.filter(r => {
+        return r.values.some(v => String(v).toLowerCase().includes(q));
+      });
+      renderTable(currentHeaders, filtered);
     }
   </script>
 </body>

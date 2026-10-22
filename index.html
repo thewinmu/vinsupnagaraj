@@ -11,7 +11,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
+<script>
+  // โค้ดดึงสกินจาก Admin
+  (function applyActiveTheme() {
+    const themeMap = {
+      "emerald_gold": { bg: "radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%)", text: "#F3F4F6" },
+      "obsidian_night": { bg: "radial-gradient(circle at 50% 0%, #0D2B23 0%, #071612 60%, #030A08 100%)", text: "#F3F4F6" },
+      "pearl_platinum": { bg: "radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF8F5 45%, #EAF2EE 100%)", text: "#0E1310" },
+      "solar_bronze": { bg: "radial-gradient(circle at 50% 0%, #2D220B 0%, #1E1606 60%, #0F0A02 100%)", text: "#F3F4F6" },
+      "lotus_ruby": { bg: "radial-gradient(circle at 50% 0%, #2A1620 0%, #1A0F14 60%, #0D060A 100%)", text: "#F3F4F6" },
+      "deep_sea_sapphire": { bg: "radial-gradient(circle at 50% 0%, #0C2B3B 0%, #061A24 60%, #020D13 100%)", text: "#F3F4F6" },
+      "crimson_ruby": { bg: "radial-gradient(circle at 50% 0%, #2B1212 0%, #180A0A 60%, #0B0404 100%)", text: "#F3F4F6" },
+      "imperial_diamond": { bg: "radial-gradient(circle at 50% 0%, #161F2C 0%, #0D1117 60%, #05080C 100%)", text: "#F3F4F6" }
+    };
+    const saved = localStorage.getItem("vinsup_theme_id") || "emerald_gold";
+    const selected = themeMap[saved] || themeMap["emerald_gold"];
+    document.documentElement.style.setProperty('--main-bg', selected.bg);
+  })();
+</script>
   <script>
     tailwind.config = {
       theme: {

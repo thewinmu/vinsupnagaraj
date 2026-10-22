@@ -1,16 +1,540 @@
-// ระบบสุ่มแท้จริง (Fisher-Yates Crypto Shuffle)
-    function shuffleArray(array) {
-      let m = array.length, t, i;
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>สาส์นนำทางออราเคิลนาคราช - วินทร์ทรัพย์นาคราช</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            nagaEmerald: {
+              DEFAULT: '#0B4734',
+              deep: '#052A1F',
+              glow: '#0E6B4E',
+              light: '#EBF4F0'
+            },
+            creamPearl: {
+              DEFAULT: '#FDFBF7',
+              surface: '#FFFFFF',
+              dark: '#F5EFEB'
+            },
+            obsidianGloss: {
+              DEFAULT: '#0B0F0D',
+              card: '#131A16',
+              border: '#1F2B24'
+            },
+            radiantGold: {
+              light: '#FEF08A',
+              DEFAULT: '#F59E0B',
+              bright: '#FBBF24',
+              amber: '#D97706',
+              border: '#E6CA65'
+            }
+          },
+          boxShadow: {
+            'card-float': '0 20px 40px -10px rgba(5, 42, 31, 0.25)',
+            'gold-aura': '0 0 30px rgba(245, 158, 11, 0.5)',
+            'gloss-shadow': '0 15px 35px rgba(11, 15, 13, 0.5)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF7F2 40%, #E8F2ED 100%);
+      color: #0B0F0D;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    .glass-pearl {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(230, 202, 101, 0.65);
+    }
+
+    /* แอนิเมชันสับไพ่และแสงออร่าเวทมนตร์ */
+    @keyframes shuffleLeft {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      30% { transform: translate(-65px, -15px) rotate(-16deg) scale(1.06); }
+      60% { transform: translate(-35px, 20px) rotate(-8deg) scale(0.98); z-index: 10; }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    }
+    @keyframes shuffleRight {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      30% { transform: translate(65px, 15px) rotate(16deg) scale(1.06); }
+      60% { transform: translate(35px, -20px) rotate(8deg) scale(0.98); z-index: 20; }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    }
+    @keyframes holyPulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 0.9; transform: scale(1.1); filter: drop-shadow(0 0 15px #FBBF24); }
+    }
+    @keyframes mysticFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .shuffling-left { animation: shuffleLeft 0.55s ease-in-out infinite alternate; }
+    .shuffling-right { animation: shuffleRight 0.55s ease-in-out infinite alternate; }
+    .aura-glow { animation: holyPulse 2.8s ease-in-out infinite; }
+    .mystic-float { animation: mysticFloat 3s ease-in-out infinite; }
+
+    .card-tap-effect {
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .card-tap-effect:hover, .card-tap-effect:active {
+      transform: translateY(-12px) scale(1.04);
+      box-shadow: 0 20px 35px -5px rgba(11, 71, 52, 0.35), 0 0 20px rgba(245, 158, 11, 0.5);
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen pb-24 p-3.5 flex flex-col justify-between max-w-md mx-auto">
+
+  <main class="w-full space-y-3">
+    <!-- Top Header: วินทร์ทรัพย์นาคราช -->
+    <header class="glass-pearl rounded-2xl p-3 shadow-sm flex items-center justify-between border border-radiantGold-border/70">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald p-0.5 border border-radiantGold-border flex items-center justify-center shadow-gloss-shadow">
+          <!-- ตราเศียรพญานาคราชสีทองเรืองแสง -->
+          <svg class="w-6 h-6 text-radiantGold-light" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M32 6C28 12 24 18 24 24C24 28 27 31 30 32C26 35 22 39 22 46C22 52 26 58 32 58C38 58 42 52 42 46C42 39 38 35 34 32C37 31 40 28 40 24C40 18 36 12 32 6Z" fill="currentColor" fill-opacity="0.2"/>
+            <circle cx="32" cy="18" r="2.5" fill="#FBBF24"/>
+            <path d="M22 28C18 32 16 38 18 44"/>
+            <path d="M42 28C46 32 48 38 46 44"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xs font-black tracking-widest text-radiantGold-amber uppercase leading-tight">
+            วินทร์ทรัพย์นาคราช
+          </h1>
+          <p class="text-[11px] font-black text-nagaEmerald">สาส์นนำทางออราเคิลญาณบารมี</p>
+        </div>
+      </div>
+      <a href="index.html" class="text-xs font-bold text-stone-600 bg-white px-3 py-1.5 rounded-xl border border-radiantGold-border/70 hover:bg-creamPearl transition shadow-sm">
+        หน้าร้าน
+      </a>
+    </header>
+
+    <!-- Navigation Menu: 5 หมวดหมู่หลักแบบเต็มตา ไม่ต้องเลื่อนปัด (Responsive Layout) -->
+    <div>
+      <div class="flex items-center justify-between mb-1.5 px-1">
+        <span class="text-[10px] font-black tracking-wider text-radiantGold-amber uppercase">
+          ✦ เลือกหมวดญาณที่ต้องการเปิดสาส์น
+        </span>
+        <span id="current-sheet-label" class="text-[10px] font-bold text-nagaEmerald bg-nagaEmerald-light px-2 py-0.5 rounded-md border border-nagaEmerald/20 font-mono">
+          ชีต: pjob
+        </span>
+      </div>
+
+      <!-- แถวที่ 1 (3 หมวด) + แถวที่ 2 (2 หมวด) เต็มสตรีม -->
+      <div class="grid grid-cols-6 gap-1.5" id="category-grid">
+        <!-- 1. pjob (การงาน) -->
+        <button onclick="switchCategory('job', this)" class="cat-card col-span-2 p-2 rounded-xl bg-nagaEmerald text-white border border-radiantGold shadow-md text-center transition flex flex-col items-center justify-center space-y-0.5">
+          <span class="text-xs">💼</span>
+          <span class="text-[11px] font-black leading-tight">การงาน & กิจการ</span>
+          <span class="text-[8px] opacity-80 font-mono">pjob</span>
+        </button>
+
+        <!-- 2. pmoney (การเงิน) -->
+        <button onclick="switchCategory('money', this)" class="cat-card col-span-2 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
+          <span class="text-xs">💰</span>
+          <span class="text-[11px] font-black leading-tight">การเงิน & ทรัพย์</span>
+          <span class="text-[8px] opacity-75 font-mono">pmoney</span>
+        </button>
+
+        <!-- 3. plove (ความรัก) -->
+        <button onclick="switchCategory('love', this)" class="cat-card col-span-2 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
+          <span class="text-xs">💖</span>
+          <span class="text-[11px] font-black leading-tight">ความรัก & เมตตา</span>
+          <span class="text-[8px] opacity-75 font-mono">plove</span>
+        </button>
+
+        <!-- 4. phealth (สุขภาพ) -->
+        <button onclick="switchCategory('health', this)" class="cat-card col-span-3 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
+          <span class="text-xs">🌿</span>
+          <span class="text-[11px] font-black leading-tight">สุขภาพ & ธาตุขันธ์</span>
+          <span class="text-[8px] opacity-75 font-mono">phealth</span>
+        </button>
+
+        <!-- 5. plucky (โชคลาภ) -->
+        <button onclick="switchCategory('lucky', this)" class="cat-card col-span-3 p-2 rounded-xl bg-white text-nagaEmerald border border-radiantGold-border/60 hover:bg-creamPearl text-center transition flex flex-col items-center justify-center space-y-0.5 shadow-sm">
+          <span class="text-xs">🎲</span>
+          <span class="text-[11px] font-black leading-tight">โชคลาภ & วาสนา</span>
+          <span class="text-[8px] opacity-75 font-mono">plucky</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- แถบสมาธิ & คำแนะนำ -->
+    <div class="glass-pearl rounded-2xl p-2.5 text-center space-y-0.5 shadow-sm border border-radiantGold-border/40">
+      <p id="stage-title" class="text-xs font-black text-obsidianGloss">✨ รวมจิตตั้งมั่น น้อมระลึกถึงบารมีพญานาคาธิบดี</p>
+      <p id="stage-desc" class="text-[10px] font-medium text-stone-500">แตะปุ่ม "เริ่มสับไพ่สายญาณ" ด้านล่าง เพื่อเชื่อมกระแสจิตและสุ่มคำทำนาย</p>
+    </div>
+
+    <!-- โซนสำรับไพ่อลังการ (Mystic Naga Deck Arena) -->
+    <div class="min-h-[280px] flex flex-col items-center justify-center relative py-2">
+
+      <!-- โหมดที่ 1: กองไพ่ใหญ่ลอยกลางอากาศ (Deck View) -->
+      <div id="deck-view" class="relative w-44 h-64 flex items-center justify-center mystic-float">
+        <!-- แสงเรืองรองสีทองออร่าพญานาค -->
+        <div class="absolute w-56 h-56 rounded-full bg-radiantGold-light/45 blur-3xl aura-glow pointer-events-none"></div>
+
+        <!-- ไพ่เงา 1 -->
+        <div id="deck-card-1" class="absolute w-40 h-60 rounded-3xl border border-radiantGold-border bg-white shadow-md flex flex-col justify-between p-3 rotate-[-6deg] -translate-x-2">
+          <div class="flex justify-between text-[8px] text-radiantGold-amber font-bold"><span>✦</span><span>✦</span></div>
+          <div class="text-center opacity-30">
+            <div class="w-10 h-10 rounded-full border border-radiantGold-border mx-auto flex items-center justify-center">
+              <span class="text-base">🐍</span>
+            </div>
+          </div>
+          <div class="flex justify-between text-[8px] text-radiantGold-amber font-bold"><span>✦</span><span>✦</span></div>
+        </div>
+
+        <!-- ไพ่เงา 2 -->
+        <div id="deck-card-2" class="absolute w-40 h-60 rounded-3xl border border-radiantGold-border bg-creamPearl shadow-md flex flex-col justify-between p-3 rotate-[6deg] translate-x-2">
+          <div class="flex justify-between text-[8px] text-radiantGold-amber font-bold"><span>✦</span><span>✦</span></div>
+          <div class="text-center opacity-30">
+            <div class="w-10 h-10 rounded-full border border-radiantGold-border mx-auto flex items-center justify-center">
+              <span class="text-base">🐍</span>
+            </div>
+          </div>
+          <div class="flex justify-between text-[8px] text-radiantGold-amber font-bold"><span>✦</span><span>✦</span></div>
+        </div>
+
+        <!-- ไพ่ประธานใบบนสุด (The Crown Naga Card) คมชัด มีมิติ -->
+        <div id="deck-card-main" class="absolute w-40 h-60 rounded-3xl border-2 border-radiantGold-border bg-gradient-to-b from-white via-creamPearl to-[#EEF5F1] shadow-gloss-shadow flex flex-col justify-between p-3.5 z-10">
+          <div class="flex justify-between items-center text-[9px] text-radiantGold-amber font-bold">
+            <span>✧ ॐ ✧</span>
+            <span class="text-nagaEmerald font-black tracking-wider text-[8px]">วินทร์ทรัพย์นาคราช</span>
+            <span>✧ ॐ ✧</span>
+          </div>
+
+          <!-- ตราสัญลักษณ์พญานาคราชมงคลศิลป์ 3D Glow -->
+          <div class="text-center space-y-1.5">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald border-2 border-radiantGold-border mx-auto flex items-center justify-center shadow-lg relative">
+              <div class="absolute inset-1 rounded-full border border-dashed border-radiantGold-bright/50 animate-spin" style="animation-duration: 25s;"></div>
+              
+              <svg class="w-9 h-9 text-radiantGold-light filter drop-shadow-[0_2px_5px_rgba(245,158,11,0.9)]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M32 8C27 15 22 22 22 30C22 35 25 39 29 40C24 44 20 49 20 56C20 62 25 68 32 68C39 68 44 62 44 56C44 49 40 44 35 40C39 39 42 35 42 30C42 22 37 15 32 8Z" fill="currentColor" fill-opacity="0.25"/>
+                <circle cx="32" cy="22" r="3" fill="#FBBF24"/>
+                <path d="M19 35C15 40 13 46 15 54"/>
+                <path d="M45 35C49 40 51 46 49 54"/>
+                <path d="M32 2L35 7H29L32 2Z" fill="#FBBF24"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs font-black text-nagaEmerald tracking-wider">สำรับญาณนาคราช</p>
+              <p class="text-[9px] font-bold text-radiantGold-amber">ถอดรหัสชะตากรรม</p>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-[8px] text-radiantGold-amber font-bold">
+            <span>บารมี</span>
+            <span class="text-nagaEmerald font-bold">ศรัทธา</span>
+            <span>ปาฏิหาริย์</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- โหมดที่ 2: คลี่ไพ่ออกมา 3 ใบให้แตะเลือก (Fanned View) -->
+      <div id="fanned-view" class="hidden w-full grid grid-cols-3 gap-2.5">
+        <!-- ใบที่ ๑: ปฐมญาณ -->
+        <div onclick="pickSacredCard(0)" class="card-tap-effect cursor-pointer rounded-2xl border-2 border-radiantGold-border bg-gradient-to-b from-white to-creamPearl shadow-card-float aspect-[2/3] flex flex-col items-center justify-between p-2.5 text-center">
+          <div class="w-full flex justify-between items-center text-[8px] text-radiantGold-amber font-bold">
+            <span>✧</span><span class="text-[8px] text-nagaEmerald">ปฐมญาณ</span><span>✧</span>
+          </div>
+          <div class="space-y-1">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-obsidianGloss to-nagaEmerald-deep border border-radiantGold-border flex items-center justify-center mx-auto shadow-sm">
+              <svg class="w-5 h-5 text-radiantGold-light" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C9 5 8 8 8 11C8 13.5 9.5 15 11 16C9.5 17 8 19 8 21C8 22.1 8.9 23 10 23C11.1 23 12 22.1 12 21C12 19 13.5 17.5 14.5 16C15.5 15 16 13 16 11C16 8 15 5 12 2Z"/>
+              </svg>
+            </div>
+            <p class="text-xs font-black text-nagaEmerald">ใบที่ ๑</p>
+            <p class="text-[9px] font-bold text-radiantGold-amber">สาส์นนำทาง</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[8px] text-radiantGold-amber font-bold">
+            <span>✦</span><span>✦</span>
+          </div>
+        </div>
+
+        <!-- ใบที่ ๒: มัชฌิมญาณ -->
+        <div onclick="pickSacredCard(1)" class="card-tap-effect cursor-pointer rounded-2xl border-2 border-radiantGold-border bg-gradient-to-b from-white to-creamPearl shadow-card-float aspect-[2/3] flex flex-col items-center justify-between p-2.5 text-center">
+          <div class="w-full flex justify-between items-center text-[8px] text-radiantGold-amber font-bold">
+            <span>✧</span><span class="text-[8px] text-nagaEmerald">มัชฌิมญาณ</span><span>✧</span>
+          </div>
+          <div class="space-y-1">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-obsidianGloss to-nagaEmerald-deep border border-radiantGold-border flex items-center justify-center mx-auto shadow-sm">
+              <svg class="w-5 h-5 text-radiantGold-light" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15 8H9L12 2ZM12 9C14.2 9 16 10.8 16 13C16 15.2 14.2 17 12 17C9.8 17 8 15.2 8 13C8 10.8 9.8 9 12 9ZM12 18C14.8 18 17 20.2 17 23H7C7 20.2 9.2 18 12 18Z"/>
+              </svg>
+            </div>
+            <p class="text-xs font-black text-nagaEmerald">ใบที่ ๒</p>
+            <p class="text-[9px] font-bold text-radiantGold-amber">สาส์นนำทาง</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[8px] text-radiantGold-amber font-bold">
+            <span>✦</span><span>✦</span>
+          </div>
+        </div>
+
+        <!-- ใบที่ ๓: อุดมญาณ -->
+        <div onclick="pickSacredCard(2)" class="card-tap-effect cursor-pointer rounded-2xl border-2 border-radiantGold-border bg-gradient-to-b from-white to-creamPearl shadow-card-float aspect-[2/3] flex flex-col items-center justify-between p-2.5 text-center">
+          <div class="w-full flex justify-between items-center text-[8px] text-radiantGold-amber font-bold">
+            <span>✧</span><span class="text-[8px] text-nagaEmerald">อุดมญาณ</span><span>✧</span>
+          </div>
+          <div class="space-y-1">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-obsidianGloss to-nagaEmerald-deep border border-radiantGold-border flex items-center justify-center mx-auto shadow-sm">
+              <svg class="w-5 h-5 text-radiantGold-light" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C10.5 4 8 5.5 8 8C8 10 9.5 11 10.5 12C9 13.5 7 15 7 18C7 20.2 8.8 22 11 22C13.2 22 15 20.2 15 18C15 15.5 13.5 14 12.5 13C13.5 12 15 10.5 15 8C15 5.5 13.5 4 12 2Z"/>
+              </svg>
+            </div>
+            <p class="text-xs font-black text-nagaEmerald">ใบที่ ๓</p>
+            <p class="text-[9px] font-bold text-radiantGold-amber">สาส์นนำทาง</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[8px] text-radiantGold-amber font-bold">
+            <span>✦</span><span>✦</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ปุ่มควบคุมการสับไพ่ -->
+    <div class="pt-1">
+      <button id="btn-shuffle" onclick="startMysticShuffle()" class="w-full bg-gradient-to-r from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald text-white font-black text-xs py-3.5 rounded-2xl shadow-gloss-shadow hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2 border border-radiantGold">
+        <span class="text-base">🌀</span>
+        <span>เริ่มสับไพ่สายญาณบารมี</span>
+      </button>
+
+      <button id="btn-reshuffle" onclick="resetToDeckArena()" class="hidden w-full bg-white text-nagaEmerald font-bold text-xs py-2.5 rounded-2xl border border-radiantGold-border hover:bg-creamPearl active:scale-95 transition mt-1.5 text-center shadow-sm">
+        🔄 สับไพ่ใหม่อีกครั้ง
+      </button>
+    </div>
+
+    <!-- REVEALED CARD MODAL (แสดงคำทำนาย + วรรคประทานพรพระคาถาอลังการ) -->
+    <div id="result-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3.5">
+      <div class="bg-white rounded-[32px] w-full max-w-sm overflow-hidden shadow-2xl border-2 border-radiantGold-border p-4.5 space-y-3.5 relative max-h-[92vh] flex flex-col justify-between">
+        
+        <!-- รัศมีแสงทองด้านบน Modal -->
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-radiantGold-light/40 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="text-center space-y-0.5 relative z-10 pt-1">
+          <span class="inline-block px-3 py-0.5 rounded-full bg-gradient-to-r from-radiantGold-bright to-radiantGold-amber text-obsidianGloss text-[9px] font-black tracking-wider uppercase shadow-sm">
+            ✦ ปรากฏสาส์นนำทางญาณบารมี ✦
+          </span>
+          <h3 id="res-card-name" class="text-base font-black text-nagaEmerald tracking-tight pt-1">ชื่อสาส์นแห่งองค์นาคราช</h3>
+          <p id="res-card-cat" class="text-[10px] font-bold text-radiantGold-amber uppercase tracking-widest">หมวดหมู่</p>
+        </div>
+
+        <!-- กล่องสัญลักษณ์พญานาคราช 3D เวกเตอร์ -->
+        <div class="w-full py-3 rounded-2xl bg-gradient-to-b from-creamPearl to-white border border-radiantGold-border/60 flex flex-col items-center justify-center shadow-inner relative overflow-hidden">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-obsidianGloss to-nagaEmerald-deep border-2 border-radiantGold-border flex items-center justify-center shadow-md relative z-10">
+            <svg class="w-8 h-8 text-radiantGold-light filter drop-shadow-[0_2px_4px_rgba(245,158,11,0.8)]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C10.5 4 8 5.5 8 8C8 10 9.5 11 10.5 12C9 13.5 7 15 7 18C7 20.2 8.8 22 11 22C13.2 22 15 20.2 15 18C15 15.5 13.5 14 12.5 13C13.5 12 15 10.5 15 8C15 5.5 13.5 4 12 2ZM11.5 6C12 6 12.5 6.4 12.5 7C12.5 7.6 12 8 11.5 8C11 8 10.5 7.6 10.5 7C10.5 6.4 11 6 11.5 6ZM11 17C10.4 17 10 16.6 10 16C10 15.4 10.4 15 11 15C11.6 15 12 15.4 12 16C12 16.6 11.6 17 11 17Z"/>
+            </svg>
+          </div>
+          <p class="text-[9px] font-black text-radiantGold-amber mt-1 z-10 tracking-widest uppercase">
+            ✧ ตราสุวรรณนาคินทร์มงคล ✧
+          </p>
+        </div>
+
+        <!-- กล่องคำทำนายและวรรคประทานพรอลังการ (Scrollable) -->
+        <div class="bg-creamPearl p-3.5 rounded-2xl border border-radiantGold-border/50 shadow-sm space-y-2.5 overflow-y-auto max-h-56 hide-scrollbar">
+          <!-- 1. คำพยากรณ์หลัก (Col E) -->
+          <div>
+            <span class="text-[10px] font-black text-radiantGold-amber uppercase tracking-wider block mb-0.5">
+              ✦ สาส์นพยากรณ์หลัก
+            </span>
+            <p class="text-xs text-stone-800 leading-relaxed font-semibold" id="res-card-meaning">
+              กำลังอัญเชิญคำพยากรณ์...
+            </p>
+          </div>
+
+          <!-- 2. แนวทางปฏิบัติ (Col F) -->
+          <div class="pt-2 border-t border-radiantGold-border/30">
+            <span class="text-[10px] font-black text-nagaEmerald block mb-0.5">
+              ✦ นัยยะและแนวทางน้อมรับบารมี
+            </span>
+            <p class="text-[11px] text-stone-600 font-medium leading-relaxed" id="res-card-advice">
+              กำลังอัญเชิญแนวทางปฏิบัติ...
+            </p>
+          </div>
+
+          <!-- 3. วรรคประทานพรพิเศษ (ระบบสังเคราะห์ให้แบบอลังการ) -->
+          <div class="pt-2 border-t border-radiantGold-border/40 bg-gradient-to-r from-amber-50 to-emerald-50 p-2.5 rounded-xl border border-radiantGold/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-black text-radiantGold-amber">✧ พระมนต์ตรานาคาธิบดี</span>
+              <span id="res-card-blessing-gem" class="text-[8px] font-bold text-nagaEmerald">อัญมณี: มรกตพิสุทธิ์</span>
+            </div>
+            <p class="text-[11px] font-black text-nagaEmerald-deep font-mono tracking-wide" id="res-card-mantra">
+              "กายะวาจาจิตตัง อะหังวันทา นาคาธิบดีศรีสุทโธ วิสุทธิเทวาปูเชมิ"
+            </p>
+            <p class="text-[9px] text-stone-500 font-medium italic" id="res-card-direction">
+              ทิศมงคลเปิดทรัพย์: ทิศตะวันออกเฉียงเหนือ • ฤกษ์สวด: ยามรุ่งอรุณ
+            </p>
+          </div>
+        </div>
+
+        <!-- ปุ่มปิด Modal -->
+        <button onclick="closeResultModal()" class="w-full bg-gradient-to-r from-obsidianGloss via-nagaEmerald-deep to-nagaEmerald text-white font-black text-xs py-3 rounded-2xl shadow-md border border-radiantGold hover:brightness-110 active:scale-95 transition">
+          น้อมรับสาส์นนำทางบารมี 🙏
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+    
+    // ตรงกับ 5 แท็บหลักใน Sheet
+    const sheetTabNames = {
+      "job": "pjob",
+      "money": "pmoney",
+      "love": "plove",
+      "health": "phealth",
+      "lucky": "plucky"
+    };
+
+    // คลังพระมนต์ตราและพรเสริมมงคลอลังการ (สำหรับวรรคสุดท้ายที่ระบบออกแบบให้)
+    const mysticBlessings = [
+      {
+        mantra: "กายะวาจาจิตตัง อะหังวันทา นาคาธิบดีศรีสุทโธ วิสุทธิเทวาปูเชมิ",
+        gem: "มณีนาคราชสีเขียวมรกต",
+        direction: "ทิศเปิดทรัพย์: ทิศตะวันออกเฉียงเหนือ • ธาตุลมหนุนเนื่อง"
+      },
+      {
+        mantra: "โอม มหาภุชงโค มหานาโค มหิทธิโก มหาเตโช มหากุญชะโร ปูเชมิ",
+        gem: "มณีนาคราชสีทองอำพัน",
+        direction: "ทิศเปิดทรัพย์: ทิศตะวันออก • เสริมบารมีอำนาจวาสนา"
+      },
+      {
+        mantra: "นะโมตัสสะ พญานาคินทร์ศรีปทุมมา วิสุทธิเทวี ปูเชมิตะมัง สัพพะลาภัง",
+        gem: "มณีนาคราชสีชมพูกลีบบัว",
+        direction: "ทิศเปิดทรัพย์: ทิศทักษิณ (ใต้) • เมตตามหานิยมเสน่หา"
+      },
+      {
+        mantra: "อะหัง วันทามิ ทัสสะนาคานัง มหิทธิกานัง สุวัณณะรัตตัง ประสิทธิเม",
+        gem: "มณีนาคราชสีแดงทับทิม",
+        direction: "ทิศเปิดทรัพย์: ทิศพายัพ (ตะวันตกเฉียงเหนือ) • เสี่ยงโชคลาภลอย"
+      },
+      {
+        mantra: "พุทโธ เมนาโถ ธัมโม เมนาโถ สังโฆ เมนาโถ นาคาธิบดี สัพพะสิทธิ สวาหะ",
+        gem: "มณีนาคราชสีขาวนิลเพชร",
+        direction: "ทิศเปิดทรัพย์: ทิศอุดร (เหนือ) • สุขภาพกายใจไร้โรคัย"
+      }
+    ];
+
+    let currentCategory = "job";
+    let categoryCards = [];
+    let isShuffling = false;
+
+    window.addEventListener("DOMContentLoaded", () => {
+      fetchCards(currentCategory);
+    });
+
+    async function switchCategory(cat, btn) {
+      if (isShuffling) return;
+      currentCategory = cat;
+
+      // จัดการปุ่ม active
+      document.querySelectorAll(".cat-card").forEach(b => {
+        b.classList.remove("bg-nagaEmerald", "text-white", "shadow-md");
+        b.classList.add("bg-white", "text-nagaEmerald", "shadow-sm");
+      });
+      btn.classList.add("bg-nagaEmerald", "text-white", "shadow-md");
+      btn.classList.remove("bg-white", "text-nagaEmerald", "shadow-sm");
+
+      const targetTab = sheetTabNames[cat] || "pjob";
+      document.getElementById("current-sheet-label").innerText = `ชีต: ${targetTab}`;
+
+      resetToDeckArena();
+      fetchCards(cat);
+    }
+
+    async function fetchCards(cat) {
+      try {
+        const res = await fetch(`${API_URL}?action=get_cards&category=${encodeURIComponent(cat)}`);
+        const data = await res.json();
+        if (data.status === "success" && data.cards) {
+          categoryCards = data.cards;
+        }
+      } catch (e) {
+        console.warn("fetchCards error:", e);
+      }
+    }
+
+    // ระบบสุ่มแท้จริง (Fisher-Yates Crypto Shuffle)
+    function cryptoShuffle(arr) {
+      let m = arr.length, t, i;
       while (m) {
-        // ใช้ crypto.getRandomValues เพื่อความแม่นยำในการสุ่มระดับสูง
         const randomBuffer = new Uint32Array(1);
         window.crypto.getRandomValues(randomBuffer);
         i = Math.floor((randomBuffer[0] / (0xffffffff + 1)) * m--);
-        t = array[m];
-        array[m] = array[i];
-        array[i] = t;
+        t = arr[m];
+        arr[m] = arr[i];
+        arr[i] = t;
       }
-      return array;
+      return arr;
+    }
+
+    function startMysticShuffle() {
+      if (isShuffling) return;
+      isShuffling = true;
+
+      const btn = document.getElementById("btn-shuffle");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-1.5">🌀</span> กำลังประสานกระแสญาณสับไพ่...`;
+
+      document.getElementById("stage-title").innerText = "🌀 สำรับไพ่กำลังสับเปลี่ยนตามบุญสัมพันธ์...";
+      document.getElementById("stage-desc").innerText = "โปรดกำหนดลมหายใจเข้า-ออกเบา ๆ จิตนิ่งสงบ รอน้อมรับสาส์น";
+
+      const c1 = document.getElementById("deck-card-1");
+      const c2 = document.getElementById("deck-card-2");
+      c1.classList.add("shuffling-left");
+      c2.classList.add("shuffling-right");
+
+      setTimeout(() => {
+        c1.classList.remove("shuffling-left");
+        c2.classList.remove("shuffling-right");
+        isShuffling = false;
+
+        document.getElementById("deck-view").classList.add("hidden");
+        document.getElementById("fanned-view").classList.remove("hidden");
+        document.getElementById("btn-shuffle").classList.add("hidden");
+        document.getElementById("btn-reshuffle").classList.remove("hidden");
+
+        document.getElementById("stage-title").innerText = "✨ แตะเลือกไพ่ 1 ใบ ที่ดึงดูดจิตใจของท่านที่สุด";
+        document.getElementById("stage-desc").innerText = "องค์นาคราชจะทรงประทานสาส์นนำทางอันควรแก่กาลนี้";
+      }, 1600);
+    }
+
+    function resetToDeckArena() {
+      document.getElementById("fanned-view").classList.add("hidden");
+      document.getElementById("deck-view").classList.remove("hidden");
+      document.getElementById("btn-shuffle").classList.remove("hidden");
+      document.getElementById("btn-shuffle").disabled = false;
+      document.getElementById("btn-shuffle").innerHTML = `<span class="text-base">🌀</span><span>เริ่มสับไพ่สายญาณบารมี</span>`;
+      document.getElementById("btn-reshuffle").classList.add("hidden");
+
+      document.getElementById("stage-title").innerText = "✨ รวมจิตตั้งมั่น น้อมระลึกถึงบารมีพญานาคาธิบดี";
+      document.getElementById("stage-desc").innerText = "แตะปุ่ม \"เริ่มสับไพ่สายญาณ\" ด้านล่าง เพื่อเชื่อมกระแสจิตและสุ่มคำทำนาย";
     }
 
     function pickSacredCard(idx) {
@@ -19,17 +543,31 @@
         return;
       }
 
-      // 1. สับสำรับไพ่ 100 รายการแบบสุ่มแท้จริง
-      const shuffledDeck = shuffleArray([...categoryCards]);
-
-      // 2. จับใบที่สุ่มได้ตามที่ผู้ใช้เลือก
+      // สุ่มสำรับไพ่ด้วย Crypto Shuffle
+      const shuffledDeck = cryptoShuffle([...categoryCards]);
       const card = shuffledDeck[idx % shuffledDeck.length];
 
-      // 3. แสดงผลคำทำนาย
       document.getElementById("res-card-name").innerText = card.name || "สาส์นญาณบารมีนาคราช";
       document.getElementById("res-card-cat").innerText = `หมวด: ${card.category || currentCategory}`;
+      
+      // ข้อความคำพยากรณ์หลัก (Col E)
       document.getElementById("res-card-meaning").innerText = card.meaning || "ตั้งมั่นอยู่ในความดี มีสติในการตัดสินใจ แล้วทุกสิ่งจะราบรื่น";
+      
+      // แนวทางปฏิบัติ (Col F)
       document.getElementById("res-card-advice").innerText = card.advice || "หมั่นรักษาศีล เจริญภาวนา แผ่เมตตาจิต และมีสติรู้เท่าทันอารมณ์ในปัจจุบัน";
+
+      // วรรคสุดท้ายสังเคราะห์พิเศษ: พระมนต์ตรา อัญมณี และทิศเปิดทรัพย์
+      const blessing = mysticBlessings[Math.floor(Math.random() * mysticBlessings.length)];
+      document.getElementById("res-card-mantra").innerText = `"${blessing.mantra}"`;
+      document.getElementById("res-card-blessing-gem").innerText = `อัญมณี: ${blessing.gem}`;
+      document.getElementById("res-card-direction").innerText = blessing.direction;
 
       document.getElementById("result-modal").classList.remove("hidden");
     }
+
+    function closeResultModal() {
+      document.getElementById("result-modal").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

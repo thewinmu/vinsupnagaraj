@@ -16,9 +16,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Prompt', 'sans-serif'],
-          },
+          fontFamily: { sans: ['Prompt', 'sans-serif'] },
           colors: {
             gold: {
               light: '#FDE68A',
@@ -53,13 +51,8 @@
       background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 100%);
       color: #064E3B;
     }
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="min-h-screen pb-24">
@@ -74,7 +67,7 @@
           <p class="text-[10px] text-gold-dark font-medium">ร้านค้าวัตถุมงคล & เทียนบูชาสายญาณ</p>
         </div>
       </div>
-      <!-- ตะกร้าสินค้าปุ่มบน -->
+      <!-- ปุ่มเปิดตะกร้าบน -->
       <button onclick="openCartModal()" class="relative p-2 rounded-full bg-[#FAF8F5] border border-gold-border hover:bg-white transition shadow-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -84,9 +77,9 @@
     </div>
   </header>
 
-  <!-- Banner & Status Bar -->
+  <!-- Content Container -->
   <main class="max-w-md mx-auto px-4 mt-3 space-y-4">
-    <!-- กล่องโปรไฟล์สมาชิก -->
+    <!-- กล่องข้อมูลผู้ใช้งาน LINE -->
     <div id="user-info-box" class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-sm">
       <div class="flex items-center space-x-3">
         <img id="user-avatar" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full border border-gold-border object-cover" alt="User">
@@ -103,7 +96,7 @@
       </a>
     </div>
 
-    <!-- รายการสินค้า -->
+    <!-- รายการวัตถุมงคล -->
     <div>
       <div class="flex items-center justify-between mb-2 px-1">
         <h2 class="text-sm font-bold text-stone-800 flex items-center gap-1.5">
@@ -112,7 +105,6 @@
         <span id="product-count" class="text-[11px] text-stone-500 font-medium">กำลังโหลด...</span>
       </div>
 
-      <!-- รายการสินค้า (Grid) -->
       <div id="product-grid" class="grid grid-cols-2 gap-3">
         <!-- Skeleton Loading -->
         <div class="glass-card rounded-2xl p-3 animate-pulse space-y-2">
@@ -129,7 +121,7 @@
     </div>
   </main>
 
-  <!-- แถบด้านล่าง: สรุปตะกร้า (Sticky Bottom) -->
+  <!-- Sticky Bottom Bar สรุปยอดตะกร้า -->
   <div id="bottom-cart-bar" class="hidden fixed bottom-3 left-4 right-4 max-w-md mx-auto z-40">
     <div class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-lg border border-gold-border bg-white/95">
       <div class="flex items-center space-x-3">
@@ -147,7 +139,7 @@
     </div>
   </div>
 
-  <!-- Modal ตะกร้าสินค้าและฟอร์มจัดส่ง -->
+  <!-- Cart Modal & Checkout -->
   <div id="cart-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-gold-border">
       <!-- Modal Header -->
@@ -160,20 +152,18 @@
         </button>
       </div>
 
-      <!-- Modal Body (Scrollable) -->
+      <!-- Modal Body -->
       <div class="p-4 overflow-y-auto space-y-4 flex-1 hide-scrollbar">
-        <!-- รายการสินค้าในตะกร้า -->
+        <!-- รายการสินค้า -->
         <div>
           <h3 class="text-xs font-bold text-stone-700 mb-2">รายการที่เลือก</h3>
-          <div id="cart-items-container" class="space-y-2">
-            <!-- Render Cart Items -->
-          </div>
+          <div id="cart-items-container" class="space-y-2"></div>
           <div id="cart-empty-msg" class="text-center py-6 text-xs text-stone-400 hidden">
             ไม่มีสินค้าในตะกร้า
           </div>
         </div>
 
-        <!-- ฟอร์มชื่อ ที่อยู่ เบอร์โทร -->
+        <!-- ฟอร์มผู้รับ -->
         <div class="border-t border-stone-200 pt-3 space-y-2.5">
           <h3 class="text-xs font-bold text-stone-700 flex items-center gap-1">
             <span>📍</span> ข้อมูลผู้รับพัสดุ
@@ -187,8 +177,8 @@
             <input type="tel" id="cust-phone" placeholder="08xxxxxxxx" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep">
           </div>
           <div>
-            <label class="text-[11px] text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุ (บ้านเลขที่ ตำบล อำเภอ จังหวัด รหัสไปรษณีย์) *</label>
-            <textarea id="cust-address" rows="2" placeholder="ระบุที่อยู่จัดส่งโดยละเอียด" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep"></textarea>
+            <label class="text-[11px] text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุโดยละเอียด *</label>
+            <textarea id="cust-address" rows="2" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep"></textarea>
           </div>
         </div>
 
@@ -220,10 +210,10 @@
 
   <script>
     // ==========================================
-    // CONFIGURATION (ตั้งค่า LIFF & Backend API)
+    // CONFIGURATION
     // ==========================================
-    const LIFF_ID = "2006625890-g27yBv5e";
-    const API_URL = "https://script.google.com/macros/s/AKfycbwYyY1q6F0qBjhqN9cO-W_KSp-6ZlU4Lw9mYfG3d2A/exec";
+    const LIFF_ID = "2006625890-g27yBv5e"; // << LIFF ID ของหน้าร้าน
+    const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec"; // << Web App URL ของคุณ
 
     let currentUserId = "GUEST_USER";
     let allProducts = [];
@@ -240,7 +230,7 @@
             const profile = await liff.getProfile();
             currentUserId = profile.userId;
             document.getElementById("user-name").innerText = profile.displayName || "ผู้ศรัทธา";
-            document.getElementById("user-uid").innerText = "ID: " + profile.userId.substring(0, 10) + "...";
+            document.getElementById("user-uid").innerText = "ID: " + profile.userId.substring(0, 8) + "...";
             if (profile.pictureUrl) {
               document.getElementById("user-avatar").src = profile.pictureUrl;
             }
@@ -253,7 +243,7 @@
     });
 
     // ==========================================
-    // FETCH PRODUCTS (ดึงจาก Apps Script พร้อม Cache)
+    // LOAD PRODUCTS (Cached)
     // ==========================================
     async function loadProducts() {
       try {
@@ -323,7 +313,7 @@
     }
 
     // ==========================================
-    // CART MANAGEMENT
+    // CART LOGIC
     // ==========================================
     function addToCart(productId) {
       const product = allProducts.find(p => String(p.id).trim() === String(productId).trim());
@@ -431,7 +421,7 @@
     }
 
     // ==========================================
-    // CONFIRM ORDER & DUAL-TRIGGER SENDING
+    // CONFIRM ORDER & SAFE AUTO-CLOSE
     // ==========================================
     async function confirmOrder() {
       if (cart.length === 0) {
@@ -450,8 +440,9 @@
 
       const btn = document.getElementById("btn-submit-order");
       btn.disabled = true;
-      btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังส่งคำสั่งซื้อ...`;
+      btn.innerText = "กำลังจารึกคำสั่งซื้อ...";
 
+      // ดึง userId ปัจจุบัน
       let uid = currentUserId;
       try {
         if (typeof liff !== "undefined" && liff.isLoggedIn()) {
@@ -481,7 +472,7 @@
         const result = await response.json();
 
         if (result.status === "success") {
-          // หากอยู่ใน LINE App และมีสิทธิ์ chat_message.write ให้สั่งส่งเข้าห้องแชท
+          // พยายามส่งทาง Client ถ้าบริบทอนุญาต (ไม่บล็อกถ้าส่งไม่ผ่าน เพราะ Server Push ข้อความให้แล้ว)
           if (typeof liff !== "undefined" && liff.isInClient() && result.flexBubble) {
             try {
               await liff.sendMessages([{
@@ -489,35 +480,44 @@
                 altText: `ใบแจ้งยอดชำระคำสั่งซื้อ [${result.orderId}] กรุณาโอนเงินภายใน 15 นาที`,
                 contents: result.flexBubble
               }]);
-            } catch (sendErr) {
-              console.warn("liff.sendMessages warning:", sendErr);
+            } catch (err) {
+              console.warn("liff.sendMessages bypassed, fallback to Server Push:", err);
             }
           }
 
-          // หน่วงเวลา 350ms เพื่อให้การส่งข้อความสมบูรณ์ก่อนปิดหน้าจอ LIFF
-          setTimeout(() => {
-            if (typeof liff !== "undefined" && liff.isInClient()) {
-              liff.closeWindow();
-            } else {
-              alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE ของท่านแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
-              closeCartModal();
-              cart = [];
-              updateCartUI();
-              btn.disabled = false;
-              btn.innerHTML = `<span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>`;
-            }
-          }, 350);
-
+          // ปิดหน้าต่าง LIFF ทันทีทุกกรณี
+          safeCloseLiff();
         } else {
           alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสั่งซื้อได้"));
           btn.disabled = false;
-          btn.innerHTML = `<span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>`;
+          btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
         }
       } catch (err) {
         console.error("Submit Order Error:", err);
         alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
         btn.disabled = false;
-        btn.innerHTML = `<span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>`;
+        btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+      }
+    }
+
+    // ฟังก์ชันบังคับปิดหน้าต่าง LIFF อย่างปลอดภัย
+    function safeCloseLiff() {
+      if (typeof liff !== "undefined" && liff.isInClient()) {
+        try {
+          liff.closeWindow();
+        } catch (e) {
+          window.close();
+        }
+      } else {
+        alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE ของท่านแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
+        closeCartModal();
+        cart = [];
+        updateCartUI();
+        const btn = document.getElementById("btn-submit-order");
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+        }
       }
     }
   </script>

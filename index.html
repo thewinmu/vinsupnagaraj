@@ -91,7 +91,7 @@
     </div>
   </header>
 
-  <!-- ปุ่มเข้าสู่ระบบ Admin Control (ซ่อนไว้สำหรับ Admin U8065e05dc54f0ddc3fb46e97492eb53a เท่านั้น) -->
+  <!-- ปุ่มเข้าสู่ระบบ Admin Control (เฉพาะ Admin User ID: U8065e05dc54f0ddc3fb46e97492eb53a เท่านั้น) -->
   <div id="admin-menu-btn" class="hidden w-full mb-3.5">
     <a href="admincontrol.html" class="w-full bg-gradient-to-r from-red-950 via-red-900 to-[#051913] border-2 border-red-500/70 rounded-2xl p-3 flex items-center justify-between shadow-2xl hover:brightness-110 active:scale-98 transition">
       <div class="flex items-center space-x-3">
@@ -286,9 +286,10 @@
       const grid = document.getElementById("product-grid");
       
       const filtered = products.filter(p => {
+        // ตรวจสอบ Col G (category) และ Col B (name)
         const isServ = p.isService || 
-                       (p.description && p.description.includes("บริการ")) ||
                        (p.category && (p.category.includes("บริการ") || p.category.includes("chat"))) ||
+                       (p.description && p.description.includes("บริการ")) ||
                        (p.name && (p.name.includes("ดูดวง") || p.name.includes("พยากรณ์")));
 
         if (activeCategory === "SERVICE") return isServ;
@@ -302,15 +303,16 @@
       }
 
       grid.innerHTML = filtered.map(p => {
-        // ตรวจจับหมวดบริการตามโครงสร้างจริงของตารางชีต
+        // 1. ตรวจสอบเงื่อนไขบริการจาก Col B (name) และ Col G (category)
         const isService = p.isService || 
-                          (p.description && p.description.includes("บริการ")) ||
                           (p.category && (p.category.includes("บริการ") || p.category.includes("chat"))) ||
+                          (p.description && p.description.includes("บริการ")) ||
                           (p.name && (p.name.includes("ดูดวง") || p.name.includes("พยากรณ์")));
 
         const bookingLink = `booking.html?service=${encodeURIComponent(p.name)}&price=${p.price}`;
 
-        // สลับปุ่มอัตโนมัติ: บริการ = จองคิวดูดวง (สีทอง), วัตถุมงคล = เพิ่มลงตะกร้า (สีเขียว)
+        // 2. ถ้าเข้าเงื่อนไข ให้แสดงปุ่มสีทอง [ 🗓️ จองคิวดูดวง ] ทันที
+        // ถ้าเป็นสินค้าวัตถุมงคลทั่วไป ให้แสดงปุ่ม [ 🛒 เพิ่มลงตะกร้า ]
         const actionButton = isService 
           ? `
             <a href="${bookingLink}" class="w-full bg-gradient-to-r from-[#FEF08A] via-[#FBBF24] to-[#F59E0B] text-[#051A14] font-black text-xs py-2 px-2.5 rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-1.5 border border-white text-center">

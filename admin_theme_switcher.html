@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - ปรับแต่งสกินระบบ วินทร์ทรัพย์นาคราช</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: 'Prompt', sans-serif; }
+    .theme-preview-card:hover { transform: translateY(-4px); }
+  </style>
+</head>
+<body class="bg-[#05140F] text-stone-100 min-h-screen p-4 sm:p-8">
+
+  <div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-[#E6CA65]/30 pb-4">
+      <div class="flex items-center space-x-3">
+        <span class="text-3xl">🐍</span>
+        <div>
+          <h1 class="text-lg font-black text-[#FBBF24] tracking-wider uppercase">
+            ผู้ดูแลระบบ: ปรับแต่งสกินร้านค้า & Pick-a-Card
+          </h1>
+          <p class="text-xs text-stone-400">SHOP@วินทร์ทรัพย์นาคราช (8 Divine Themes)</p>
+        </div>
+      </div>
+      <button onclick="saveThemeToDatabase()" class="bg-gradient-to-r from-[#0B4734] to-[#106B4E] border border-[#FBBF24] text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-lg hover:brightness-110 active:scale-95 transition">
+        💾 บันทึกสกินใช้งานจริง
+      </button>
+    </div>
+
+    <!-- Live Preview Monitor Bar -->
+    <div class="p-4 rounded-2xl bg-[#0B241C] border border-[#E6CA65]/40 flex items-center justify-between">
+      <div>
+        <span class="text-[10px] text-[#FBBF24] uppercase font-bold block">สกินที่กำลังแสดงผล (Active Skin)</span>
+        <h2 id="active-skin-title" class="text-sm font-black text-white">01. มรกตสุวรรณภูมิ (Emerald & Radiant Gold)</h2>
+      </div>
+      <span class="text-xs px-3 py-1 rounded-full bg-[#105B43] text-emerald-200 border border-emerald-400">
+        ออนไลน์แบบเรียลไทม์
+      </span>
+    </div>
+
+    <!-- 8 Theme Selector Cards Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="theme-grid">
+      <!-- Generated via JS -->
+    </div>
+  </div>
+
+  <script>
+    const THEMES = [
+      {
+        id: "emerald_gold",
+        num: "01",
+        name: "มรกตสุวรรณภูมิ",
+        desc: "สกินหลักดั้งเดิม มรกตแก้วประกายทอง",
+        bg: "radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%)",
+        accent: "#FBBF24",
+        border: "#E6CA65"
+      },
+      {
+        id: "obsidian_night",
+        num: "02",
+        name: "มณีรัตน์ราตรี",
+        desc: "นิลกาฬลึกผสานออร่ามรกต ขลังสงบ",
+        bg: "radial-gradient(circle at 50% 0%, #0D2B23 0%, #071612 60%, #030A08 100%)",
+        accent: "#34D399",
+        border: "#105B43"
+      },
+      {
+        id: "pearl_platinum",
+        num: "03",
+        name: "เพชรนาคินทร์ไข่มุก",
+        desc: "สว่าง สะอาด โปร่งเบา สไตล์ Apple Luxury",
+        bg: "radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF8F5 45%, #EAF2EE 100%)",
+        accent: "#D97706",
+        border: "#E6CA65",
+        lightText: false
+      },
+      {
+        id: "solar_bronze",
+        num: "04",
+        name: "สุริยันจันทราคราช",
+        desc: "อำพันทองสว่าง บารมีอำนาจวาสนา",
+        bg: "radial-gradient(circle at 50% 0%, #2D220B 0%, #1E1606 60%, #0F0A02 100%)",
+        accent: "#F59E0B",
+        border: "#FBBF24"
+      },
+      {
+        id: "lotus_ruby",
+        num: "05",
+        name: "นาคีบงกชแก้ว",
+        desc: "มรกตทับทิมชมพู เมตตามหานิยม",
+        bg: "radial-gradient(circle at 50% 0%, #2A1620 0%, #1A0F14 60%, #0D060A 100%)",
+        accent: "#F472B6",
+        border: "#FB7185"
+      },
+      {
+        id: "deep_sea_sapphire",
+        num: "06",
+        name: "สมุทรนพรัตน์",
+        desc: "ครามทะเลลึกและหยกเขียว เย็นตาปัญญาใส",
+        bg: "radial-gradient(circle at 50% 0%, #0C2B3B 0%, #061A24 60%, #020D13 100%)",
+        accent: "#38BDF8",
+        border: "#0284C7"
+      },
+      {
+        id: "crimson_ruby",
+        num: "07",
+        name: "เพลิงสุวรรณกาล",
+        desc: "ดำขลับประกายโกเมนแดง ชัยชนะบารมี",
+        bg: "radial-gradient(circle at 50% 0%, #2B1212 0%, #180A0A 60%, #0B0404 100%)",
+        accent: "#EF4444",
+        border: "#DC2626"
+      },
+      {
+        id: "imperial_diamond",
+        num: "08",
+        name: "มหาจักรพรรดิรัตน",
+        desc: "ไพลินดำประกายแพลทินัม ระดับไฮเอนด์",
+        bg: "radial-gradient(circle at 50% 0%, #161F2C 0%, #0D1117 60%, #05080C 100%)",
+        accent: "#E2E8F0",
+        border: "#94A3B8"
+      }
+    ];
+
+    let currentSelectedTheme = localStorage.getItem("vinsup_theme_id") || "emerald_gold";
+
+    function renderThemeOptions() {
+      const grid = document.getElementById("theme-grid");
+      grid.innerHTML = THEMES.map(t => {
+        const isSelected = (t.id === currentSelectedTheme);
+        return `
+          <div onclick="selectTheme('${t.id}')" class="theme-preview-card cursor-pointer rounded-2xl p-4 border-2 transition-all flex flex-col justify-between h-44 shadow-md relative overflow-hidden ${isSelected ? 'border-[#FBBF24] ring-2 ring-[#FBBF24]/50' : 'border-stone-700/60 hover:border-stone-500'}" style="background: ${t.bg};">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-[10px] font-mono font-bold text-stone-400">SKIN ${t.num}</span>
+                ${isSelected ? '<span class="text-xs text-[#FBBF24]">✓ กำลังใช้</span>' : ''}
+              </div>
+              <h3 class="text-xs font-black tracking-wide ${t.lightText === false ? 'text-stone-900' : 'text-white'}">${t.name}</h3>
+              <p class="text-[9px] ${t.lightText === false ? 'text-stone-600' : 'text-stone-300'} line-clamp-2 mt-1 leading-relaxed">${t.desc}</p>
+            </div>
+            
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between">
+              <span class="w-3 h-3 rounded-full border border-white/40" style="background: ${t.accent};"></span>
+              <button class="text-[9px] font-bold px-2 py-0.5 rounded-md bg-black/40 text-stone-200 border border-white/20">
+                เลือกใช้
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const active = THEMES.find(t => t.id === currentSelectedTheme) || THEMES[0];
+      document.getElementById("active-skin-title").innerText = `${active.num}. ${active.name} (${active.desc})`;
+    }
+
+    function selectTheme(themeId) {
+      currentSelectedTheme = themeId;
+      localStorage.setItem("vinsup_theme_id", themeId);
+      renderThemeOptions();
+    }
+
+    async function saveThemeToDatabase() {
+      const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+      try {
+        const res = await fetch(`${API_URL}?action=set_global_theme&themeId=${encodeURIComponent(currentSelectedTheme)}`);
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("✅ บันทึกและปรับใช้สกินใหม่ทั้งระบบเรียบร้อยแล้ว!");
+        } else {
+          alert("บันทึกลง LocalStorage สำเร็จ (แต่ออฟไลน์กับชีต): " + (data.message || ""));
+        }
+      } catch (err) {
+        alert("✅ บันทึกสกินสำเร็จ (ทำงานบนเครื่องนี้ทันที)");
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", renderThemeOptions);
+  </script>
+</body>
+</html>

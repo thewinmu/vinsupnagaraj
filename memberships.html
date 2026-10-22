@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <script>
@@ -84,9 +85,10 @@
 
     <!-- ส่วนปุ่มควบคุมการสมัคร / แก้ไขข้อมูล -->
     <div id="action-box" class="space-y-3">
-      <!-- กรณีที่ 1: ยังไม่เป็นสมาชิก -> แสดงปุ่มกดสมัคร -->
-      <button id="btn-register-action" onclick="handleRegisterClick()" class="w-full bg-gradient-to-r from-auroraGold-bright to-auroraGold-amber text-mysticBg-deep font-black text-xs py-4 rounded-2xl shadow-xl border border-auroraGold-border hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
-        <span>✨ กดสมัครสมาชิกสายญาณนาคราช</span>
+      <!-- กรณีที่ 1: ยังไม่เป็นสมาชิก -> แสดงปุ่มกดสมัครตัวใหญ่ ชัดเจน -->
+      <button id="btn-register-action" onclick="handleRegisterClick()" class="w-full bg-gradient-to-r from-auroraGold-bright to-auroraGold-amber text-mysticBg-deep font-black text-sm py-4 rounded-2xl shadow-xl border-2 border-auroraGold-border hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
+        <span class="text-lg">✨</span>
+        <span>กดสมัครสมาชิกสายญาณนาคราช</span>
       </button>
 
       <!-- กรณีที่ 2: เป็นสมาชิกแล้ว -> แสดงปุ่มเปิดฟอร์มแก้ไขข้อมูล -->
@@ -147,7 +149,7 @@
           const profile = await liff.getProfile();
           currentUserId = profile.userId;
 
-          // เช็กข้อมูลสมาชิกทันที
+          // ตรวจสอบสถานะสมาชิกทันที
           loadMemberStatus(currentUserId, profile.displayName);
         }
       } catch (err) {
@@ -175,7 +177,7 @@
           document.getElementById("member-phone").value = m.phone !== "-" ? m.phone : "";
           document.getElementById("member-address").value = m.address !== "-" ? m.address : "";
 
-          // สลับปุ่มเป็น "แก้ไขข้อมูล"
+          // ซ่อนปุ่มสมัคร แล้วแสดงปุ่มแก้ไขข้อมูลแทน
           document.getElementById("btn-register-action").classList.add("hidden");
           document.getElementById("btn-toggle-edit").classList.remove("hidden");
         } else {
@@ -190,39 +192,49 @@
       }
     }
 
-    // กดปุ่มสมัครสมาชิก -> ส่งข้อความเข้าแชทไลน์ และอัปเดตระบบ
+    // เมื่อกดปุ่มสมัครสมาชิก -> ส่งคำว่า "สมาชิก" เข้าแชท LINE ทันที
     async function handleRegisterClick() {
       const btn = document.getElementById("btn-register-action");
       btn.disabled = true;
-      btn.innerText = "กำลังสถาปนาสมาชิก...";
+      btn.innerHTML = `<span class="animate-spin mr-1.5">🌀</span> กำลังสมัครสมาชิก...`;
 
       try {
-        // ส่งข้อความว่า "สมัครสมาชิก" เข้าห้องแชท
-        if (liff.isInClient()) {
-          await liff.sendMessages([{ type: "text", text: "สมัครสมาชิก" }]);
-        }
+        // 1. ตรวจสอบว่าเปิดใน LINE Client หรือไม่
+        if (typeof liff !== "undefined" && liff.isInClient()) {
+          // ส่งข้อความแทนผู้ใช้เข้าห้องแชทคำว่า "สมาชิก"
+          await liff.sendMessages([{
+            type: "text",
+            text: "สมาชิก"
+          }]);
 
-        // ยิง API บันทึกสมาชิกลงชีตแถวใหม่ทันที
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action: "register_member",
-            userId: currentUserId,
-            name: "ผู้ศรัทธาบารมี"
-          })
-        });
-        const result = await res.json();
+          // หน่วงเวลาเล็กน้อยเพื่อให้ระบบส่งข้อความสำเร็จ แล้วปิดหน้าต่าง LIFF กลับเข้าห้องแชท
+          setTimeout(() => {
+            liff.closeWindow();
+          }, 500);
 
-        if (result.status === "success") {
-          alert("🎉 สถาปนาสมาชิกสำเร็จ! ท่านสามารถแก้ไขข้อมูลส่วนตัวได้ทันทีครับ");
-          await loadMemberStatus(currentUserId);
-          toggleEditForm(); // เปิดฟอร์มให้กรอกข้อมูลทันที
+        } else {
+          // หากเปิดผ่านเบราว์เซอร์ภายนอก (Fallback API)
+          const res = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+              action: "register_member",
+              userId: currentUserId,
+              name: "ผู้ศรัทธาบารมี"
+            })
+          });
+          const result = await res.json();
+          if (result.status === "success") {
+            alert("สถาปนาสมาชิกสำเร็จ! กรุณาตรวจสอบบัตรในแชท LINE ครับ");
+            await loadMemberStatus(currentUserId);
+          }
         }
       } catch (err) {
+        console.error("Register Error:", err);
         alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้งครับ");
       } finally {
         btn.disabled = false;
+        btn.innerText = "✨ กดสมัครสมาชิกสายญาณนาคราช";
       }
     }
 
@@ -234,7 +246,7 @@
       }
     }
 
-    // กดอัปเดตข้อมูล -> แก้ไขทับ Row เดิม และฟอร์มจะพับหายไป
+    // กดอัปเดตข้อมูล -> แก้ไขทับแถวเดิมในชีต member และพับฟอร์มเก็บทันที
     async function saveUpdatedMemberProfile() {
       const name = document.getElementById("member-name").value.trim();
       const phone = document.getElementById("member-phone").value.trim();
@@ -265,9 +277,8 @@
 
         if (result.status === "success") {
           alert("✅ อัปเดตข้อมูลสมาชิกเรียบร้อยแล้ว!");
-          // อัปเดตหน้าบัตร
           document.getElementById("card-holder-name").innerText = name;
-          // พับฟอร์มหายไปทันที
+          // พับฟอร์มเก็บซ่อนทันที
           document.getElementById("edit-form-panel").classList.add("hidden");
         } else {
           alert("แจ้งเตือน: " + (result.message || "บันทึกไม่สำเร็จ"));

@@ -2,23 +2,70 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Master Control - วินทร์ทรัพย์นาคราช</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ADMIN MASTER CONTROL - วินทร์ทรัพย์นาคราช</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            mysticDark: '#04120D',
+            nagaEmerald: {
+              DEFAULT: '#105B43',
+              deep: '#063828',
+              glow: '#16805E',
+              bright: '#34D399',
+              light: '#A7F3D0'
+            },
+            auroraGold: {
+              light: '#FEF08A',
+              DEFAULT: '#FBBF24',
+              amber: '#F59E0B',
+              border: '#E6CA65'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    body { font-family: 'Prompt', sans-serif; background: #04120D; color: #F3F4F6; }
-    .glass-box { background: rgba(8, 38, 30, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(230, 202, 101, 0.35); }
-    .tab-active { background: linear-gradient(135deg, #105B43 0%, #063828 100%); border-color: #FBBF24; color: #FEF08A; font-weight: 800; }
-    
-    /* สไตล์ปุ่มสวิตช์เลื่อน (Toggle Switch) */
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #0d382d 0%, #06231a 50%, #020f0a 100%);
+      color: #F3F4F6;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 100vh;
+    }
+    .glass-box {
+      background: rgba(6, 26, 20, 0.88);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(230, 202, 101, 0.35);
+    }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(9, 39, 31, 0.95) 0%, rgba(4, 18, 13, 0.98) 100%);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(230, 202, 101, 0.3);
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Custom Switch Toggle */
     .switch {
       position: relative;
       display: inline-block;
       width: 44px;
       height: 24px;
+      flex-shrink: 0;
     }
     .switch input {
       opacity: 0;
@@ -28,11 +75,14 @@
     .slider {
       position: absolute;
       cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background-color: #374151;
       transition: .3s;
       border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     .slider:before {
       position: absolute;
@@ -44,197 +94,288 @@
       background-color: white;
       transition: .3s;
       border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
     input:checked + .slider {
       background-color: #10B981;
-      border-color: #FBBF24;
+      border-color: #34D399;
     }
     input:checked + .slider:before {
       transform: translateX(20px);
     }
   </style>
 </head>
-<body class="min-h-screen p-3 sm:p-6 pb-20">
+<body class="pb-28 p-3 sm:p-5 max-w-5xl mx-auto">
 
-  <div class="max-w-7xl mx-auto space-y-4">
-    <!-- Header -->
-    <header class="glass-box rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+  <!-- Access Denied Screen (ถ้าไม่ใช่ Master Admin) -->
+  <div id="denied-screen" class="hidden min-h-[70vh] flex flex-col items-center justify-center text-center p-6 space-y-4">
+    <div class="w-16 h-16 rounded-3xl bg-red-950/80 border-2 border-red-500/60 flex items-center justify-center text-3xl shadow-2xl">
+      🚫
+    </div>
+    <div class="space-y-1">
+      <h2 class="text-lg font-black text-red-400">สิทธิ์การเข้าถึงถูกปฏิเสธ (403 Unauthorized)</h2>
+      <p class="text-xs text-stone-400 max-w-xs mx-auto">หน้านี้สงวนไว้สำหรับ Master Admin วินทร์ทรัพย์นาคราช เท่านั้นครับ</p>
+    </div>
+    <p id="user-uid-display" class="text-[10px] font-mono text-stone-500 bg-black/40 px-3 py-1.5 rounded-lg border border-white/5"></p>
+    <a href="index.html" class="px-5 py-2.5 rounded-xl bg-nagaEmerald text-white font-bold text-xs border border-auroraGold-border shadow-lg">
+      กลับสู่หน้าร้านค้า
+    </a>
+  </div>
+
+  <!-- Admin Main Console (แสดงเมื่อเป็น Admin U8065e05dc54f0ddc3fb46e97492eb53a) -->
+  <div id="admin-main-screen" class="space-y-4">
+
+    <!-- Header คอนโซล -->
+    <header class="glass-box rounded-2xl p-4 shadow-xl flex items-center justify-between border border-auroraGold-border/60">
       <div class="flex items-center space-x-3">
-        <span class="text-3xl">🐍</span>
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-mysticDark via-red-950 to-red-800 p-0.5 border border-red-500/60 flex items-center justify-center shadow-lg text-2xl">
+          🐍
+        </div>
         <div>
-          <h1 class="text-base sm:text-lg font-black text-[#FBBF24] uppercase tracking-wider flex items-center gap-2">
-            <span>วินทร์ทรัพย์นาคราช</span>
-            <span class="text-[10px] bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/40">ADMIN MASTER</span>
-          </h1>
-          <p class="text-xs text-stone-400">ควบคุมระบบทุกหน้า ทุกแท็บ และสวิตช์เปิด-ปิดรอบเวลาดูดวง / แสดงสินค้า</p>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-sm font-black tracking-wider text-auroraGold-bright uppercase leading-tight">
+              วินทร์ทรัพย์นาคราช
+            </h1>
+            <span class="text-[9px] font-black px-2 py-0.5 rounded bg-red-600 text-white font-mono shadow-sm">
+              ADMIN MASTER
+            </span>
+          </div>
+          <p class="text-[10px] text-stone-300">ควบคุมระบบทุกหน้า ทุกแท็บ และสวิตช์เปิด-ปิดรอบเวลาดูดวง</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="refreshCurrentTab()" class="bg-[#105B43] border border-[#FBBF24] text-white px-3.5 py-1.5 rounded-xl text-xs font-bold hover:brightness-125 transition flex items-center gap-1.5">
-          <span>🔄</span> รีเฟรชข้อมูล
+      
+      <div class="flex items-center space-x-2">
+        <button onclick="refreshAllSummary()" class="p-2 rounded-xl bg-black/40 border border-white/10 text-xs font-bold text-stone-300 hover:text-white hover:bg-black/60 transition flex items-center space-x-1">
+          <span>🔄</span>
+          <span class="hidden sm:inline">รีเฟรชข้อมูล</span>
         </button>
+        <a href="index.html" class="p-2 px-3 rounded-xl bg-nagaEmerald text-xs font-bold text-white border border-auroraGold-border/70 hover:brightness-110 transition shadow-md">
+          หน้าร้าน ➔
+        </a>
       </div>
     </header>
 
-    <!-- Metrics Cards -->
+    <!-- การ์ดสรุปยอดภาพรวม (Stat Summary Cards) -->
     <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-[#FBBF24]">
-        <span class="text-[10px] text-stone-400 font-bold block">สมาชิก (member)</span>
-        <span id="stat-members" class="text-lg font-black text-white">0</span>
+      <div class="glass-card rounded-2xl p-3 border border-white/10 shadow-lg">
+        <span class="text-[10px] text-stone-400 block font-medium">สมาชิก (member)</span>
+        <span id="stat-members" class="text-lg font-black text-white font-mono">-</span>
       </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-emerald-400">
-        <span class="text-[10px] text-stone-400 font-bold block">คำสั่งซื้อ (orders)</span>
-        <span id="stat-orders" class="text-lg font-black text-emerald-400">0</span>
+      <div class="glass-card rounded-2xl p-3 border border-white/10 shadow-lg">
+        <span class="text-[10px] text-stone-400 block font-medium">คำสั่งซื้อ (orders)</span>
+        <span id="stat-orders" class="text-lg font-black text-emerald-400 font-mono">-</span>
       </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-amber-400">
-        <span class="text-[10px] text-stone-400 font-bold block">นัดหมายดูดวง (bookings)</span>
-        <span id="stat-bookings" class="text-lg font-black text-amber-300">0</span>
+      <div class="glass-card rounded-2xl p-3 border border-white/10 shadow-lg">
+        <span class="text-[10px] text-stone-400 block font-medium">นัดหมายดูดวง (bookings)</span>
+        <span id="stat-bookings" class="text-lg font-black text-amber-300 font-mono">-</span>
       </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-cyan-400">
-        <span class="text-[10px] text-stone-400 font-bold block">สินค้า/บริการ (products)</span>
-        <span id="stat-products" class="text-lg font-black text-cyan-300">0</span>
+      <div class="glass-card rounded-2xl p-3 border border-white/10 shadow-lg">
+        <span class="text-[10px] text-stone-400 block font-medium">สินค้า/บริการ (products)</span>
+        <span id="stat-products" class="text-lg font-black text-cyan-300 font-mono">-</span>
       </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-purple-400">
-        <span class="text-[10px] text-stone-400 font-bold block">สาส์นบรมครู (psarnkru)</span>
-        <span id="stat-kru" class="text-lg font-black text-purple-300">0</span>
-      </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs font-medium hide-scrollbar">
-      <button onclick="switchTab('member')" id="tab-btn-member" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap tab-active">👤 สมาชิก (member)</button>
-      <button onclick="switchTab('orders')" id="tab-btn-orders" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">📦 ออเดอร์ & พัสดุ (orders)</button>
-      <button onclick="switchTab('bookings')" id="tab-btn-bookings" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">📞 คิวดูดวง (bookings)</button>
-      <button onclick="switchTab('slots')" id="tab-btn-slots" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">⏰ สวิตช์รอบเวลา (Time Slots)</button>
-      <button onclick="switchTab('products')" id="tab-btn-products" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">💎 สินค้า & สวิตช์แสดง (products)</button>
-      <button onclick="switchTab('psarnkru')" id="tab-btn-psarnkru" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">👑 สาส์นบรมครู (psarnkru)</button>
-      <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">⚙️ ตั้งค่าระบบ (settings)</button>
-    </div>
-
-    <!-- Data Panel / Tables -->
-    <div id="data-table-container" class="glass-box rounded-2xl overflow-hidden shadow-2xl border border-[#E6CA65]/30">
-      <div class="p-3.5 border-b border-white/10 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center space-x-2">
-          <span id="current-tab-title" class="text-xs font-black text-[#FBBF24] uppercase">ตาราง: member</span>
-          <span id="row-count-badge" class="text-[10px] bg-black/40 px-2 py-0.5 rounded-full text-stone-300">0 รายการ</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <input type="text" id="table-search" oninput="filterTable()" placeholder="ค้นหาข้อมูลในตาราง..." class="text-xs bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#FBBF24] text-white">
-        </div>
-      </div>
-
-      <div class="overflow-x-auto max-h-[65vh]">
-        <table class="w-full text-left text-xs">
-          <thead id="table-head" class="bg-black/60 text-stone-300 border-b border-white/10 sticky top-0 backdrop-blur-md"></thead>
-          <tbody id="table-body" class="divide-y divide-white/5">
-            <tr><td class="p-8 text-center text-stone-400">กำลังประสานฐานข้อมูล...</td></tr>
-          </tbody>
-        </table>
+      <div class="glass-card rounded-2xl p-3 border border-white/10 shadow-lg col-span-2 sm:col-span-1">
+        <span class="text-[10px] text-stone-400 block font-medium">สาส์นบรมครู (psarnkru)</span>
+        <span id="stat-kru" class="text-lg font-black text-purple-300 font-mono">-</span>
       </div>
     </div>
 
-    <!-- Time Slots Switch Panel (แท็บ slots) -->
-    <div id="slots-panel" class="hidden glass-box rounded-2xl p-5 shadow-2xl border border-[#E6CA65]/40 space-y-4">
-      <div class="border-b border-white/10 pb-3 flex justify-between items-center">
+    <!-- แถบเลือกเมนูควบคุม (Tabs Bar) -->
+    <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs font-semibold hide-scrollbar border-b border-white/10">
+      <button onclick="switchTab('timeslot')" id="tab-btn-timeslot" class="tab-btn px-4 py-2.5 rounded-t-xl border-b-2 border-auroraGold-bright bg-nagaEmerald/40 text-white font-bold whitespace-nowrap">
+        ⏰ สวิตช์รอบเวลา (Time Slots)
+      </button>
+      <button onclick="switchTab('orders')" id="tab-btn-orders" class="tab-btn px-4 py-2.5 rounded-t-xl text-stone-400 hover:text-white whitespace-nowrap">
+        📦 ออเดอร์ & พัสดุ (orders)
+      </button>
+      <button onclick="switchTab('bookings')" id="tab-btn-bookings" class="tab-btn px-4 py-2.5 rounded-t-xl text-stone-400 hover:text-white whitespace-nowrap">
+        📞 คิวดวง (bookings)
+      </button>
+      <button onclick="switchTab('products')" id="tab-btn-products" class="tab-btn px-4 py-2.5 rounded-t-xl text-stone-400 hover:text-white whitespace-nowrap">
+        💎 สินค้า & สวิตช์แสดง (products)
+      </button>
+      <button onclick="switchTab('member')" id="tab-btn-member" class="tab-btn px-4 py-2.5 rounded-t-xl text-stone-400 hover:text-white whitespace-nowrap">
+        👤 สมาชิก (member)
+      </button>
+      <button onclick="switchTab('psarnkru')" id="tab-btn-psarnkru" class="tab-btn px-4 py-2.5 rounded-t-xl text-stone-400 hover:text-white whitespace-nowrap">
+        👑 สาส์นบรมครู (psarnkru)
+      </button>
+      <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn px-4 py-2.5 rounded-t-xl text-stone-400 hover:text-white whitespace-nowrap">
+        ⚙️ ตั้งค่าระบบ (settings)
+      </button>
+    </div>
+
+    <!-- PANEL 1: แท็บสวิตช์รอบเวลา (TIMESLOT TAB) -->
+    <section id="panel-timeslot" class="panel-section glass-box rounded-2xl p-4 sm:p-5 border border-auroraGold-border/40 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <div>
-          <h2 class="text-sm font-black text-[#FBBF24] uppercase flex items-center gap-2">
-            <span>⏰</span> จัดการสวิตช์เปิด-ปิด รอบเวลาการจองคิวดูดวง (Time Slots Switch)
+          <h2 class="text-xs font-black text-auroraGold-bright uppercase tracking-wider flex items-center gap-1.5">
+            <span>⏰</span> จัดการสวิตช์เปิด-ปิด รอบเวลาการจองคิวดูดวง (TIME SLOTS SWITCH)
           </h2>
-          <p class="text-xs text-stone-400">รอบเวลาที่เลื่อนปิด สวิตช์จะเป็นสีเทา และจะไม่ปรากฏให้ลูกค้าเลือกในหน้าจองคิว (booking.html)</p>
+          <p class="text-[10px] text-stone-300">รอบเวลาที่เลื่อนปิด สวิตช์จะเป็นสีเทา และจะไม่ปรากฏให้ลูกค้าเลือกในหน้าจองคิว (booking.html)</p>
         </div>
-        <button onclick="loadSlotsPanel()" class="bg-[#105B43] border border-[#FBBF24] text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:brightness-125 transition">
+        <button onclick="loadSlotsPanel()" class="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-[10px] font-bold text-stone-300 hover:text-white transition">
           🔄 โหลดรอบเวลา
         </button>
       </div>
 
-      <div id="slots-switch-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-        <div class="col-span-full text-center py-6 text-stone-400 text-xs">กำลังโหลดข้อมูลรอบเวลา...</div>
+      <!-- Grid สวิตช์รอบเวลา (Col A = time, Col B = Key OPEN/CLOSE) -->
+      <div id="slots-switch-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div class="col-span-full text-center py-10 text-stone-400 text-xs">กำลังเชื่อมโยงตาราง timeslot...</div>
       </div>
-    </div>
+    </section>
 
-    <!-- Settings Switch Panel (แท็บ settings) -->
-    <div id="settings-panel" class="hidden glass-box rounded-2xl p-5 shadow-2xl border border-[#E6CA65]/40 space-y-5">
-      <div class="border-b border-white/10 pb-3 flex justify-between items-center">
+    <!-- PANEL 2: ออเดอร์และส่งพัสดุ (ORDERS TAB) -->
+    <section id="panel-orders" class="panel-section hidden glass-box rounded-2xl p-4 sm:p-5 border border-auroraGold-border/40 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <div>
-          <h2 class="text-sm font-black text-[#FBBF24] uppercase flex items-center gap-2">
-            <span>⚙️</span> แผงควบคุมสวิตช์และการตั้งค่าระบบ (Master Settings)
+          <h2 class="text-xs font-black text-auroraGold-bright uppercase tracking-wider flex items-center gap-1.5">
+            <span>📦</span> จัดการคำสั่งซื้อ & จัดส่งพัสดุ (ORDERS)
           </h2>
-          <p class="text-xs text-stone-400">ควบคุมเปิด-ปิดฟีเจอร์ร้านค้า เลขที่บัญชี และ API Key จัดส่งพัสดุ</p>
+          <p class="text-[10px] text-stone-300">กรอกเลขพัสดุ (Tracking No.) เพื่อส่ง Flex แจ้งเตือนลูกค้าใน LINE อัตโนมัติ</p>
         </div>
-        <button onclick="saveAllSettings()" class="bg-[#105B43] border border-[#FBBF24] text-white px-4 py-2 rounded-xl text-xs font-bold hover:brightness-125 transition flex items-center gap-1.5">
-          <span>💾</span> บันทึกการตั้งค่าทั้งหมด
+        <button onclick="loadTabData('orders')" class="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-[10px] font-bold text-stone-300 hover:text-white transition">
+          🔄 โหลดตารางออเดอร์
         </button>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-black/40 p-4 rounded-xl border border-white/10 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-white block">🛒 สถานะเปิดหน้าร้านวัตถุมงคล (Shop Status)</span>
-            <span class="text-[11px] text-stone-400">เปิดหรือปิดรับออเดอร์จากหน้าเว็บทันที</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="switch-shop-status" checked>
-            <span class="slider"></span>
-          </label>
+      <div id="table-orders-container" class="overflow-x-auto hide-scrollbar">
+        <div class="text-center py-10 text-stone-400 text-xs">กำลังโหลดตารางคำสั่งซื้อ...</div>
+      </div>
+    </section>
+
+    <!-- PANEL 3: คิวนัดหมายตรวจดวงชะตา (BOOKINGS TAB) -->
+    <section id="panel-bookings" class="panel-section hidden glass-box rounded-2xl p-4 sm:p-5 border border-auroraGold-border/40 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-xs font-black text-auroraGold-bright uppercase tracking-wider flex items-center gap-1.5">
+            <span>📞</span> ตารางนัดหมายตรวจดวงชะตา (BOOKINGS)
+          </h2>
+          <p class="text-[10px] text-stone-300">ตรวจสอบและอัปเดตสถานะคิวนัดหมายสนทนาสายสด</p>
+        </div>
+        <button onclick="loadTabData('bookings')" class="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-[10px] font-bold text-stone-300 hover:text-white transition">
+          🔄 โหลดตารางคิว
+        </button>
+      </div>
+
+      <div id="table-bookings-container" class="overflow-x-auto hide-scrollbar">
+        <div class="text-center py-10 text-stone-400 text-xs">กำลังโหลดตารางนัดหมาย...</div>
+      </div>
+    </section>
+
+    <!-- PANEL 4: สินค้าและบริการ (PRODUCTS TAB) -->
+    <section id="panel-products" class="panel-section hidden glass-box rounded-2xl p-4 sm:p-5 border border-auroraGold-border/40 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-xs font-black text-auroraGold-bright uppercase tracking-wider flex items-center gap-1.5">
+            <span>💎</span> จัดการรายการสินค้า & สวิตช์แสดงหน้าเว็บ (PRODUCTS)
+          </h2>
+          <p class="text-[10px] text-stone-300">สลับสวิตช์ ACTIVE/HIDE เพื่อซ่อนหรือเปิดแสดงสินค้าในหน้าหลัก</p>
+        </div>
+        <button onclick="loadTabData('products')" class="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-[10px] font-bold text-stone-300 hover:text-white transition">
+          🔄 โหลดรายการสินค้า
+        </button>
+      </div>
+
+      <div id="table-products-container" class="overflow-x-auto hide-scrollbar">
+        <div class="text-center py-10 text-stone-400 text-xs">กำลังโหลดรายการสินค้า...</div>
+      </div>
+    </section>
+
+    <!-- PANEL 5: ข้อมูลสมาชิก (MEMBER TAB) -->
+    <section id="panel-member" class="panel-section hidden glass-box rounded-2xl p-4 sm:p-5 border border-auroraGold-border/40 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-xs font-black text-auroraGold-bright uppercase tracking-wider flex items-center gap-1.5">
+            <span>👤</span> ทะเบียนสมาชิกสายญาณ (MEMBER)
+          </h2>
+          <p class="text-[10px] text-stone-300">ตรวจสอบรหัสสังข์แก้ว และที่อยู่จัดส่งของผู้ศรัทธา</p>
+        </div>
+        <button onclick="loadTabData('member')" class="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-[10px] font-bold text-stone-300 hover:text-white transition">
+          🔄 โหลดตารางสมาชิก
+        </button>
+      </div>
+
+      <div id="table-member-container" class="overflow-x-auto hide-scrollbar">
+        <div class="text-center py-10 text-stone-400 text-xs">กำลังโหลดตารางสมาชิก...</div>
+      </div>
+    </section>
+
+    <!-- PANEL 6: สาส์นบรมครู (PSARNKRU TAB) -->
+    <section id="panel-psarnkru" class="panel-section hidden glass-box rounded-2xl p-4 sm:p-5 border border-auroraGold-border/40 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-xs font-black text-auroraGold-bright uppercase tracking-wider flex items-center gap-1.5">
+            <span>👑</span> ฐานข้อมูลสาส์นบรมครูโบราณ & องค์เทพ (PSARNKRU)
+          </h2>
+          <p class="text-[10px] text-stone-300">Col A: ใบที่ | Col B: นามองค์เทพ | Col C: เตือน | Col D: สอน | Col E: ทางแก้ | Col F: เลขมงคล</p>
+        </div>
+        <button onclick="loadTabData('psarnkru')" class="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-[10px] font-bold text-stone-300 hover:text-white transition">
+          🔄 โหลดสาส์นบรมครู
+        </button>
+      </div>
+
+      <div id="table-psarnkru-container" class="overflow-x-auto hide-scrollbar">
+        <div class="text-center py-10 text-stone-400 text-xs">กำลังโหลดสาส์นบรมครู...</div>
+      </div>
+    </section>
+
+    <!-- PANEL 7: ตั้งค่าระบบ (SETTINGS TAB) -->
+    <section id="panel-settings" class="panel-section hidden glass-box rounded-2xl p-4 sm:p-5 border border-auroraGold-border/40 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-xs font-black text-auroraGold-bright uppercase tracking-wider flex items-center gap-1.5">
+            <span>⚙️</span> การตั้งค่าคอนฟิกระบบหลัก (GLOBAL SETTINGS)
+          </h2>
+          <p class="text-[10px] text-stone-300">จัดการเลขบัญชีรับโอน, SlipOK API Key และขนส่ง</p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🏦 ชื่อธนาคาร</label>
-          <input type="text" id="set-bank-name" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
+      <div id="settings-form-container" class="space-y-3 max-w-xl">
+        <div class="text-center py-6 text-stone-400 text-xs">กำลังโหลดการตั้งค่าระบบ...</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Modal สำหรับส่งเลขพัสดุ (Tracking Modal) -->
+  <div id="tracking-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-box rounded-3xl w-full max-w-md p-5 border-2 border-auroraGold-border space-y-4 shadow-2xl bg-mysticDark">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">🚚</span>
+          <h3 class="text-xs font-black text-white uppercase tracking-wider">บันทึกหมายเลขพัสดุ & ส่งแจ้งเตือน</h3>
         </div>
+        <button onclick="closeTrackingModal()" class="text-xs text-stone-400 hover:text-white">✕ ปิด</button>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <input type="hidden" id="track-row-index">
+        <input type="hidden" id="track-order-id">
+        <input type="hidden" id="track-user-id">
+
         <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">💳 เลขที่บัญชีธนาคาร</label>
-          <input type="text" id="set-bank-no" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
+          <label class="text-[10px] font-bold text-stone-300 block mb-1">รหัสคำสั่งซื้อ:</label>
+          <p id="track-order-display" class="font-mono font-bold text-auroraGold-bright bg-black/40 p-2 rounded-xl border border-white/10">-</p>
         </div>
+
         <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">👤 ชื่อบัญชีธนาคาร</label>
-          <input type="text" id="set-bank-acc-name" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🚚 ขนส่งหลัก (Shipping Provider)</label>
-          <select id="set-shipping-provider" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-            <option value="THAIPOST">ไปรษณีย์ไทย (Thailand Post EMS)</option>
+          <label class="text-[10px] font-bold text-stone-300 block mb-1">ผู้ให้บริการขนส่ง:</label>
+          <select id="track-provider" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-auroraGold-bright">
+            <option value="THAIPOST">ไปรษณีย์ไทย (EMS / ลงทะเบียน)</option>
             <option value="FLASH">Flash Express</option>
             <option value="KERRY">Kerry Express</option>
             <option value="J&T">J&T Express</option>
           </select>
         </div>
+
         <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🔑 Shipping API Key (ระบบติดตามพัสดุ)</label>
-          <input type="text" id="set-shipping-key" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🔐 SlipOK API Key</label>
-          <input type="text" id="set-slipok-key" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
+          <label class="text-[10px] font-bold text-stone-300 block mb-1">หมายเลขพัสดุ (Tracking Number) *:</label>
+          <input type="text" id="track-number" placeholder="เช่น ED123456789TH" class="w-full uppercase font-mono tracking-wider bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-auroraGold-bright">
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Modal สำหรับใส่เลข Tracking & ส่ง Flex -->
-  <div id="tracking-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3.5">
-    <div class="glass-box rounded-2xl w-full max-w-sm p-5 space-y-4 border border-[#E6CA65]">
-      <div class="flex justify-between items-center border-b border-white/10 pb-2">
-        <h3 class="text-xs font-black text-[#FBBF24] uppercase flex items-center gap-1.5">
-          <span>🚚</span> ระบุหมายเลขพัสดุ & ส่ง Flex แจ้งเตือน
-        </h3>
-        <button onclick="closeTrackingModal()" class="text-xs text-stone-400 hover:text-white">✕</button>
-      </div>
-
-      <div>
-        <label class="text-[11px] text-stone-300 block mb-1">รหัสคำสั่งซื้อ</label>
-        <input type="text" id="modal-order-id" readonly class="w-full text-xs bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-[#FEF08A] font-bold">
-      </div>
-
-      <div>
-        <label class="text-[11px] text-stone-300 block mb-1">หมายเลขพัสดุ (Tracking No.) *</label>
-        <input type="text" id="modal-tracking-no" placeholder="เช่น ED123456789TH หรือ TH0123456" class="w-full text-xs bg-black/50 border border-[#E6CA65]/50 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-[#FBBF24]">
-      </div>
-
-      <button id="btn-submit-tracking" onclick="submitDispatchTracking()" class="w-full bg-[#105B43] hover:bg-[#16805E] border border-[#FBBF24] text-white font-bold text-xs py-3 rounded-xl transition flex items-center justify-center gap-1.5">
-        <span>🚀</span> ยืนยันจัดส่ง & ส่ง Flex แจ้งลูกค้า
+      <button id="btn-submit-tracking" onclick="submitTrackingAction()" class="w-full bg-gradient-to-r from-nagaEmerald-glow to-nagaEmerald text-white font-black text-xs py-3 rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition border border-auroraGold-border">
+        🚀 บันทึกและส่งข้อความแจ้งเตือนลูกค้า
       </button>
     </div>
   </div>
@@ -245,127 +386,112 @@
     const MASTER_ADMIN_UID = "U8065e05dc54f0ddc3fb46e97492eb53a";
 
     let currentAdminUid = "";
-    let activeTab = "member";
-    let currentRawData = [];
-    let currentHeaders = [];
-    let currentModalTarget = null;
+    let activeTab = "timeslot";
 
     window.addEventListener("DOMContentLoaded", async () => {
-      document.body.style.display = "none";
-
+      // เริ่มต้น LIFF และตรวจสอบสิทธิ์ Master Admin
       try {
         if (typeof liff !== "undefined") {
           await liff.init({ liffId: LIFF_ID });
-          if (!liff.isLoggedIn()) {
+          if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            currentAdminUid = profile.userId;
+          } else {
             liff.login();
             return;
           }
-          const profile = await liff.getProfile();
-          currentAdminUid = profile.userId;
-
-          if (currentAdminUid !== MASTER_ADMIN_UID) {
-            alert("⛔ ขออภัย ท่านไม่มีสิทธิ์เข้าถึงระบบ Admin Master");
-            window.location.href = "index.html";
-            return;
-          }
-
-          document.body.style.display = "block";
-          loadOverviewStats();
-          loadTabData(activeTab);
         }
       } catch (err) {
-        alert("กรุณาเปิดผ่าน LINE เพื่อตรวจสอบสิทธิ์แอดมิน");
-        window.location.href = "index.html";
+        console.warn("LIFF Init Notice:", err);
       }
+
+      // ตรวจสอบสิทธิ์ Admin
+      if (currentAdminUid !== MASTER_ADMIN_UID) {
+        document.getElementById("denied-screen").classList.remove("hidden");
+        document.getElementById("admin-main-screen").classList.add("hidden");
+        document.getElementById("user-uid-display").innerText = `UID: ${currentAdminUid || 'GUEST_USER'}`;
+        return;
+      }
+
+      document.getElementById("denied-screen").classList.add("hidden");
+      document.getElementById("admin-main-screen").classList.remove("hidden");
+
+      await refreshAllSummary();
+      await loadSlotsPanel();
     });
 
-    async function loadOverviewStats() {
+    async function refreshAllSummary() {
       try {
         const res = await fetch(`${API_URL}?action=admin_get_all_summary&userId=${encodeURIComponent(currentAdminUid)}`);
         const data = await res.json();
         if (data.status === "success" && data.summary) {
-          document.getElementById("stat-members").innerText = data.summary.membersCount;
-          document.getElementById("stat-orders").innerText = data.summary.ordersCount;
-          document.getElementById("stat-bookings").innerText = data.summary.bookingsCount;
-          document.getElementById("stat-products").innerText = data.summary.productsCount;
-          document.getElementById("stat-kru").innerText = data.summary.kruCardsCount;
+          const s = data.summary;
+          document.getElementById("stat-members").innerText = s.membersCount || 0;
+          document.getElementById("stat-orders").innerText = s.ordersCount || 0;
+          document.getElementById("stat-bookings").innerText = s.bookingsCount || 0;
+          document.getElementById("stat-products").innerText = s.productsCount || 0;
+          document.getElementById("stat-kru").innerText = s.kruCardsCount || 0;
         }
-      } catch (e) {}
-    }
-
-    function switchTab(tabName) {
-      activeTab = tabName;
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("tab-active"));
-      const btn = document.getElementById(`tab-btn-${tabName}`);
-      if (btn) btn.classList.add("tab-active");
-
-      const tableContainer = document.getElementById("data-table-container");
-      const settingsPanel = document.getElementById("settings-panel");
-      const slotsPanel = document.getElementById("slots-panel");
-
-      tableContainer.classList.add("hidden");
-      settingsPanel.classList.add("hidden");
-      slotsPanel.classList.add("hidden");
-
-      if (tabName === "settings") {
-        settingsPanel.classList.remove("hidden");
-        loadSettingsPanel();
-      } else if (tabName === "slots") {
-        slotsPanel.classList.remove("hidden");
-        loadSlotsPanel();
-      } else {
-        tableContainer.classList.remove("hidden");
-        document.getElementById("current-tab-title").innerText = `ตาราง: ${tabName}`;
-        loadTabData(tabName);
+      } catch (e) {
+        console.warn("Summary Load Error:", e);
       }
     }
 
-    function refreshCurrentTab() {
-      loadOverviewStats();
-      if (activeTab === "settings") {
-        loadSettingsPanel();
-      } else if (activeTab === "slots") {
-        loadSlotsPanel();
-      } else {
-        loadTabData(activeTab);
+    function switchTab(tabId) {
+      activeTab = tabId;
+
+      document.querySelectorAll(".panel-section").forEach(p => p.classList.add("hidden"));
+      const targetPanel = document.getElementById(`panel-${tabId}`);
+      if (targetPanel) targetPanel.classList.remove("hidden");
+
+      document.querySelectorAll(".tab-btn").forEach(b => {
+        b.className = "tab-btn px-4 py-2.5 rounded-t-xl text-stone-400 hover:text-white whitespace-nowrap";
+      });
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.className = "tab-btn px-4 py-2.5 rounded-t-xl border-b-2 border-auroraGold-bright bg-nagaEmerald/40 text-white font-bold whitespace-nowrap";
       }
+
+      if (tabId === "timeslot") loadSlotsPanel();
+      else if (tabId === "settings") loadSettingsPanel();
+      else loadTabData(tabId);
     }
 
-    // -------------------------------------------------------------
-    // จัดการสวิตช์รอบเวลาดูดวง (Slots Toggle)
-    // -------------------------------------------------------------
+    // 1. TIMESLOT PANEL
     async function loadSlotsPanel() {
       const grid = document.getElementById("slots-switch-grid");
-      grid.innerHTML = `<div class="col-span-full text-center py-6 text-stone-400 text-xs">กำลังดึงสถานะรอบเวลา...</div>`;
+      grid.innerHTML = `<div class="col-span-full text-center py-10 text-stone-400 text-xs"><span class="inline-block animate-spin text-xl mb-1">🌀</span><br>กำลังเชื่อมโยงตาราง timeslot...</div>`;
 
       try {
         const res = await fetch(`${API_URL}?action=get_all_master_slots`);
         const data = await res.json();
 
-        if (data.status === "success" && data.slots) {
+        if (data.status === "success" && data.slots && data.slots.length > 0) {
           grid.innerHTML = data.slots.map(s => {
             return `
-              <div class="bg-black/40 p-3.5 rounded-xl border border-white/10 flex items-center justify-between shadow-md">
-                <div>
-                  <span class="text-xs font-bold text-white block">${s.time}</span>
-                  <span id="slot-label-${s.time}" class="text-[10px] ${s.enabled ? 'text-emerald-400' : 'text-stone-500'} font-semibold">
-                    ${s.enabled ? '● เปิดให้จอง' : '○ ปิดรอบนี้'}
+              <div class="bg-black/50 p-3.5 rounded-2xl border border-white/10 flex items-center justify-between shadow-md hover:border-auroraGold-border/40 transition">
+                <div class="space-y-0.5">
+                  <span class="text-xs font-black text-white block">${s.time}</span>
+                  <span id="slot-label-${s.rowIndex}" class="text-[10px] ${s.enabled ? 'text-emerald-400' : 'text-stone-500'} font-bold">
+                    ${s.enabled ? '● เปิดรับคิว (OPEN)' : '○ ปิดรับคิว (CLOSE)'}
                   </span>
                 </div>
                 <label class="switch">
-                  <input type="checkbox" ${s.enabled ? 'checked' : ''} onchange="toggleSlotSwitch('${s.time}', this)">
+                  <input type="checkbox" ${s.enabled ? 'checked' : ''} onchange="toggleSlotSwitch(${s.rowIndex}, this)">
                   <span class="slider"></span>
                 </label>
               </div>
             `;
           }).join('');
+        } else {
+          grid.innerHTML = `<div class="col-span-full text-center py-10 text-amber-300 text-xs">ไม่พบข้อมูลในแท็บ timeslot กรุณาเพิ่มรอบเวลาใน Col A และ Col B ตั้งแต่แถวที่ 2 เป็นต้นไป</div>`;
         }
       } catch (err) {
-        grid.innerHTML = `<div class="col-span-full text-center py-6 text-red-400 text-xs">โหลดสถานะรอบเวลาไม่สำเร็จ</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center py-10 text-red-400 text-xs">สายสัญญาณขัดข้อง ไม่สามารถโหลดตาราง timeslot ได้</div>`;
       }
     }
 
-    async function toggleSlotSwitch(slotTime, checkbox) {
+    async function toggleSlotSwitch(rowIndex, checkbox) {
       try {
         const res = await fetch(API_URL, {
           method: "POST",
@@ -373,110 +499,107 @@
           body: JSON.stringify({
             action: "admin_toggle_slot",
             userId: currentAdminUid,
-            time: slotTime
+            rowIndex: Number(rowIndex)
           })
         });
         const data = await res.json();
         if (data.status === "success") {
           checkbox.checked = data.enabled;
-          const label = document.getElementById(`slot-label-${slotTime}`);
+          const label = document.getElementById(`slot-label-${rowIndex}`);
           if (label) {
-            label.className = `text-[10px] ${data.enabled ? 'text-emerald-400' : 'text-stone-500'} font-semibold`;
-            label.innerText = data.enabled ? '● เปิดให้จอง' : '○ ปิดรอบนี้';
+            label.className = `text-[10px] ${data.enabled ? 'text-emerald-400' : 'text-stone-500'} font-bold`;
+            label.innerText = data.enabled ? '● เปิดรับคิว (OPEN)' : '○ ปิดรับคิว (CLOSE)';
           }
         } else {
-          alert("ไม่สามารถเปลี่ยนสถานะได้: " + data.message);
+          alert("ไม่สามารถเปลี่ยนสถานะได้: " + (data.message || "Error"));
           checkbox.checked = !checkbox.checked;
         }
       } catch (e) {
-        alert("สายสัญญาณขัดข้อง");
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
         checkbox.checked = !checkbox.checked;
       }
     }
 
-    // -------------------------------------------------------------
-    // ตารางข้อมูลทั่วไป
-    // -------------------------------------------------------------
+    // 2. DATA TABLE LOADER
     async function loadTabData(tabName) {
-      const tbody = document.getElementById("table-body");
-      const thead = document.getElementById("table-head");
-      tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-stone-400">กำลังดึงข้อมูลแท็บ ${tabName}...</td></tr>`;
+      const container = document.getElementById(`table-${tabName}-container`);
+      container.innerHTML = `<div class="text-center py-10 text-stone-400 text-xs"><span class="inline-block animate-spin text-xl mb-1">🌀</span><br>กำลังดึงข้อมูลแท็บ ${tabName}...</div>`;
 
       try {
-        const res = await fetch(`${API_URL}?action=admin_get_tab_data&tabName=${tabName}&userId=${encodeURIComponent(currentAdminUid)}`);
+        const res = await fetch(`${API_URL}?action=admin_get_tab_data&tabName=${encodeURIComponent(tabName)}&userId=${encodeURIComponent(currentAdminUid)}`);
         const data = await res.json();
 
-        if (data.status === "success") {
-          currentHeaders = data.headers || [];
-          currentRawData = data.rows || [];
-          document.getElementById("row-count-badge").innerText = `${currentRawData.length} รายการ`;
-          renderTable(currentHeaders, currentRawData);
+        if (data.status === "success" && data.headers && data.rows) {
+          renderDynamicTable(tabName, data.headers, data.rows);
         } else {
-          tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">ข้อผิดพลาด: ${data.message}</td></tr>`;
+          container.innerHTML = `<div class="text-center py-10 text-stone-400 text-xs">ไม่พบข้อมูลในแท็บ ${tabName}</div>`;
         }
-      } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">สายสัญญาณขัดข้อง</td></tr>`;
+      } catch (e) {
+        container.innerHTML = `<div class="text-center py-10 text-red-400 text-xs">เกิดข้อผิดพลาดในการโหลดข้อมูลแท็บ ${tabName}</div>`;
       }
     }
 
-    function renderTable(headers, rows) {
-      const thead = document.getElementById("table-head");
-      const tbody = document.getElementById("table-body");
-
-      if (headers.length === 0) {
-        thead.innerHTML = "";
-        tbody.innerHTML = `<tr><td class="p-8 text-center text-stone-400">แท็บนี้ยังไม่มีข้อมูล</td></tr>`;
-        return;
-      }
-
-      thead.innerHTML = `<tr>
-        <th class="p-3 text-[10px] font-bold text-stone-400"># แถว</th>
-        ${headers.map(h => `<th class="p-3 text-stone-200 font-bold whitespace-nowrap">${h}</th>`).join('')}
-        <th class="p-3 text-stone-200 font-bold text-center">การจัดการ</th>
-      </tr>`;
-
+    function renderDynamicTable(tabName, headers, rows) {
+      const container = document.getElementById(`table-${tabName}-container`);
       if (rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${headers.length + 2}" class="p-8 text-center text-stone-400">ไม่มีรายการในแท็บนี้</td></tr>`;
+        container.innerHTML = `<div class="text-center py-10 text-stone-400 text-xs">ยังไม่มีข้อมูลในตารางนี้</div>`;
         return;
       }
 
-      tbody.innerHTML = rows.map(r => {
-        return `<tr class="hover:bg-white/5 transition">
-          <td class="p-3 text-[10px] text-stone-400 font-mono">${r.rowIndex}</td>
-          ${r.values.map(val => `<td class="p-3 text-stone-300 max-w-xs truncate font-medium">${val || '-'}</td>`).join('')}
-          <td class="p-3 text-center whitespace-nowrap">
-            ${getActionButtons(activeTab, r)}
-          </td>
-        </tr>`;
+      let thHtml = headers.map(h => `<th class="p-2.5 text-left text-[11px] font-black text-auroraGold-bright uppercase tracking-wider whitespace-nowrap bg-black/60 border-b border-white/10">${h}</th>`).join('');
+      if (tabName === "orders") thHtml += `<th class="p-2.5 text-center text-[11px] font-black text-white bg-black/60 border-b border-white/10">จัดการพัสดุ</th>`;
+      if (tabName === "products") thHtml += `<th class="p-2.5 text-center text-[11px] font-black text-white bg-black/60 border-b border-white/10">สวิตช์แสดง</th>`;
+
+      let trHtml = rows.map(r => {
+        let tdList = r.values.map(val => {
+          let displayVal = String(val || "-");
+          if (displayVal.startsWith("[{") || displayVal.startsWith("{\"")) {
+            try {
+              const parsed = JSON.parse(displayVal);
+              displayVal = Array.isArray(parsed) ? parsed.map(it => `${it.name} (x${it.qty || 1})`).join(', ') : displayVal;
+            } catch(e) {}
+          }
+          return `<td class="p-2.5 text-xs text-stone-200 border-b border-white/5 whitespace-nowrap">${displayVal}</td>`;
+        }).join('');
+
+        if (tabName === "orders") {
+          const orderId = r.values[0];
+          const userId = r.values[2];
+          const trackingNo = r.values[11] || "";
+          tdList += `
+            <td class="p-2.5 text-center border-b border-white/5 whitespace-nowrap">
+              <button onclick="openTrackingModal(${r.rowIndex}, '${orderId}', '${userId}', '${trackingNo}')" class="px-2.5 py-1 rounded-lg ${trackingNo ? 'bg-emerald-800 text-white' : 'bg-auroraGold text-black'} text-[10px] font-bold shadow hover:brightness-110">
+                ${trackingNo ? '🚚 อัปเดตพัสดุ' : '📦 ส่งพัสดุ'}
+              </button>
+            </td>
+          `;
+        }
+
+        if (tabName === "products") {
+          const statusVal = String(r.values[8] || "ACTIVE").toUpperCase();
+          const isActive = (statusVal === "ACTIVE" || statusVal === "SHOW" || statusVal === "");
+          tdList += `
+            <td class="p-2.5 text-center border-b border-white/5 whitespace-nowrap">
+              <label class="switch">
+                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleProductStatus(${r.rowIndex}, this)">
+                <span class="slider"></span>
+              </label>
+            </td>
+          `;
+        }
+
+        return `<tr class="hover:bg-white/5 transition">${tdList}</tr>`;
       }).join('');
+
+      container.innerHTML = `
+        <table class="w-full border-collapse">
+          <thead><tr>${thHtml}</tr></thead>
+          <tbody>${trHtml}</tbody>
+        </table>
+      `;
     }
 
-    function getActionButtons(tab, row) {
-      if (tab === "orders") {
-        return `
-          <button onclick="quickUpdateStatus('orders', ${row.rowIndex}, 9, 'ชำระเงินแล้ว')" class="bg-emerald-800/80 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold mr-1">ชำระแล้ว</button>
-          <button onclick="openTrackingModal(${row.rowIndex}, '${row.values[0]}', '${row.values[2]}')" class="bg-cyan-800/80 hover:bg-cyan-700 text-white px-2 py-1 rounded text-[10px] font-bold">🚚 ใส่เลขพัสดุ</button>
-        `;
-      }
-      if (tab === "bookings") {
-        return `
-          <button onclick="quickUpdateStatus('bookings', ${row.rowIndex}, 7, 'ยืนยันนัดหมายแล้ว')" class="bg-emerald-800/80 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold mr-1">ยืนยันคิว</button>
-          <button onclick="quickUpdateStatus('bookings', ${row.rowIndex}, 7, 'ยกเลิก')" class="bg-red-800/80 hover:bg-red-700 text-white px-2 py-1 rounded text-[10px] font-bold">ยกเลิก</button>
-        `;
-      }
-      if (tab === "products") {
-        const isShown = (row.values[8] !== "HIDE" && row.values[8] !== "ปิด");
-        return `
-          <label class="switch" title="สวิตช์เปิด-ปิดการแสดงสินค้า">
-            <input type="checkbox" ${isShown ? "checked" : ""} onchange="toggleProductVisibility(${row.rowIndex}, this)">
-            <span class="slider"></span>
-          </label>
-        `;
-      }
-      return `<span class="text-stone-500 text-[10px]">บันทึกอัตโนมัติ</span>`;
-    }
-
-    async function toggleProductVisibility(rowIndex, checkbox) {
+    async function toggleProductStatus(rowIndex, checkbox) {
       try {
         const res = await fetch(API_URL, {
           method: "POST",
@@ -488,10 +611,8 @@
           })
         });
         const data = await res.json();
-        if (data.status === "success") {
-          checkbox.checked = (data.newStatus === "ACTIVE");
-        } else {
-          alert("ไม่สามารถเปลี่ยนสถานะได้: " + data.message);
+        if (data.status !== "success") {
+          alert("ไม่สามารถเปลี่ยนสถานะสินค้าได้");
           checkbox.checked = !checkbox.checked;
         }
       } catch (e) {
@@ -500,28 +621,36 @@
       }
     }
 
-    function openTrackingModal(rowIndex, orderId, userId) {
-      currentModalTarget = { rowIndex, orderId, userId };
-      document.getElementById("modal-order-id").value = orderId;
-      document.getElementById("modal-tracking-no").value = "";
+    // 3. TRACKING MODAL
+    function openTrackingModal(rowIndex, orderId, userId, currentTracking) {
+      document.getElementById("track-row-index").value = rowIndex;
+      document.getElementById("track-order-id").value = orderId;
+      document.getElementById("track-user-id").value = userId;
+      document.getElementById("track-order-display").innerText = orderId;
+      document.getElementById("track-number").value = currentTracking || "";
+
       document.getElementById("tracking-modal").classList.remove("hidden");
     }
 
     function closeTrackingModal() {
       document.getElementById("tracking-modal").classList.add("hidden");
-      currentModalTarget = null;
     }
 
-    async function submitDispatchTracking() {
-      const trackingNo = document.getElementById("modal-tracking-no").value.trim();
+    async function submitTrackingAction() {
+      const rowIndex = document.getElementById("track-row-index").value;
+      const orderId = document.getElementById("track-order-id").value;
+      const userId = document.getElementById("track-user-id").value;
+      const provider = document.getElementById("track-provider").value;
+      const trackingNo = document.getElementById("track-number").value.trim().toUpperCase();
+
       if (!trackingNo) {
-        alert("กรุณาระบุเลขพัสดุครับ");
+        alert("กรุณาระบุหมายเลขพัสดุ (Tracking No.) ครับ");
         return;
       }
 
       const btn = document.getElementById("btn-submit-tracking");
       btn.disabled = true;
-      btn.innerText = "กำลังส่ง Flex แจ้งลูกค้า...";
+      btn.innerText = "กำลังบันทึกและส่งการแจ้งเตือน...";
 
       try {
         const res = await fetch(API_URL, {
@@ -530,85 +659,87 @@
           body: JSON.stringify({
             action: "admin_dispatch_tracking",
             userId: currentAdminUid,
-            rowIndex: currentModalTarget.rowIndex,
-            orderId: currentModalTarget.orderId,
+            rowIndex: Number(rowIndex),
+            orderId: orderId,
             trackingNo: trackingNo,
-            provider: document.getElementById("set-shipping-provider").value || "THAIPOST"
+            provider: provider
           })
         });
         const data = await res.json();
         if (data.status === "success") {
-          alert("✅ อัปเดตสถานะจัดส่งและส่ง Flex แจ้งเตือนลูกค้าเรียบร้อยแล้ว!");
+          alert("🎉 บันทึกหมายเลขพัสดุและส่ง Flex แจ้งเตือนลูกค้าเข้า LINE สำเร็จเรียบร้อยแล้วครับ");
           closeTrackingModal();
           loadTabData("orders");
         } else {
-          alert("แจ้งเตือน: " + data.message);
+          alert("แจ้งเตือน: " + (data.message || "ไม่สามารถบันทึกได้"));
         }
-      } catch (e) {
-        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่");
+      } catch (err) {
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
       } finally {
         btn.disabled = false;
-        btn.innerText = "🚀 ยืนยันจัดส่ง & ส่ง Flex แจ้งลูกค้า";
+        btn.innerText = "🚀 บันทึกและส่งข้อความแจ้งเตือนลูกค้า";
       }
     }
 
-    async function quickUpdateStatus(tab, rowIndex, colIndex, statusValue) {
-      if (!confirm(`ยืนยันการปรับสถานะเป็น "${statusValue}" หรือไม่?`)) return;
-
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action: "admin_update_status",
-            userId: currentAdminUid,
-            tabName: tab,
-            rowIndex: rowIndex,
-            colIndex: colIndex,
-            statusValue: statusValue
-          })
-        });
-        const data = await res.json();
-        if (data.status === "success") {
-          alert("✅ อัปเดตสถานะสำเร็จ!");
-          loadTabData(tab);
-        } else {
-          alert("ข้อผิดพลาด: " + data.message);
-        }
-      } catch (e) {
-        alert("สายสัญญาณขัดข้อง");
-      }
-    }
-
+    // 4. SETTINGS PANEL
     async function loadSettingsPanel() {
+      const container = document.getElementById("settings-form-container");
+      container.innerHTML = `<div class="text-center py-6 text-stone-400 text-xs"><span class="inline-block animate-spin text-xl mb-1">🌀</span><br>กำลังโหลดการตั้งค่าระบบ...</div>`;
+
       try {
         const res = await fetch(`${API_URL}?action=get_global_settings`);
         const data = await res.json();
+
         if (data.status === "success" && data.config) {
           const cfg = data.config;
-          document.getElementById("set-bank-name").value = cfg.bankName || "";
-          document.getElementById("set-bank-no").value = cfg.bankAccountNo || "";
-          document.getElementById("set-bank-acc-name").value = cfg.bankAccountName || "";
-          document.getElementById("set-shipping-provider").value = cfg.shippingProvider || "THAIPOST";
-          document.getElementById("set-shipping-key").value = cfg.shippingApiKey || "";
-          document.getElementById("set-slipok-key").value = cfg.slipOkApiKey || "";
-          document.getElementById("switch-shop-status").checked = (cfg.shopStatus !== "CLOSED");
+          container.innerHTML = `
+            <div class="space-y-3 bg-black/40 p-4 rounded-2xl border border-white/10 text-xs">
+              <div>
+                <label class="text-[10px] font-bold text-stone-300 block mb-1">ชื่อบัญชีรับโอนเงิน (BANK_ACC_NAME)</label>
+                <input type="text" id="cfg-bank-acc-name" value="${cfg.bankAccountName || ''}" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white">
+              </div>
+
+              <div>
+                <label class="text-[10px] font-bold text-stone-300 block mb-1">เลขบัญชีรับโอนเงิน (BANK_ACC_NO)</label>
+                <input type="text" id="cfg-bank-acc-no" value="${cfg.bankAccountNo || ''}" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white font-mono">
+              </div>
+
+              <div>
+                <label class="text-[10px] font-bold text-stone-300 block mb-1">ชื่อธนาคาร (BANK_NAME)</label>
+                <input type="text" id="cfg-bank-name" value="${cfg.bankName || ''}" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white">
+              </div>
+
+              <div>
+                <label class="text-[10px] font-bold text-stone-300 block mb-1">SlipOK API Key (SLIPOK_API_KEY)</label>
+                <input type="text" id="cfg-slipok-key" value="${cfg.slipOkApiKey || ''}" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white font-mono">
+              </div>
+
+              <div>
+                <label class="text-[10px] font-bold text-stone-300 block mb-1">ผู้ให้บริการขนส่งเริ่มต้น (SHIPPING_PROVIDER)</label>
+                <input type="text" id="cfg-shipping-provider" value="${cfg.shippingProvider || 'THAIPOST'}" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white">
+              </div>
+
+              <button onclick="saveGlobalSettingsAction()" class="w-full bg-gradient-to-r from-auroraGold-bright to-auroraGold text-mysticDark font-black text-xs py-3 rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition border border-white">
+                💾 บันทึกการตั้งค่าระบบ (Save Settings)
+              </button>
+            </div>
+          `;
         }
-      } catch (e) {}
+      } catch (e) {
+        container.innerHTML = `<div class="text-center py-6 text-red-400 text-xs">ไม่สามารถโหลดการตั้งค่าได้</div>`;
+      }
     }
 
-    async function saveAllSettings() {
+    async function saveGlobalSettingsAction() {
       const payload = {
         action: "admin_save_settings",
         userId: currentAdminUid,
         settings: {
-          BANK_NAME: document.getElementById("set-bank-name").value.trim(),
-          BANK_ACC_NO: document.getElementById("set-bank-no").value.trim(),
-          BANK_ACC_NAME: document.getElementById("set-bank-acc-name").value.trim(),
-          SHIPPING_PROVIDER: document.getElementById("set-shipping-provider").value,
-          SHIPPING_API_KEY: document.getElementById("set-shipping-key").value.trim(),
-          SLIPOK_API_KEY: document.getElementById("set-slipok-key").value.trim(),
-          SHOP_STATUS: document.getElementById("switch-shop-status").checked ? "OPEN" : "CLOSED"
+          "BANK_ACC_NAME": document.getElementById("cfg-bank-acc-name").value.trim(),
+          "BANK_ACC_NO": document.getElementById("cfg-bank-acc-no").value.trim(),
+          "BANK_NAME": document.getElementById("cfg-bank-name").value.trim(),
+          "SLIPOK_API_KEY": document.getElementById("cfg-slipok-key").value.trim(),
+          "SHIPPING_PROVIDER": document.getElementById("cfg-shipping-provider").value.trim()
         }
       };
 
@@ -620,23 +751,13 @@
         });
         const data = await res.json();
         if (data.status === "success") {
-          alert("✅ บันทึกการตั้งค่าระบบเรียบร้อยแล้ว!");
+          alert("🎉 บันทึกการตั้งค่าระบบลงในแท็บ settings สำเร็จเรียบร้อยแล้วครับ");
         } else {
-          alert("แจ้งเตือน: " + data.message);
+          alert("บันทึกไม่สำเร็จ: " + data.message);
         }
       } catch (e) {
-        alert("สายสัญญาณขัดข้อง ไม่สามารถบันทึกได้");
+        alert("สายสัญญาณขัดข้อง");
       }
-    }
-
-    function filterTable() {
-      const q = document.getElementById("table-search").value.toLowerCase();
-      if (!q) {
-        renderTable(currentHeaders, currentRawData);
-        return;
-      }
-      const filtered = currentRawData.filter(r => r.values.some(v => String(v).toLowerCase().includes(q)));
-      renderTable(currentHeaders, filtered);
     }
   </script>
 </body>

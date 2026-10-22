@@ -117,7 +117,6 @@
 
   <!-- ========================================== -->
   <!-- 2. ศูนย์รวมลิงก์บริการทั้งหมด (All Links Hub) -->
-  <!-- (ยกเว้น admincontrol ตามที่กำหนด) -->
   <!-- ========================================== -->
   <div class="space-y-2 mb-4">
     <div class="flex items-center space-x-1.5 px-1">
@@ -214,9 +213,10 @@
         <textarea id="inp-address" rows="3" placeholder="บ้านเลขที่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-auroraGold-bright"></textarea>
       </div>
 
-      <button id="btn-save-member" onclick="saveMemberProfile()" class="w-full bg-gradient-to-r from-auroraGold-bright via-auroraGold to-auroraGold-amber text-mysticBg-deep font-black text-xs py-3 rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-1.5 border border-white">
-        <span>💾</span>
-        <span>บันทึกข้อมูลสมาชิก & ที่อยู่จัดส่ง</span>
+      <!-- ปุ่มบันทึกข้อมูล (ปรับตัวหนังสือเป็นสีขาวเด่นชัด text-white) -->
+      <button id="btn-save-member" onclick="saveMemberProfile()" class="w-full bg-gradient-to-r from-nagaEmerald-glow via-nagaEmerald to-mysticBg-deep text-white font-black text-xs py-3.5 rounded-xl shadow-xl hover:brightness-125 active:scale-95 transition flex items-center justify-center space-x-2 border border-auroraGold-bright tracking-wide">
+        <span class="text-sm">💾</span>
+        <span class="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">บันทึกข้อมูลสมาชิก & ที่อยู่จัดส่ง</span>
       </button>
     </div>
   </div>
@@ -282,7 +282,7 @@
 
       const btn = document.getElementById("btn-save-member");
       btn.disabled = true;
-      btn.innerText = "กำลังบันทึกข้อมูล...";
+      btn.innerHTML = `<span class="animate-spin inline-block mr-1">🌀</span> <span class="text-white">กำลังบันทึกข้อมูล...</span>`;
 
       const payload = {
         action: "save_member",
@@ -311,7 +311,7 @@
         alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้งครับ");
       } finally {
         btn.disabled = false;
-        btn.innerText = "💾 บันทึกข้อมูลสมาชิก & ที่อยู่จัดส่ง";
+        btn.innerHTML = `<span class="text-sm">💾</span> <span class="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">บันทึกข้อมูลสมาชิก & ที่อยู่จัดส่ง</span>`;
       }
     }
   </script>

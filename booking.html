@@ -2,523 +2,305 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Control Master - วินทร์ทรัพย์นาคราช</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>จองคิวตรวจดวงชะตาสายญาณ - วินทร์ทรัพย์นาคราช</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Prompt', '-apple-system', 'sans-serif'] },
+          colors: {
+            mysticBg: { DEFAULT: '#08231C', light: '#0D382D', deep: '#051913' },
+            nagaEmerald: { DEFAULT: '#105B43', deep: '#063828', glow: '#16805E', bright: '#34D399', light: '#A7F3D0' },
+            auroraGold: { light: '#FEF08A', DEFAULT: '#FBBF24', amber: '#F59E0B', border: '#E6CA65' }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body { font-family: 'Prompt', sans-serif; background: #04120D; color: #F3F4F6; }
-    .glass-box { background: rgba(8, 38, 30, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(230, 202, 101, 0.35); }
-    .tab-active { background: linear-gradient(135deg, #105B43 0%, #063828 100%); border-color: #FBBF24; color: #FEF08A; font-weight: 800; }
-    
-    /* สไตล์ปุ่มสวิตช์เลื่อน (Toggle Switch) */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%);
+      color: #F3F4F6;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
     }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
+    .glass-mystic {
+      background: rgba(9, 39, 31, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(230, 202, 101, 0.45);
     }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #374151;
-      transition: .3s;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 2px;
-      bottom: 2px;
-      background-color: white;
-      transition: .3s;
-      border-radius: 50%;
-    }
-    input:checked + .slider {
-      background-color: #10B981;
-      border-color: #FBBF24;
-    }
-    input:checked + .slider:before {
-      transform: translateX(20px);
+    .slot-btn.active {
+      background: linear-gradient(135deg, #FEF08A 0%, #FBBF24 50%, #F59E0B 100%);
+      color: #051913;
+      border-color: #FFFFFF;
+      font-weight: 800;
+      box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
     }
   </style>
 </head>
-<body class="min-h-screen p-3 sm:p-6 pb-20">
+<body class="p-3.5 pb-28 max-w-md mx-auto">
 
-  <div class="max-w-7xl mx-auto space-y-4">
-    <!-- Header -->
-    <header class="glass-box rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-xl">
-      <div class="flex items-center space-x-3">
-        <span class="text-3xl">🐍</span>
-        <div>
-          <h1 class="text-base sm:text-lg font-black text-[#FBBF24] uppercase tracking-wider flex items-center gap-2">
-            <span>วินทร์ทรัพย์นาคราช</span>
-            <span class="text-[10px] bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/40">ADMIN MASTER CONTROL</span>
-          </h1>
-          <p class="text-xs text-stone-400">ควบคุมระบบทุกหน้า ทุกแท็บฐานข้อมูล และตั้งค่าสวิตช์ระบบจัดส่ง/แสดงสินค้า</p>
-        </div>
+  <!-- Header -->
+  <header class="glass-mystic rounded-2xl p-4 shadow-xl flex items-center justify-between border border-auroraGold-border/60 mb-3.5">
+    <div class="flex items-center space-x-2.5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-mysticBg-deep via-nagaEmerald to-nagaEmerald-glow p-0.5 border border-auroraGold-border flex items-center justify-center shadow-md">
+        <span class="text-xl">📞</span>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="refreshCurrentTab()" class="bg-[#105B43] border border-[#FBBF24] text-white px-3.5 py-1.5 rounded-xl text-xs font-bold hover:brightness-125 transition flex items-center gap-1.5">
-          <span>🔄</span> รีเฟรชข้อมูล
-        </button>
-      </div>
-    </header>
-
-    <!-- Metrics Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-[#FBBF24]">
-        <span class="text-[10px] text-stone-400 font-bold block">สมาชิก (member)</span>
-        <span id="stat-members" class="text-lg font-black text-white">0</span>
-      </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-emerald-400">
-        <span class="text-[10px] text-stone-400 font-bold block">คำสั่งซื้อ (orders)</span>
-        <span id="stat-orders" class="text-lg font-black text-emerald-400">0</span>
-      </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-amber-400">
-        <span class="text-[10px] text-stone-400 font-bold block">นัดหมายดูดวง (bookings)</span>
-        <span id="stat-bookings" class="text-lg font-black text-amber-300">0</span>
-      </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-cyan-400">
-        <span class="text-[10px] text-stone-400 font-bold block">สินค้า/บริการ (products)</span>
-        <span id="stat-products" class="text-lg font-black text-cyan-300">0</span>
-      </div>
-      <div class="glass-box p-3 rounded-2xl border-l-4 border-l-purple-400">
-        <span class="text-[10px] text-stone-400 font-bold block">สาส์นบรมครู (psarnkru)</span>
-        <span id="stat-kru" class="text-lg font-black text-purple-300">0</span>
-      </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs font-medium hide-scrollbar">
-      <button onclick="switchTab('member')" id="tab-btn-member" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap tab-active">👤 สมาชิก (member)</button>
-      <button onclick="switchTab('orders')" id="tab-btn-orders" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">📦 ออเดอร์ & พัสดุ (orders)</button>
-      <button onclick="switchTab('bookings')" id="tab-btn-bookings" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">📞 คิวดูดวง (bookings)</button>
-      <button onclick="switchTab('products')" id="tab-btn-products" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">💎 สินค้า & สวิตช์แสดง (products)</button>
-      <button onclick="switchTab('psarnkru')" id="tab-btn-psarnkru" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">👑 สาส์นบรมครู (psarnkru)</button>
-      <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn px-4 py-2 rounded-xl border border-white/10 glass-box whitespace-nowrap">⚙️ ตั้งค่า & สวิตช์ระบบ (settings)</button>
-    </div>
-
-    <!-- Data Panel / Settings Panel -->
-    <div id="data-table-container" class="glass-box rounded-2xl overflow-hidden shadow-2xl border border-[#E6CA65]/30">
-      <div class="p-3.5 border-b border-white/10 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center space-x-2">
-          <span id="current-tab-title" class="text-xs font-black text-[#FBBF24] uppercase">ตาราง: member</span>
-          <span id="row-count-badge" class="text-[10px] bg-black/40 px-2 py-0.5 rounded-full text-stone-300">0 รายการ</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <input type="text" id="table-search" oninput="filterTable()" placeholder="ค้นหาข้อมูลในตาราง..." class="text-xs bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#FBBF24] text-white">
-        </div>
-      </div>
-
-      <div class="overflow-x-auto max-h-[65vh]">
-        <table class="w-full text-left text-xs">
-          <thead id="table-head" class="bg-black/60 text-stone-300 border-b border-white/10 sticky top-0 backdrop-blur-md"></thead>
-          <tbody id="table-body" class="divide-y divide-white/5">
-            <tr><td class="p-8 text-center text-stone-400">กำลังประสานฐานข้อมูล...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Settings Switch Panel (เฉพาะแท็บ settings) -->
-    <div id="settings-panel" class="hidden glass-box rounded-2xl p-5 shadow-2xl border border-[#E6CA65]/40 space-y-5">
-      <div class="border-b border-white/10 pb-3 flex justify-between items-center">
-        <div>
-          <h2 class="text-sm font-black text-[#FBBF24] uppercase flex items-center gap-2">
-            <span>⚙️</span> แผงควบคุมสวิตช์และการตั้งค่าระบบ (Master Settings)
-          </h2>
-          <p class="text-xs text-stone-400">ควบคุมเปิด-ปิดฟีเจอร์ร้านค้า เลขที่บัญชี และ API Key จัดส่งพัสดุ</p>
-        </div>
-        <button onclick="saveAllSettings()" class="bg-[#105B43] border border-[#FBBF24] text-white px-4 py-2 rounded-xl text-xs font-bold hover:brightness-125 transition flex items-center gap-1.5">
-          <span>💾</span> บันทึกการตั้งค่าทั้งหมด
-        </button>
-      </div>
-
-      <!-- สวิตช์แบบเลื่อน (Toggle Switches) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-black/40 p-4 rounded-xl border border-white/10 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-white block">🛒 สถานะเปิดหน้าร้านวัตถุมงคล (Shop Status)</span>
-            <span class="text-[11px] text-stone-400">เปิดหรือปิดรับออเดอร์จากหน้าเว็บทันที</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="switch-shop-status" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="bg-black/40 p-4 rounded-xl border border-white/10 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-white block">🔮 สวิตช์ระบบตรวจดวงชะตา (Booking Service)</span>
-            <span class="text-[11px] text-stone-400">เปิด-ปิดระบบนัดหมายดูดวงแบบโทร</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="switch-booking-status" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="bg-black/40 p-4 rounded-xl border border-white/10 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-white block">🚚 ตรวจสอบพัสดุอัตโนมัติ (Auto Tracking Notify)</span>
-            <span class="text-[11px] text-stone-400">ส่ง Flex แจ้งเตือนเลขพัสดุเมื่อใส่เลข Tracking</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="switch-auto-tracking" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="bg-black/40 p-4 rounded-xl border border-white/10 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-white block">🧾 ระบบ SlipOK ตรวจสลิปอัตโนมัติ</span>
-            <span class="text-[11px] text-stone-400">เปิดใช้การอ่านสลิปและปรับสถานะชำระเงิน</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="switch-slipok-status" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-      </div>
-
-      <!-- ฟอร์มกรอก API Keys & บัญชีธนาคาร -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🏦 ชื่อธนาคาร</label>
-          <input type="text" id="set-bank-name" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">💳 เลขที่บัญชีธนาคาร</label>
-          <input type="text" id="set-bank-no" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">👤 ชื่อบัญชีธนาคาร</label>
-          <input type="text" id="set-bank-acc-name" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🚚 ขนส่งหลัก (Shipping Provider)</label>
-          <select id="set-shipping-provider" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-            <option value="THAIPOST">ไปรษณีย์ไทย (Thailand Post EMS)</option>
-            <option value="FLASH">Flash Express</option>
-            <option value="KERRY">Kerry Express</option>
-            <option value="J&T">J&T Express</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🔑 Shipping API Key (ระบบติดตามพัสดุ)</label>
-          <input type="text" id="set-shipping-key" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-stone-300 block mb-1">🔐 SlipOK API Key</label>
-          <input type="text" id="set-slipok-key" class="w-full text-xs bg-black/50 border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:border-[#FBBF24]">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal สำหรับใส่เลข Tracking & ส่ง Flex -->
-  <div id="tracking-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3.5">
-    <div class="glass-box rounded-2xl w-full max-w-sm p-5 space-y-4 border border-[#E6CA65]">
-      <div class="flex justify-between items-center border-b border-white/10 pb-2">
-        <h3 class="text-xs font-black text-[#FBBF24] uppercase flex items-center gap-1.5">
-          <span>🚚</span> ระบุหมายเลขพัสดุ & ส่ง Flex แจ้งเตือน
-        </h3>
-        <button onclick="closeTrackingModal()" class="text-xs text-stone-400 hover:text-white">✕</button>
-      </div>
-
       <div>
-        <label class="text-[11px] text-stone-300 block mb-1">รหัสคำสั่งซื้อ</label>
-        <input type="text" id="modal-order-id" readonly class="w-full text-xs bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-[#FEF08A] font-bold">
+        <h1 class="text-xs font-black tracking-widest text-auroraGold-bright uppercase leading-tight">
+          วินทร์ทรัพย์นาคราช
+        </h1>
+        <p class="text-[11px] font-black text-nagaEmerald-light">จองคิวตรวจดวงชะตา (โทร)</p>
       </div>
+    </div>
+    <a href="index.html" class="text-xs font-bold text-auroraGold-light bg-black/40 px-3 py-1.5 rounded-xl border border-auroraGold-border/60 hover:bg-black/60 transition shadow-sm">
+      หน้าร้าน
+    </a>
+  </header>
 
-      <div>
-        <label class="text-[11px] text-stone-300 block mb-1">หมายเลขพัสดุ (Tracking No.) *</label>
-        <input type="text" id="modal-tracking-no" placeholder="เช่น ED123456789TH หรือ TH0123456" class="w-full text-xs bg-black/50 border border-[#E6CA65]/50 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-[#FBBF24]">
+  <div class="space-y-3.5">
+    <!-- กล่องเลือกแพ็กเกจดูดวง -->
+    <div class="glass-mystic rounded-2xl p-4 border border-auroraGold-border/40 space-y-2 shadow-lg">
+      <label class="text-xs font-bold text-auroraGold-light flex items-center gap-1.5">
+        <span>🔮</span> เลือกแพ็กเกจสายญาณ (หมวดบริการ)
+      </label>
+      <select id="service-select" onchange="onServiceChange()" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-xl border border-auroraGold-border/50 bg-black/50 text-white focus:outline-none focus:border-auroraGold-bright">
+        <option value="">กำลังดึงรายการบริการ...</option>
+      </select>
+      <div id="service-desc-box" class="text-[11px] text-stone-300 bg-black/30 p-2.5 rounded-xl border border-white/5 hidden leading-relaxed"></div>
+      <div class="flex justify-between items-center pt-1 border-t border-white/10">
+        <span class="text-xs text-stone-300">ค่าครูบูชาญาณ:</span>
+        <span id="service-price" class="text-base font-black text-auroraGold-bright font-mono">฿0 บาท</span>
       </div>
+    </div>
 
-      <button id="btn-submit-tracking" onclick="submitDispatchTracking()" class="w-full bg-[#105B43] hover:bg-[#16805E] border border-[#FBBF24] text-white font-bold text-xs py-3 rounded-xl transition flex items-center justify-center gap-1.5">
-        <span>🚀</span> ยืนยันจัดส่ง & ส่ง Flex แจ้งลูกค้า
+    <!-- กล่องเลือกวันที่ -->
+    <div class="glass-mystic rounded-2xl p-4 border border-auroraGold-border/40 space-y-2 shadow-lg">
+      <label class="text-xs font-bold text-auroraGold-light flex items-center gap-1.5">
+        <span>🗓️</span> เลือกวันที่นัดหมายสนทนา
+      </label>
+      <input type="date" id="booking-date" onchange="loadTimeSlots()" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-xl border border-auroraGold-border/50 bg-black/50 text-white focus:outline-none focus:border-auroraGold-bright">
+    </div>
+
+    <!-- กล่องเลือกรอบเวลา (รองรับสวิตช์เปิด-ปิดจากแอดมิน) -->
+    <div class="glass-mystic rounded-2xl p-4 border border-auroraGold-border/40 space-y-2 shadow-lg">
+      <div class="flex items-center justify-between">
+        <label class="text-xs font-bold text-auroraGold-light flex items-center gap-1.5">
+          <span>⏰</span> เลือกรอบเวลาสนทนา
+        </label>
+        <span id="slot-status" class="text-[10px] text-stone-400">เลือกรอบที่สะดวก</span>
+      </div>
+      <div id="slots-grid" class="grid grid-cols-2 gap-2 pt-1">
+        <p class="text-xs text-stone-400 col-span-2 text-center py-4">กรุณาเลือกวันที่ก่อนครับ</p>
+      </div>
+    </div>
+
+    <!-- ข้อมูลผู้ขอรับคำพยากรณ์ -->
+    <div class="glass-mystic rounded-2xl p-4 border border-auroraGold-border/40 space-y-2 shadow-lg">
+      <label class="text-xs font-bold text-auroraGold-light flex items-center gap-1.5">
+        <span>👤</span> ข้อมูลผู้ขอรับคำพยากรณ์
+      </label>
+      <input type="text" id="cust-name" placeholder="ชื่อ - นามสกุล หรือชื่อเรียก *" class="w-full text-xs bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-auroraGold-bright">
+      <input type="tel" id="cust-phone" placeholder="เบอร์โทรศัพท์ติดต่อสำหรับการโทร *" class="w-full text-xs bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-auroraGold-bright">
+    </div>
+
+    <!-- ปุ่มยืนยันการจอง -->
+    <div class="pt-2">
+      <button id="btn-confirm-booking" onclick="confirmBookingAction()" class="w-full bg-gradient-to-r from-auroraGold-bright via-auroraGold to-auroraGold-amber text-mysticBg-deep font-black text-sm py-3.5 rounded-2xl shadow-xl hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2 border border-white">
+        <span>✨</span>
+        <span>ยืนยันการนัดหมายตรวจดวงชะตา</span>
       </button>
     </div>
   </div>
 
   <script>
+    const LIFF_ID = "2007499712-3e6TMnJJ";
     const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
-    let activeTab = "member";
-    let currentRawData = [];
-    let currentHeaders = [];
-    let currentModalTarget = null;
 
-    window.addEventListener("DOMContentLoaded", () => {
-      loadOverviewStats();
-      loadTabData(activeTab);
+    let currentUserId = "";
+    let servicesList = [];
+    let selectedService = null;
+    let selectedDate = "";
+    let selectedTime = "";
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      // 1. ตั้งค่าวันที่เริ่มต้นเป็นวันพรุ่งนี้
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const dateStr = tomorrow.toISOString().split('T')[0];
+      const dateInput = document.getElementById("booking-date");
+      dateInput.min = dateStr;
+      dateInput.value = dateStr;
+      selectedDate = dateStr;
+
+      // 2. เริ่มต้น LIFF SDK
+      try {
+        if (typeof liff !== "undefined") {
+          await liff.init({ liffId: LIFF_ID });
+          if (liff.isLoggedIn()) {
+            const prof = await liff.getProfile();
+            currentUserId = prof.userId;
+            loadSavedProfile(currentUserId);
+          }
+        }
+      } catch (e) {
+        console.warn("LIFF Notice:", e);
+      }
+
+      // 3. โหลดบริการดูดวงและรอบเวลา
+      await loadServices();
+      loadTimeSlots();
     });
 
-    async function loadOverviewStats() {
+    async function loadSavedProfile(uid) {
       try {
-        const res = await fetch(`${API_URL}?action=admin_get_all_summary`);
+        const res = await fetch(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`);
         const data = await res.json();
-        if (data.status === "success" && data.summary) {
-          document.getElementById("stat-members").innerText = data.summary.membersCount;
-          document.getElementById("stat-orders").innerText = data.summary.ordersCount;
-          document.getElementById("stat-bookings").innerText = data.summary.bookingsCount;
-          document.getElementById("stat-products").innerText = data.summary.productsCount;
-          document.getElementById("stat-kru").innerText = data.summary.kruCardsCount;
+        if (data.status === "success" && data.member) {
+          if (data.member.name && data.member.name !== "-") document.getElementById("cust-name").value = data.member.name;
+          if (data.member.phone && data.member.phone !== "-") document.getElementById("cust-phone").value = data.member.phone;
         }
       } catch (e) {}
     }
 
-    function switchTab(tabName) {
-      activeTab = tabName;
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("tab-active"));
-      const btn = document.getElementById(`tab-btn-${tabName}`);
-      if (btn) btn.classList.add("tab-active");
-
-      const tableContainer = document.getElementById("data-table-container");
-      const settingsPanel = document.getElementById("settings-panel");
-
-      if (tabName === "settings") {
-        tableContainer.classList.add("hidden");
-        settingsPanel.classList.remove("hidden");
-        loadSettingsPanel();
-      } else {
-        tableContainer.classList.remove("hidden");
-        settingsPanel.classList.add("hidden");
-        document.getElementById("current-tab-title").innerText = `ตาราง: ${tabName}`;
-        loadTabData(tabName);
-      }
-    }
-
-    function refreshCurrentTab() {
-      loadOverviewStats();
-      if (activeTab === "settings") {
-        loadSettingsPanel();
-      } else {
-        loadTabData(activeTab);
-      }
-    }
-
-    async function loadTabData(tabName) {
-      const tbody = document.getElementById("table-body");
-      const thead = document.getElementById("table-head");
-      tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-stone-400">กำลังดึงข้อมูลแท็บ ${tabName}...</td></tr>`;
-
+    async function loadServices() {
+      const select = document.getElementById("service-select");
       try {
-        const res = await fetch(`${API_URL}?action=admin_get_tab_data&tabName=${tabName}`);
+        const res = await fetch(`${API_URL}?action=get_call_services`);
         const data = await res.json();
+        if (data.status === "success" && data.services && data.services.length > 0) {
+          servicesList = data.services;
+          select.innerHTML = servicesList.map((s, idx) => `
+            <option value="${idx}">${s.name} - ฿${Number(s.price).toLocaleString()} บาท</option>
+          `).join('');
 
-        if (data.status === "success") {
-          currentHeaders = data.headers || [];
-          currentRawData = data.rows || [];
-          document.getElementById("row-count-badge").innerText = `${currentRawData.length} รายการ`;
-          renderTable(currentHeaders, currentRawData);
+          // ตรวจสอบ Parameter จาก URL (กรณีส่งต่อมาจากหน้าร้าน)
+          const params = new URLSearchParams(window.location.search);
+          const reqService = params.get("service");
+          if (reqService) {
+            const foundIdx = servicesList.findIndex(s => s.name === reqService);
+            if (foundIdx !== -1) select.value = foundIdx;
+          }
+
+          onServiceChange();
         } else {
-          tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">ข้อผิดพลาด: ${data.message}</td></tr>`;
+          select.innerHTML = `<option value="">ไม่พบบริการในหมวดบริการ</option>`;
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-red-400">สายสัญญาณขัดข้อง</td></tr>`;
+        select.innerHTML = `<option value="">สายสัญญาณขัดข้อง</option>`;
       }
     }
 
-    function renderTable(headers, rows) {
-      const thead = document.getElementById("table-head");
-      const tbody = document.getElementById("table-body");
-
-      if (headers.length === 0) {
-        thead.innerHTML = "";
-        tbody.innerHTML = `<tr><td class="p-8 text-center text-stone-400">แท็บนี้ยังไม่มีข้อมูล</td></tr>`;
-        return;
-      }
-
-      thead.innerHTML = `<tr>
-        <th class="p-3 text-[10px] font-bold text-stone-400"># แถว</th>
-        ${headers.map(h => `<th class="p-3 text-stone-200 font-bold whitespace-nowrap">${h}</th>`).join('')}
-        <th class="p-3 text-stone-200 font-bold text-center">การจัดการ</th>
-      </tr>`;
-
-      if (rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${headers.length + 2}" class="p-8 text-center text-stone-400">ไม่มีรายการในแท็บนี้</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = rows.map(r => {
-        return `<tr class="hover:bg-white/5 transition">
-          <td class="p-3 text-[10px] text-stone-400 font-mono">${r.rowIndex}</td>
-          ${r.values.map(val => `<td class="p-3 text-stone-300 max-w-xs truncate font-medium">${val || '-'}</td>`).join('')}
-          <td class="p-3 text-center whitespace-nowrap">
-            ${getActionButtons(activeTab, r)}
-          </td>
-        </tr>`;
-      }).join('');
-    }
-
-    function getActionButtons(tab, row) {
-      if (tab === "orders") {
-        return `
-          <button onclick="quickUpdateStatus('orders', ${row.rowIndex}, 9, 'ชำระเงินแล้ว')" class="bg-emerald-800/80 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold mr-1">ชำระแล้ว</button>
-          <button onclick="openTrackingModal(${row.rowIndex}, '${row.values[0]}', '${row.values[2]}')" class="bg-cyan-800/80 hover:bg-cyan-700 text-white px-2 py-1 rounded text-[10px] font-bold">🚚 ใส่เลขพัสดุ</button>
-        `;
-      }
-      if (tab === "bookings") {
-        return `
-          <button onclick="quickUpdateStatus('bookings', ${row.rowIndex}, 7, 'ยืนยันนัดหมายแล้ว')" class="bg-emerald-800/80 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold mr-1">ยืนยันคิว</button>
-          <button onclick="quickUpdateStatus('bookings', ${row.rowIndex}, 7, 'ยกเลิก')" class="bg-red-800/80 hover:bg-red-700 text-white px-2 py-1 rounded text-[10px] font-bold">ยกเลิก</button>
-        `;
-      }
-      if (tab === "products") {
-        const isShown = (row.values[8] !== "HIDE" && row.values[8] !== "ปิด");
-        return `
-          <label class="switch" title="สวิตช์เปิด-ปิดการแสดงสินค้า">
-            <input type="checkbox" ${isShown ? "checked" : ""} onchange="toggleProductVisibility(${row.rowIndex}, this)">
-            <span class="slider"></span>
-          </label>
-        `;
-      }
-      return `<span class="text-stone-500 text-[10px]">บันทึกอัตโนมัติ</span>`;
-    }
-
-    async function toggleProductVisibility(rowIndex, checkbox) {
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action: "admin_toggle_product_status",
-            rowIndex: rowIndex
-          })
-        });
-        const data = await res.json();
-        if (data.status === "success") {
-          checkbox.checked = (data.newStatus === "SHOW");
+    function onServiceChange() {
+      const select = document.getElementById("service-select");
+      const idx = select.value;
+      if (idx !== "" && servicesList[idx]) {
+        selectedService = servicesList[idx];
+        document.getElementById("service-price").innerText = `฿${Number(selectedService.price).toLocaleString()} บาท`;
+        const descBox = document.getElementById("service-desc-box");
+        if (selectedService.description) {
+          descBox.innerText = selectedService.description;
+          descBox.classList.remove("hidden");
         } else {
-          alert("ไม่สามารถเปลี่ยนสถานะได้: " + data.message);
-          checkbox.checked = !checkbox.checked;
+          descBox.classList.add("hidden");
+        }
+      }
+    }
+
+    async function loadTimeSlots() {
+      selectedDate = document.getElementById("booking-date").value;
+      const grid = document.getElementById("slots-grid");
+      const statusEl = document.getElementById("slot-status");
+      selectedTime = "";
+
+      if (!selectedDate) {
+        grid.innerHTML = `<p class="text-xs text-stone-400 col-span-2 text-center py-4">กรุณาเลือกวันที่</p>`;
+        return;
+      }
+
+      statusEl.innerText = "กำลังตรวจสอบรอบว่าง...";
+      grid.innerHTML = `<p class="text-xs text-stone-400 col-span-2 text-center py-4">กำลังประสานตารางเวลา...</p>`;
+
+      try {
+        const res = await fetch(`${API_URL}?action=get_time_slots&date=${selectedDate}`);
+        const data = await res.json();
+        if (data.status === "success" && data.slots) {
+          if (data.slots.length === 0) {
+            statusEl.innerText = "ไม่มีรอบเวลาเปิด";
+            grid.innerHTML = `<p class="text-xs text-amber-300 col-span-2 text-center py-4">รอบเวลาในวันนี้ปิดให้บริการทั้งหมด</p>`;
+            return;
+          }
+
+          statusEl.innerText = "แตะเลือกรอบที่ต้องการ";
+          grid.innerHTML = data.slots.map(s => {
+            if (s.available) {
+              return `<button type="button" onclick="selectSlot(this, '${s.time}')" class="slot-btn p-2.5 rounded-xl border border-auroraGold-border/40 bg-black/40 text-stone-200 text-xs font-semibold hover:border-auroraGold-bright active:scale-95 transition text-center shadow-sm">${s.time}</button>`;
+            } else {
+              return `<button type="button" disabled class="p-2.5 rounded-xl border border-white/5 bg-white/5 text-stone-500 text-xs font-medium cursor-not-allowed text-center">${s.time} (เต็ม)</button>`;
+            }
+          }).join('');
         }
       } catch (e) {
-        alert("สายสัญญาณขัดข้อง");
-        checkbox.checked = !checkbox.checked;
+        grid.innerHTML = `<p class="text-xs text-red-400 col-span-2 text-center py-4">โหลดรอบเวลาไม่สำเร็จ</p>`;
       }
     }
 
-    function openTrackingModal(rowIndex, orderId, userId) {
-      currentModalTarget = { rowIndex, orderId, userId };
-      document.getElementById("modal-order-id").value = orderId;
-      document.getElementById("modal-tracking-no").value = "";
-      document.getElementById("tracking-modal").classList.remove("hidden");
+    function selectSlot(btn, time) {
+      document.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedTime = time;
     }
 
-    function closeTrackingModal() {
-      document.getElementById("tracking-modal").classList.add("hidden");
-      currentModalTarget = null;
-    }
-
-    async function submitDispatchTracking() {
-      const trackingNo = document.getElementById("modal-tracking-no").value.trim();
-      if (!trackingNo) {
-        alert("กรุณาระบุเลขพัสดุครับ");
+    async function confirmBookingAction() {
+      if (!selectedService) {
+        alert("กรุณาเลือกแพ็กเกจดูดวงครับ");
+        return;
+      }
+      if (!selectedDate) {
+        alert("กรุณาเลือกวันที่นัดหมายครับ");
+        return;
+      }
+      if (!selectedTime) {
+        alert("กรุณาเลือกรอบเวลาสนทนาครับ");
         return;
       }
 
-      const btn = document.getElementById("btn-submit-tracking");
+      const custName = document.getElementById("cust-name").value.trim();
+      const custPhone = document.getElementById("cust-phone").value.trim();
+
+      if (!custName || !custPhone) {
+        alert("กรุณากรอกชื่อและเบอร์โทรศัพท์ติดต่อสำหรับการโทรครับ");
+        return;
+      }
+
+      const btn = document.getElementById("btn-confirm-booking");
       btn.disabled = true;
-      btn.innerText = "กำลังส่ง Flex แจ้งลูกค้า...";
+      btn.innerText = "กำลังประสานคิวนัดหมาย...";
 
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action: "admin_dispatch_tracking",
-            rowIndex: currentModalTarget.rowIndex,
-            orderId: currentModalTarget.orderId,
-            userId: currentModalTarget.userId,
-            trackingNo: trackingNo,
-            provider: document.getElementById("set-shipping-provider").value || "THAIPOST"
-          })
-        });
-        const data = await res.json();
-        if (data.status === "success") {
-          alert("✅ อัปเดตสถานะจัดส่งและส่ง Flex แจ้งเตือนลูกค้าเรียบร้อยแล้ว!");
-          closeTrackingModal();
-          loadTabData("orders");
-        } else {
-          alert("แจ้งเตือน: " + data.message);
-        }
-      } catch (e) {
-        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่");
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "🚀 ยืนยันจัดส่ง & ส่ง Flex แจ้งลูกค้า";
+      let uid = currentUserId;
+      if (!uid && typeof liff !== "undefined" && liff.isLoggedIn()) {
+        try {
+          const prof = await liff.getProfile();
+          uid = prof.userId;
+        } catch (e) {}
       }
-    }
 
-    async function quickUpdateStatus(tab, rowIndex, colIndex, statusValue) {
-      if (!confirm(`ยืนยันการปรับสถานะเป็น "${statusValue}" หรือไม่?`)) return;
-
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            action: "admin_update_status",
-            tabName: tab,
-            rowIndex: rowIndex,
-            colIndex: colIndex,
-            statusValue: statusValue
-          })
-        });
-        const data = await res.json();
-        if (data.status === "success") {
-          alert("✅ อัปเดตสถานะสำเร็จ!");
-          loadTabData(tab);
-        } else {
-          alert("ข้อผิดพลาด: " + data.message);
-        }
-      } catch (e) {
-        alert("สายสัญญาณขัดข้อง");
-      }
-    }
-
-    async function loadSettingsPanel() {
-      try {
-        const res = await fetch(`${API_URL}?action=get_global_settings`);
-        const data = await res.json();
-        if (data.status === "success" && data.config) {
-          const cfg = data.config;
-          document.getElementById("set-bank-name").value = cfg.bankName || "";
-          document.getElementById("set-bank-no").value = cfg.bankAccountNo || "";
-          document.getElementById("set-bank-acc-name").value = cfg.bankAccountName || "";
-          document.getElementById("set-shipping-provider").value = cfg.shippingProvider || "THAIPOST";
-          document.getElementById("set-shipping-key").value = cfg.shippingApiKey || "";
-          document.getElementById("set-slipok-key").value = cfg.slipOkApiKey || "";
-          document.getElementById("switch-shop-status").checked = (cfg.shopStatus !== "CLOSED");
-        }
-      } catch (e) {}
-    }
-
-    async function saveAllSettings() {
       const payload = {
-        action: "admin_save_settings",
-        settings: {
-          BANK_NAME: document.getElementById("set-bank-name").value.trim(),
-          BANK_ACC_NO: document.getElementById("set-bank-no").value.trim(),
-          BANK_ACC_NAME: document.getElementById("set-bank-acc-name").value.trim(),
-          SHIPPING_PROVIDER: document.getElementById("set-shipping-provider").value,
-          SHIPPING_API_KEY: document.getElementById("set-shipping-key").value.trim(),
-          SLIPOK_API_KEY: document.getElementById("set-slipok-key").value.trim(),
-          SHOP_STATUS: document.getElementById("switch-shop-status").checked ? "OPEN" : "CLOSED"
-        }
+        action: "submit_fast_booking",
+        userId: uid || "GUEST_USER",
+        serviceName: selectedService.name,
+        price: selectedService.price,
+        bookingDate: selectedDate,
+        slotTime: selectedTime,
+        customerName: custName,
+        phone: custPhone
       };
 
       try {
@@ -527,25 +309,37 @@
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
-        if (data.status === "success") {
-          alert("✅ บันทึกการตั้งค่าระบบเรียบร้อยแล้ว!");
-        } else {
-          alert("แจ้งเตือน: " + data.message);
-        }
-      } catch (e) {
-        alert("สายสัญญาณขัดข้อง ไม่สามารถบันทึกได้");
-      }
-    }
+        const result = await res.json();
 
-    function filterTable() {
-      const q = document.getElementById("table-search").value.toLowerCase();
-      if (!q) {
-        renderTable(currentHeaders, currentRawData);
-        return;
+        if (result.status === "success") {
+          // ฝั่งเราส่งข้อความธรรมดาเข้าห้องแชท (ฝั่งขวา) ป้องกัน Flex ส่งมาเบิ้ล
+          if (typeof liff !== "undefined" && liff.isInClient()) {
+            try {
+              await liff.sendMessages([
+                {
+                  type: "text",
+                  text: `📞 จองคิวตรวจดวงชะตา: ${result.bookingId}\nแพ็กเกจ: ${selectedService.name}\nวันที่นัด: ${selectedDate} (${selectedTime})\nค่าครู: ฿${Number(selectedService.price).toLocaleString()} บาท\n(กำลังแนบสลิปค่าครู)`
+                }
+              ]);
+            } catch (chatErr) {
+              console.warn("sendMessages warning:", chatErr);
+            }
+          }
+
+          alert("🎉 จองคิวสำเร็จ! ระบบส่งใบนัดหมายและเลขที่บัญชีเข้าห้องแชทเรียบร้อยแล้วครับ");
+          if (typeof liff !== "undefined" && liff.isInClient()) {
+            setTimeout(() => { liff.closeWindow(); }, 500);
+          }
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถจองคิวได้"));
+          btn.disabled = false;
+          btn.innerText = "ยืนยันการนัดหมายตรวจดวงชะตา";
+        }
+      } catch (err) {
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้งครับ");
+        btn.disabled = false;
+        btn.innerText = "ยืนยันการนัดหมายตรวจดวงชะตา";
       }
-      const filtered = currentRawData.filter(r => r.values.some(v => String(v).toLowerCase().includes(q)));
-      renderTable(currentHeaders, filtered);
     }
   </script>
 </body>

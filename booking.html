@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>จองคิวตรวจดวงชะตา - SHOP@วินทร์ทรัพย์นาคราช</title>
+  <title>จองคิวตรวจดวงชะตา - วินทร์ทรัพย์นาคราช</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,15 +14,11 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Prompt', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+          fontFamily: { sans: ['Prompt', '-apple-system', 'sans-serif'] },
           colors: {
-            pearl: '#F2F7F4',
-            emeraldDeep: '#0B4734',
-            emeraldDark: '#083828',
-            nagaGold: '#D97706',
-            goldBright: '#FBBF24',
-            goldBorder: '#E6CA65',
-            obsidian: '#121714'
+            mysticBg: { DEFAULT: '#08231C', light: '#0D382D', deep: '#051913' },
+            nagaEmerald: { DEFAULT: '#105B43', deep: '#063828', glow: '#16805E', light: '#A7F3D0' },
+            auroraGold: { light: '#FEF08A', DEFAULT: '#FBBF24', amber: '#F59E0B', border: '#E6CA65' }
           }
         }
       }
@@ -32,62 +28,65 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at top, #FBFDFB 0%, #EBF4F0 100%);
-      color: #121714;
+      background: radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%);
+      color: #F3F4F6;
+      min-height: 100vh;
+      transition: background 0.5s ease, color 0.5s ease;
     }
-    .glass-pearl {
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(12px);
+    .glass-mystic {
+      background: rgba(9, 39, 31, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(230, 202, 101, 0.45);
     }
   </style>
 </head>
-<body class="min-h-screen pb-24 p-4">
+<body class="pb-24 p-4">
 
   <main class="max-w-md mx-auto space-y-4">
-    <!-- Header Card -->
-    <div class="glass-pearl rounded-3xl p-4 shadow-sm border border-goldBorder/40 flex items-center justify-between">
+    <!-- Header -->
+    <div class="glass-mystic rounded-3xl p-4 shadow-md border border-auroraGold-border/50 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-obsidian via-emeraldDark to-emeraldDeep p-0.5 border border-goldBorder flex items-center justify-center">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-mysticBg-deep to-nagaEmerald p-0.5 border border-auroraGold-border flex items-center justify-center shadow-lg">
           <span class="text-xl">🐍</span>
         </div>
         <div>
-          <h1 class="text-xs font-black tracking-wider text-nagaGold uppercase leading-none">
+          <h1 class="text-xs font-black tracking-wider text-auroraGold-bright uppercase leading-none">
             จองคิวตรวจดวงชะตาสายญาณ
           </h1>
-          <p class="text-[10px] font-bold text-emeraldDark mt-0.5">SHOP@วินทร์ทรัพย์นาคราช</p>
+          <p class="text-[10px] font-bold text-nagaEmerald-light mt-0.5">SHOP@วินทร์ทรัพย์นาคราช</p>
         </div>
       </div>
-      <a href="index.html" class="text-xs font-bold text-stone-500 bg-stone-100 px-3 py-1.5 rounded-xl hover:bg-stone-200 transition">
+      <a href="index.html" class="text-xs font-bold text-auroraGold-light bg-black/40 px-3 py-1.5 rounded-xl border border-auroraGold-border/50 hover:bg-black/60 transition">
         หน้าร้าน
       </a>
     </div>
 
-    <!-- Step 1: เลือกรายการบริการ (ดึงจากชีต products อัตโนมัติ) -->
-    <div class="glass-pearl rounded-3xl p-4 shadow-sm border border-goldBorder/40 space-y-2.5">
-      <h2 class="text-xs font-black text-obsidian uppercase flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-goldBright"></span>
+    <!-- Step 1: รายการบริการ -->
+    <div class="glass-mystic rounded-3xl p-4 shadow-md border border-auroraGold-border/40 space-y-2.5">
+      <h2 class="text-xs font-black text-auroraGold-light uppercase flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-auroraGold-bright"></span>
         1. เลือกแพ็กเกจตรวจดวงชะตา
       </h2>
       <div id="service-list" class="space-y-2">
-        <div class="p-4 text-center text-xs text-stone-400 font-bold animate-pulse">กำลังอัญเชิญรายการบริการ...</div>
+        <div class="p-4 text-center text-xs text-stone-300 font-bold animate-pulse">กำลังอัญเชิญรายการบริการ...</div>
       </div>
     </div>
 
-    <!-- Step 2: เลือกวันที่และเวลาสนทนา -->
-    <div class="glass-pearl rounded-3xl p-4 shadow-sm border border-goldBorder/40 space-y-3">
-      <h2 class="text-xs font-black text-obsidian uppercase flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-goldBright"></span>
+    <!-- Step 2: เลือกวันที่และเวลา -->
+    <div class="glass-mystic rounded-3xl p-4 shadow-md border border-auroraGold-border/40 space-y-3">
+      <h2 class="text-xs font-black text-auroraGold-light uppercase flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-auroraGold-bright"></span>
         2. เลือกวันและรอบเวลาสนทนา
       </h2>
       
       <div>
-        <label class="text-[11px] font-bold text-stone-600 block mb-1">วันที่ต้องการรับคำพยากรณ์ *</label>
-        <input type="date" id="booking-date" onchange="loadTimeSlots()" class="w-full text-xs font-bold px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-goldBright bg-white">
+        <label class="text-[11px] font-bold text-stone-300 block mb-1">วันที่ต้องการรับคำพยากรณ์ *</label>
+        <input type="date" id="booking-date" onchange="loadTimeSlots()" class="w-full text-xs font-bold px-3.5 py-2.5 rounded-2xl border border-auroraGold-border/40 focus:outline-none focus:border-auroraGold-bright bg-black/40 text-white">
       </div>
 
       <div>
-        <label class="text-[11px] font-bold text-stone-600 block mb-1.5">รอบเวลาสนทนาญาณ *</label>
+        <label class="text-[11px] font-bold text-stone-300 block mb-1.5">รอบเวลาสนทนาญาณ *</label>
         <div id="time-slots" class="grid grid-cols-2 gap-2">
           <div class="col-span-2 text-center py-4 text-xs text-stone-400 font-bold">
             กรุณาเลือกวันที่ก่อนครับ
@@ -97,21 +96,56 @@
     </div>
 
     <!-- Action Button -->
-    <button id="btn-submit-booking" onclick="submitBooking()" class="w-full bg-gradient-to-r from-obsidian via-emeraldDark to-emeraldDeep text-white font-black text-xs py-4 rounded-2xl shadow-lg border border-goldBright hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
+    <button id="btn-submit-booking" onclick="submitBooking()" class="w-full bg-gradient-to-r from-nagaEmerald-glow via-nagaEmerald to-mysticBg-deep text-white font-black text-xs py-4 rounded-2xl shadow-xl border border-auroraGold-bright hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
       <span>✨ ยืนยันการจองคิว & รับใบนัดหมายใน LINE</span>
     </button>
   </main>
 
+  <!-- ปุ่มสวิตช์ 8 สกิน -->
+  <button id="theme-switch-btn" onclick="toggleNextTheme()" class="fixed bottom-20 right-4 z-50 p-2.5 rounded-full bg-black/70 border border-auroraGold-bright text-white shadow-2xl backdrop-blur-md active:scale-90 transition-all flex items-center gap-1.5">
+    <span class="text-base">🎨</span>
+    <span id="current-theme-name" class="text-[10px] font-bold text-auroraGold-bright pr-1">มรกตสุวรรณภูมิ</span>
+  </button>
+
   <script>
     const LIFF_ID = "2007499712-3e6TMnJJ";
     const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+
+    const THEME_LIST = [
+      { id: "emerald_gold", name: "มรกตสุวรรณภูมิ", bg: "radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%)", text: "#F3F4F6" },
+      { id: "obsidian_night", name: "มณีรัตน์ราตรี", bg: "radial-gradient(circle at 50% 0%, #0D2B23 0%, #071612 60%, #030A08 100%)", text: "#F3F4F6" },
+      { id: "pearl_platinum", name: "เพชรนาคินทร์ไข่มุก", bg: "radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF8F5 45%, #EAF2EE 100%)", text: "#0E1310" },
+      { id: "solar_bronze", name: "สุริยันจันทราคราช", bg: "radial-gradient(circle at 50% 0%, #2D220B 0%, #1E1606 60%, #0F0A02 100%)", text: "#F3F4F6" },
+      { id: "lotus_ruby", name: "นาคีบงกชแก้ว", bg: "radial-gradient(circle at 50% 0%, #2A1620 0%, #1A0F14 60%, #0D060A 100%)", text: "#F3F4F6" },
+      { id: "deep_sea_sapphire", name: "สมุทรนพรัตน์", bg: "radial-gradient(circle at 50% 0%, #0C2B3B 0%, #061A24 60%, #020D13 100%)", text: "#F3F4F6" },
+      { id: "crimson_ruby", name: "เพลิงสุวรรณกาล", bg: "radial-gradient(circle at 50% 0%, #2B1212 0%, #180A0A 60%, #0B0404 100%)", text: "#F3F4F6" },
+      { id: "imperial_diamond", name: "มหาจักรพรรดิรัตน", bg: "radial-gradient(circle at 50% 0%, #161F2C 0%, #0D1117 60%, #05080C 100%)", text: "#F3F4F6" }
+    ];
+
+    function toggleNextTheme() {
+      let currentId = localStorage.getItem("vinsup_theme_id") || "emerald_gold";
+      let currentIndex = THEME_LIST.findIndex(t => t.id === currentId);
+      let nextIndex = (currentIndex + 1) % THEME_LIST.length;
+      applyTheme(THEME_LIST[nextIndex].id);
+    }
+
+    function applyTheme(themeId) {
+      const theme = THEME_LIST.find(t => t.id === themeId) || THEME_LIST[0];
+      localStorage.setItem("vinsup_theme_id", theme.id);
+      document.body.style.background = theme.bg;
+      document.body.style.color = theme.text;
+      const label = document.getElementById("current-theme-name");
+      if (label) label.innerText = theme.name;
+    }
 
     let currentUserId = "GUEST_USER";
     let selectedService = null;
     let selectedSlot = "";
 
     window.addEventListener("DOMContentLoaded", async () => {
-      // ตั้งค่าวันที่เริ่มต้นเป็นวันพรุ่งนี้
+      let savedThemeId = localStorage.getItem("vinsup_theme_id") || "emerald_gold";
+      applyTheme(savedThemeId);
+
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       const dateStr = tomorrow.toISOString().split('T')[0];
@@ -141,33 +175,32 @@
 
         if (data.status === "success" && data.services && data.services.length > 0) {
           container.innerHTML = data.services.map((s, idx) => `
-            <div onclick="selectServiceItem('${s.id}', '${s.name}', ${s.price}, this)" class="service-card p-3 rounded-2xl border ${idx === 0 ? 'border-nagaGold bg-amber-50/50' : 'border-stone-200 bg-white'} cursor-pointer hover:border-goldBorder transition flex items-center justify-between shadow-sm">
+            <div onclick="selectServiceItem('${s.id}', '${s.name}', ${s.price}, this)" class="service-card p-3 rounded-2xl border ${idx === 0 ? 'border-auroraGold-bright bg-black/40' : 'border-white/10 bg-black/20'} cursor-pointer hover:border-auroraGold-bright transition flex items-center justify-between shadow-sm">
               <div>
-                <p class="text-xs font-black text-obsidian">${s.name}</p>
-                <p class="text-[10px] text-stone-500 font-medium">${s.desc || 'ตรวจดวงชะตาสายญาณ'}</p>
+                <p class="text-xs font-black text-white">${s.name}</p>
+                <p class="text-[10px] text-stone-300 font-medium">${s.desc || 'ตรวจดวงชะตาสายญาณ'}</p>
               </div>
-              <span class="text-xs font-black text-nagaGold">฿${Number(s.price).toLocaleString()}</span>
+              <span class="text-xs font-black text-auroraGold-bright">฿${Number(s.price).toLocaleString()}</span>
             </div>
           `).join("");
 
-          // เลือกตัวแรกเป็น Default
           selectedService = data.services[0];
         } else {
           container.innerHTML = `<div class="p-3 text-center text-xs text-stone-400 font-bold">ไม่พบรายการบริการดูดวง</div>`;
         }
       } catch (e) {
-        document.getElementById("service-list").innerHTML = `<div class="p-3 text-center text-xs text-red-500">สายสัญญาณขัดข้อง</div>`;
+        document.getElementById("service-list").innerHTML = `<div class="p-3 text-center text-xs text-red-400">สายสัญญาณขัดข้อง</div>`;
       }
     }
 
     function selectServiceItem(id, name, price, el) {
       selectedService = { id: id, name: name, price: price };
       document.querySelectorAll(".service-card").forEach(c => {
-        c.classList.remove("border-nagaGold", "bg-amber-50/50");
-        c.classList.add("border-stone-200", "bg-white");
+        c.classList.remove("border-auroraGold-bright", "bg-black/40");
+        c.classList.add("border-white/10", "bg-black/20");
       });
-      el.classList.add("border-nagaGold", "bg-amber-50/50");
-      el.classList.remove("border-stone-200", "bg-white");
+      el.classList.add("border-auroraGold-bright", "bg-black/40");
+      el.classList.remove("border-white/10", "bg-black/20");
     }
 
     async function loadTimeSlots() {
@@ -175,7 +208,7 @@
       if (!targetDate) return;
 
       const container = document.getElementById("time-slots");
-      container.innerHTML = `<div class="col-span-2 text-center py-3 text-xs text-stone-400 font-bold animate-pulse">กำลังตรวจสอบรอบเวลาว่าง...</div>`;
+      container.innerHTML = `<div class="col-span-2 text-center py-3 text-xs text-stone-300 font-bold animate-pulse">กำลังตรวจสอบรอบเวลาว่าง...</div>`;
 
       try {
         const dParts = targetDate.split("-");
@@ -186,24 +219,24 @@
 
         if (data.status === "success" && data.slots) {
           container.innerHTML = data.slots.map(s => `
-            <button type="button" onclick="selectSlotTime('${s.time}', this)" ${!s.available ? 'disabled' : ''} class="slot-btn py-2 px-3 rounded-xl text-xs font-bold border ${s.available ? 'border-stone-200 bg-white text-stone-700 hover:border-goldBorder' : 'border-stone-200 bg-stone-100 text-stone-400 cursor-not-allowed'} transition">
+            <button type="button" onclick="selectSlotTime('${s.time}', this)" ${!s.available ? 'disabled' : ''} class="slot-btn py-2 px-3 rounded-xl text-xs font-bold border ${s.available ? 'border-white/20 bg-black/30 text-white hover:border-auroraGold-bright' : 'border-white/5 bg-black/10 text-stone-500 cursor-not-allowed'} transition">
               ${s.time} ${!s.available ? '(เต็ม)' : ''}
             </button>
           `).join("");
         }
       } catch (e) {
-        container.innerHTML = `<div class="col-span-2 text-center text-xs text-red-500">ไม่สามารถโหลดรอบเวลาได้</div>`;
+        container.innerHTML = `<div class="col-span-2 text-center text-xs text-red-400">ไม่สามารถโหลดรอบเวลาได้</div>`;
       }
     }
 
     function selectSlotTime(slotTime, btn) {
       selectedSlot = slotTime;
       document.querySelectorAll(".slot-btn").forEach(b => {
-        b.classList.remove("border-nagaGold", "bg-emeraldDeep", "text-white");
-        b.classList.add("bg-white", "text-stone-700");
+        b.classList.remove("border-auroraGold-bright", "bg-nagaEmerald", "text-white");
+        b.classList.add("bg-black/30", "text-white");
       });
-      btn.classList.add("border-nagaGold", "bg-emeraldDeep", "text-white");
-      btn.classList.remove("bg-white", "text-stone-700");
+      btn.classList.add("border-auroraGold-bright", "bg-nagaEmerald", "text-white");
+      btn.classList.remove("bg-black/30");
     }
 
     async function submitBooking() {

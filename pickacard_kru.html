@@ -3,400 +3,410 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>สาส์นบรมครูพญานาคาธิบดี • วินทร์ทรัพย์นาคราช</title>
-  
-  <script src="./config.js"></script>
+  <title>สาส์นบรมครูโบราณ - วินทร์ทรัพย์นาคราช</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <style>
-    body {
-      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at 50% -10%, #064032 0%, #032018 40%, #010a08 100%);
-      color: #f8fafc;
-      min-height: 100vh;
-      margin: 0;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    .pearl-header {
-      background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
-      border: 1px solid rgba(250, 204, 21, 0.35);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-    }
-
-    .lux-glass-box {
-      background: linear-gradient(145deg, rgba(6, 64, 50, 0.88) 0%, rgba(2, 28, 21, 0.96) 100%);
-      border: 1px solid rgba(250, 204, 21, 0.3);
-      backdrop-filter: blur(18px);
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
-    }
-
-    /* กล่องสำรับไพ่ 3 มิติ */
-    .deck-container {
-      position: relative;
-      width: 100%;
-      height: 380px;
-      perspective: 1200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* ใบไพ่แต่ละใบ */
-    .tarot-card {
-      position: absolute;
-      width: 170px;
-      height: 275px;
-      border-radius: 18px;
-      transform-origin: center 130%;
-      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-      cursor: pointer;
-    }
-
-    /* แอนิเมชันตอนเริ่มสับไพ่แบบอลังการ */
-    .shuffling-1 { transform: translate(-70px, -20px) rotate(-15deg) scale(0.95); }
-    .shuffling-2 { transform: translate(70px, 20px) rotate(15deg) scale(1.02); }
-    .shuffling-3 { transform: translate(0, -35px) scale(1.05); }
-
-    /* คลี่ไพ่แบบพัด 5 ใบให้เลือก */
-    .fan-pos-1 { transform: translate(-85px, 10px) rotate(-18deg); z-index: 10; }
-    .fan-pos-2 { transform: translate(-42px, -6px) rotate(-9deg); z-index: 20; }
-    .fan-pos-3 { transform: translate(0px, -15px) rotate(0deg); z-index: 30; }
-    .fan-pos-4 { transform: translate(42px, -6px) rotate(9deg); z-index: 20; }
-    .fan-pos-5 { transform: translate(85px, 10px) rotate(18deg); z-index: 10; }
-
-    .tarot-card:hover {
-      transform: translateY(-25px) scale(1.08) !important;
-      z-index: 50 !important;
-      box-shadow: 0 0 25px rgba(250, 204, 21, 0.8);
-    }
-
-    /* หลังไพ่พญานาคสีทองตามรูปที่ส่งให้ */
-    .card-back {
-      background: radial-gradient(circle at 50% 50%, #031c15 0%, #010a08 100%);
-      border: 2px solid #facc15;
-      border-radius: 18px;
-      width: 100%;
-      height: 100%;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.7), inset 0 0 15px rgba(250, 204, 21, 0.25);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    /* ป้ายตัวเลขมงคล */
-    .lucky-number-badge {
-      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022018;
-      box-shadow: 0 4px 15px rgba(202, 138, 4, 0.45);
-    }
-
-    .btn-pearl-action {
-      background: linear-gradient(135deg, #065f46 0%, #022c22 100%);
-      color: #fef08a;
-      border: 1px solid rgba(254, 240, 138, 0.45);
-      border-radius: 9999px;
-      transition: all 0.2s ease;
-    }
-    .btn-pearl-action:hover {
-      background: #047857;
-      color: #ffffff;
-    }
-  </style>
-</head>
-<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-32">
-
-  <!-- Header -->
-  <header class="pearl-header rounded-3xl p-3 mb-3.5 flex items-center justify-between">
-    <div class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
-        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
-          <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain p-0.5" onerror="this.src='https://placehold.co/60x60/064032/fef08a?text=🐍'">
-        </div>
-      </div>
-      <div>
-        <h1 class="text-xs font-bold text-amber-200 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
-        <p class="text-[9px] text-emerald-300/80 font-light">สาส์นบรมครูพญานาคาธิบดี</p>
-      </div>
-    </div>
-    
-    <a href="./pickacard_hub.html" class="text-[10px] bg-black/50 border border-amber-300/30 text-pearl-cream px-3 py-1.5 rounded-full font-medium">
-      ⟨ กลับหน้า Hub
-    </a>
-  </header>
-
-  <!-- คำอธิษฐานจิต -->
-  <div class="lux-glass-box rounded-2xl p-3.5 text-center mb-3">
-    <div class="text-amber-300 text-xs font-bold flex items-center justify-center gap-1 mb-1">
-      <span>🪷</span> ตั้งจิตน้อมรับสาส์นบรมครู
-    </div>
-    <p class="text-[11px] text-emerald-100/90 leading-relaxed font-light">
-      "นึกถึงองค์พญานาคาธิบดี บารมีครูบาอาจารย์ สูดลมหายใจลึกๆ แล้วแตะเลือกไพ่ 1 ใบที่ดึงดูดสายตาคุณที่สุด"
-    </p>
-  </div>
-
-  <!-- แท่นสับและคลี่สำรับไพ่อลังการ -->
-  <div class="deck-container my-1">
-    <div id="deck-wrapper" class="relative w-full h-full flex items-center justify-center">
-      <!-- ใบที่ 1 ถึง 5 (คลี่เป็นพัด) -->
-      <div onclick="selectCard(1)" id="c-1" class="tarot-card fan-pos-1">
-        <div class="card-back">
-          <img src="./card_back_kru.png" class="w-full h-full object-cover p-1.5 rounded-2xl" onerror="renderSvgBack(this)">
-        </div>
-      </div>
-      <div onclick="selectCard(2)" id="c-2" class="tarot-card fan-pos-2">
-        <div class="card-back">
-          <img src="./card_back_kru.png" class="w-full h-full object-cover p-1.5 rounded-2xl" onerror="renderSvgBack(this)">
-        </div>
-      </div>
-      <div onclick="selectCard(3)" id="c-3" class="tarot-card fan-pos-3">
-        <div class="card-back">
-          <img src="./card_back_kru.png" class="w-full h-full object-cover p-1.5 rounded-2xl" onerror="renderSvgBack(this)">
-        </div>
-      </div>
-      <div onclick="selectCard(4)" id="c-4" class="tarot-card fan-pos-4">
-        <div class="card-back">
-          <img src="./card_back_kru.png" class="w-full h-full object-cover p-1.5 rounded-2xl" onerror="renderSvgBack(this)">
-        </div>
-      </div>
-      <div onclick="selectCard(5)" id="c-5" class="tarot-card fan-pos-5">
-        <div class="card-back">
-          <img src="./card_back_kru.png" class="w-full h-full object-cover p-1.5 rounded-2xl" onerror="renderSvgBack(this)">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="text-center mb-4">
-    <button onclick="shuffleDeckAnimation()" class="px-4 py-1.5 rounded-full bg-black/60 border border-amber-400/40 text-[11px] font-bold text-amber-200 hover:bg-black/80 transition">
-      🔄 สับสำรับไพ่อีกครั้ง
-    </button>
-  </div>
-
-  <!-- ผลลัพธ์สาส์นบรมครูจาก Google Sheets (ไม่ผ่าน AI) -->
-  <div id="result-box" class="hidden space-y-3.5 mt-2">
-    
-    <!-- พระนามองค์บรมครู & หมวด -->
-    <div class="lux-glass-box rounded-3xl p-5 border-2 border-amber-300/50 text-center relative overflow-hidden">
-      <div class="text-[9px] font-mono tracking-widest text-amber-300 uppercase mb-1">SACRED NAGA MESSAGE</div>
-      <h2 id="res-deity-name" class="text-base font-extrabold text-amber-200 mb-1">พระนามบรมครู</h2>
-      <span id="res-tag" class="px-3 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30">-</span>
-    </div>
-
-    <!-- 1. คำเตือนสติ / สาส์นเตือนใจ -->
-    <div class="lux-glass-box rounded-2xl p-4">
-      <div class="text-xs font-bold text-amber-300 mb-1.5 flex items-center gap-1.5">
-        <span>⚠️</span> สาส์นเตือนสติประจำวัน
-      </div>
-      <p id="res-warning" class="text-xs text-slate-100 leading-relaxed font-light whitespace-pre-line"></p>
-    </div>
-
-    <!-- 2. สาส์นข้อคิดมงคลหลัก -->
-    <div class="lux-glass-box rounded-2xl p-4">
-      <div class="text-xs font-bold text-emerald-300 mb-1.5 flex items-center gap-1.5">
-        <span>📜</span> สาส์นข้อคิดบรมครู
-      </div>
-      <p id="res-message" class="text-xs text-slate-100 leading-relaxed font-light whitespace-pre-line"></p>
-    </div>
-
-    <!-- 3. แนวทางปฏิบัติและแก้เคล็ดเสริมดวง -->
-    <div class="lux-glass-box rounded-2xl p-4 border border-amber-300/40">
-      <div class="text-xs font-bold text-amber-200 mb-1.5 flex items-center gap-1.5">
-        <span>🪷</span> แนวทางปฏิบัติ & แก้เคล็ดเสริมบารมี
-      </div>
-      <p id="res-guidance" class="text-xs text-slate-200 leading-relaxed font-light whitespace-pre-line"></p>
-    </div>
-
-    <!-- 4. ตัวเลขนำโชคประจำวัน -->
-    <div id="lucky-num-container" class="lucky-number-badge rounded-2xl p-3 text-center">
-      <span class="text-[10px] font-bold text-slate-900 block">ตัวเลขมงคลนำโชคประจำวัน</span>
-      <span id="res-lucky-number" class="text-2xl font-black font-mono tracking-widest text-emerald-950">-</span>
-    </div>
-
-    <button onclick="resetToShuffle()" class="btn-pearl-action w-full py-3.5 text-xs font-bold shadow-xl">
-      🔮 เปิดสาส์นบรมครูใหม่อีกครั้ง
-    </button>
-  </div>
-
-  <!-- แถบนำทางด้านล่างสไตล์ iOS -->
-  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-black/85 border border-amber-300/30 backdrop-blur-2xl rounded-full py-2.5 px-6 flex justify-around items-center z-40 shadow-2xl">
-    <a href="./index.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">🛍️</span>
-      <span class="text-[9px]">ร้านค้า</span>
-    </a>
-    <a href="./booking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">📅</span>
-      <span class="text-[9px]">จองคิว</span>
-    </a>
-    <a href="./pickacard_hub.html" class="flex flex-col items-center gap-0.5 text-amber-300">
-      <span class="text-sm">🔮</span>
-      <span class="text-[9px] font-bold">เสี่ยงทาย</span>
-    </a>
-    <a href="./tracking.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">📦</span>
-      <span class="text-[9px]">พัสดุ</span>
-    </a>
-    <a href="./memberships.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-200 transition">
-      <span class="text-sm">👤</span>
-      <span class="text-[9px]">สมาชิก</span>
-    </a>
-  </nav>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <script>
-    const WEB_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbwBK-NcHXTiaoVhJyBxB3fMVGFj9x8lSjvU1ECL6pzmjjIWLFqgN-94ny9niIjtow9B/exec";
-
-    let kruCards = [];
-    let isSelected = false;
-
-    window.onload = function() {
-      loadKruData();
-      shuffleDeckAnimation();
-    };
-
-    // ดึงข้อมูลตรงจากชีต psarnkru
-    function loadKruData() {
-      fetch(`${WEB_URL}?action=get_table_data&sheetName=psarnkru`)
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "success" && res.rows && res.rows.length > 0) {
-            kruCards = res.rows.map(r => {
-              const d = r.data;
-              return {
-                id: d[0],
-                deity: d[1] || "องค์พญานาคาธิบดีบารมี",
-                tag: d[2] || "ข้อคิดมงคล",
-                warning: d[3] || "มีสติในการดำเนินชีวิต อย่าประมาทในอารมณ์และคำพูด",
-                message: d[4] || "ความดีและบุญบารมีที่ท่านได้เพียรสร้าง จะเป็นเกราะคุ้มครองให้ผ่านพ้นอุปสรรค",
-                guidance: d[5] || "หมั่นทำบุญ บริจาคทาน นั่งสมาธิ และรักษาศีล 5 ให้บริสุทธิ์",
-                luckyNum: d[6] || "89, 168"
-              };
-            });
-          } else {
-            // สำรองกรณีตารางยังว่าง
-            kruCards = [{
-              deity: "พญาอนันตนาคราชมหาบารมี",
-              tag: "สติและปัญญา",
-              warning: "อย่าเพิ่งด่วนตัดสินใจเรื่องใหญ่ในสภาวะที่จิตใจยังกังวล",
-              message: "เมื่อตั้งจิตมั่นคงในศีลธรรม สิ่งที่รอคอยจะสำเร็จผลราบรื่น",
-              guidance: "สวดมนต์ นั่งสมาธิ แผ่เมตตาให้เจ้ากรรมนายเวร",
-              luckyNum: "19, 95, 89"
-            }];
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            mysticBg: {
+              DEFAULT: '#08231C',
+              light: '#0D382D',
+              deep: '#051913'
+            },
+            nagaEmerald: {
+              DEFAULT: '#105B43',
+              deep: '#063828',
+              glow: '#16805E',
+              bright: '#34D399',
+              light: '#A7F3D0'
+            },
+            auroraGold: {
+              light: '#FEF08A',
+              DEFAULT: '#FBBF24',
+              amber: '#F59E0B',
+              border: '#E6CA65'
+            }
+          },
+          boxShadow: {
+            'card-float': '0 20px 40px -10px rgba(5, 42, 31, 0.4)',
+            'gold-aura': '0 0 30px rgba(245, 158, 11, 0.5)',
+            'gloss-shadow': '0 15px 35px rgba(3, 18, 13, 0.6)'
           }
-        })
-        .catch(() => {
-          kruCards = [{
-            deity: "พญามุจลินทร์นาคราช",
-            tag: "การคุ้มครอง",
-            warning: "ระวังการไว้ใจคนง่ายเกินไป",
-            message: "บารมีครูบาอาจารย์คุ้มครอง แคล้วคลาดปลอดภัย",
-            guidance: "ทำบุญปล่อยปลา หรือถวายสังฆทานน้ำดื่ม",
-            luckyNum: "45, 99"
-          }];
-        });
-    }
-
-    // แอนิเมชันสับไพ่คลี่เป็นพัด
-    function shuffleDeckAnimation() {
-      isSelected = false;
-      document.getElementById("result-box").classList.add("hidden");
-      
-      const cards = [document.getElementById("c-1"), document.getElementById("c-2"), document.getElementById("c-3"), document.getElementById("c-4"), document.getElementById("c-5")];
-      
-      // รวมไพ่เข้าตรงกลางและสับ
-      cards.forEach(c => {
-        c.className = "tarot-card shuffling-1";
-      });
-
-      setTimeout(() => {
-        cards.forEach((c, idx) => {
-          c.className = `tarot-card shuffling-${(idx % 3) + 1}`;
-        });
-      }, 300);
-
-      // คลี่ออกเป็นพัด 5 ใบ
-      setTimeout(() => {
-        document.getElementById("c-1").className = "tarot-card fan-pos-1";
-        document.getElementById("c-2").className = "tarot-card fan-pos-2";
-        document.getElementById("c-3").className = "tarot-card fan-pos-3";
-        document.getElementById("c-4").className = "tarot-card fan-pos-4";
-        document.getElementById("c-5").className = "tarot-card fan-pos-5";
-      }, 700);
-    }
-
-    // เมื่อแตะเลือกไพ่
-    function selectCard(cardIdx) {
-      if (isSelected) return;
-      if (kruCards.length === 0) return alert("กำลังจัดเตรียมสาส์นบรมครู กรุณาลองอีกครั้ง");
-
-      isSelected = true;
-      const targetCard = document.getElementById(`c-${cardIdx}`);
-      
-      // ดึงไพ่ที่เลือกขึ้นมาตรงกลางเด่นชัด
-      targetCard.style.transform = "translate(0px, -45px) scale(1.15)";
-      targetCard.style.zIndex = "100";
-      targetCard.style.boxShadow = "0 0 35px rgba(250, 204, 21, 0.9)";
-
-      // จางไพ่อื่นๆ ลง
-      for (let i = 1; i <= 5; i++) {
-        if (i !== cardIdx) {
-          const other = document.getElementById(`c-${i}`);
-          other.style.opacity = "0.3";
-          other.style.transform += " scale(0.9)";
         }
       }
+    }
+  </script>
 
-      // สุ่มข้อมูลจากตารางชีต psarnkru 1 แถว[cite: 4]
-      const picked = kruCards[Math.floor(Math.random() * kruCards.length)];
-
-      setTimeout(() => {
-        document.getElementById("res-deity-name").innerText = picked.deity;
-        document.getElementById("res-tag").innerText = picked.tag;
-        document.getElementById("res-warning").innerText = picked.warning;
-        document.getElementById("res-message").innerText = picked.message;
-        document.getElementById("res-guidance").innerText = picked.guidance;
-
-        if (picked.luckyNum && picked.luckyNum.trim() !== "") {
-          document.getElementById("res-lucky-number").innerText = picked.luckyNum;
-          document.getElementById("lucky-num-container").classList.remove("hidden");
-        } else {
-          document.getElementById("lucky-num-container").classList.add("hidden");
-        }
-
-        document.getElementById("result-box").classList.remove("hidden");
-        document.getElementById("result-box").scrollIntoView({ behavior: 'smooth' });
-      }, 600);
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #104234 0%, #08261E 50%, #051A14 100%);
+      color: #F3F4F6;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background 0.5s ease, color 0.5s ease;
     }
 
-    function resetToShuffle() {
-      for (let i = 1; i <= 5; i++) {
-        const c = document.getElementById(`c-${i}`);
-        c.style.opacity = "1";
-        c.style.boxShadow = "";
-      }
-      shuffleDeckAnimation();
+    .glass-mystic {
+      background: rgba(9, 39, 31, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(230, 202, 101, 0.5);
     }
 
-    // สำรองกรณีไม่มีรูปภาพ ให้แสดงกราฟิกองค์พญานาคสีทองขดกลม
-    function renderSvgBack(imgElement) {
-      const parent = imgElement.parentElement;
-      parent.innerHTML = `
-        <div class="flex flex-col items-center justify-between p-3 h-full w-full">
-          <span class="text-[8px] font-mono tracking-widest text-amber-300/60 uppercase">NAGA BLESSING</span>
-          <div class="w-24 h-24 rounded-full border-2 border-amber-400/60 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(250,204,21,0.3)]">
-            <svg class="w-16 h-16 text-amber-300 drop-shadow-[0_2px_8px_rgba(250,204,21,0.8)]" viewBox="0 0 100 100" fill="currentColor">
-              <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="3 3"/>
-              <path d="M50 20 C40 20 30 35 30 50 C30 65 42 75 50 75 C58 75 70 65 70 50 C70 38 62 30 50 30 C45 30 40 35 40 42 C40 48 45 52 50 52 C53 52 56 49 56 46" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-              <circle cx="50" cy="22" r="3.5" fill="currentColor"/>
-            </svg>
-          </div>
-          <span class="text-[9px] font-bold text-amber-200">วินทร์ทรัพย์นาคราช</span>
+    .glass-mystic-card {
+      background: linear-gradient(135deg, rgba(14, 56, 44, 0.9) 0%, rgba(7, 33, 26, 0.95) 100%);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(230, 202, 101, 0.4);
+    }
+
+    @keyframes shuffleLeft {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      30% { transform: translate(-65px, -15px) rotate(-16deg) scale(1.06); }
+      60% { transform: translate(-35px, 20px) rotate(-8deg) scale(0.98); z-index: 10; }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    }
+    @keyframes shuffleRight {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      30% { transform: translate(65px, 15px) rotate(16deg) scale(1.06); }
+      60% { transform: translate(35px, -20px) rotate(8deg) scale(0.98); z-index: 20; }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    }
+    @keyframes holyPulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 0.9; transform: scale(1.1); filter: drop-shadow(0 0 15px #FBBF24); }
+    }
+    @keyframes mysticFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .shuffling-left { animation: shuffleLeft 0.55s ease-in-out infinite alternate; }
+    .shuffling-right { animation: shuffleRight 0.55s ease-in-out infinite alternate; }
+    .aura-glow { animation: holyPulse 2.8s ease-in-out infinite; }
+    .mystic-float { animation: mysticFloat 3s ease-in-out infinite; }
+
+    .card-tap-effect {
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .card-tap-effect:hover, .card-tap-effect:active {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 35px -5px rgba(16, 128, 94, 0.5), 0 0 20px rgba(245, 158, 11, 0.5);
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="pb-24 p-3.5 flex flex-col justify-between max-w-md mx-auto">
+
+  <main class="w-full space-y-3">
+    <!-- Header -->
+    <header class="glass-mystic rounded-2xl p-3 shadow-md flex items-center justify-between border border-auroraGold-border/60">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-mysticBg-deep via-nagaEmerald to-nagaEmerald-glow p-0.5 border border-auroraGold-border flex items-center justify-center shadow-gloss-shadow">
+          <span class="text-xl">👑</span>
         </div>
-      `;
+        <div>
+          <h1 class="text-xs font-black tracking-widest text-auroraGold-bright uppercase leading-tight">
+            วินทร์ทรัพย์นาคราช
+          </h1>
+          <p class="text-[11px] font-black text-nagaEmerald-light">สาส์นบรมครูโบราณ & องค์เทพ</p>
+        </div>
+      </div>
+      <a href="index.html" class="text-xs font-bold text-auroraGold-light bg-black/40 px-3 py-1.5 rounded-xl border border-auroraGold-border/60 hover:bg-black/60 transition shadow-sm">
+        หน้าร้าน
+      </a>
+    </header>
+
+    <!-- ข้อมูลแถบสมาธิ -->
+    <div class="glass-mystic rounded-2xl p-3 text-center space-y-1 shadow-sm border border-auroraGold-border/30">
+      <p id="stage-title" class="text-xs font-black text-auroraGold-light">🙏 น้อมจิตกราบระลึกถึงพระคุณครูบาอาจารย์</p>
+      <p id="stage-desc" class="text-[10px] font-medium text-stone-300">แตะปุ่ม "เริ่มสับไพ่บรมครู" ด้านล่างเพื่อน้อมรับคำสั่งสอนและแนวทางแก้ไข</p>
+    </div>
+
+    <!-- โซนสำรับไพ่ -->
+    <div class="min-h-[290px] flex flex-col items-center justify-center relative py-2">
+
+      <!-- สำรับไพ่รอสับ -->
+      <div id="deck-view" class="relative w-44 h-64 flex items-center justify-center mystic-float">
+        <div class="absolute w-56 h-56 rounded-full bg-auroraGold-light/35 blur-3xl aura-glow pointer-events-none"></div>
+
+        <div id="deck-card-1" class="absolute w-40 h-60 rounded-3xl border border-auroraGold-border/60 bg-mysticBg-deep shadow-md flex flex-col justify-between p-3 rotate-[-6deg] -translate-x-2">
+          <div class="flex justify-between text-[8px] text-auroraGold-amber font-bold"><span>✦</span><span>✦</span></div>
+          <div class="text-center opacity-40">
+            <div class="w-10 h-10 rounded-full border border-auroraGold-border mx-auto flex items-center justify-center">
+              <span class="text-base">👑</span>
+            </div>
+          </div>
+          <div class="flex justify-between text-[8px] text-auroraGold-amber font-bold"><span>✦</span><span>✦</span></div>
+        </div>
+
+        <div id="deck-card-2" class="absolute w-40 h-60 rounded-3xl border border-auroraGold-border/60 bg-mysticBg-deep shadow-md flex flex-col justify-between p-3 rotate-[6deg] translate-x-2">
+          <div class="flex justify-between text-[8px] text-auroraGold-amber font-bold"><span>✦</span><span>✦</span></div>
+          <div class="text-center opacity-40">
+            <div class="w-10 h-10 rounded-full border border-auroraGold-border mx-auto flex items-center justify-center">
+              <span class="text-base">👑</span>
+            </div>
+          </div>
+          <div class="flex justify-between text-[8px] text-auroraGold-amber font-bold"><span>✦</span><span>✦</span></div>
+        </div>
+
+        <div id="deck-card-main" class="absolute w-40 h-60 rounded-3xl border-2 border-auroraGold-border bg-gradient-to-b from-mysticBg-light via-mysticBg to-mysticBg-deep shadow-gloss-shadow flex flex-col justify-between p-3.5 z-10">
+          <div class="flex justify-between items-center text-[9px] text-auroraGold-bright font-bold">
+            <span>✧ ॐ ✧</span>
+            <span class="text-white font-black tracking-wider text-[8px]">วินทร์ทรัพย์นาคราช</span>
+            <span>✧ ॐ ✧</span>
+          </div>
+
+          <div class="text-center space-y-1.5">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-mysticBg-deep via-nagaEmerald to-nagaEmerald-glow border-2 border-auroraGold-border mx-auto flex items-center justify-center shadow-lg relative">
+              <div class="absolute inset-1 rounded-full border border-dashed border-auroraGold-bright/50 animate-spin" style="animation-duration: 25s;"></div>
+              <span class="text-3xl filter drop-shadow-[0_2px_6px_rgba(245,158,11,0.9)]">👑</span>
+            </div>
+            <div>
+              <p class="text-xs font-black text-white tracking-wider">สาส์นบรมครูโบราณ</p>
+              <p class="text-[9px] font-bold text-auroraGold-amber">พุทธบารมี & เทวคุณ</p>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-[8px] text-auroraGold-bright font-bold">
+            <span>ศีล</span>
+            <span class="text-white font-bold">สมาธิ</span>
+            <span>ปัญญา</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- คลี่ไพ่ 3 ใบให้เลือก -->
+      <div id="fanned-view" class="hidden w-full grid grid-cols-3 gap-2.5">
+        <div onclick="pickKruCard(0)" class="card-tap-effect cursor-pointer rounded-2xl border-2 border-auroraGold-border bg-gradient-to-b from-mysticBg-light to-mysticBg-deep shadow-card-float aspect-[2/3] flex flex-col items-center justify-between p-2.5 text-center">
+          <div class="w-full flex justify-between items-center text-[8px] text-auroraGold-amber font-bold">
+            <span>✧</span><span class="text-[8px] text-white">ปฐมญาณ</span><span>✧</span>
+          </div>
+          <div class="space-y-1">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-mysticBg-deep to-nagaEmerald border border-auroraGold-border flex items-center justify-center mx-auto shadow-sm">
+              <span class="text-lg">🪷</span>
+            </div>
+            <p class="text-xs font-black text-white">ใบที่ ๑</p>
+            <p class="text-[9px] font-bold text-auroraGold-bright">สาส์นบรมครู</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[8px] text-auroraGold-amber font-bold"><span>✦</span><span>✦</span></div>
+        </div>
+
+        <div onclick="pickKruCard(1)" class="card-tap-effect cursor-pointer rounded-2xl border-2 border-auroraGold-border bg-gradient-to-b from-mysticBg-light to-mysticBg-deep shadow-card-float aspect-[2/3] flex flex-col items-center justify-between p-2.5 text-center">
+          <div class="w-full flex justify-between items-center text-[8px] text-auroraGold-amber font-bold">
+            <span>✧</span><span class="text-[8px] text-white">มัชฌิมญาณ</span><span>✧</span>
+          </div>
+          <div class="space-y-1">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-mysticBg-deep to-nagaEmerald border border-auroraGold-border flex items-center justify-center mx-auto shadow-sm">
+              <span class="text-lg">☸️</span>
+            </div>
+            <p class="text-xs font-black text-white">ใบที่ ๒</p>
+            <p class="text-[9px] font-bold text-auroraGold-bright">สาส์นบรมครู</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[8px] text-auroraGold-amber font-bold"><span>✦</span><span>✦</span></div>
+        </div>
+
+        <div onclick="pickKruCard(2)" class="card-tap-effect cursor-pointer rounded-2xl border-2 border-auroraGold-border bg-gradient-to-b from-mysticBg-light to-mysticBg-deep shadow-card-float aspect-[2/3] flex flex-col items-center justify-between p-2.5 text-center">
+          <div class="w-full flex justify-between items-center text-[8px] text-auroraGold-amber font-bold">
+            <span>✧</span><span class="text-[8px] text-white">อุดมญาณ</span><span>✧</span>
+          </div>
+          <div class="space-y-1">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-mysticBg-deep to-nagaEmerald border border-auroraGold-border flex items-center justify-center mx-auto shadow-sm">
+              <span class="text-lg">🕯️</span>
+            </div>
+            <p class="text-xs font-black text-white">ใบที่ ๓</p>
+            <p class="text-[9px] font-bold text-auroraGold-bright">สาส์นบรมครู</p>
+          </div>
+          <div class="w-full flex justify-between items-center text-[8px] text-auroraGold-amber font-bold"><span>✦</span><span>✦</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ปุ่มสับไพ่ -->
+    <div class="pt-1">
+      <button id="btn-shuffle" onclick="startKruShuffle()" class="w-full bg-gradient-to-r from-nagaEmerald-glow via-nagaEmerald to-mysticBg-deep text-white font-black text-xs py-3.5 rounded-2xl shadow-gold-glow hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2 border border-auroraGold-bright">
+        <span class="text-base">🌀</span>
+        <span>เริ่มสับไพ่สาส์นบรมครูโบราณ</span>
+      </button>
+
+      <button id="btn-reshuffle" onclick="resetToKruDeck()" class="hidden w-full glass-mystic text-auroraGold-light font-bold text-xs py-2.5 rounded-2xl border border-auroraGold-border/60 hover:brightness-125 active:scale-95 transition mt-1.5 text-center shadow-sm">
+        🔄 สับไพ่ใหม่อีกครั้ง
+      </button>
+    </div>
+
+    <!-- Modal ผลสาส์นบรมครู (แสดงผลตามคอลัมน์ชีต psarnkru ครบถ้วน) -->
+    <div id="result-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3.5">
+      <div class="glass-mystic rounded-[32px] w-full max-w-sm overflow-hidden shadow-2xl border-2 border-auroraGold-border p-4.5 space-y-3 relative max-h-[92vh] flex flex-col justify-between bg-mysticBg-deep">
+        
+        <div class="text-center space-y-0.5 relative z-10 pt-1">
+          <span class="inline-block px-3 py-0.5 rounded-full bg-gradient-to-r from-auroraGold-bright to-auroraGold-amber text-mysticBg-deep text-[9px] font-black tracking-wider uppercase shadow-sm">
+            ✦ ปรากฏสาส์นบรมครูโบราณ ✦
+          </span>
+          <!-- Col B: นามองค์เทพ / บรมครูโบราณ -->
+          <h3 id="res-deity-name" class="text-base font-black text-white tracking-tight pt-1">องค์พระพิฆเนศวร</h3>
+          <p id="res-card-no" class="text-[10px] font-bold text-auroraGold-bright">ใบที่ ๑</p>
+        </div>
+
+        <div class="glass-mystic-card p-3.5 rounded-2xl border border-auroraGold-border/40 shadow-sm space-y-3 overflow-y-auto max-h-72 hide-scrollbar">
+          
+          <!-- Col C: สิ่งที่ต้องระมัดระวัง -->
+          <div class="bg-red-950/30 p-2.5 rounded-xl border border-red-500/30">
+            <span class="text-[10px] font-black text-red-300 uppercase tracking-wider flex items-center gap-1 mb-1">
+              <span>⚠️</span> สิ่งที่ต้องระมัดระวัง
+            </span>
+            <p class="text-xs text-stone-200 leading-relaxed font-medium" id="res-warning">
+              -
+            </p>
+          </div>
+
+          <!-- Col D: คำสอนหลักธรรม -->
+          <div class="bg-amber-950/25 p-2.5 rounded-xl border border-auroraGold-border/30">
+            <span class="text-[10px] font-black text-auroraGold-light uppercase tracking-wider flex items-center gap-1 mb-1">
+              <span>📜</span> คำสอนหลักธรรม
+            </span>
+            <p class="text-xs text-white leading-relaxed font-semibold" id="res-teaching">
+              -
+            </p>
+          </div>
+
+          <!-- Col E: คำแนะนำและทางแก้ -->
+          <div class="bg-emerald-950/30 p-2.5 rounded-xl border border-nagaEmerald-glow/30">
+            <span class="text-[10px] font-black text-nagaEmerald-light uppercase tracking-wider flex items-center gap-1 mb-1">
+              <span>💡</span> คำแนะนำและทางแก้
+            </span>
+            <p class="text-xs text-stone-200 leading-relaxed font-medium" id="res-solution">
+              -
+            </p>
+          </div>
+
+          <!-- Col F: เลขมงคล -->
+          <div class="p-2 rounded-xl bg-black/40 border border-auroraGold-border/40 flex items-center justify-between px-3">
+            <span class="text-[10px] font-bold text-stone-300">🔢 เลขมงคลประจำสาส์น</span>
+            <span id="res-lucky-number" class="text-base font-black text-auroraGold-bright font-mono">15</span>
+          </div>
+
+        </div>
+
+        <button onclick="closeResultModal()" class="w-full bg-gradient-to-r from-nagaEmerald-glow to-nagaEmerald text-white font-black text-xs py-3 rounded-2xl shadow-md border border-auroraGold-bright hover:brightness-110 active:scale-95 transition">
+          น้อมรับคำสอนบรมครู 🙏
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
+    
+    let kruCards = [];
+    let isShuffling = false;
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadKruCards();
+    });
+
+    async function loadKruCards() {
+      try {
+        const res = await fetch(`${API_URL}?action=get_kru_cards`);
+        const data = await res.json();
+        if (data.status === "success" && data.cards) {
+          kruCards = data.cards;
+        }
+      } catch (err) {
+        console.warn("Load Kru Cards Notice:", err);
+      }
+    }
+
+    function cryptoShuffle(arr) {
+      let m = arr.length, t, i;
+      while (m) {
+        const randomBuffer = new Uint32Array(1);
+        window.crypto.getRandomValues(randomBuffer);
+        i = Math.floor((randomBuffer[0] / (0xffffffff + 1)) * m--);
+        t = arr[m];
+        arr[m] = arr[i];
+        arr[i] = t;
+      }
+      return arr;
+    }
+
+    function startKruShuffle() {
+      if (isShuffling) return;
+      isShuffling = true;
+
+      const btn = document.getElementById("btn-shuffle");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-1.5">🌀</span> กำลังประสานญาณบรมครู...`;
+
+      document.getElementById("stage-title").innerText = "🌀 บารมีครูกำลังจัดสรรตามบุญสัมพันธ์...";
+      document.getElementById("stage-desc").innerText = "โปรดสำรวมกาย วาจา ใจ ให้นิ่งสงบ น้อมระลึกถึงพระคุณครู";
+
+      const c1 = document.getElementById("deck-card-1");
+      const c2 = document.getElementById("deck-card-2");
+      c1.classList.add("shuffling-left");
+      c2.classList.add("shuffling-right");
+
+      setTimeout(() => {
+        c1.classList.remove("shuffling-left");
+        c2.classList.remove("shuffling-right");
+        isShuffling = false;
+
+        document.getElementById("deck-view").classList.add("hidden");
+        document.getElementById("fanned-view").classList.remove("hidden");
+        document.getElementById("btn-shuffle").classList.add("hidden");
+        document.getElementById("btn-reshuffle").classList.remove("hidden");
+
+        document.getElementById("stage-title").innerText = "✨ แตะเลือกไพ่ 1 ใบ ที่ดึงดูดจิตใจของท่าน";
+        document.getElementById("stage-desc").innerText = "บรมครูจะทรงประทานสาส์นเตือนสติและหลักธรรมนำทาง";
+      }, 1600);
+    }
+
+    function resetToKruDeck() {
+      document.getElementById("fanned-view").classList.add("hidden");
+      document.getElementById("deck-view").classList.remove("hidden");
+      document.getElementById("btn-shuffle").classList.remove("hidden");
+      document.getElementById("btn-shuffle").disabled = false;
+      document.getElementById("btn-shuffle").innerHTML = `<span class="text-base">🌀</span><span>เริ่มสับไพ่สาส์นบรมครูโบราณ</span>`;
+      document.getElementById("btn-reshuffle").classList.add("hidden");
+
+      document.getElementById("stage-title").innerText = "🙏 น้อมจิตกราบระลึกถึงพระคุณครูบาอาจารย์";
+      document.getElementById("stage-desc").innerText = "แตะปุ่ม \"เริ่มสับไพ่บรมครู\" ด้านล่างเพื่อน้อมรับคำสั่งสอนและแนวทางแก้ไข";
+    }
+
+    function pickKruCard(idx) {
+      if (!kruCards || kruCards.length === 0) {
+        alert("กำลังเชื่อมต่อตาราง psarnkru กรุณาลองใหม่อีกครั้งครับ");
+        return;
+      }
+
+      const shuffled = cryptoShuffle([...kruCards]);
+      const card = shuffled[idx % shuffled.length];
+
+      // แมปข้อมูลตามหัวตารางในชีต psarnkru
+      document.getElementById("res-deity-name").innerText = card.name || "บรมครูโบราณ";
+      document.getElementById("res-card-no").innerText = `สาส์นใบที่ ${card.no}`;
+      document.getElementById("res-warning").innerText = card.warning || "-";
+      document.getElementById("res-teaching").innerText = card.teaching || "-";
+      document.getElementById("res-solution").innerText = card.solution || "-";
+      document.getElementById("res-lucky-number").innerText = card.luckyNumber || "-";
+
+      document.getElementById("result-modal").classList.remove("hidden");
+    }
+
+    function closeResultModal() {
+      document.getElementById("result-modal").classList.add("hidden");
     }
   </script>
 </body>

@@ -285,6 +285,58 @@
         btn.innerText = "💾 ยืนยันการอัปเดตข้อมูล";
       }
     }
+    
   </script>
+  // ฟังก์ชันช่วยเรียก API ซ้ำอัตโนมัติหากเน็ตหลุด (Auto Retry สูงสุด 3 ครั้ง)
+    async function fetchWithRetry(url, options = {}, retries = 3, backoff = 1000) {
+      try {
+        const response = await fetch(url, options);
+        if (!response.ok) throw new Error("HTTP error " + response.status);
+        return await response.json();
+      } catch (err) {
+        if (retries > 0) {
+          console.warn(`เน็ตสะดุด กำลังลองเชื่อมต่อใหม่... (เหลือ ${retries} ครั้ง)`);
+          await new Promise(res => setTimeout(res, backoff));
+          return fetchWithRetry(url, options, retries - 1, backoff * 1.5);
+        }
+        throw err;
+      }
+    }
+
+    // ปรับฟังก์ชันโหลดข้อมูลสมาชิกให้ดึงซ้ำหากสัญญาณหลุด
+    async function loadMemberStatus(uid, displayName) {
+      try {
+        const data = await fetchWithRetry(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`);
+
+        if (data.status === "success" && data.member) {
+          isMember = true;
+          const m = data.member;
+          document.getElementById("card-holder-name").innerText = m.name || displayName || "ผู้ศรัทธาบารมี";
+          document.getElementById("card-member-code").innerText = m.memberCode || "NAGA-VIP";
+          document.getElementById("card-privilege").innerText = m.privilege || "วรรณะนาคารัตนบารมี";
+          document.getElementById("card-balance").innerText = `฿${Number(m.balance || 0).toLocaleString()} มณี`;
+          document.getElementById("card-badge").innerText = "สมาชิกสายญาณ";
+
+          document.getElementById("member-name").value = m.name !== "-" ? m.name : "";
+          document.getElementById("member-phone").value = m.phone !== "-" ? m.phone : "";
+          document.getElementById("member-address").value = m.address !== "-" ? m.address : "";
+
+          document.getElementById("btn-register-action").classList.add("hidden");
+          document.getElementById("btn-toggle-edit").classList.remove("hidden");
+        } else {
+          isMember = false;
+          document.getElementById("card-holder-name").innerText = displayName || "ผู้ศรัทธาบารมี";
+          document.getElementById("card-badge").innerText = "ยังไม่เป็นสมาชิก";
+          document.getElementById("btn-register-action").classList.remove("hidden");
+          document.getElementById("btn-toggle-edit").classList.add("hidden");
+        }
+      } catch (e) {
+        console.error("Load Member Error:", e);
+        document.getElementById("card-holder-name").innerHTML = `
+          <span class="text-xs text-amber-300">สัญญาณอินเทอร์เน็ตขาดช่วง</span>
+          <button onclick="loadMemberStatus(currentUserId)" class="ml-2 px-2 py-0.5 text-[10px] bg-black/40 border border-amber-300 rounded-lg">แตะลองใหม่</button>
+        `;
+      }
+    }
 </body>
 </html>

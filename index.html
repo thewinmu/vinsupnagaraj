@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>เรือนพยากรณ์วินทร์ทรัพย์นาคราช - ร้านค้าวัตถุมงคล</title>
-  <!-- Google Fonts & Tailwind CSS -->
+  <title>SHOP@วินทร์ทรัพย์นาคราช - วัตถุมงคล & เทียนบูชาสายญาณ</title>
+  <!-- Google Fonts: Prompt & Inter สำหรับสไตล์ Apple iOS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=SF+Pro+Display:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- LINE LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -16,19 +16,40 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Prompt', 'sans-serif'] },
+          fontFamily: {
+            sans: ['Prompt', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
           colors: {
-            gold: {
-              light: '#FDE68A',
-              DEFAULT: '#D4AF37',
-              dark: '#9A6B15',
-              border: '#E6CA65'
+            pearl: {
+              light: '#FBFDFB',
+              DEFAULT: '#F2F7F4',
+              surface: '#FFFFFF',
+              dark: '#E2ECE6'
             },
             emerald: {
-              deep: '#064E3B',
-              soft: '#047857',
-              light: '#F0FDF4'
+              dark: '#083828',
+              deep: '#0B4734',
+              pearl: '#14634B',
+              soft: '#2D8A6C',
+              light: '#E6F4EE'
+            },
+            nagaGold: {
+              light: '#FEF3C7',
+              DEFAULT: '#F59E0B',
+              bright: '#FBBF24',
+              radiant: '#D97706',
+              border: '#E6CA65'
+            },
+            obsidian: {
+              DEFAULT: '#121714',
+              card: '#1A211D',
+              border: '#2A352F'
             }
+          },
+          boxShadow: {
+            'naga-gold': '0 8px 24px -4px rgba(245, 158, 11, 0.35)',
+            'obsidian-glow': '0 10px 30px -5px rgba(18, 23, 20, 0.45)',
+            'pearl-card': '0 10px 25px -3px rgba(11, 71, 52, 0.08), 0 4px 6px -2px rgba(18, 23, 20, 0.05)'
           }
         }
       }
@@ -37,83 +58,114 @@
 
   <style>
     body {
-      font-family: 'Prompt', sans-serif;
-      background: #FAF8F5;
-      color: #1C1917;
+      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #FBFDFB 0%, #EBF4F0 100%);
+      color: #121714;
       -webkit-tap-highlight-color: transparent;
     }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border: 1px solid #E6CA65;
+    .glass-pearl {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(230, 202, 101, 0.45);
     }
-    .badge-gold {
-      background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 100%);
-      color: #064E3B;
+    .gold-crest-glow {
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), inset 0 0 10px rgba(254, 243, 199, 0.6);
     }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="min-h-screen pb-24">
+<body class="min-h-screen pb-28">
 
-  <!-- Header Bar -->
-  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#E6CA65]/40 shadow-sm px-4 py-3">
+  <!-- Top Navigation Bar: Premium Naga Header -->
+  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-nagaGold-border/40 shadow-sm px-4 py-3">
     <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <span class="text-2xl">🐍</span>
+      <div class="flex items-center space-x-2.5">
+        <!-- ตราพญานาคสีทองนูนต่ำ พร้อมแสงเรืองรอง -->
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-obsidian via-emerald-dark to-emerald-pearl p-0.5 border border-nagaGold-border gold-crest-glow flex items-center justify-center">
+          <span class="text-xl filter drop-shadow">🐍</span>
+        </div>
         <div>
-          <h1 class="text-sm font-bold text-emerald-deep leading-tight">วินทร์ทรัพย์นาคราช</h1>
-          <p class="text-[10px] text-gold-dark font-medium">ร้านค้าวัตถุมงคล & เทียนบูชาสายญาณ</p>
+          <h1 class="text-xs font-black tracking-wider text-nagaGold-radiant uppercase leading-none">
+            SHOP@วินทร์ทรัพย์นาคราช
+          </h1>
+          <p class="text-[10px] font-bold text-emerald-dark mt-0.5">คลังมงคลบารมี & วัตถุบูชาสายญาณ</p>
         </div>
       </div>
-      <!-- ปุ่มเปิดตะกร้าบน -->
-      <button onclick="openCartModal()" class="relative p-2 rounded-full bg-[#FAF8F5] border border-gold-border hover:bg-white transition shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+      
+      <!-- Cart Icon Button -->
+      <button onclick="openCartModal()" class="relative p-2.5 rounded-2xl bg-pearl-light border border-nagaGold-border/60 hover:bg-white active:scale-95 transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
-        <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">0</span>
       </button>
     </div>
   </header>
 
-  <!-- Content Container -->
+  <!-- Quick Menu Bar (iOS Pill Tabs) -->
+  <div class="max-w-md mx-auto px-4 mt-3">
+    <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar py-1">
+      <a href="index.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-emerald-deep text-white text-xs font-bold border border-nagaGold-bright shadow-sm flex items-center gap-1.5">
+        <span>🛍️</span> วัตถุมงคล
+      </a>
+      <a href="booking.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-nagaGold-border/50 hover:bg-pearl transition flex items-center gap-1.5 shadow-sm">
+        <span>📅</span> จองคิวดูดวง
+      </a>
+      <a href="pickacard.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-nagaGold-border/50 hover:bg-pearl transition flex items-center gap-1.5 shadow-sm">
+        <span>🔮</span> สาส์นนำทาง Pick-A-Card
+      </a>
+      <a href="memberships.html" class="flex-shrink-0 px-3.5 py-1.5 rounded-full bg-white text-emerald-deep text-xs font-bold border border-nagaGold-border/50 hover:bg-pearl transition flex items-center gap-1.5 shadow-sm">
+        <span>👑</span> บัตรแก้วรัตนบารมี
+      </a>
+    </div>
+  </div>
+
   <main class="max-w-md mx-auto px-4 mt-3 space-y-4">
-    <!-- กล่องข้อมูลผู้ใช้งาน LINE -->
-    <div id="user-info-box" class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-sm">
+    <!-- User Profile Bar: Pearl Glass Panel -->
+    <div id="user-info-box" class="glass-pearl rounded-3xl p-3.5 shadow-pearl-card flex items-center justify-between border border-nagaGold-border/40">
       <div class="flex items-center space-x-3">
-        <img id="user-avatar" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full border border-gold-border object-cover" alt="User">
+        <div class="relative">
+          <img id="user-avatar" src="https://via.placeholder.com/48" class="w-11 h-11 rounded-2xl border-2 border-nagaGold-bright object-cover shadow-sm" alt="User">
+          <span class="absolute -bottom-1 -right-1 text-[10px]">✨</span>
+        </div>
         <div>
           <div class="flex items-center space-x-1.5">
-            <span id="user-name" class="text-xs font-bold text-stone-800">กำลังเชื่อมต่อ LINE...</span>
-            <span class="text-[9px] px-1.5 py-0.5 rounded badge-gold font-bold">ศรัทธาบารมี</span>
+            <span id="user-name" class="text-xs font-black text-obsidian tracking-tight">กำลังเชื่อมต่อจิตญาณ LINE...</span>
+            <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-nagaGold-bright to-nagaGold-radiant text-obsidian border border-nagaGold-bright shadow-sm">
+              วรรณะนาคา
+            </span>
           </div>
-          <p id="user-uid" class="text-[10px] text-stone-400">LINE Connected</p>
+          <p id="user-uid" class="text-[10px] font-medium text-emerald-soft mt-0.5">LINE Identity Verified</p>
         </div>
       </div>
-      <a href="booking.html" class="text-[11px] font-semibold text-emerald-soft bg-emerald-light px-2.5 py-1.5 rounded-lg border border-emerald-deep/20 hover:bg-emerald-100 transition">
-        📅 จองคิวดูดวง
+      <a href="memberships.html" class="text-[11px] font-bold text-nagaGold-radiant bg-pearl-light px-3 py-1.5 rounded-xl border border-nagaGold-border/70 hover:bg-white transition flex items-center gap-1 shadow-sm">
+        <span>บัตรสมาชิก</span> →
       </a>
     </div>
 
-    <!-- รายการวัตถุมงคล -->
+    <!-- Product Grid Section -->
     <div>
-      <div class="flex items-center justify-between mb-2 px-1">
-        <h2 class="text-sm font-bold text-stone-800 flex items-center gap-1.5">
-          <span class="text-gold-dark">✦</span> รายการวัตถุมงคลทั้งหมด
+      <div class="flex items-center justify-between mb-3 px-1">
+        <h2 class="text-xs font-black text-obsidian uppercase tracking-wider flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-nagaGold-bright animate-ping"></span>
+          คลังวัตถุมงคลศักดิ์สิทธิ์
         </h2>
-        <span id="product-count" class="text-[11px] text-stone-500 font-medium">กำลังโหลด...</span>
+        <span id="product-count" class="text-[11px] font-bold text-emerald-soft">กำลังโหลด...</span>
       </div>
 
-      <div id="product-grid" class="grid grid-cols-2 gap-3">
-        <!-- Skeleton Loading -->
-        <div class="glass-card rounded-2xl p-3 animate-pulse space-y-2">
-          <div class="w-full h-36 bg-stone-200 rounded-xl"></div>
+      <!-- Products Grid -->
+      <div id="product-grid" class="grid grid-cols-2 gap-3.5">
+        <!-- Skeleton Card 1 -->
+        <div class="glass-pearl rounded-3xl p-3 animate-pulse space-y-2 border border-nagaGold-border/20">
+          <div class="w-full h-36 bg-emerald-light/60 rounded-2xl"></div>
           <div class="h-3 bg-stone-200 rounded w-3/4"></div>
           <div class="h-3 bg-stone-200 rounded w-1/2"></div>
         </div>
-        <div class="glass-card rounded-2xl p-3 animate-pulse space-y-2">
-          <div class="w-full h-36 bg-stone-200 rounded-xl"></div>
+        <!-- Skeleton Card 2 -->
+        <div class="glass-pearl rounded-3xl p-3 animate-pulse space-y-2 border border-nagaGold-border/20">
+          <div class="w-full h-36 bg-emerald-light/60 rounded-2xl"></div>
           <div class="h-3 bg-stone-200 rounded w-3/4"></div>
           <div class="h-3 bg-stone-200 rounded w-1/2"></div>
         </div>
@@ -121,107 +173,108 @@
     </div>
   </main>
 
-  <!-- Sticky Bottom Bar สรุปยอดตะกร้า -->
-  <div id="bottom-cart-bar" class="hidden fixed bottom-3 left-4 right-4 max-w-md mx-auto z-40">
-    <div class="glass-card rounded-2xl p-3 flex items-center justify-between shadow-lg border border-gold-border bg-white/95">
+  <!-- Sticky Bottom Cart Summary (Floating iOS Dock) -->
+  <div id="bottom-cart-bar" class="hidden fixed bottom-4 left-4 right-4 max-w-md mx-auto z-40">
+    <div class="glass-pearl rounded-3xl p-3.5 flex items-center justify-between shadow-obsidian-glow border-2 border-nagaGold-bright bg-white/95">
       <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-full bg-emerald-deep flex items-center justify-center text-white text-xs font-bold" id="bottom-cart-qty">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-obsidian to-emerald-dark flex items-center justify-center text-nagaGold-bright text-xs font-black border border-nagaGold-border" id="bottom-cart-qty">
           0
         </div>
         <div>
-          <p class="text-[10px] text-stone-500">ยอดรวมทั้งสิ้น</p>
-          <p class="text-sm font-bold text-gold-dark" id="bottom-cart-total">฿0</p>
+          <p class="text-[10px] font-bold text-stone-500 uppercase">ยอดรวมสุทธิ</p>
+          <p class="text-base font-black text-nagaGold-radiant tracking-tight" id="bottom-cart-total">฿0</p>
         </div>
       </div>
-      <button onclick="openCartModal()" class="bg-emerald-deep text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md hover:bg-emerald-800 transition">
-        ดูตะกร้าสินค้า 🛒
+      <button onclick="openCartModal()" class="bg-gradient-to-r from-emerald-dark to-emerald-pearl text-white text-xs font-black px-5 py-3 rounded-2xl shadow-naga-gold border border-nagaGold-bright/60 hover:brightness-110 active:scale-95 transition flex items-center gap-1.5">
+        <span>ตรวจดูตะกร้า</span> ➔
       </button>
     </div>
   </div>
 
-  <!-- Cart Modal & Checkout -->
-  <div id="cart-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-gold-border">
+  <!-- Cart Modal & Checkout Panel -->
+  <div id="cart-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border-2 border-nagaGold-border">
+      
       <!-- Modal Header -->
-      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-[#FAF8F5]">
+      <div class="p-4 border-b border-nagaGold-border/30 flex items-center justify-between bg-gradient-to-r from-pearl-light via-white to-pearl-light">
         <div class="flex items-center space-x-2">
-          <span class="text-emerald-deep font-bold text-sm">🛒 ตะกร้าสินค้า & รายละเอียดจัดส่ง</span>
+          <span class="text-lg">🐍</span>
+          <div>
+            <h3 class="text-xs font-black text-obsidian uppercase">ตะกร้าวัตถุมงคล</h3>
+            <p class="text-[10px] text-nagaGold-radiant font-bold">SHOP@วินทร์ทรัพย์นาคราช</p>
+          </div>
         </div>
-        <button onclick="closeCartModal()" class="text-stone-400 hover:text-stone-600 p-1">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 hover:text-obsidian transition">
+          ✕
         </button>
       </div>
 
-      <!-- Modal Body -->
+      <!-- Modal Body (Scrollable) -->
       <div class="p-4 overflow-y-auto space-y-4 flex-1 hide-scrollbar">
-        <!-- รายการสินค้า -->
+        <!-- Selected Items -->
         <div>
-          <h3 class="text-xs font-bold text-stone-700 mb-2">รายการที่เลือก</h3>
-          <div id="cart-items-container" class="space-y-2"></div>
-          <div id="cart-empty-msg" class="text-center py-6 text-xs text-stone-400 hidden">
-            ไม่มีสินค้าในตะกร้า
+          <h4 class="text-xs font-black text-obsidian mb-2.5 flex items-center gap-1.5">
+            <span>✧</span> รายการวัตถุมงคลที่น้อมรับ
+          </h4>
+          <div id="cart-items-container" class="space-y-2.5"></div>
+          <div id="cart-empty-msg" class="text-center py-8 text-xs text-stone-400 font-bold hidden">
+            ยังไม่มีวัตถุมงคลในตะกร้า
           </div>
         </div>
 
-        <!-- ฟอร์มผู้รับ -->
-        <div class="border-t border-stone-200 pt-3 space-y-2.5">
-          <h3 class="text-xs font-bold text-stone-700 flex items-center gap-1">
-            <span>📍</span> ข้อมูลผู้รับพัสดุ
-          </h3>
+        <!-- Shipping Destination Form -->
+        <div class="border-t border-stone-200/80 pt-3.5 space-y-3">
+          <h4 class="text-xs font-black text-obsidian flex items-center gap-1.5">
+            <span>📍</span> ที่อยู่จัดส่งมงคลบารมี
+          </h4>
           <div>
-            <label class="text-[11px] text-stone-600 block mb-1">ชื่อ-นามสกุล ผู้รับ *</label>
-            <input type="text" id="cust-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep">
+            <label class="text-[11px] font-bold text-stone-600 block mb-1">ชื่อ-นามสกุล ผู้รับ *</label>
+            <input type="text" id="cust-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-nagaGold-bright bg-pearl-light">
           </div>
           <div>
-            <label class="text-[11px] text-stone-600 block mb-1">เบอร์โทรศัพท์ *</label>
-            <input type="tel" id="cust-phone" placeholder="08xxxxxxxx" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep">
+            <label class="text-[11px] font-bold text-stone-600 block mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
+            <input type="tel" id="cust-phone" placeholder="08xxxxxxxx" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-nagaGold-bright bg-pearl-light">
           </div>
           <div>
-            <label class="text-[11px] text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุโดยละเอียด *</label>
-            <textarea id="cust-address" rows="2" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-deep"></textarea>
+            <label class="text-[11px] font-bold text-stone-600 block mb-1">ที่อยู่จัดส่งพัสดุโดยละเอียด *</label>
+            <textarea id="cust-address" rows="2" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" class="w-full text-xs font-medium px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-nagaGold-bright bg-pearl-light"></textarea>
           </div>
         </div>
 
-        <!-- สรุปยอด -->
-        <div class="bg-[#FDFBF7] p-3 rounded-2xl border border-gold-border space-y-1.5">
-          <div class="flex justify-between text-xs text-stone-600">
-            <span>รวมค่าสินค้า</span>
-            <span id="modal-subtotal" class="font-bold text-stone-800">฿0</span>
+        <!-- Total Calculation Box -->
+        <div class="bg-gradient-to-br from-pearl-light to-white p-3.5 rounded-2xl border border-nagaGold-border/60 shadow-sm space-y-2">
+          <div class="flex justify-between text-xs font-bold text-stone-600">
+            <span>รวมค่าบูชาวัตถุมงคล</span>
+            <span id="modal-subtotal" class="font-black text-obsidian">฿0</span>
           </div>
-          <div class="flex justify-between text-xs text-stone-600">
-            <span>ค่าบริการจัดส่ง</span>
-            <span class="font-bold text-emerald-deep">ฟรีมงคลบารมี</span>
+          <div class="flex justify-between text-xs font-bold text-stone-600">
+            <span>ค่าจัดส่งผ่าน ETrackings</span>
+            <span class="font-black text-emerald-deep">ฟรีมงคลบารมี</span>
           </div>
-          <div class="border-t border-gold-border/40 pt-1.5 flex justify-between text-sm font-bold">
-            <span class="text-stone-800">ยอดชำระสุทธิ</span>
-            <span id="modal-total" class="text-gold-dark">฿0</span>
+          <div class="border-t border-nagaGold-border/40 pt-2 flex justify-between text-sm font-black">
+            <span class="text-obsidian">ยอดชำระสุทธิ</span>
+            <span id="modal-total" class="text-nagaGold-radiant">฿0</span>
           </div>
         </div>
       </div>
 
       <!-- Modal Footer -->
-      <div class="p-3 border-t border-stone-200 bg-white">
-        <button id="btn-submit-order" onclick="confirmOrder()" class="w-full bg-emerald-deep text-white font-bold text-xs py-3 rounded-xl shadow-md hover:bg-emerald-800 transition flex items-center justify-center space-x-1.5">
-          <span>✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE</span>
+      <div class="p-3.5 border-t border-stone-200/80 bg-white">
+        <button id="btn-submit-order" onclick="confirmOrder()" class="w-full bg-gradient-to-r from-obsidian via-emerald-dark to-emerald-pearl text-white font-black text-xs py-3.5 rounded-2xl shadow-naga-gold border border-nagaGold-bright hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
+          <span>✨ ยืนยันคำสั่งซื้อ & รับใบสรุปยอดใน LINE</span>
         </button>
       </div>
     </div>
   </div>
 
   <script>
-    // ==========================================
-    // CONFIGURATION
-    // ==========================================
-    const LIFF_ID = "2007499712-3e6TMnJJ"; // << LIFF ID ของหน้าร้าน
-    const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec"; // << Web App URL ของคุณ
+    const LIFF_ID = "2007499712-3e6TMnJJ";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
 
     let currentUserId = "GUEST_USER";
     let allProducts = [];
     let cart = [];
 
-    // ==========================================
-    // INITIALIZATION (LIFF SDK)
-    // ==========================================
     window.addEventListener("DOMContentLoaded", async () => {
       try {
         if (typeof liff !== "undefined") {
@@ -229,40 +282,48 @@
           if (liff.isLoggedIn()) {
             const profile = await liff.getProfile();
             currentUserId = profile.userId;
-            document.getElementById("user-name").innerText = profile.displayName || "ผู้ศรัทธา";
+            document.getElementById("user-name").innerText = profile.displayName || "ผู้ศรัทธาบารมี";
             document.getElementById("user-uid").innerText = "ID: " + profile.userId.substring(0, 8) + "...";
             if (profile.pictureUrl) {
               document.getElementById("user-avatar").src = profile.pictureUrl;
             }
+            autoFillMemberData(currentUserId);
           }
         }
       } catch (err) {
-        console.warn("LIFF Init Notice:", err);
+        console.warn("LIFF Notice:", err);
       }
       loadProducts();
     });
 
-    // ==========================================
-    // LOAD PRODUCTS (Cached)
-    // ==========================================
+    async function autoFillMemberData(uid) {
+      try {
+        const res = await fetch(`${API_URL}?action=get_member_profile&userId=${encodeURIComponent(uid)}`);
+        const data = await res.json();
+        if (data.status === "success" && data.member) {
+          if (data.member.name && data.member.name !== "-") document.getElementById("cust-name").value = data.member.name;
+          if (data.member.phone && data.member.phone !== "-") document.getElementById("cust-phone").value = data.member.phone;
+          if (data.member.address && data.member.address !== "-") document.getElementById("cust-address").value = data.member.address;
+        }
+      } catch (e) {}
+    }
+
     async function loadProducts() {
       try {
         const res = await fetch(`${API_URL}?action=get_shop_products`);
         const data = await res.json();
-
         if (data.status === "success" && data.products) {
           allProducts = data.products;
           renderProductGrid(allProducts);
         } else {
           document.getElementById("product-grid").innerHTML = `
-            <div class="col-span-2 text-center py-10 text-xs text-stone-400">
-              ไม่พบรายการสินค้าที่เปิดจำหน่าย
+            <div class="col-span-2 text-center py-12 text-xs font-bold text-stone-400">
+              ไม่พบรายการวัตถุมงคลที่เปิดจำหน่าย
             </div>`;
         }
       } catch (err) {
-        console.error("Load Products Error:", err);
         document.getElementById("product-grid").innerHTML = `
-          <div class="col-span-2 text-center py-10 text-xs text-red-500">
+          <div class="col-span-2 text-center py-12 text-xs font-bold text-red-500">
             สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง
           </div>`;
       }
@@ -279,31 +340,31 @@
       document.getElementById("product-count").innerText = `${products.length} รายการ`;
 
       if (products.length === 0) {
-        container.innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-stone-400">ขณะนี้ไม่มีสินค้าในคลัง</div>`;
+        container.innerHTML = `<div class="col-span-2 text-center py-12 text-xs font-bold text-stone-400">ขณะนี้ไม่มีวัตถุมงคลในคลัง</div>`;
         return;
       }
 
       container.innerHTML = products.map(p => {
         const imgUrl = formatDriveImg(p.imageId);
         return `
-          <div class="glass-card rounded-2xl p-2.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+          <div class="glass-pearl rounded-3xl p-3 flex flex-col justify-between shadow-pearl-card hover:shadow-obsidian-glow transition-all duration-300 border border-nagaGold-border/40">
             <div>
-              <div class="relative w-full h-36 rounded-xl overflow-hidden bg-stone-100 mb-2 border border-gold-border/40">
+              <div class="relative w-full h-36 rounded-2xl overflow-hidden bg-emerald-light/30 mb-2.5 border border-nagaGold-border/30">
                 <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-cover">
-                <span class="absolute top-1.5 right-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded badge-gold">
+                <span class="absolute top-2 right-2 text-[9px] font-black px-2 py-0.5 rounded-full bg-obsidian text-nagaGold-bright border border-nagaGold-bright/60 shadow-sm">
                   คงเหลือ ${p.stock}
                 </span>
               </div>
-              <h3 class="text-xs font-bold text-stone-800 line-clamp-1">${p.name}</h3>
-              <p class="text-[10px] text-stone-500 line-clamp-2 my-1 leading-snug">${p.description || 'วัตถุมงคลเสริมดวงชะตา'}</p>
+              <h3 class="text-xs font-black text-obsidian line-clamp-1 tracking-tight">${p.name}</h3>
+              <p class="text-[10px] font-medium text-stone-500 line-clamp-2 my-1 leading-relaxed">${p.description || 'วัตถุมงคลเสริมสิริมงคล โชคลาภ และบารมี'}</p>
             </div>
             
-            <div class="mt-2 pt-2 border-t border-stone-100 flex items-center justify-between">
+            <div class="mt-2.5 pt-2 border-t border-stone-200/60 flex items-center justify-between">
               <div>
-                <span class="text-xs font-bold text-gold-dark">฿${Number(p.price).toLocaleString()}</span>
+                <span class="text-xs font-black text-nagaGold-radiant">฿${Number(p.price).toLocaleString()}</span>
                 ${p.originalPrice ? `<span class="text-[9px] text-stone-400 line-through ml-1">฿${p.originalPrice}</span>` : ''}
               </div>
-              <button onclick="addToCart('${p.id}')" class="bg-emerald-deep text-white text-[11px] font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-800 transition shadow-sm">
+              <button onclick="addToCart('${p.id}')" class="bg-gradient-to-r from-emerald-dark to-emerald-pearl text-white text-[11px] font-black px-3 py-1.5 rounded-xl border border-nagaGold-bright/50 shadow-sm hover:brightness-110 active:scale-95 transition">
                 + สั่งจอง
               </button>
             </div>
@@ -312,9 +373,6 @@
       }).join("");
     }
 
-    // ==========================================
-    // CART LOGIC
-    // ==========================================
     function addToCart(productId) {
       const product = allProducts.find(p => String(p.id).trim() === String(productId).trim());
       if (!product) return;
@@ -324,7 +382,7 @@
         if (existing.qty < product.stock) {
           existing.qty += 1;
         } else {
-          alert(`สินค้า ${product.name} มีในคลังเพียง ${product.stock} ชิ้นครับ`);
+          alert(`วัตถุมงคล ${product.name} มีในคลังเพียง ${product.stock} ชิ้นครับ`);
           return;
         }
       } else {
@@ -351,7 +409,7 @@
         cart = cart.filter(i => i.id !== productId);
       } else if (item.qty > maxStock) {
         item.qty = maxStock;
-        alert(`มีสินค้าในคลังสูงสุด ${maxStock} ชิ้นครับ`);
+        alert(`มีวัตถุมงคลในคลังสูงสุด ${maxStock} ชิ้นครับ`);
       }
       updateCartUI();
     }
@@ -390,18 +448,18 @@
       } else {
         emptyMsg.classList.add("hidden");
         container.innerHTML = cart.map(i => `
-          <div class="flex items-center justify-between bg-stone-50 p-2 rounded-xl border border-stone-200">
-            <div class="flex items-center space-x-2">
-              <img src="${i.img}" class="w-10 h-10 rounded-lg object-cover border border-gold-border" alt="${i.name}">
+          <div class="flex items-center justify-between bg-pearl-light p-2.5 rounded-2xl border border-nagaGold-border/40">
+            <div class="flex items-center space-x-2.5">
+              <img src="${i.img}" class="w-11 h-11 rounded-xl object-cover border border-nagaGold-border/60" alt="${i.name}">
               <div>
-                <p class="text-xs font-bold text-stone-800 line-clamp-1">${i.name}</p>
-                <p class="text-[10px] text-gold-dark font-medium">฿${i.price.toLocaleString()} / ชิ้น</p>
+                <p class="text-xs font-black text-obsidian line-clamp-1">${i.name}</p>
+                <p class="text-[10px] text-nagaGold-radiant font-bold">฿${i.price.toLocaleString()} / ชิ้น</p>
               </div>
             </div>
             <div class="flex items-center space-x-2">
-              <button onclick="changeQty('${i.id}', -1)" class="w-6 h-6 rounded-md bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs">-</button>
-              <span class="text-xs font-bold w-4 text-center">${i.qty}</span>
-              <button onclick="changeQty('${i.id}', 1)" class="w-6 h-6 rounded-md bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs">+</button>
+              <button onclick="changeQty('${i.id}', -1)" class="w-7 h-7 rounded-xl bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs shadow-sm">-</button>
+              <span class="text-xs font-black w-4 text-center">${i.qty}</span>
+              <button onclick="changeQty('${i.id}', 1)" class="w-7 h-7 rounded-xl bg-white border border-stone-300 text-stone-600 font-bold flex items-center justify-center text-xs shadow-sm">+</button>
             </div>
           </div>
         `).join("");
@@ -420,12 +478,9 @@
       document.getElementById("cart-modal").classList.add("hidden");
     }
 
-    // ==========================================
-    // CONFIRM ORDER & SAFE AUTO-CLOSE
-    // ==========================================
     async function confirmOrder() {
-      if (cart.length === 0) {
-        alert("กรุณาเลือกสินค้าลงตะกร้าก่อนครับ");
+      if (!cart || cart.length === 0) {
+        alert("กรุณาเลือกวัตถุมงคลลงตะกร้าก่อนครับ");
         return;
       }
 
@@ -440,9 +495,8 @@
 
       const btn = document.getElementById("btn-submit-order");
       btn.disabled = true;
-      btn.innerText = "กำลังจารึกคำสั่งซื้อ...";
+      btn.innerText = "กำลังจารึกคำสั่งซื้อมงคล...";
 
-      // ดึง userId ปัจจุบัน
       let uid = currentUserId;
       try {
         if (typeof liff !== "undefined" && liff.isLoggedIn()) {
@@ -472,52 +526,39 @@
         const result = await response.json();
 
         if (result.status === "success") {
-          // พยายามส่งทาง Client ถ้าบริบทอนุญาต (ไม่บล็อกถ้าส่งไม่ผ่าน เพราะ Server Push ข้อความให้แล้ว)
+          cart = [];
+          updateCartUI();
+          closeCartModal();
+
           if (typeof liff !== "undefined" && liff.isInClient() && result.flexBubble) {
             try {
               await liff.sendMessages([{
                 type: "flex",
-                altText: `ใบแจ้งยอดชำระคำสั่งซื้อ [${result.orderId}] กรุณาโอนเงินภายใน 15 นาที`,
+                altText: `ใบสั่งซื้อวัตถุมงคล [${result.orderId}] กรุณาโอนเงินภายใน 15 นาที`,
                 contents: result.flexBubble
               }]);
-            } catch (err) {
-              console.warn("liff.sendMessages bypassed, fallback to Server Push:", err);
+            } catch (sendErr) {
+              console.warn("Client sendMessages bypassed, Server Push active:", sendErr);
             }
           }
 
-          // ปิดหน้าต่าง LIFF ทันทีทุกกรณี
-          safeCloseLiff();
+          setTimeout(() => {
+            if (typeof liff !== "undefined" && liff.isInClient()) {
+              liff.closeWindow();
+            } else {
+              alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE เรียบร้อยแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
+            }
+          }, 300);
+
         } else {
           alert("แจ้งเตือน: " + (result.message || "ไม่สามารถสั่งซื้อได้"));
           btn.disabled = false;
-          btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
+          btn.innerText = "✨ ยืนยันคำสั่งซื้อ & รับใบสรุปยอดใน LINE";
         }
       } catch (err) {
-        console.error("Submit Order Error:", err);
         alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
         btn.disabled = false;
-        btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
-      }
-    }
-
-    // ฟังก์ชันบังคับปิดหน้าต่าง LIFF อย่างปลอดภัย
-    function safeCloseLiff() {
-      if (typeof liff !== "undefined" && liff.isInClient()) {
-        try {
-          liff.closeWindow();
-        } catch (e) {
-          window.close();
-        }
-      } else {
-        alert("✅ สั่งซื้อสำเร็จ! ระบบได้ส่งใบสรุปคำสั่งซื้อไปยังแชท LINE ของท่านแล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
-        closeCartModal();
-        cart = [];
-        updateCartUI();
-        const btn = document.getElementById("btn-submit-order");
-        if (btn) {
-          btn.disabled = false;
-          btn.innerText = "✨ ยืนยันการสั่งซื้อ & รับใบสรุปยอดใน LINE";
-        }
+        btn.innerText = "✨ ยืนยันคำสั่งซื้อ & รับใบสรุปยอดใน LINE";
       }
     }
   </script>

@@ -3,482 +3,278 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>จองคิวตรวจดวงชะตา • วินทร์ทรัพย์นาคราช</title>
-  
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="./config.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>จองคิวตรวจดวงชะตา - SHOP@วินทร์ทรัพย์นาคราช</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Prompt', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+          colors: {
+            pearl: '#F2F7F4',
+            emeraldDeep: '#0B4734',
+            emeraldDark: '#083828',
+            nagaGold: '#D97706',
+            goldBright: '#FBBF24',
+            goldBorder: '#E6CA65',
+            obsidian: '#121714'
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Prompt", sans-serif;
-      background: radial-gradient(circle at 50% -10%, #064032 0%, #022018 45%, #010a08 100%);
-      color: #f8fafc;
-      min-height: 100vh;
-      margin: 0;
-      -webkit-font-smoothing: antialiased;
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at top, #FBFDFB 0%, #EBF4F0 100%);
+      color: #121714;
     }
-
-    .pearl-header {
-      background: linear-gradient(135deg, rgba(6, 64, 50, 0.94) 0%, rgba(2, 32, 24, 0.98) 100%);
-      border: 1px solid rgba(250, 204, 21, 0.35);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-    }
-
-    .lux-glass-box {
-      background: linear-gradient(145deg, rgba(6, 44, 34, 0.9) 0%, rgba(2, 24, 18, 0.95) 100%);
-      border: 1.4px solid rgba(250, 204, 21, 0.35);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.65), 0 0 16px rgba(250, 204, 21, 0.12);
-    }
-
-    .custom-input {
-      background: rgba(0, 15, 11, 0.75);
-      border: 1px solid rgba(250, 204, 21, 0.25);
-      color: #fef9c3;
-      transition: all 0.2s ease;
-    }
-    .custom-input:focus {
-      border-color: #facc15;
-      background: rgba(0, 22, 16, 0.9);
-      outline: none;
-      box-shadow: 0 0 12px rgba(250, 204, 21, 0.25);
-    }
-
-    .slot-btn {
-      background: rgba(2, 30, 24, 0.8);
-      border: 1px solid rgba(250, 204, 21, 0.25);
-      color: #cbd5e1;
-      transition: all 0.2s ease;
-      font-size: 11px;
-    }
-    .slot-btn:hover:not(:disabled) {
-      border-color: #facc15;
-      color: #fef08a;
-    }
-    .slot-btn.selected {
-      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022018;
-      font-weight: 800;
-      border-color: #fef08a;
-      box-shadow: 0 0 14px rgba(250, 204, 21, 0.4);
-    }
-    .slot-btn:disabled {
-      background: rgba(15, 23, 42, 0.6);
-      border-color: rgba(239, 68, 68, 0.3);
-      color: #ef4444;
-      text-decoration: line-through;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .btn-pearl-action {
-      background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
-      color: #022018;
-      border: 1px solid #fef08a;
-      border-radius: 9999px;
-      font-weight: 800;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(202, 138, 4, 0.4);
-    }
-    .btn-pearl-action:hover:not(:disabled) {
-      background: #fef08a;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(202, 138, 4, 0.6);
+    .glass-pearl {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(230, 202, 101, 0.45);
     }
   </style>
 </head>
-<body class="p-3 sm:p-5 max-w-md mx-auto flex flex-col pb-36">
+<body class="min-h-screen pb-24 p-4">
 
-  <!-- Header -->
-  <header class="pearl-header rounded-3xl p-3 mb-3.5 flex items-center justify-between">
-    <div class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-emerald-400 to-amber-500 shadow flex-shrink-0">
-        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
-          <img src="./logo.png" alt="โลโก้" class="w-full h-full object-contain p-0.5" onerror="this.src='https://placehold.co/60x60/064032/fef08a?text=🐍'">
+  <main class="max-w-md mx-auto space-y-4">
+    <!-- Header Card -->
+    <div class="glass-pearl rounded-3xl p-4 shadow-sm border border-goldBorder/40 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-obsidian via-emeraldDark to-emeraldDeep p-0.5 border border-goldBorder flex items-center justify-center">
+          <span class="text-xl">🐍</span>
         </div>
-      </div>
-      <div>
-        <h1 class="text-xs font-bold text-amber-200 tracking-wide">วินทร์ทรัพย์นาคราช</h1>
-        <p class="text-[9px] text-emerald-300/80 font-light">เรือนพยากรณ์ & นัดหมายสนทนา</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center gap-1.5">
-      <a href="https://www.facebook.com/thewinmu/" target="_blank" class="text-[10px] bg-blue-600/25 border border-blue-400/40 text-blue-100 px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
-        <span>📘</span>
-        <span>เพจ</span>
-      </a>
-      <a href="https://www.tiktok.com/@thewinmu" target="_blank" class="text-[10px] bg-black/40 border border-white/20 text-slate-200 px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
-        <span>🎵</span>
-        <span>TikTok</span>
-      </a>
-    </div>
-  </header>
-
-  <!-- Title -->
-  <div class="text-center mb-4">
-    <h2 class="text-xl font-extrabold text-amber-200 mb-1">จองคิวตรวจดวงชะตา</h2>
-    <p class="text-xs text-emerald-300/80 font-light">เลือกรอบเวลาที่สะดวก • ปรึกษาพูดคุยสบายใจแบบวันต่อวัน</p>
-  </div>
-
-  <!-- Booking Form -->
-  <div id="booking-box" class="lux-glass-box rounded-3xl p-5 space-y-4">
-    
-    <div>
-      <label class="block text-xs font-bold text-amber-300 mb-1.5">1. เลือกแพ็กเกจเวลาที่ต้องการปรึกษา</label>
-      <select id="service-select" onchange="onServiceChange()" class="custom-input w-full p-3 rounded-2xl text-xs focus:outline-none">
-        <option value="" disabled selected>กำลังโหลดรายการบริการ...</option>
-      </select>
-      <div id="service-desc" class="text-[10px] text-emerald-200/70 mt-1 font-light px-1"></div>
-    </div>
-
-    <div>
-      <label class="block text-xs font-bold text-amber-300 mb-1.5">2. เลือกวันที่สะดวก</label>
-      <input type="date" id="booking-date" onchange="onDateChange()" class="custom-input w-full p-3 rounded-2xl text-xs cursor-pointer focus:outline-none">
-    </div>
-
-    <div>
-      <div class="flex justify-between items-center mb-1.5">
-        <label class="text-xs font-bold text-amber-300">3. เลือกรอบเวลาที่ว่าง</label>
-        <span id="slot-loading" class="text-[10px] text-amber-200/60 hidden animate-pulse">กำลังตรวจรอบเวลา...</span>
-      </div>
-      <div id="slots-container" class="grid grid-cols-3 gap-2">
-        <div class="col-span-full py-6 text-center text-xs text-slate-400 font-light">
-          กรุณาเลือกวันที่ก่อนเลือกรอบเวลา
-        </div>
-      </div>
-    </div>
-
-    <div class="pt-3 border-t border-amber-400/20">
-      <div class="flex justify-between items-center mb-3">
-        <span class="text-xs text-slate-300 font-light">ค่าบริการ / ค่าครู:</span>
-        <span id="display-price" class="text-xl font-black text-amber-300 font-mono">฿0 บาท</span>
-      </div>
-
-      <button id="btn-submit-booking" onclick="submitBooking()" class="btn-pearl-action w-full py-3.5 text-xs shadow-xl flex items-center justify-center gap-2">
-        <span>✨ ยืนยันการนัดหมายและส่งเข้าแชท LINE</span>
-      </button>
-    </div>
-
-  </div>
-
-  <!-- Fallback Invoice Box -->
-  <div id="invoice-box" class="lux-glass-box rounded-3xl p-5 space-y-4 hidden">
-    <div class="text-center">
-      <div class="text-3xl mb-1">🙏</div>
-      <h3 class="text-sm font-bold text-amber-200">บันทึกการนัดหมายสำเร็จ</h3>
-      <p class="text-[10px] text-slate-300 font-mono mt-0.5">รหัสการนัดหมาย: <span id="inv-id" class="text-amber-300 font-bold">BK-XXXXXXXX</span></p>
-    </div>
-
-    <div class="bg-black/40 rounded-2xl p-3.5 border border-white/10 space-y-2 text-xs">
-      <div class="flex justify-between">
-        <span class="text-slate-400">รายการ:</span>
-        <span id="inv-service" class="font-bold text-white text-right">-</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-slate-400">วันที่:</span>
-        <span id="inv-date" class="font-bold text-amber-200">-</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-slate-400">รอบเวลา:</span>
-        <span id="inv-slot" class="font-bold text-emerald-300">-</span>
-      </div>
-      <div class="flex justify-between pt-2 border-t border-white/10 items-baseline">
-        <span class="text-slate-300">ยอดที่ต้องชำระ:</span>
-        <span id="inv-price" class="text-base font-black text-amber-300 font-mono">฿0 บาท</span>
-      </div>
-    </div>
-
-    <div class="bg-emerald-950/70 p-3.5 rounded-2xl border border-amber-300/30 text-xs space-y-2">
-      <div class="text-[11px] text-slate-300">ช่องทางการโอนเงิน:</div>
-      <div class="flex justify-between items-center">
         <div>
-          <div class="text-slate-300 font-light">ธ.กสิกรไทย (KBANK)</div>
-          <div id="bank-acc-display" class="text-base font-bold text-amber-300 font-mono tracking-wider">2251495656</div>
-          <div class="text-[10px] text-slate-300">ชื่อ: นายพีรดิษฐ์ กิตติเขมานนท์</div>
+          <h1 class="text-xs font-black tracking-wider text-nagaGold uppercase leading-none">
+            จองคิวตรวจดวงชะตาสายญาณ
+          </h1>
+          <p class="text-[10px] font-bold text-emeraldDark mt-0.5">SHOP@วินทร์ทรัพย์นาคราช</p>
         </div>
-        <button type="button" onclick="copyBankAccount()" class="px-3 py-1.5 bg-amber-400 hover:bg-amber-500 text-black font-bold text-[11px] rounded-lg shadow">
-          📋 คัดลอกเลขบัญชี
-        </button>
+      </div>
+      <a href="index.html" class="text-xs font-bold text-stone-500 bg-stone-100 px-3 py-1.5 rounded-xl hover:bg-stone-200 transition">
+        หน้าร้าน
+      </a>
+    </div>
+
+    <!-- Step 1: เลือกรายการบริการ (ดึงจากชีต products อัตโนมัติ) -->
+    <div class="glass-pearl rounded-3xl p-4 shadow-sm border border-goldBorder/40 space-y-2.5">
+      <h2 class="text-xs font-black text-obsidian uppercase flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-goldBright"></span>
+        1. เลือกแพ็กเกจตรวจดวงชะตา
+      </h2>
+      <div id="service-list" class="space-y-2">
+        <div class="p-4 text-center text-xs text-stone-400 font-bold animate-pulse">กำลังอัญเชิญรายการบริการ...</div>
       </div>
     </div>
 
-    <p class="text-[10px] text-amber-300/80 text-center font-light">
-      * กรุณาชำระภายใน 15 นาที ระบบจะตรวจสอบยอดและยืนยันคิวอัตโนมัติ
-    </p>
+    <!-- Step 2: เลือกวันที่และเวลาสนทนา -->
+    <div class="glass-pearl rounded-3xl p-4 shadow-sm border border-goldBorder/40 space-y-3">
+      <h2 class="text-xs font-black text-obsidian uppercase flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-goldBright"></span>
+        2. เลือกวันและรอบเวลาสนทนา
+      </h2>
+      
+      <div>
+        <label class="text-[11px] font-bold text-stone-600 block mb-1">วันที่ต้องการรับคำพยากรณ์ *</label>
+        <input type="date" id="booking-date" onchange="loadTimeSlots()" class="w-full text-xs font-bold px-3.5 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:border-goldBright bg-white">
+      </div>
 
-    <div class="space-y-2 pt-1">
-      <a href="https://line.me/R/ti/p/@thewinmu" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-full shadow text-center flex items-center justify-center gap-1.5">
-        <span>💬 ส่งสลิปยืนยันทาง LINE OA</span>
-      </a>
-      <button onclick="resetBookingForm()" class="w-full py-2.5 bg-white/10 text-slate-300 text-xs rounded-full hover:bg-white/20 transition text-center">
-        ทำการจองคิวใหม่
-      </button>
+      <div>
+        <label class="text-[11px] font-bold text-stone-600 block mb-1.5">รอบเวลาสนทนาญาณ *</label>
+        <div id="time-slots" class="grid grid-cols-2 gap-2">
+          <div class="col-span-2 text-center py-4 text-xs text-stone-400 font-bold">
+            กรุณาเลือกวันที่ก่อนครับ
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Bottom Nav 2 Rows -->
-  <nav class="fixed bottom-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-black/90 border border-amber-300/35 backdrop-blur-2xl rounded-3xl p-2.5 z-40 shadow-2xl">
-    <div class="grid grid-cols-3 gap-1 pb-1.5 border-b border-white/10 text-center">
-      <a href="./index.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">🛍️</span>
-        <span class="text-[10px]">ร้านค้า</span>
-      </a>
-      <a href="./booking.html" class="flex items-center justify-center gap-1 text-amber-300 font-bold py-1 bg-amber-400/10 rounded-xl border border-amber-300/30">
-        <span class="text-xs">📅</span>
-        <span class="text-[10px]">จองคิว</span>
-      </a>
-      <a href="./pickacard_hub.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">🔮</span>
-        <span class="text-[10px]">เสี่ยงทาย</span>
-      </a>
-    </div>
-    <div class="grid grid-cols-3 gap-1 pt-1.5 text-center">
-      <a href="./tracking.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">📦</span>
-        <span class="text-[10px]">ติดตามพัสดุ</span>
-      </a>
-      <a href="./memberships.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">👤</span>
-        <span class="text-[10px]">ระบบสมาชิก</span>
-      </a>
-      <a href="./admin.html" class="flex items-center justify-center gap-1 text-slate-300 hover:text-amber-300 py-1">
-        <span class="text-xs">⚙️</span>
-        <span class="text-[10px]">แอดมิน</span>
-      </a>
-    </div>
-  </nav>
+    <!-- Action Button -->
+    <button id="btn-submit-booking" onclick="submitBooking()" class="w-full bg-gradient-to-r from-obsidian via-emeraldDark to-emeraldDeep text-white font-black text-xs py-4 rounded-2xl shadow-lg border border-goldBright hover:brightness-110 active:scale-95 transition flex items-center justify-center space-x-2">
+      <span>✨ ยืนยันการจองคิว & รับใบนัดหมายใน LINE</span>
+    </button>
+  </main>
 
   <script>
-    const API_URL = typeof getMasterApiUrl === "function" ? getMasterApiUrl() : "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
-    const MY_LIFF_ID = "2007499712-B0uid9G3";
+    const LIFF_ID = "2007499712-3e6TMnJJ";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzhqzmw9LkSheJD2AQTreWQY2w1Wqh0okxRMXhRelayFqHetwQCPmc877YJCPnd6P6w/exec";
 
-    let availableServices = [];
-    let selectedSlot = "";
-    let selectedPrice = 0;
     let currentUserId = "GUEST_USER";
+    let selectedService = null;
+    let selectedSlot = "";
 
-    window.onload = function() {
-      const today = new Date().toISOString().split('T')[0];
+    window.addEventListener("DOMContentLoaded", async () => {
+      // ตั้งค่าวันที่เริ่มต้นเป็นวันพรุ่งนี้
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const dateStr = tomorrow.toISOString().split('T')[0];
       const dateInput = document.getElementById("booking-date");
-      dateInput.min = today;
-      dateInput.value = today;
+      dateInput.value = dateStr;
+      dateInput.min = new Date().toISOString().split('T')[0];
 
-      initLiff();
-      loadServices();
-      loadTimeSlots(today);
-    };
-
-    function initLiff() {
-      if (typeof liff !== "undefined") {
-        liff.init({ liffId: MY_LIFF_ID }).then(() => {
+      try {
+        if (typeof liff !== "undefined") {
+          await liff.init({ liffId: LIFF_ID });
           if (liff.isLoggedIn()) {
-            liff.getProfile().then(p => {
-              currentUserId = p.userId;
-            });
+            const profile = await liff.getProfile();
+            currentUserId = profile.userId;
           }
-        }).catch(() => {});
+        }
+      } catch (err) {}
+
+      loadServices();
+      loadTimeSlots();
+    });
+
+    async function loadServices() {
+      try {
+        const res = await fetch(`${API_URL}?action=get_call_services`);
+        const data = await res.json();
+        const container = document.getElementById("service-list");
+
+        if (data.status === "success" && data.services && data.services.length > 0) {
+          container.innerHTML = data.services.map((s, idx) => `
+            <div onclick="selectServiceItem('${s.id}', '${s.name}', ${s.price}, this)" class="service-card p-3 rounded-2xl border ${idx === 0 ? 'border-nagaGold bg-amber-50/50' : 'border-stone-200 bg-white'} cursor-pointer hover:border-goldBorder transition flex items-center justify-between shadow-sm">
+              <div>
+                <p class="text-xs font-black text-obsidian">${s.name}</p>
+                <p class="text-[10px] text-stone-500 font-medium">${s.desc || 'ตรวจดวงชะตาสายญาณ'}</p>
+              </div>
+              <span class="text-xs font-black text-nagaGold">฿${Number(s.price).toLocaleString()}</span>
+            </div>
+          `).join("");
+
+          // เลือกตัวแรกเป็น Default
+          selectedService = data.services[0];
+        } else {
+          container.innerHTML = `<div class="p-3 text-center text-xs text-stone-400 font-bold">ไม่พบรายการบริการดูดวง</div>`;
+        }
+      } catch (e) {
+        document.getElementById("service-list").innerHTML = `<div class="p-3 text-center text-xs text-red-500">สายสัญญาณขัดข้อง</div>`;
       }
     }
 
-    function loadServices() {
-      fetch(`${API_URL}?action=get_call_services`)
-        .then(r => r.json())
-        .then(res => {
-          const select = document.getElementById("service-select");
-          select.innerHTML = "";
-
-          if (res.status === "success" && res.services && res.services.length > 0) {
-            availableServices = res.services;
-            res.services.forEach((s, idx) => {
-              const opt = document.createElement("option");
-              opt.value = s.id;
-              opt.innerText = `${s.name} (฿${Number(s.price).toLocaleString()})`;
-              if (idx === 0) opt.selected = true;
-              select.appendChild(opt);
-            });
-            onServiceChange();
-          } else {
-            select.innerHTML = `<option value="">ไม่มีบริการพร้อมให้จอง</option>`;
-          }
-        })
-        .catch(() => {
-          document.getElementById("service-select").innerHTML = `<option value="">การเชื่อมต่อขัดข้อง</option>`;
-        });
+    function selectServiceItem(id, name, price, el) {
+      selectedService = { id: id, name: name, price: price };
+      document.querySelectorAll(".service-card").forEach(c => {
+        c.classList.remove("border-nagaGold", "bg-amber-50/50");
+        c.classList.add("border-stone-200", "bg-white");
+      });
+      el.classList.add("border-nagaGold", "bg-amber-50/50");
+      el.classList.remove("border-stone-200", "bg-white");
     }
 
-    function onServiceChange() {
-      const select = document.getElementById("service-select");
-      const s = availableServices.find(item => item.id === select.value);
-      if (s) {
-        selectedPrice = s.price;
-        document.getElementById("display-price").innerText = `฿${Number(s.price).toLocaleString()} บาท`;
-        document.getElementById("service-desc").innerText = s.desc || "";
-      }
-    }
-
-    function onDateChange() {
+    async function loadTimeSlots() {
       const targetDate = document.getElementById("booking-date").value;
-      if (targetDate) {
-        loadTimeSlots(targetDate);
+      if (!targetDate) return;
+
+      const container = document.getElementById("time-slots");
+      container.innerHTML = `<div class="col-span-2 text-center py-3 text-xs text-stone-400 font-bold animate-pulse">กำลังตรวจสอบรอบเวลาว่าง...</div>`;
+
+      try {
+        const dParts = targetDate.split("-");
+        const formattedDate = `${dParts[2]}/${dParts[1]}/${dParts[0]}`;
+
+        const res = await fetch(`${API_URL}?action=get_time_slots&date=${encodeURIComponent(formattedDate)}`);
+        const data = await res.json();
+
+        if (data.status === "success" && data.slots) {
+          container.innerHTML = data.slots.map(s => `
+            <button type="button" onclick="selectSlotTime('${s.time}', this)" ${!s.available ? 'disabled' : ''} class="slot-btn py-2 px-3 rounded-xl text-xs font-bold border ${s.available ? 'border-stone-200 bg-white text-stone-700 hover:border-goldBorder' : 'border-stone-200 bg-stone-100 text-stone-400 cursor-not-allowed'} transition">
+              ${s.time} ${!s.available ? '(เต็ม)' : ''}
+            </button>
+          `).join("");
+        }
+      } catch (e) {
+        container.innerHTML = `<div class="col-span-2 text-center text-xs text-red-500">ไม่สามารถโหลดรอบเวลาได้</div>`;
       }
     }
 
-    function loadTimeSlots(dateStr) {
-      selectedSlot = "";
-      document.getElementById("slot-loading").classList.remove("hidden");
-      const container = document.getElementById("slots-container");
-      container.innerHTML = "";
-
-      fetch(`${API_URL}?action=get_time_slots&date=${encodeURIComponent(dateStr)}`)
-        .then(r => r.json())
-        .then(res => {
-          document.getElementById("slot-loading").classList.add("hidden");
-
-          if (res.status === "success" && res.slots && res.slots.length > 0) {
-            const cleanSlots = res.slots.filter(s => {
-              const t = String(s.time || "").trim();
-              return t && !t.includes("BOOKING") && !t.includes("STATUS");
-            });
-
-            if (cleanSlots.length === 0) {
-              container.innerHTML = `<div class="col-span-full py-6 text-center text-xs text-red-300">ไม่มีรอบเวลาว่างในวันนี้</div>`;
-              return;
-            }
-
-            cleanSlots.forEach(s => {
-              const btn = document.createElement("button");
-              btn.type = "button";
-              btn.className = "slot-btn p-2.5 rounded-xl text-center";
-              btn.innerText = s.time;
-
-              if (s.available) {
-                btn.onclick = () => selectSlot(btn, s.time);
-              } else {
-                btn.disabled = true;
-                btn.innerHTML = `${s.time}<br><span class="text-[9px]">(เต็ม)</span>`;
-              }
-              container.appendChild(btn);
-            });
-          } else {
-            container.innerHTML = `<div class="col-span-full py-6 text-center text-xs text-slate-400">ไม่มีรอบเวลาว่างในวันนี้</div>`;
-          }
-        })
-        .catch(() => {
-          document.getElementById("slot-loading").classList.add("hidden");
-          container.innerHTML = `<div class="col-span-full py-6 text-center text-xs text-slate-400">ไม่สามารถโหลดรอบเวลาได้</div>`;
-        });
+    function selectSlotTime(slotTime, btn) {
+      selectedSlot = slotTime;
+      document.querySelectorAll(".slot-btn").forEach(b => {
+        b.classList.remove("border-nagaGold", "bg-emeraldDeep", "text-white");
+        b.classList.add("bg-white", "text-stone-700");
+      });
+      btn.classList.add("border-nagaGold", "bg-emeraldDeep", "text-white");
+      btn.classList.remove("bg-white", "text-stone-700");
     }
 
-    function selectSlot(buttonElement, timeStr) {
-      selectedSlot = timeStr;
-      document.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("selected"));
-      buttonElement.classList.add("selected");
-    }
+    async function submitBooking() {
+      if (!selectedService) {
+        alert("กรุณาเลือกแพ็กเกจดูดวงครับ");
+        return;
+      }
+      if (!selectedSlot) {
+        alert("กรุณาเลือกรอบเวลาสนทนาครับ");
+        return;
+      }
 
-    function submitBooking() {
-      const select = document.getElementById("service-select");
-      const service = availableServices.find(s => s.id === select.value);
-      const bookingDate = document.getElementById("booking-date").value;
-
-      if (!service) return alert("กรุณาเลือกบริการ");
-      if (!bookingDate) return alert("กรุณาเลือกวันที่");
-      if (!selectedSlot) return alert("กรุณาเลือกรอบเวลาที่ต้องการ");
+      const targetDate = document.getElementById("booking-date").value;
+      const dParts = targetDate.split("-");
+      const formattedDate = `${dParts[2]}/${dParts[1]}/${dParts[0]}`;
 
       const btn = document.getElementById("btn-submit-booking");
       btn.disabled = true;
-      btn.innerText = "กำลังบันทึกการนัดหมาย...";
+      btn.innerText = "กำลังจารึกนัดหมายมงคล...";
 
-      const params = new URLSearchParams({
+      let uid = currentUserId;
+      try {
+        if (typeof liff !== "undefined" && liff.isLoggedIn()) {
+          const prof = await liff.getProfile();
+          uid = prof.userId;
+        }
+      } catch (e) {}
+
+      const payload = {
         action: "submit_fast_booking",
-        serviceName: service.name,
-        price: service.price,
-        bookingDate: bookingDate,
-        slotTime: selectedSlot,
-        userId: currentUserId
-      });
+        userId: uid || "GUEST_USER",
+        serviceName: selectedService.name,
+        price: selectedService.price,
+        bookingDate: formattedDate,
+        slotTime: selectedSlot
+      };
 
-      fetch(`${API_URL}?${params.toString()}`)
-        .then(r => r.json())
-        .then(res => {
-          btn.disabled = false;
-          btn.innerText = "✨ ยืนยันการนัดหมายและส่งเข้าแชท LINE";
+      try {
+        const query = new URLSearchParams(payload).toString();
+        const res = await fetch(`${API_URL}?${query}`);
+        const result = await res.json();
 
-          if (res.status === "success") {
-            const bookingId = res.bookingId;
-
-            const bookingChatMessages = [
-              {
-                type: "text",
-                text: `🔮 ใบนัดหมายตรวจดวงชะตา [${bookingId}]\n` +
-                      `━━━━━━━━━━━━━━━━\n` +
-                      `• บริการ: ${res.serviceName}\n` +
-                      `• วันที่นัดหมาย: ${res.bookingDate}\n` +
-                      `• รอบเวลาสนทนา: ${res.slotTime}\n` +
-                      `• ค่าครู/ยอดชำระ: ฿${Number(res.price).toLocaleString()} บาท\n` +
-                      `━━━━━━━━━━━━━━━━\n` +
-                      `🏦 ช่องทางโอนเงิน:\n` +
-                      `ธ.กสิกรไทย (KBANK)\n` +
-                      `เลขบัญชี: 2251495656\n` +
-                      `ชื่อบัญชี: นายพีรดิษฐ์ กิตติเขมานนท์\n\n` +
-                      `⚠️ กรุณาโอนเงินและแนบรูปสลิปในแชทนี้ภายใน 15 นาที ระบบจะตรวจสอบและยืนยันคิวอัตโนมัติครับ 🙏`
-              }
-            ];
-
-            if (typeof liff !== "undefined" && liff.isInClient()) {
-              liff.sendMessages(bookingChatMessages)
-                .then(() => {
-                  liff.closeWindow();
-                })
-                .catch(() => {
-                  showInvoiceFallback(res);
-                });
-            } else {
-              showInvoiceFallback(res);
-            }
-
-          } else {
-            alert("เกิดข้อผิดพลาด: " + (res.message || "ไม่สามารถจองได้"));
+        if (result.status === "success") {
+          if (typeof liff !== "undefined" && liff.isInClient() && result.flexBubble) {
+            try {
+              await liff.sendMessages([{
+                type: "flex",
+                altText: `ใบนัดหมายตรวจดวงชะตา [${result.bookingId}] กรุณาแนบสลิปภายใน 15 นาที`,
+                contents: result.flexBubble
+              }]);
+            } catch (err) {}
           }
-        })
-        .catch(() => {
+
+          setTimeout(() => {
+            if (typeof liff !== "undefined" && liff.isInClient()) {
+              liff.closeWindow();
+            } else {
+              alert("✅ บันทึกนัดหมายสำเร็จ! ระบบได้ส่งใบนัดหมายไปยังแชท LINE แล้ว กรุณาแนบสลิปภายใน 15 นาทีครับ");
+            }
+          }, 300);
+
+        } else {
+          alert("แจ้งเตือน: " + (result.message || "ไม่สามารถจองคิวได้"));
           btn.disabled = false;
-          btn.innerText = "✨ ยืนยันการนัดหมายและส่งเข้าแชท LINE";
-          alert("การเชื่อมต่อระบบขัดข้อง กรุณาลองใหม่อีกครั้ง");
-        });
-    }
-
-    function showInvoiceFallback(res) {
-      document.getElementById("booking-box").classList.add("hidden");
-      document.getElementById("invoice-box").classList.remove("hidden");
-
-      document.getElementById("inv-id").innerText = res.bookingId;
-      document.getElementById("inv-service").innerText = res.serviceName;
-      document.getElementById("inv-date").innerText = res.bookingDate;
-      document.getElementById("inv-slot").innerText = res.slotTime;
-      document.getElementById("inv-price").innerText = `฿${Number(res.price).toLocaleString()} บาท`;
-
-      const bankDisplay = document.getElementById("bank-acc-display");
-      if (bankDisplay) bankDisplay.innerText = "2251495656";
-    }
-
-    function copyBankAccount() {
-      navigator.clipboard.writeText("2251495656").then(() => {
-        alert("คัดลอกเลขบัญชี 2251495656 เรียบร้อยแล้ว");
-      }).catch(() => {
-        prompt("คัดลอกเลขบัญชี:", "2251495656");
-      });
-    }
-
-    function resetBookingForm() {
-      document.getElementById("invoice-box").classList.add("hidden");
-      document.getElementById("booking-box").classList.remove("hidden");
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById("booking-date").value = today;
-      loadTimeSlots(today);
+          btn.innerText = "✨ ยืนยันการจองคิว & รับใบนัดหมายใน LINE";
+        }
+      } catch (err) {
+        alert("สายสัญญาณขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        btn.disabled = false;
+        btn.innerText = "✨ ยืนยันการจองคิว & รับใบนัดหมายใน LINE";
+      }
     }
   </script>
 </body>
